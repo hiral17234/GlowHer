@@ -278,7 +278,7 @@ export default function MoodJournalPage() {
                         <FormControl>
                           <Textarea
                             placeholder="Anything on your mind today?"
-                            className="resize-none min-h-[150px]"
+                            className="resize-none min-h-[250px]"
                             {...field}
                           />
                         </FormControl>
@@ -325,5 +325,3 @@ export default function MoodJournalPage() {
     </div>
   );
 }
-
-    
