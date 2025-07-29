@@ -16,6 +16,8 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Slider } from '@/components/ui/slider';
+import { cn } from '@/lib/utils';
 import {
   CalendarIcon,
   ChevronLeft,
@@ -31,6 +33,7 @@ import {
   Shell,
   Angry,
   Bed,
+  Smile,
 } from 'lucide-react';
 
 const symptomsList = [
@@ -46,7 +49,19 @@ const symptomsList = [
     { id: 'diarrheaConstipation', label: 'Diarrhea / Constipation', icon: Thermometer },
     { id: 'moodSwings', label: 'Mood Swings', icon: Angry },
     { id: 'insomnia', label: 'Insomnia', icon: Moon },
-  ];
+];
+
+const moods = [
+    { name: 'Happy', emoji: '😄' },
+    { name: 'Calm', emoji: '🙂' },
+    { name: 'Neutral', emoji: '😐' },
+    { name: 'Sad', emoji: '😢' },
+    { name: 'Angry', emoji: '😠' },
+    { name: 'Anxious', emoji: '😰' },
+    { name: 'Tired', emoji: '😴' },
+    { name: 'Affectionate', emoji: '😍' },
+];
+
 
 const FormSchema = z.object({
   logDate: z.date({
@@ -56,6 +71,8 @@ const FormSchema = z.object({
     message: "You have to select at least one symptom.",
   }),
   otherSymptom: z.string().optional(),
+  mood: z.string({ required_error: "Please select a mood." }),
+  moodIntensity: z.array(z.number()).optional(),
 });
 
 export default function LogSymptomsPage() {
@@ -67,6 +84,7 @@ export default function LogSymptomsPage() {
     defaultValues: {
       logDate: new Date(),
       symptoms: [],
+      moodIntensity: [5],
     },
   });
 
@@ -202,6 +220,56 @@ export default function LogSymptomsPage() {
                     )}
                   />
 
+                  <FormField
+                    control={form.control}
+                    name="mood"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                          <Smile /> Select Your Mood
+                        </FormLabel>
+                        <FormControl>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                            {moods.map((mood) => (
+                              <Button
+                                key={mood.name}
+                                type="button"
+                                variant={field.value === mood.name ? "secondary" : "outline"}
+                                className={cn(
+                                  "h-16 text-lg transition-all duration-200 transform hover:scale-105",
+                                  field.value === mood.name && "border-2 border-accent ring-2 ring-accent/50"
+                                )}
+                                onClick={() => field.onChange(mood.name)}
+                              >
+                                <span className="text-3xl mr-2">{mood.emoji}</span> {mood.name}
+                              </Button>
+                            ))}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="moodIntensity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-lg font-semibold">Mood Intensity ({field.value?.[0]}/10)</FormLabel>
+                        <FormControl>
+                          <Slider
+                            defaultValue={[5]}
+                            max={10}
+                            step={1}
+                            onValueChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <Button type="submit" size="lg" className="w-full">Save Log</Button>
                 </form>
               </Form>
@@ -213,3 +281,5 @@ export default function LogSymptomsPage() {
     </div>
   );
 }
+
+    
