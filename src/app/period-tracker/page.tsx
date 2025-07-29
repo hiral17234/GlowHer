@@ -250,11 +250,11 @@ export default function PeriodTrackerPage() {
                       name="cycleLength"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Average Cycle Length (21-35 days)</FormLabel>
+                          <FormLabel>Average Cycle Length (days)</FormLabel>
                           <FormControl>
-                            <Input type="number" min="21" max="35" {...field} />
+                            <Input type="number" {...field} />
                           </FormControl>
-                          <FormMessage />
+                           <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -439,5 +439,3 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
-
-    
