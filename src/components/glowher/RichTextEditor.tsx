@@ -59,8 +59,8 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     if (editorRef.current && editorRef.current.innerHTML !== value) {
         editorRef.current.innerHTML = value || "";
     }
-  // We only want to run this when the value prop changes from an external source, not on every keystroke.
-  // By removing `value` from the dependency array and relying on mount to set initial value,
+  // This effect should only run when the value prop changes from an external source,
+  // not on every keystroke. By removing `value` from the dependency array and relying on mount to set initial value,
   // we prevent the cursor jump. We'll handle external updates (like form reset)
   // by using a key on the component if needed, but for now this is more stable.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,8 +129,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             'min-h-[250px] w-full p-3 text-base bg-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
             !value && 'text-muted-foreground'
         )}
-        // Use a key to force re-mount on external value change instead of dangerouslySetInnerHTML
-        // but for now, we will rely on the useEffect.
         data-placeholder={placeholder}
         style={{
             whiteSpace: 'pre-wrap',
