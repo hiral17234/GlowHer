@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -471,7 +470,7 @@ const weeklyDevelopment = [
         week: 40,
         title: "Week 40: Due Date!",
         size: "Your baby is the size of a small pumpkin.",
-        development: "👶 The baby is fully developed and just waiting for the signal to begin their journey into the world.\n\n⚖️ The average baby at this stage weighs between 6 and 9 pounds and is 19 to 22 inches long.\n\nHAIR and nails are continuing to grow.\n\nThe vernix caseosa is still protecting their skin.\n\nThey are snugly tucked into your pelvis.\n\nLungs are ready and waiting to take that first breath.\n\nAll organ systems are mature and ready for life on the outside.\n\nThey are biding their time until their birthday arrives.",
+        development: "👶 The baby is fully developed and just waiting for the signal to begin their journey into the world.\n\n⚖️ The average baby at this stage weighs between 6 and 9 pounds and is 19 to 22 inches long.\n\nHAIR and nails are continuing to grow.\n\nThe vernix caseosa is still protecting their skin.\n\nThey are snugly tucked into your pelvis.\n\nLUNGS are ready and waiting to take that first breath.\n\nAll organ systems are mature and ready for life on the outside.\n\nThey are biding their time until their birthday arrives.",
         bodyChanges: "📅 Your due date is here, but it's just an estimate. Only about 5% of babies are born on their actual due date.\n\nTry not to be discouraged if your due date comes and goes. It's very common to go a bit beyond 40 weeks, especially with a first baby.\n\nYour provider will be monitoring you and the baby very closely.\n\nThey will likely discuss induction options with you if you go to 41 or 42 weeks.\n\nYour body is physically and hormonally primed for labor.\n\nYour cervix is likely effaced and may be dilated.\n\nYour patience is being tested to its absolute limit.\n\nYou are on high alert for any sign of labor starting.",
         symptoms: "😣 You are likely feeling a potent combination of being physically miserable and incredibly excited.\n\n😴 Sleep is something that happens to other people.\n\nEverything hurts: your back, your hips, your pelvis.\n\nWalking is a chore.\n\nStrong, frequent Braxton Hicks keep you guessing.\n\nConstant pressure on your bladder and rectum.\n\nExtreme impatience and frustration are normal if your due date passes.\n\nYou are ready to not be pregnant anymore.",
         tips: "🌶️ If you're feeling antsy, you can try some methods that are *thought* to encourage labor, like walking, having sex, or eating spicy food (with your doctor's approval, of course). There's little scientific evidence, but it can make you feel more proactive.\n\nsoon you'll be holding your baby! This is the most important thing to remember.\n\nTrust your body and your baby. They know the right time.\n\nIf you're scheduled for an induction, ask your provider questions so you know what to expect.\n\nRest as much as humanly possible.\n\nStay in close contact with your provider.\n\nLean on your support system.\n\nTake one day at a time. Your baby will be here before you know it.",
@@ -479,6 +478,12 @@ const weeklyDevelopment = [
         aiHint: "baby holding finger"
     }
 ];
+
+const trimesterVideos: { [key: number]: string } = {
+    1: "https://www.youtube.com/embed/-LHNfkaaMFA",
+    2: "https://www.youtube.com/embed/IPj4dJnP85o",
+    3: "https://www.youtube.com/embed/lpDW00nQhUo",
+};
 
 
 export default function PregnancyTrackerPage() {
@@ -502,7 +507,7 @@ export default function PregnancyTrackerPage() {
         calculateDetails(data.dueDate);
       }
     } catch (error) {
-      console.error("Could not retrieve data from localStorage", error);
+        console.error("Could not retrieve data from localStorage", error);
     }
   }, []);
 
@@ -560,6 +565,7 @@ export default function PregnancyTrackerPage() {
   }
   
   const currentWeekData = pregnancyDetails ? weeklyDevelopment[pregnancyDetails.gestationalAgeWeeks] : null;
+  const currentVideoUrl = pregnancyDetails ? trimesterVideos[pregnancyDetails.trimester] : null;
 
   if (pregnancyDetails) {
     return (
@@ -617,6 +623,17 @@ export default function PregnancyTrackerPage() {
                              <CardDescription>{currentWeekData.size}</CardDescription>
                         </CardHeader>
                         <CardContent>
+                            {currentVideoUrl && (
+                                <div className="mb-6 aspect-video">
+                                    <iframe
+                                        className="w-full h-full rounded-lg"
+                                        src={currentVideoUrl}
+                                        title="YouTube video player"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            )}
                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                                 <div>
                                     <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={400} className="rounded-lg object-cover" />
