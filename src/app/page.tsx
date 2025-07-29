@@ -18,9 +18,6 @@ export default function Home() {
           <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
             Track your wellness with ease and peace of mind.
           </p>
-          <Button size="lg" className="mt-8 px-8 py-6 text-base font-semibold shadow-lg shadow-primary/30 hover:shadow-xl transition-shadow">
-            Get Started Free
-          </Button>
         </section>
 
         <WellnessDashboard />
