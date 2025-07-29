@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay } from 'date-fns';
+import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, differenceInDays } from 'date-fns';
 import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,8 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
-import { Bar as RechartsBar } from 'recharts';
+import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis } from 'recharts';
+import { Label } from '@/components/ui/label';
 
 const GOALS_KEY = 'glowher-fitness-goals';
 const LOG_PREFIX = 'glowher-fitness-log-';
@@ -167,7 +168,7 @@ export default function FitnessGoalsPage() {
                         currentCycleStartDate = addDays(currentCycleStartDate, data.cycleLength);
                     }
                     const nextPeriodStart = addDays(currentCycleStartDate, data.cycleLength);
-                    const ovulationDay = addDays(nextPeriodStart, data.lutealPhaseLength || 14);
+                    const ovulationDay = addDays(nextPeriodStart, -(data.lutealPhaseLength || 14));
                     const periodEnd = addDays(currentCycleStartDate, 4);
 
                     if (isWithinInterval(today, { start: currentCycleStartDate, end: periodEnd })) setCurrentPhase("Menstrual");
