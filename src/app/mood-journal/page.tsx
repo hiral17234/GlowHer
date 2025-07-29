@@ -47,6 +47,7 @@ const themes = [
     { name: 'Theme 8', url: 'https://i.pinimg.com/736x/c9/3c/90/c93c90c8be46f81e413eee311036c58d.jpg' },
     { name: 'Theme 9', url: 'https://i.pinimg.com/736x/cd/4b/90/cd4b901784885e7a2e0d577ab99500f2.jpg' },
     { name: 'Theme 10', url: 'https://i.pinimg.com/736x/d4/9f/3d/d49f3d3546a8e3f7ff584331dbd56c0b.jpg' },
+    { name: 'Theme 11', url: 'https://i.pinimg.com/originals/f7/52/0b/f7520b5d577dedee57e9d6d511c7d4f1.png' },
 ];
 
 const FormSchema = z.object({

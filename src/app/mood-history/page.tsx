@@ -106,8 +106,7 @@ export default function MoodHistoryPage() {
                                     <div 
                                         className="prose max-w-none text-foreground bg-muted/50 p-3 rounded-md border min-h-[100px] bg-cover bg-center"
                                         style={{ 
-                                            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), ${log.themeUrl ? `url(${log.themeUrl})` : 'none'}`,
-                                            color: 'inherit'
+                                            backgroundImage: `${log.themeUrl ? `url(${log.themeUrl})` : 'none'}`,
                                         }}
                                         dangerouslySetInnerHTML={{ __html: log.notes }} 
                                     >
