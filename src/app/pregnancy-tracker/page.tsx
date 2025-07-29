@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, addWeeks, subDays, diffe
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,27 +35,29 @@ type PregnancyDetails = {
   trimester: number;
 };
 
-// Simplified fetal development data
+// Expanded fetal development data
 const weeklyDevelopment = Array.from({ length: 41 }, (_, i) => {
     const week = i + 1;
     let size = "a poppy seed";
     if (week > 4) size = "an apple seed";
-    if (week > 8) size = "a raspberry";
-    if (week > 12) size = "a lime";
-    if (week > 16) size = "an avocado";
-    if (week > 20) size = "a banana";
-    if (week > 24) size = "an ear of corn";
-    if (week > 28) size = "an eggplant";
-    if (week > 32) size = "a squash";
-    if (week > 36) size = "a head of romaine lettuce";
-    if (week > 39) size = "a small pumpkin";
+    if (week > 8) size = "a raspberry, and weighs about 1 gram";
+    if (week > 12) size = "a lime, about 3 inches long";
+    if (week > 16) size = "an avocado, about 4.5 inches long";
+    if (week > 20) size = "a banana, about 10 inches from head to heel";
+    if (week > 24) size = "an ear of corn, and weighs over 1 pound";
+    if (week > 28) size = "an eggplant, weighing almost 2.5 pounds";
+    if (week > 32) size = "a squash, weighing about 4 pounds";
+    if (week > 36) size = "a head of romaine lettuce, over 6 pounds";
+    if (week > 39) size = "a small pumpkin, and is ready for birth";
+
     return {
         week: week,
-        title: `Week ${week}: Your Little One`,
+        title: `Week ${week}: Your Journey`,
         size: `Your baby is about the size of ${size}.`,
-        development: `Key developments this week include the formation of the neural tube and the heart beginning to beat. Keep taking your prenatal vitamins!`,
-        symptoms: `You may experience fatigue, nausea, and breast tenderness. These are common symptoms as your body adjusts.`,
-        tips: "Stay hydrated and eat small, frequent meals to combat nausea. Listen to your body and rest when you need to.",
+        development: `This week, crucial organ systems are forming. The heart is beginning to beat, and the neural tube, which becomes the brain and spinal cord, is developing. Limbs buds are starting to sprout.`,
+        bodyChanges: "You might not look pregnant yet, but hormonal changes are in full swing. Increased progesterone can lead to fatigue, and hCG levels can cause morning sickness. Your breasts may feel tender and swollen.",
+        symptoms: `Fatigue, nausea (morning sickness), frequent urination, breast tenderness, and mood swings are very common. Some experience light spotting, which can be normal but should be mentioned to a doctor.`,
+        tips: "Start taking a prenatal vitamin with folic acid immediately. Stay hydrated, eat small, frequent meals to combat nausea, and listen to your body—rest when you feel tired. Establish care with an OB/GYN or midwife.",
         imageUrl: "https://i.pinimg.com/1200x/0e/40/40/0e4040ee25da30655d857de0fb12943b.jpg",
         aiHint: "fetus development"
     }
@@ -82,8 +84,7 @@ export default function PregnancyTrackerPage() {
         data.dueDate = new Date(data.dueDate);
         calculateDetails(data.dueDate);
       }
-    } catch (error) {
-      console.error("Could not retrieve data from localStorage", error);
+    } catch (error)      console.error("Could not retrieve data from localStorage", error);
     }
   }, []);
 
@@ -92,14 +93,22 @@ export default function PregnancyTrackerPage() {
     const startDate = subDays(dueDate, 280); // 40 weeks * 7 days
     
     const totalDays = differenceInDays(today, startDate);
+    if (totalDays < 0) {
+        toast({
+            variant: 'destructive',
+            title: "Invalid Date",
+            description: "The calculated pregnancy start date is in the future. Please check your entered date.",
+        });
+        return;
+    }
     const gestationalAgeWeeks = Math.floor(totalDays / 7);
     const gestationalAgeDays = totalDays % 7;
 
     const daysLeft = differenceInDays(dueDate, today);
 
     let trimester = 1;
-    if (gestationalAgeWeeks > 27) trimester = 3;
-    else if (gestationalAgeWeeks > 13) trimester = 2;
+    if (gestationalAgeWeeks >= 28) trimester = 3;
+    else if (gestationalAgeWeeks >= 14) trimester = 2;
 
     const details = {
         dueDate,
@@ -195,27 +204,27 @@ export default function PregnancyTrackerPage() {
                                     <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={400} className="rounded-lg object-cover" />
                                 </div>
                                 <Tabs defaultValue="development" className="w-full">
-                                    <TabsList className="grid w-full grid-cols-3">
-                                        <TabsTrigger value="development"><Milestone className="mr-2 h-4 w-4" />Development</TabsTrigger>
-                                        <TabsTrigger value="symptoms"><Heart className="mr-2 h-4 w-4" />Symptoms</TabsTrigger>
+                                    <TabsList className="grid w-full grid-cols-4">
+                                        <TabsTrigger value="development"><Milestone className="mr-2 h-4 w-4" />Baby</TabsTrigger>
+                                        <TabsTrigger value="body"><Heart className="mr-2 h-4 w-4" />Body</TabsTrigger>
+                                        <TabsTrigger value="symptoms">Symptoms</TabsTrigger>
                                         <TabsTrigger value="tips"><Lightbulb className="mr-2 h-4 w-4"/>Tips</TabsTrigger>
                                     </TabsList>
-                                    <TabsContent value="development" className="mt-4 prose max-w-none text-foreground">
-                                        <p>{currentWeekData.development}</p>
-                                    </TabsContent>
-                                    <TabsContent value="symptoms" className="mt-4 prose max-w-none text-foreground">
-                                        <p>{currentWeekData.symptoms}</p>
-                                    </TabsContent>
-                                    <TabsContent value="tips" className="mt-4 prose max-w-none text-foreground">
-                                        <p>{currentWeekData.tips}</p>
-                                    </TabsContent>
+                                    <TabsContent value="development" className="mt-4 prose max-w-none text-foreground text-sm"><p>{currentWeekData.development}</p></TabsContent>
+                                    <TabsContent value="body" className="mt-4 prose max-w-none text-foreground text-sm"><p>{currentWeekData.bodyChanges}</p></TabsContent>
+                                    <TabsContent value="symptoms" className="mt-4 prose max-w-none text-foreground text-sm"><p>{currentWeekData.symptoms}</p></TabsContent>
+                                    <TabsContent value="tips" className="mt-4 prose max-w-none text-foreground text-sm"><p>{currentWeekData.tips}</p></TabsContent>
                                 </Tabs>
                            </div>
                         </CardContent>
                     </Card>
                 )}
 
-                <div className="mt-8 flex justify-center">
+                <div className="mt-8 flex justify-center gap-4">
+                    <Button onClick={() => router.push('/pregnancy-journal')}>
+                        <ClipboardPlus className="mr-2 h-4 w-4"/>
+                        My Pregnancy Journal
+                    </Button>
                     <Button variant="outline" onClick={() => setPregnancyDetails(null)}>Reset / Enter New Date</Button>
                 </div>
 
@@ -250,7 +259,7 @@ export default function PregnancyTrackerPage() {
                             name="calculationMethod"
                             render={({ field }) => (
                                 <FormItem>
-                                <Tabs defaultValue={field.value} onValueChange={field.onChange} className="w-full">
+                                <Tabs defaultValue={field.value} onValueChange={(value) => field.onChange(value as 'dueDate' | 'lmp')} className="w-full">
                                     <TabsList className="grid w-full grid-cols-2">
                                         <TabsTrigger value="dueDate">Use Due Date</TabsTrigger>
                                         <TabsTrigger value="lmp">Use Last Period</TabsTrigger>
