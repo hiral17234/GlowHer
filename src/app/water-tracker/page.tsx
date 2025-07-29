@@ -156,7 +156,7 @@ export default function WaterTrackerPage() {
         }
     } catch(e) { console.error(e)}
 
-  }, [currentDateKey, settingsForm, reminderForm]);
+  }, [currentDateKey]);
 
   const playReminderSound = () => {
     if (audioRef.current) {
@@ -199,7 +199,7 @@ export default function WaterTrackerPage() {
         playReminderSound();
       }
     }
-  }, [dailyLog, currentDateKey, reminderForm, toast]);
+  }, [dailyLog, currentDateKey]);
 
   const handleSetUnit = (newUnit: Unit) => {
     const oldGoalInCups = goal;
