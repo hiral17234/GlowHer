@@ -49,7 +49,9 @@ export function WaterLogHistory() {
                 let totalIntake = 0;
                 if (savedLog) {
                     const log: DailyLog = JSON.parse(savedLog);
-                    totalIntake = log.entries.reduce((sum, entry) => sum + entry.amount, 0);
+                    if (log && Array.isArray(log.entries)) {
+                        totalIntake = log.entries.reduce((sum, entry) => sum + entry.amount, 0);
+                    }
                 }
 
                 data.push({
