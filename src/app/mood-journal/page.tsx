@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
