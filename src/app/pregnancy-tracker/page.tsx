@@ -84,7 +84,8 @@ export default function PregnancyTrackerPage() {
         data.dueDate = new Date(data.dueDate);
         calculateDetails(data.dueDate);
       }
-    } catch (error)      console.error("Could not retrieve data from localStorage", error);
+    } catch (error) {
+      console.error("Could not retrieve data from localStorage", error);
     }
   }, []);
 
