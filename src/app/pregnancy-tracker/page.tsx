@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, addWeeks, subDays, diffe
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video, CheckSquare, Square, ThumbsUp } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,13 +19,25 @@ import { cn } from '@/lib/utils';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 
-const formSchema = z.object({
+
+const pregnancyFormSchema = z.object({
   calculationMethod: z.enum(['dueDate', 'lmp']),
   date: z.date({ required_error: "A date is required." }),
 });
 
-type PregnancyFormData = z.infer<typeof formSchema>;
+const symptomFormSchema = z.object({
+    symptoms: z.array(z.string()).optional(),
+    notes: z.string().max(500, "Notes must be 500 characters or less.").optional(),
+});
+
+
+type PregnancyFormData = z.infer<typeof pregnancyFormSchema>;
+type SymptomFormData = z.infer<typeof symptomFormSchema>;
+
 
 type PregnancyDetails = {
   dueDate: Date;
@@ -34,6 +46,18 @@ type PregnancyDetails = {
   daysLeft: number;
   trimester: number;
 };
+
+const pregnancySymptoms = [
+    { id: 'nausea', label: 'Nausea' },
+    { id: 'fatigue', label: 'Fatigue' },
+    { id: 'backPain', label: 'Back Pain' },
+    { id: 'swelling', label: 'Swelling' },
+    { id: 'cravingsAversions', label: 'Food Cravings/Aversions' },
+];
+
+const PREGNANCY_TRACKER_KEY = 'glowher-pregnancy-tracker';
+const PREGNANCY_SYMPTOM_LOG_PREFIX = 'glowher-pregnancy-symptom-';
+
 
 // Expanded fetal development data
 const weeklyDevelopment = [
@@ -498,16 +522,25 @@ export default function PregnancyTrackerPage() {
   const { toast } = useToast();
   const [pregnancyDetails, setPregnancyDetails] = useState<PregnancyDetails | null>(null);
 
-  const form = useForm<PregnancyFormData>({
-    resolver: zodResolver(formSchema),
+  const pregnancyForm = useForm<PregnancyFormData>({
+    resolver: zodResolver(pregnancyFormSchema),
     defaultValues: {
       calculationMethod: 'dueDate',
     },
   });
 
+  const symptomForm = useForm<SymptomFormData>({
+    resolver: zodResolver(symptomFormSchema),
+    defaultValues: {
+        symptoms: [],
+        notes: "",
+    },
+  });
+
+
   useEffect(() => {
     try {
-      const storedData = localStorage.getItem('glowher-pregnancy-tracker');
+      const storedData = localStorage.getItem(PREGNANCY_TRACKER_KEY);
       if (storedData) {
         const data = JSON.parse(storedData);
         data.dueDate = new Date(data.dueDate);
@@ -515,6 +548,16 @@ export default function PregnancyTrackerPage() {
       }
     } catch (error) {
         console.error("Could not retrieve data from localStorage", error);
+    }
+
+    try {
+        const todayKey = format(new Date(), 'yyyy-MM-dd');
+        const storedSymptoms = localStorage.getItem(`${PREGNANCY_SYMPTOM_LOG_PREFIX}${todayKey}`);
+        if(storedSymptoms) {
+            symptomForm.reset(JSON.parse(storedSymptoms));
+        }
+    } catch (error) {
+        console.error("Could not retrieve symptoms from localStorage", error);
     }
   }, []);
 
@@ -550,12 +593,12 @@ export default function PregnancyTrackerPage() {
     
     setPregnancyDetails(details);
     try {
-        localStorage.setItem('glowher-pregnancy-tracker', JSON.stringify({ dueDate }));
+        localStorage.setItem(PREGNANCY_TRACKER_KEY, JSON.stringify({ dueDate }));
     } catch(e) { console.error(e) }
 
   }
 
-  function onSubmit(values: PregnancyFormData) {
+  function onPregnancyFormSubmit(values: PregnancyFormData) {
     let calculatedDueDate: Date;
     if (values.calculationMethod === 'lmp') {
       calculatedDueDate = addDays(values.date, 280); // Naegele's rule
@@ -571,9 +614,28 @@ export default function PregnancyTrackerPage() {
     });
   }
   
+  function onSymptomFormSubmit(values: SymptomFormData) {
+    try {
+        const todayKey = format(new Date(), 'yyyy-MM-dd');
+        localStorage.setItem(`${PREGNANCY_SYMPTOM_LOG_PREFIX}${todayKey}`, JSON.stringify(values));
+        toast({
+            title: "Symptoms Logged!",
+            description: "Today's symptoms have been saved successfully.",
+        });
+    } catch (error) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Could not save your symptoms. Please try again.",
+        });
+    }
+  }
+
+
   const currentWeekData = pregnancyDetails ? weeklyDevelopment[pregnancyDetails.gestationalAgeWeeks] : null;
   const currentVideoUrl = pregnancyDetails ? trimesterVideos[pregnancyDetails.trimester] : null;
   const babyLookVideoUrl = pregnancyDetails ? babyLookVideos[pregnancyDetails.trimester] : null;
+  const loggedSymptoms = symptomForm.watch('symptoms') || [];
 
   if (pregnancyDetails) {
     return (
@@ -588,13 +650,13 @@ export default function PregnancyTrackerPage() {
                 </div>
             </header>
 
-            <main className="flex-grow container mx-auto px-4 py-8">
-                <div className="text-center mb-8">
+            <main className="flex-grow container mx-auto px-4 py-8 space-y-8">
+                <div className="text-center">
                     <h1 className="font-headline text-4xl md:text-5xl font-bold">Your Pregnancy Journey</h1>
                     <p className="mt-2 text-lg text-muted-foreground">You are <span className="text-primary font-semibold">{pregnancyDetails.gestationalAgeWeeks} weeks</span> and <span className="text-primary font-semibold">{pregnancyDetails.gestationalAgeDays} days</span> pregnant.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="shadow-sm">
                         <CardHeader className="flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium">Estimated Due Date</CardTitle>
@@ -625,7 +687,7 @@ export default function PregnancyTrackerPage() {
                 </div>
 
                 {currentWeekData && (
-                    <Card className="shadow-lg mb-8">
+                    <Card className="shadow-lg">
                         <CardHeader>
                              <CardTitle className="font-headline text-3xl">{currentWeekData.title}</CardTitle>
                              <CardDescription>{currentWeekData.size}</CardDescription>
@@ -662,6 +724,95 @@ export default function PregnancyTrackerPage() {
                         </CardContent>
                     </Card>
                 )}
+
+                <Card className="shadow-lg">
+                    <CardHeader>
+                        <CardTitle className="font-headline text-2xl">How Are You Feeling Today?</CardTitle>
+                        <CardDescription>Log your daily symptoms to keep track of your well-being.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...symptomForm}>
+                            <form onSubmit={symptomForm.handleSubmit(onSymptomFormSubmit)} className="space-y-6">
+                                <FormField
+                                    control={symptomForm.control}
+                                    name="symptoms"
+                                    render={() => (
+                                    <FormItem>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                        {pregnancySymptoms.map((item) => (
+                                            <FormField
+                                            key={item.id}
+                                            control={symptomForm.control}
+                                            name="symptoms"
+                                            render={({ field }) => {
+                                                return (
+                                                <FormItem
+                                                    key={item.id}
+                                                    className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-accent/50 transition-colors"
+                                                >
+                                                    <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value?.includes(item.id)}
+                                                        onCheckedChange={(checked) => {
+                                                        return checked
+                                                            ? field.onChange([...(field.value || []), item.id])
+                                                            : field.onChange(
+                                                                field.value?.filter(
+                                                                (value) => value !== item.id
+                                                                )
+                                                            );
+                                                        }}
+                                                    />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal flex items-center gap-2 cursor-pointer">
+                                                     {item.label}
+                                                    </FormLabel>
+                                                </FormItem>
+                                                );
+                                            }}
+                                            />
+                                        ))}
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={symptomForm.control}
+                                    name="notes"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Custom Symptoms or Notes</FormLabel>
+                                        <FormControl>
+                                        <Textarea
+                                            placeholder="Anything else to add?"
+                                            className="resize-none"
+                                            {...field}
+                                        />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <div className="flex items-center gap-4">
+                                     <Button type="submit">
+                                        <ThumbsUp className="mr-2 h-4 w-4" />
+                                        Save Today's Symptoms
+                                    </Button>
+                                    {loggedSymptoms.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 items-center">
+                                            <span className="text-sm font-semibold">Logged today:</span>
+                                            {loggedSymptoms.map(symptomId => {
+                                                const symptom = pregnancySymptoms.find(s => s.id === symptomId);
+                                                return symptom ? <Badge key={symptomId} variant="secondary">{symptom.label}</Badge> : null;
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
 
                 {babyLookVideoUrl && (
                      <Card className="shadow-lg">
@@ -717,10 +868,10 @@ export default function PregnancyTrackerPage() {
                 <CardDescription className="text-center">Calculate your due date to begin tracking.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <Form {...pregnancyForm}>
+                    <form onSubmit={pregnancyForm.handleSubmit(onPregnancyFormSubmit)} className="space-y-6">
                          <FormField
-                            control={form.control}
+                            control={pregnancyForm.control}
                             name="calculationMethod"
                             render={({ field }) => (
                                 <FormItem>
@@ -735,12 +886,12 @@ export default function PregnancyTrackerPage() {
                          />
 
                         <FormField
-                            control={form.control}
+                            control={pregnancyForm.control}
                             name="date"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col items-center">
                                 <FormLabel className="text-lg font-semibold">
-                                    {form.watch('calculationMethod') === 'dueDate' ? 'Your Estimated Due Date' : 'First Day of Last Period (LMP)'}
+                                    {pregnancyForm.watch('calculationMethod') === 'dueDate' ? 'Your Estimated Due Date' : 'First Day of Last Period (LMP)'}
                                 </FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -759,7 +910,7 @@ export default function PregnancyTrackerPage() {
                                         mode="single"
                                         selected={field.value}
                                         onSelect={field.onChange}
-                                        disabled={form.watch('calculationMethod') === 'lmp' ? (date) => date > new Date() : undefined}
+                                        disabled={pregnancyForm.watch('calculationMethod') === 'lmp' ? (date) => date > new Date() : undefined}
                                         initialFocus
                                     />
                                     </PopoverContent>
@@ -770,7 +921,7 @@ export default function PregnancyTrackerPage() {
                         />
                         <div className="flex flex-col gap-2 pt-4">
                             <Button type="submit" size="lg" className="w-full">
-                                {form.watch('calculationMethod') === 'lmp' ? 'Calculate Due Date & Track' : 'Track My Pregnancy'}
+                                {pregnancyForm.watch('calculationMethod') === 'lmp' ? 'Calculate Due Date & Track' : 'Track My Pregnancy'}
                             </Button>
                         </div>
                     </form>
