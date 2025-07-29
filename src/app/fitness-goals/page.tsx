@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, differenceInDays } from 'date-fns';
-import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle } from 'lucide-react';
+import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, Yoga } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -227,6 +227,7 @@ export default function FitnessGoalsPage() {
     
     const relevantSuggestions = isPregnant ? pregnancyExercises[pregnancyTrimester!] : cycleExercises[currentPhase!];
     const pregnancyVideoUrl = isPregnant && pregnancyTrimester ? pregnancyExercises[pregnancyTrimester!]?.videoUrl : null;
+    const prenatalYogaVideoUrl = "https://www.youtube.com/embed/zmUJWKM98hM";
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -415,31 +416,51 @@ export default function FitnessGoalsPage() {
                     </div>
                 </div>
 
-                {pregnancyVideoUrl && (
-                    <div className="mt-12">
-                         <div className="flex items-center justify-center mb-4 p-4 rounded-md bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800">
-                            <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400 mr-3" />
-                            <p className="font-bold text-red-800 dark:text-red-200 text-center">
-                                Do consult your doctor before doing this and proceed only if comfortable.
-                            </p>
-                        </div>
+                {isPregnant && (
+                     <div className="mt-12 space-y-8">
+                        <div className="flex items-center justify-center mb-4 p-4 rounded-md bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800">
+                           <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400 mr-3" />
+                           <p className="font-bold text-red-800 dark:text-red-200 text-center">
+                               Do consult your doctor before doing this and proceed only if comfortable.
+                           </p>
+                       </div>
+                        {pregnancyVideoUrl && (
+                           <Card className="shadow-xl">
+                                <CardHeader>
+                                   <CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle>
+                               </CardHeader>
+                               <CardContent>
+                                   <div className="aspect-video">
+                                       <iframe
+                                           className="w-full h-full rounded-lg"
+                                           src={pregnancyVideoUrl}
+                                           title={`Pregnancy Workout for ${pregnancyTrimester}`}
+                                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                           allowFullScreen
+                                       ></iframe>
+                                   </div>
+                               </CardContent>
+                           </Card>
+                       )}
+                       
                         <Card className="shadow-xl">
-                             <CardHeader>
-                                <CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2"><Yoga /> Guided Prenatal Yoga</CardTitle>
+                                <CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="aspect-video">
                                     <iframe
                                         className="w-full h-full rounded-lg"
-                                        src={pregnancyVideoUrl}
-                                        title={`Pregnancy Workout for ${pregnancyTrimester}`}
+                                        src={prenatalYogaVideoUrl}
+                                        title="Guided Prenatal Yoga"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
                                     ></iframe>
                                 </div>
                             </CardContent>
                         </Card>
-                    </div>
+                   </div>
                 )}
             </main>
         </div>
