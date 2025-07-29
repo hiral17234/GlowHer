@@ -121,7 +121,7 @@ export default function PeriodTrackerPage() {
     };
     setPredictions(newPredictions);
 
-    // Calculate current phase more accurately
+    // Calculate current phase
     if (isWithinInterval(today, { start: lastPeriod, end: periodEnd })) {
       setCurrentPhase("Menstrual");
     } else if (isSameDay(today, ovulationDay)) {
@@ -130,9 +130,13 @@ export default function PeriodTrackerPage() {
       setCurrentPhase("Follicular");
     } else if (isWithinInterval(today, { start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1) })) {
       setCurrentPhase("Luteal");
-    } else if (differenceInDays(today, periodEnd) > 0 && differenceInDays(ovulationDay, today) > 0) {
-      // Catch-all for follicular if other checks fail
+    } else if (differenceInDays(today, lastPeriod) > 0 && differenceInDays(ovulationDay, today) > 0) {
       setCurrentPhase("Follicular");
+    } else if (differenceInDays(today, ovulationDay) > 0 && differenceInDays(nextPeriodStart, today) > 0) {
+      setCurrentPhase("Luteal");
+    } else {
+        // Default to follicular if somehow it falls through (e.g. on the exact start of a new cycle after predictions)
+        setCurrentPhase("Follicular");
     }
     
     const daysUntilNextPeriod = differenceInDays(nextPeriodStart, today);
@@ -303,7 +307,7 @@ export default function PeriodTrackerPage() {
                     <CardTitle>Next Period In</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-4xl font-bold text-primary">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
+                    <p className="text-4xl font-bold text-primary-foreground">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
                   </CardContent>
                 </Card>
                 <Card>
