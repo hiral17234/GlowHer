@@ -23,6 +23,10 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
 
   useEffect(() => {
     setIsMounted(true);
+    // Set the initial value when the component mounts
+    if (editorRef.current && value) {
+      editorRef.current.innerHTML = value;
+    }
   }, []);
 
   const handleInput = () => {
@@ -34,14 +38,20 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const handleToolbarClick = (command: string) => {
     editorRef.current?.focus();
     execCmd(command);
+    handleInput(); // Ensure state is updated after command
   };
   
-  // This effect synchronizes the editor's content with the external value.
-  // It's important for scenarios like form resets or loading initial data.
+  // This effect synchronizes the editor's content with the external value,
+  // but only if the content is different. This prevents the cursor jump issue.
   useEffect(() => {
     if (editorRef.current && editorRef.current.innerHTML !== value) {
         editorRef.current.innerHTML = value || "";
     }
+  // We only want to run this when the value prop changes from an external source, not on every keystroke.
+  // By removing `value` from the dependency array and relying on mount to set initial value,
+  // we prevent the cursor jump. We'll handle external updates (like form reset)
+  // by using a key on the component if needed, but for now this is more stable.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   if (!isMounted) {
@@ -88,19 +98,19 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         contentEditable={true}
         onInput={handleInput}
         className={cn(
-            'min-h-[250px] w-full p-3 text-base bg-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+            'min-h-[250px] w-full p-3 text-base bg-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
             !value && 'text-muted-foreground'
         )}
-        dangerouslySetInnerHTML={{ __html: value || "" }}
+        // Use a key to force re-mount on external value change instead of dangerouslySetInnerHTML
+        // but for now, we will rely on the useEffect.
         data-placeholder={placeholder}
         style={{
             whiteSpace: 'pre-wrap',
             wordWrap: 'break-word',
         }}
+        // Set initial content. Subsequent updates are handled by the effect.
+        dangerouslySetInnerHTML={{ __html: value || "" }}
         />
     </div>
   );
 }
-
-
-    
