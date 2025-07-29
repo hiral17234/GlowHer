@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { addDays, format, differenceInDays, startOfDay, isWithinInterval } from 'date-fns';
+import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSameDay } from 'date-fns';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -38,22 +38,22 @@ type Predictions = {
 const phaseTips = {
     Menstrual: {
         title: "Menstrual Phase",
-        tip: "Focus on rest and nourishment. Gentle activities like walking or stretching can be beneficial. Iron-rich foods are your friend.",
+        tip: "This is day 1 of your cycle. Your body is shedding the uterine lining. Focus on rest and nourishment. Gentle activities like walking or stretching can be beneficial.",
         color: "bg-red-500/10 text-red-700",
     },
     Follicular: {
         title: "Follicular Phase",
-        tip: "Energy levels are rising! It's a great time for creative projects and more intense workouts. Your body is preparing for ovulation.",
+        tip: "After your period, your energy levels start rising as your body prepares for ovulation. It's a great time for creative projects and more intense workouts.",
         color: "bg-blue-500/10 text-blue-700",
     },
     Ovulatory: {
         title: "Ovulatory Phase",
-        tip: "Peak energy and fertility. Connect with others and enjoy high-impact workouts. Listen to your body's cues.",
+        tip: "This is your most fertile time. You're likely at your peak energy. It's a great day for connecting with others and enjoying high-impact activities.",
         color: "bg-green-500/10 text-green-700",
     },
     Luteal: {
         title: "Luteal Phase",
-        tip: "Energy may start to decrease. Focus on self-care and calming activities. Complex carbs can help with mood and cravings.",
+        tip: "After ovulation, your energy may start to decrease as your body prepares for the next period. Focus on self-care and calming activities. Complex carbs can help with mood.",
         color: "bg-yellow-500/10 text-yellow-700",
     },
 };
@@ -103,11 +103,16 @@ export default function PeriodTrackerPage() {
   }, []);
 
   function calculatePredictions(data: CycleData) {
+    const today = startOfDay(new Date());
+    const lastPeriod = startOfDay(data.lastPeriodDate);
+    const cycleLength = data.cycleLength;
     const lutealPhase = data.lutealPhaseLength || 14;
-    const nextPeriodStart = addDays(data.lastPeriodDate, data.cycleLength);
-    const ovulationDay = addDays(nextPeriodStart, -lutealPhase);
-    const fertileWindowStart = addDays(ovulationDay, -5);
-    const fertileWindowEnd = addDays(ovulationDay, 1);
+    
+    const nextPeriodStart = startOfDay(addDays(lastPeriod, cycleLength));
+    const ovulationDay = startOfDay(addDays(nextPeriodStart, -lutealPhase));
+    const fertileWindowStart = startOfDay(addDays(ovulationDay, -5));
+    const fertileWindowEnd = startOfDay(addDays(ovulationDay, 1));
+    const periodEnd = startOfDay(addDays(lastPeriod, 4)); // Assume 5-day period
 
     const newPredictions = {
       nextPeriod: Array.from({ length: 5 }, (_, i) => addDays(nextPeriodStart, i)),
@@ -116,26 +121,22 @@ export default function PeriodTrackerPage() {
     };
     setPredictions(newPredictions);
 
-    // Calculate current phase
-    const today = startOfDay(new Date());
-    const daysIntoCycle = differenceInDays(today, data.lastPeriodDate);
-    
-    if (daysIntoCycle >= 0 && daysIntoCycle < 5) { // Assuming period lasts 5 days
+    // Calculate current phase more accurately
+    if (isWithinInterval(today, { start: lastPeriod, end: periodEnd })) {
       setCurrentPhase("Menstrual");
-    } else if (isWithinInterval(today, { start: startOfDay(fertileWindowStart), end: startOfDay(fertileWindowEnd) })) {
-        if(isWithinInterval(today, { start: startOfDay(ovulationDay), end: startOfDay(ovulationDay) })) {
-            setCurrentPhase("Ovulatory");
-        } else {
-            setCurrentPhase("Follicular"); // Fertile window is part of follicular and ovulatory
-        }
-    } else if (isWithinInterval(today, {start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1)})) {
+    } else if (isSameDay(today, ovulationDay)) {
+        setCurrentPhase("Ovulatory");
+    } else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: addDays(ovulationDay, -1) })) {
+      setCurrentPhase("Follicular");
+    } else if (isWithinInterval(today, { start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1) })) {
       setCurrentPhase("Luteal");
-    } else { // Default to follicular if not in any other phase yet
+    } else if (differenceInDays(today, periodEnd) > 0 && differenceInDays(ovulationDay, today) > 0) {
+      // Catch-all for follicular if other checks fail
       setCurrentPhase("Follicular");
     }
     
-    const daysUntilNextPeriod = differenceInDays(startOfDay(nextPeriodStart), today);
-    setCountdown(daysUntilNextPeriod > 0 ? daysUntilNextPeriod : 0);
+    const daysUntilNextPeriod = differenceInDays(nextPeriodStart, today);
+    setCountdown(daysUntilNextPeriod >= 0 ? daysUntilNextPeriod : 0);
   }
 
   function onSubmit(values: CycleData) {
@@ -228,16 +229,16 @@ export default function PeriodTrackerPage() {
                       name="lutealPhaseLength"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex items-center gap-2">
+                           <div className="flex items-center gap-2">
                              <FormLabel>Luteal Phase Length (optional)</FormLabel>
                              <TooltipProvider>
                                <Tooltip>
-                                 <TooltipTrigger>
+                                 <TooltipTrigger type="button">
                                    <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
                                  </TooltipTrigger>
                                  <TooltipContent>
                                    <p className="max-w-xs">
-                                    The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. This is different from your period, which is when you bleed.
+                                    The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. This is different from your period (menstruation), which is when you bleed.
                                    </p>
                                  </TooltipContent>
                                </Tooltip>
@@ -267,7 +268,7 @@ export default function PeriodTrackerPage() {
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground pt-2">
                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-red-400/80"></span> Predicted Period</div>
                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-blue-400/80"></span> Fertile Window</div>
-                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-green-500/80"></span> Ovulation</div>
+                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-green-500/80"></span> Ovulation Day</div>
                     </div>
                 </CardHeader>
                 <CardContent className="flex justify-center">
