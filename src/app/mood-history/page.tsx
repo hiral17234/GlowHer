@@ -25,6 +25,7 @@ type LogData = {
   customMood?: string;
   moodIntensity?: number[];
   notes?: string;
+  themeUrl?: string;
 };
 
 export default function MoodHistoryPage() {
@@ -98,9 +99,17 @@ export default function MoodHistoryPage() {
                         {log.notes && (
                             <div className="flex items-start gap-2">
                                 <BookText className="h-5 w-5 text-secondary-foreground mt-1" />
-                                <div>
+                                <div className="w-full">
                                     <h4 className="font-semibold mb-2">Journal Entry:</h4>
-                                    <p className="text-muted-foreground bg-muted/50 p-3 rounded-md border">{log.notes}</p>
+                                    <div 
+                                        className="text-foreground bg-muted/50 p-3 rounded-md border min-h-[100px] bg-cover bg-center"
+                                        style={{ backgroundImage: log.themeUrl ? `url(${log.themeUrl})` : 'none' }}
+                                    >
+                                      <div 
+                                        className="prose prose-sm max-w-none" 
+                                        dangerouslySetInnerHTML={{ __html: log.notes }} 
+                                      />
+                                    </div>
                                 </div>
                             </div>
                         )}
