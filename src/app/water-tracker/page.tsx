@@ -3,11 +3,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSameDay, subDays } from 'date-fns';
+import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSameDay, subDays, differenceInHours } from 'date-fns';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { ChevronLeft, Droplet, Plus, Minus, GlassWater, Info, Goal, History } from 'lucide-react';
+import { ChevronLeft, Droplet, Plus, Minus, GlassWater, Info, Goal, History, Bell } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,12 +20,21 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { WaterLogHistory } from '@/components/glowher/WaterLogHistory';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const FormSchema = z.object({
+
+const settingsFormSchema = z.object({
   goal: z.coerce.number().min(1, "Goal must be at least 1.").positive(),
 });
 
-type SettingsFormData = z.infer<typeof FormSchema>;
+const reminderFormSchema = z.object({
+    remindersEnabled: z.boolean(),
+    reminderFrequency: z.coerce.number(), // in hours
+});
+
+type SettingsFormData = z.infer<typeof settingsFormSchema>;
+type ReminderFormData = z.infer<typeof reminderFormSchema>;
 type Unit = 'cups' | 'ml' | 'oz';
 type WaterLogEntry = { time: string; amount: number }; // amount in cups
 type DailyLog = {
@@ -68,10 +77,18 @@ export default function WaterTrackerPage() {
   const [unit, setUnit] = useState<Unit>('cups');
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
 
-  const form = useForm<SettingsFormData>({
-    resolver: zodResolver(FormSchema),
+  const settingsForm = useForm<SettingsFormData>({
+    resolver: zodResolver(settingsFormSchema),
     defaultValues: {
       goal: 8,
+    },
+  });
+
+  const reminderForm = useForm<ReminderFormData>({
+    resolver: zodResolver(reminderFormSchema),
+    defaultValues: {
+        remindersEnabled: false,
+        reminderFrequency: 2,
     },
   });
 
@@ -83,7 +100,11 @@ export default function WaterTrackerPage() {
             const { goal: savedGoal, unit: savedUnit } = JSON.parse(savedSettings);
             setGoal(savedGoal);
             setUnit(savedUnit);
-            form.setValue('goal', savedGoal * unitConversions[savedUnit]);
+            settingsForm.setValue('goal', savedGoal * unitConversions[savedUnit]);
+        }
+        const savedReminders = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}reminders`);
+        if (savedReminders) {
+            reminderForm.reset(JSON.parse(savedReminders));
         }
     } catch(e) { console.error(e)}
     
@@ -129,19 +150,42 @@ export default function WaterTrackerPage() {
         }
     } catch(e) { console.error(e)}
 
-  }, [currentDateKey, form]);
+  }, [currentDateKey, settingsForm, reminderForm]);
 
   useEffect(() => {
     try {
         localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${currentDateKey}`, JSON.stringify(dailyLog));
     } catch(e) { console.error(e) }
-  }, [dailyLog, currentDateKey]);
+
+    // Reminder logic
+    const reminderSettings = reminderForm.getValues();
+    if (reminderSettings.remindersEnabled && dailyLog.entries.length > 0) {
+        const lastEntry = dailyLog.entries[dailyLog.entries.length - 1];
+        const hoursSinceLast = differenceInHours(new Date(), new Date(lastEntry.time));
+        if (hoursSinceLast >= reminderSettings.reminderFrequency) {
+            toast({
+                title: "Thirsty?",
+                description: `It's been over ${reminderSettings.reminderFrequency} hours. Time for some water!`,
+            });
+        }
+    } else if (reminderSettings.remindersEnabled && dailyLog.entries.length === 0) {
+        // Initial reminder if no water logged today
+        const now = new Date();
+        if (now.getHours() >= 9) { // Only remind after 9am
+             toast({
+                title: "Good Morning!",
+                description: "Don't forget to start your day with a glass of water!",
+            });
+        }
+    }
+
+  }, [dailyLog, currentDateKey, reminderForm, toast]);
 
   const handleSetUnit = (newUnit: Unit) => {
     const oldGoalInCups = goal;
     const newGoalForDisplay = oldGoalInCups * unitConversions[newUnit];
     setUnit(newUnit);
-    form.setValue('goal', Math.round(newGoalForDisplay));
+    settingsForm.setValue('goal', Math.round(newGoalForDisplay));
     saveSettings(oldGoalInCups, newUnit);
   };
   
@@ -153,7 +197,7 @@ export default function WaterTrackerPage() {
     }
   };
 
-  const onSubmit = (data: SettingsFormData) => {
+  const onSettingsSubmit = (data: SettingsFormData) => {
     const newGoalInCups = data.goal / unitConversions[unit];
     setGoal(newGoalInCups);
     saveSettings(newGoalInCups, unit);
@@ -163,20 +207,35 @@ export default function WaterTrackerPage() {
     });
   };
 
+  const onReminderSubmit = (data: ReminderFormData) => {
+    try {
+        localStorage.setItem(`${LOCAL_STORAGE_PREFIX}reminders`, JSON.stringify(data));
+        toast({
+            title: "Reminder Settings Saved!",
+            description: `Your preferences have been updated.`,
+        });
+    } catch (error) {
+        toast({ variant: 'destructive', title: "Error", description: 'Could not save reminder settings.' });
+    }
+  };
+
+
   const totalIntake = dailyLog.entries.reduce((sum, entry) => sum + entry.amount, 0);
 
   const changeIntake = (amount: number) => { // amount is always in cups
     if (amount < 0 && totalIntake <= 0) return;
 
     const newEntry: WaterLogEntry = { time: new Date().toISOString(), amount };
-    const newEntries = [...dailyLog.entries, newEntry];
+    let newEntries: WaterLogEntry[];
 
-    // When removing, we just remove the last entry. A bit simplistic but works.
     if (amount < 0) {
-      newEntries.pop(); // remove the new negative entry
-      newEntries.pop(); // remove the last positive entry
+      const positiveEntries = dailyLog.entries.filter(e => e.amount > 0);
+      positiveEntries.pop(); // Remove the last positive entry
+      newEntries = positiveEntries;
+    } else {
+        newEntries = [...dailyLog.entries, newEntry];
     }
-
+    
     setDailyLog({ entries: newEntries });
 
     if (amount > 0) {
@@ -267,8 +326,8 @@ export default function WaterTrackerPage() {
                         <CardDescription>Set your daily hydration target.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <Form {...settingsForm}>
+                            <form onSubmit={settingsForm.handleSubmit(onSettingsSubmit)} className="space-y-6">
                                 <div className="space-y-2">
                                     <FormLabel>Unit</FormLabel>
                                     <Tabs defaultValue={unit} onValueChange={(value) => handleSetUnit(value as Unit)} className="w-full">
@@ -280,7 +339,7 @@ export default function WaterTrackerPage() {
                                     </Tabs>
                                 </div>
                                 <FormField
-                                    control={form.control}
+                                    control={settingsForm.control}
                                     name="goal"
                                     render={({ field }) => (
                                         <FormItem>
@@ -293,6 +352,63 @@ export default function WaterTrackerPage() {
                                     )}
                                 />
                                 <Button type="submit" className="w-full">Save Goal</Button>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+                
+                 <Card className="shadow-lg">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Bell/> Hydration Reminders</CardTitle>
+                        <CardDescription>Get notified to keep up with your goal.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...reminderForm}>
+                            <form onChange={reminderForm.handleSubmit(onReminderSubmit)} className="space-y-6">
+                                <FormField
+                                    control={reminderForm.control}
+                                    name="remindersEnabled"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <FormLabel>Enable Reminders</FormLabel>
+                                            </div>
+                                            <FormControl>
+                                                <Switch
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                 <FormField
+                                    control={reminderForm.control}
+                                    name="reminderFrequency"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                        <FormLabel>Remind Me Every...</FormLabel>
+                                        <Select 
+                                            onValueChange={field.onChange} 
+                                            defaultValue={String(field.value)}
+                                            disabled={!reminderForm.getValues("remindersEnabled")}
+                                        >
+                                            <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select frequency" />
+                                            </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="1">1 Hour</SelectItem>
+                                                <SelectItem value="2">2 Hours</SelectItem>
+                                                <SelectItem value="3">3 Hours</SelectItem>
+                                                <SelectItem value="4">4 Hours</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             </form>
                         </Form>
                     </CardContent>
@@ -310,7 +426,7 @@ export default function WaterTrackerPage() {
                                     <li key={index} className="flex justify-between border-b pb-1">
                                         <span>{format(new Date(entry.time), 'p')}</span>
                                         <span className="font-medium text-foreground">
-                                            +{entry.amount * unitConversions[unit]} {unit}
+                                            +1 Cup
                                         </span>
                                     </li>
                                 ))}
@@ -329,3 +445,4 @@ export default function WaterTrackerPage() {
   );
 }
 
+  
