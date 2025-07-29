@@ -64,6 +64,7 @@ export default function PeriodTrackerPage() {
   const [predictions, setPredictions] = useState<Predictions | null>(null);
   const [currentPhase, setCurrentPhase] = useState<keyof typeof phaseTips | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
 
   const form = useForm<CycleData>({
     resolver: zodResolver(formSchema),
@@ -108,26 +109,23 @@ export default function PeriodTrackerPage() {
     const cycleLength = data.cycleLength;
     const lutealPhase = data.lutealPhaseLength || 14;
     
-    // Find the most recent cycle start date before or on today
     let currentCycleStartDate = lastPeriod;
-    while (addDays(currentCycleStartDate, cycleLength) < today) {
+    while (addDays(currentCycleStartDate, cycleLength) <= today) {
         currentCycleStartDate = addDays(currentCycleStartDate, cycleLength);
     }
     
     const nextPeriodStart = startOfDay(addDays(currentCycleStartDate, cycleLength));
     const ovulationDay = startOfDay(addDays(nextPeriodStart, -lutealPhase));
     const fertileWindowStart = startOfDay(addDays(ovulationDay, -5));
-    const fertileWindowEnd = startOfDay(addDays(ovulationDay, 1));
-    const periodEnd = startOfDay(addDays(currentCycleStartDate, 4)); // Assume 5-day period
+    const periodEnd = startOfDay(addDays(currentCycleStartDate, 4)); 
 
     const newPredictions = {
-      nextPeriod: Array.from({ length: 5 }, (_, i) => addDays(nextPeriodStart, i)),
-      fertileWindow: { start: fertileWindowStart, end: fertileWindowEnd },
-      ovulationDay: ovulationDay,
+        nextPeriod: Array.from({ length: 5 }, (_, i) => addDays(nextPeriodStart, i)),
+        fertileWindow: { start: fertileWindowStart, end: ovulationDay },
+        ovulationDay: ovulationDay,
     };
     setPredictions(newPredictions);
 
-    // Calculate current phase
     if (isWithinInterval(today, { start: currentCycleStartDate, end: periodEnd })) {
       setCurrentPhase("Menstrual");
     } else if (isSameDay(today, ovulationDay)) {
@@ -136,17 +134,13 @@ export default function PeriodTrackerPage() {
       setCurrentPhase("Follicular");
     } else if (isWithinInterval(today, { start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1) })) {
       setCurrentPhase("Luteal");
-    } else if (differenceInDays(today, lastPeriod) >= 0 && differenceInDays(ovulationDay, today) > 0) {
-      setCurrentPhase("Follicular");
-    } else if (differenceInDays(today, ovulationDay) > 0 && differenceInDays(nextPeriodStart, today) > 0) {
-      setCurrentPhase("Luteal");
     } else {
-        // Default to follicular if somehow it falls through
-        setCurrentPhase("Follicular");
+      setCurrentPhase("Follicular");
     }
     
     const daysUntilNextPeriod = differenceInDays(nextPeriodStart, today);
     setCountdown(daysUntilNextPeriod >= 0 ? daysUntilNextPeriod : 0);
+    setCalendarMonth(nextPeriodStart);
   }
 
   function onSubmit(values: CycleData) {
@@ -287,13 +281,12 @@ export default function PeriodTrackerPage() {
                     <Calendar
                         mode="multiple"
                         min={1}
+                        month={calendarMonth}
+                        onMonthChange={setCalendarMonth}
                         selected={predictions ? [
                             ...predictions.nextPeriod,
                             {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end},
-                            predictions.ovulationDay
                         ] : []}
-                        month={predictions?.nextPeriod[0]}
-                        defaultMonth={predictions?.nextPeriod[0] || new Date()}
                         modifiers={{
                             fertile: predictions ? {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end} : [],
                             period: predictions ? predictions.nextPeriod : [],
@@ -303,6 +296,7 @@ export default function PeriodTrackerPage() {
                             fertile: 'bg-blue-400/80 text-blue-foreground rounded-none',
                             period: 'bg-red-400/80 text-red-foreground rounded-none',
                             ovulation: 'bg-green-500/80 text-green-foreground rounded-full font-bold',
+                            today: 'bg-accent text-accent-foreground',
                           }}
                         className="p-0"
                     />
