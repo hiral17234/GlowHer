@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { HeartPulse, LoaderCircle, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { HeartPulse, LoaderCircle, Sparkles, User } from 'lucide-react';
 
 import { CycleTracker } from './CycleTracker';
 import { MoodTracker } from './MoodTracker';
@@ -39,9 +40,23 @@ export function WellnessDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-12 space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <CycleTracker selectedValue={cyclePhase} onValueChange={setCyclePhase} />
         <MoodTracker selectedValue={mood} onValueChange={setMood} />
+        <Card className="shadow-lg shadow-card/20 hover:shadow-xl hover:shadow-card/40 transition-shadow duration-300 flex flex-col">
+            <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2 text-2xl">
+                    <User /> Personal Details
+                </CardTitle>
+                <CardDescription>Keep your personal information up to date for a tailored experience.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow flex flex-col justify-center items-center text-center">
+                <p className="text-muted-foreground mb-4">Click here to view or edit your personal details.</p>
+                <Button asChild size="lg">
+                    <Link href="/personal-details">View Details</Link>
+                </Button>
+            </CardContent>
+        </Card>
       </div>
 
       <Card className="bg-secondary/50 border-secondary shadow-lg shadow-secondary/20 text-center">
