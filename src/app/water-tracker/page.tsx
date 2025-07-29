@@ -66,7 +66,7 @@ const motivationalMessages = [
 ];
 
 const LOCAL_STORAGE_PREFIX = 'glowher-water-tracker-';
-const REMINDER_SOUND_URL = '/sounds/water-drop.mp3'; // Placeholder for your sound file
+const REMINDER_SOUND_URL = '/sounds/water-drop.mp3';
 
 export default function WaterTrackerPage() {
   const router = useRouter();
@@ -97,24 +97,27 @@ export default function WaterTrackerPage() {
 
   useEffect(() => {
     // Initialize audio on client
-    audioRef.current = new Audio(REMINDER_SOUND_URL);
-
+    if (typeof window !== 'undefined') {
+        audioRef.current = new Audio(REMINDER_SOUND_URL);
+    }
+    
     // Load settings from local storage
     try {
         const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
         if (savedSettings) {
             const { goal: savedGoal, unit: savedUnit } = JSON.parse(savedSettings);
-            setGoal(savedGoal);
-            setUnit(savedUnit);
-            settingsForm.setValue('goal', savedGoal * unitConversions[savedUnit]);
+            if (savedGoal && savedUnit) {
+                setGoal(savedGoal);
+                setUnit(savedUnit);
+                settingsForm.setValue('goal', savedGoal * unitConversions[savedUnit]);
+            }
         }
         const savedReminders = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}reminders`);
         if (savedReminders) {
             reminderForm.reset(JSON.parse(savedReminders));
         }
-    } catch(e) { console.error(e)}
+    } catch(e) { console.error("Error loading settings:", e)}
     
-
     // Load today's intake
     try {
         const savedLog = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${currentDateKey}`);
@@ -123,7 +126,7 @@ export default function WaterTrackerPage() {
         } else {
             setDailyLog({ entries: [] });
         }
-    } catch(e) { console.error(e)}
+    } catch(e) { console.error("Error loading daily log:", e)}
 
     // Determine current cycle phase
     try {
@@ -154,7 +157,7 @@ export default function WaterTrackerPage() {
               setCurrentPhase("Luteal");
             }
         }
-    } catch(e) { console.error(e)}
+    } catch(e) { console.error("Error determining cycle phase:", e)}
 
   }, [currentDateKey]);
 
@@ -199,7 +202,7 @@ export default function WaterTrackerPage() {
         playReminderSound();
       }
     }
-  }, [dailyLog, currentDateKey]);
+  }, [dailyLog, currentDateKey, reminderForm, toast]);
 
   const handleSetUnit = (newUnit: Unit) => {
     const oldGoalInCups = goal;
@@ -311,11 +314,11 @@ export default function WaterTrackerPage() {
 
                         <div className="flex items-center gap-4 text-center">
                             {Array.from({ length: Math.ceil(goal) }).map((_, i) => (
-                                <Droplet key={i} className={cn("h-12 w-12 transition-colors duration-300", i < totalIntake ? "text-blue-400 fill-blue-400" : "text-gray-300")} />
+                                <Droplet key={i} className={cn("h-10 w-10 md:h-12 md:w-12 transition-all duration-500 ease-in-out", i < totalIntake ? "text-blue-400 fill-blue-400" : "text-gray-300 dark:text-gray-600")} />
                             ))}
                         </div>
 
-                        <div className="flex items-center justify-center gap-4 pt-4">
+                        <div className="hidden md:flex items-center justify-center gap-4 pt-4">
                             <Button size="lg" variant="outline" onClick={() => changeIntake(-1)} disabled={totalIntake <= 0}>
                                 <Minus className="mr-2 h-5 w-5"/> Remove Cup
                             </Button>
@@ -460,11 +463,17 @@ export default function WaterTrackerPage() {
         </div>
       </main>
 
+      <Button
+        size="icon"
+        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg md:hidden"
+        onClick={() => changeIntake(1)}
+        aria-label="Add a cup of water"
+      >
+        <Plus className="h-8 w-8" />
+      </Button>
+
       <AppFooter />
     </div>
   );
-}
-
-  
 
     
