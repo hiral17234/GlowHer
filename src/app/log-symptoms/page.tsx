@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays } from "date-fns";
+import { format, subDays, isSameDay } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -86,6 +86,8 @@ const LOCAL_STORAGE_KEY_PREFIX = 'glowher-log-';
 export default function LogSymptomsPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [currentDate, setCurrentDate] = useState(new Date());
+
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -103,16 +105,16 @@ export default function LogSymptomsPage() {
   const logDate = form.watch("logDate");
 
   useEffect(() => {
+    if (isSameDay(logDate, currentDate)) return;
+
     const key = `${LOCAL_STORAGE_KEY_PREFIX}${format(logDate, 'yyyy-MM-dd')}`;
     try {
       const savedData = localStorage.getItem(key);
       if (savedData) {
         const parsedData = JSON.parse(savedData);
-        // Ensure date is a Date object
         parsedData.logDate = new Date(parsedData.logDate);
         form.reset(parsedData);
       } else {
-        // Reset to default for a new date, but keep the selected date
         form.reset({
           logDate: logDate,
           symptoms: [],
@@ -122,10 +124,11 @@ export default function LogSymptomsPage() {
           notes: "",
         });
       }
+      setCurrentDate(logDate);
     } catch (error) {
       console.error("Failed to read from localStorage", error);
     }
-  }, [logDate, form]);
+  }, [logDate, form, currentDate]);
 
   function onSubmit(data: FormData) {
     const key = `${LOCAL_STORAGE_KEY_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`;
