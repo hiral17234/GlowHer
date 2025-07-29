@@ -21,15 +21,24 @@ const execCmd = (command: string, value?: string) => {
 export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const colorInputRef = useRef<HTMLInputElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useRef(false);
 
+  // This effect ensures that the editor's content is synchronized with the `value` prop
+  // only when the component mounts or when the value changes from an external source
+  // (e.g., loading data for a different date). It avoids resetting the content on every keystroke.
   useEffect(() => {
-    setIsMounted(true);
-    // Set the initial value when the component mounts
-    if (editorRef.current && value) {
-      editorRef.current.innerHTML = value;
+    if (editorRef.current && value !== editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = value || "";
     }
-  }, []);
+  }, [value]);
+
+
+  // This effect marks the component as mounted. This helps prevent resetting the content
+  // on the initial render if a value already exists.
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; }
+  }, [])
 
   const handleInput = () => {
     if (editorRef.current) {
@@ -40,7 +49,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const handleToolbarClick = (command: string) => {
     editorRef.current?.focus();
     execCmd(command);
-    handleInput(); // Ensure state is updated after command
+    handleInput();
   };
   
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,27 +61,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const handleColorButtonClick = () => {
     colorInputRef.current?.click();
   };
-
-  // This effect synchronizes the editor's content with the external value,
-  // but only if the content is different. This prevents the cursor jump issue.
-  useEffect(() => {
-    if (editorRef.current && editorRef.current.innerHTML !== value) {
-        editorRef.current.innerHTML = value || "";
-    }
-  // This effect should only run when the value prop changes from an external source,
-  // not on every keystroke. By removing `value` from the dependency array and relying on mount to set initial value,
-  // we prevent the cursor jump. We'll handle external updates (like form reset)
-  // by using a key on the component if needed, but for now this is more stable.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
-
-  if (!isMounted) {
-    return (
-        <div className="w-full rounded-md border border-input bg-background min-h-[250px] p-3 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
-            Loading Editor...
-        </div>
-    );
-  }
 
   return (
     <div className="w-full rounded-md border border-input focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
@@ -134,8 +122,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             whiteSpace: 'pre-wrap',
             wordWrap: 'break-word',
         }}
-        // Set initial content. Subsequent updates are handled by the effect.
-        dangerouslySetInnerHTML={{ __html: value || "" }}
         />
     </div>
   );
