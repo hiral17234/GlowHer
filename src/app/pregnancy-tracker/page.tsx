@@ -200,13 +200,13 @@ export default function PregnancyTrackerPage() {
                                         <TabsTrigger value="symptoms"><Heart className="mr-2 h-4 w-4" />Symptoms</TabsTrigger>
                                         <TabsTrigger value="tips"><Lightbulb className="mr-2 h-4 w-4"/>Tips</TabsTrigger>
                                     </TabsList>
-                                    <TabsContent value="development" className="mt-4 prose">
+                                    <TabsContent value="development" className="mt-4 prose max-w-none text-foreground">
                                         <p>{currentWeekData.development}</p>
                                     </TabsContent>
-                                    <TabsContent value="symptoms" className="mt-4 prose">
+                                    <TabsContent value="symptoms" className="mt-4 prose max-w-none text-foreground">
                                         <p>{currentWeekData.symptoms}</p>
                                     </TabsContent>
-                                    <TabsContent value="tips" className="mt-4 prose">
+                                    <TabsContent value="tips" className="mt-4 prose max-w-none text-foreground">
                                         <p>{currentWeekData.tips}</p>
                                     </TabsContent>
                                 </Tabs>
