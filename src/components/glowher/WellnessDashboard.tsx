@@ -6,12 +6,10 @@ import {
   Heart,
   Droplet,
   Bed,
-  Pilcrow,
   BookOpen,
   Baby,
   Activity,
   ShoppingCart,
-  Flame,
   Brain,
   User,
   Sparkles,
@@ -55,14 +53,6 @@ const wellnessFeatures = [
       bgColor: 'bg-indigo-500/10'
     },
     {
-      icon: Pilcrow,
-      title: 'Medication Reminder',
-      description: 'Add meds + times, manage reminders',
-      href: '#',
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10'
-    },
-    {
       icon: BookOpen,
       title: 'Mood Journal',
       description: 'Daily mood + notes, view history',
@@ -95,17 +85,9 @@ const wellnessFeatures = [
       bgColor: 'bg-orange-500/10'
     },
     {
-      icon: Flame,
-      title: 'Calorie Tracker',
-      description: 'Add meals + calories, view daily total',
-      href: '#',
-      color: 'text-red-600',
-      bgColor: 'bg-red-600/10'
-    },
-    {
       icon: Brain,
       title: 'Mental Health Check-In',
-      description: 'Daily questions, breathing exercises',
+      description: 'Answer daily questions, breathing exercises',
       href: '#',
       color: 'text-cyan-500',
       bgColor: 'bg-cyan-500/10'
