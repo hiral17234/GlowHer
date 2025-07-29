@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -78,31 +78,71 @@ const FormSchema = z.object({
   notes: z.string().max(300, { message: "Notes must be 300 characters or less." }).optional(),
 });
 
+type FormData = z.infer<typeof FormSchema>;
+
+
+const LOCAL_STORAGE_KEY_PREFIX = 'glowher-log-';
+
 export default function LogSymptomsPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       logDate: new Date(),
       symptoms: [],
+      otherSymptom: "",
+      mood: "Neutral",
       moodIntensity: [5],
       notes: "",
     },
   });
 
   const notesValue = form.watch("notes");
+  const logDate = form.watch("logDate");
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "Log Saved!",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  useEffect(() => {
+    const key = `${LOCAL_STORAGE_KEY_PREFIX}${format(logDate, 'yyyy-MM-dd')}`;
+    try {
+      const savedData = localStorage.getItem(key);
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        // Ensure date is a Date object
+        parsedData.logDate = new Date(parsedData.logDate);
+        form.reset(parsedData);
+      } else {
+        // Reset to default for a new date, but keep the selected date
+        form.reset({
+          logDate: logDate,
+          symptoms: [],
+          otherSymptom: "",
+          mood: "Neutral",
+          moodIntensity: [5],
+          notes: "",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to read from localStorage", error);
+    }
+  }, [logDate, form]);
+
+  function onSubmit(data: FormData) {
+    const key = `${LOCAL_STORAGE_KEY_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`;
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        toast({
+            title: "Log Saved!",
+            description: "Your entry for this day has been successfully saved.",
+        });
+    } catch (error) {
+        toast({
+            variant: "destructive",
+            title: "Error Saving Log",
+            description: "Could not save your entry. Please try again."
+        });
+        console.error("Failed to save to localStorage", error);
+    }
   }
 
   return (
@@ -152,7 +192,7 @@ export default function LogSymptomsPage() {
                               selected={field.value}
                               onSelect={field.onChange}
                               disabled={(date) =>
-                                date > new Date() || date < subDays(new Date(), 3)
+                                date > new Date() || date < subDays(new Date(), 30) // Allow logging for a month
                               }
                               initialFocus
                             />
@@ -265,7 +305,7 @@ export default function LogSymptomsPage() {
                         <FormLabel className="text-lg font-semibold">Mood Intensity ({field.value?.[0]}/10)</FormLabel>
                         <FormControl>
                           <Slider
-                            defaultValue={[5]}
+                            value={field.value}
                             max={10}
                             step={1}
                             onValueChange={field.onChange}
