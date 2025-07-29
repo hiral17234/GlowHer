@@ -41,6 +41,16 @@ const phaseTips: { [key: string]: string } = {
     Luteal: "Feeling bloated? It sounds counterintuitive, but drinking more water helps flush out excess sodium and reduce puffiness."
 };
 
+const motivationalMessages = [
+    "Great job!",
+    "Keep it up!",
+    "You're doing amazing!",
+    "One step closer to your goal!",
+    "Way to hydrate!",
+    "Every sip counts!",
+    "Fantastic work!",
+];
+
 const LOCAL_STORAGE_PREFIX = 'glowher-water-tracker-';
 
 export default function WaterTrackerPage() {
@@ -149,7 +159,16 @@ export default function WaterTrackerPage() {
   };
 
   const changeIntake = (amount: number) => { // amount is always in cups
+    const newIntake = intake + amount;
     setIntake(prev => Math.max(0, prev + amount));
+
+    if (amount > 0) {
+        const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+        toast({
+            title: randomMessage,
+            description: `You've logged ${Math.round(newIntake * unitConversions[unit])} ${unit} so far.`,
+        });
+    }
   };
   
   const intakeInCurrentUnit = intake * unitConversions[unit];
