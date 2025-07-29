@@ -36,6 +36,7 @@ import {
   Bed,
   Smile,
   BookText,
+  History,
 } from 'lucide-react';
 
 const symptomsList = [
@@ -168,6 +169,15 @@ export default function LogSymptomsPage() {
           </div>
 
           <Card className="shadow-lg">
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Create a New Log</CardTitle>
+                    <Button variant="outline" onClick={() => router.push('/log-history')}>
+                        <History className="mr-2 h-4 w-4" />
+                        View History
+                    </Button>
+                </div>
+            </CardHeader>
             <CardContent className="p-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
