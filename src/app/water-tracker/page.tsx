@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSameDay, subDays, differenceInHours } from 'date-fns';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,6 +66,7 @@ const motivationalMessages = [
 ];
 
 const LOCAL_STORAGE_PREFIX = 'glowher-water-tracker-';
+const REMINDER_SOUND_URL = '/sounds/water-drop.mp3'; // Placeholder for your sound file
 
 export default function WaterTrackerPage() {
   const router = useRouter();
@@ -76,6 +77,8 @@ export default function WaterTrackerPage() {
   const [goal, setGoal] = useState(8); // Always stored in cups
   const [unit, setUnit] = useState<Unit>('cups');
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
 
   const settingsForm = useForm<SettingsFormData>({
     resolver: zodResolver(settingsFormSchema),
@@ -93,6 +96,9 @@ export default function WaterTrackerPage() {
   });
 
   useEffect(() => {
+    // Initialize audio on client
+    audioRef.current = new Audio(REMINDER_SOUND_URL);
+
     // Load settings from local storage
     try {
         const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
@@ -152,6 +158,12 @@ export default function WaterTrackerPage() {
 
   }, [currentDateKey, settingsForm, reminderForm]);
 
+  const playReminderSound = () => {
+    if (audioRef.current) {
+        audioRef.current.play().catch(error => console.error("Audio playback failed:", error));
+    }
+  };
+
   useEffect(() => {
     try {
         localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${currentDateKey}`, JSON.stringify(dailyLog));
@@ -159,26 +171,34 @@ export default function WaterTrackerPage() {
 
     // Reminder logic
     const reminderSettings = reminderForm.getValues();
-    if (reminderSettings.remindersEnabled && dailyLog.entries.length > 0) {
-        const lastEntry = dailyLog.entries[dailyLog.entries.length - 1];
-        const hoursSinceLast = differenceInHours(new Date(), new Date(lastEntry.time));
-        if (hoursSinceLast >= reminderSettings.reminderFrequency) {
-            toast({
-                title: "Thirsty?",
-                description: `It's been over ${reminderSettings.reminderFrequency} hours. Time for some water!`,
-            });
-        }
-    } else if (reminderSettings.remindersEnabled && dailyLog.entries.length === 0) {
-        // Initial reminder if no water logged today
-        const now = new Date();
-        if (now.getHours() >= 9) { // Only remind after 9am
-             toast({
-                title: "Good Morning!",
-                description: "Don't forget to start your day with a glass of water!",
-            });
-        }
-    }
+    if (reminderSettings.remindersEnabled) {
+      let shouldRemind = false;
+      let reminderMessage = "";
 
+      if (dailyLog.entries.length > 0) {
+          const lastEntryTime = new Date(dailyLog.entries[dailyLog.entries.length - 1].time);
+          const hoursSinceLast = differenceInHours(new Date(), lastEntryTime);
+          if (hoursSinceLast >= reminderSettings.reminderFrequency) {
+            shouldRemind = true;
+            reminderMessage = `It's been over ${reminderSettings.reminderFrequency} hours. Time for some water!`;
+          }
+      } else {
+          // Initial reminder if no water logged today
+          const now = new Date();
+          if (now.getHours() >= 9) { // Only remind after 9am
+            shouldRemind = true;
+            reminderMessage = "Don't forget to start your day with a glass of water!";
+          }
+      }
+
+      if(shouldRemind) {
+        toast({
+            title: "Thirsty?",
+            description: reminderMessage,
+        });
+        playReminderSound();
+      }
+    }
   }, [dailyLog, currentDateKey, reminderForm, toast]);
 
   const handleSetUnit = (newUnit: Unit) => {
@@ -446,3 +466,5 @@ export default function WaterTrackerPage() {
 }
 
   
+
+    
