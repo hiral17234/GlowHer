@@ -122,17 +122,19 @@ export default function PeriodTrackerPage() {
     
     if (daysIntoCycle >= 0 && daysIntoCycle < 5) { // Assuming period lasts 5 days
       setCurrentPhase("Menstrual");
-    } else if (isWithinInterval(today, { start: ovulationDay, end: ovulationDay })) {
-      setCurrentPhase("Ovulatory");
-    } else if (isWithinInterval(today, { start: fertileWindowStart, end: addDays(ovulationDay, -1) })) {
-      setCurrentPhase("Follicular"); // Technically also includes pre-ovulation fertile days
-    } else if (isWithinInterval(today, {start: addDays(ovulationDay, 1), end: nextPeriodStart})) {
+    } else if (isWithinInterval(today, { start: startOfDay(fertileWindowStart), end: startOfDay(fertileWindowEnd) })) {
+        if(isWithinInterval(today, { start: startOfDay(ovulationDay), end: startOfDay(ovulationDay) })) {
+            setCurrentPhase("Ovulatory");
+        } else {
+            setCurrentPhase("Follicular"); // Fertile window is part of follicular and ovulatory
+        }
+    } else if (isWithinInterval(today, {start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1)})) {
       setCurrentPhase("Luteal");
     } else { // Default to follicular if not in any other phase yet
       setCurrentPhase("Follicular");
     }
     
-    const daysUntilNextPeriod = differenceInDays(nextPeriodStart, today);
+    const daysUntilNextPeriod = differenceInDays(startOfDay(nextPeriodStart), today);
     setCountdown(daysUntilNextPeriod > 0 ? daysUntilNextPeriod : 0);
   }
 
@@ -152,10 +154,6 @@ export default function PeriodTrackerPage() {
       });
     }
   }
-
-  const periodDays = predictions ? predictions.nextPeriod : [];
-  const fertileDays = predictions ? [predictions.fertileWindow] : [];
-
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -231,7 +229,7 @@ export default function PeriodTrackerPage() {
                       render={({ field }) => (
                         <FormItem>
                           <div className="flex items-center gap-2">
-                             <FormLabel>Luteal Phase Length (optional, 10-18 days)</FormLabel>
+                             <FormLabel>Luteal Phase Length (optional)</FormLabel>
                              <TooltipProvider>
                                <Tooltip>
                                  <TooltipTrigger asChild>
@@ -239,14 +237,14 @@ export default function PeriodTrackerPage() {
                                  </TooltipTrigger>
                                  <TooltipContent>
                                    <p className="max-w-xs">
-                                    The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. Your period is the phase when you bleed.
+                                    The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. This is different from your period, which is when you bleed.
                                    </p>
                                  </TooltipContent>
                                </Tooltip>
                              </TooltipProvider>
                            </div>
-                          <FormControl>
-                            <Input type="number" min="10" max="18" {...field} />
+                           <FormControl>
+                            <Input type="number" placeholder="Default: 14" min="10" max="18" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -276,12 +274,16 @@ export default function PeriodTrackerPage() {
                     <Calendar
                         mode="multiple"
                         min={1}
-                        selected={[...periodDays, ...fertileDays]}
+                        selected={predictions ? [
+                            ...predictions.nextPeriod,
+                            {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end},
+                            predictions.ovulationDay
+                        ] : []}
                         defaultMonth={predictions?.nextPeriod[0] || new Date()}
                         modifiers={{
-                            fertile: fertileDays,
-                            period: periodDays,
-                            ovulation: predictions ? [predictions.ovulationDay] : [],
+                            fertile: predictions ? {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end} : [],
+                            period: predictions ? predictions.nextPeriod : [],
+                            ovulation: predictions ? predictions.ovulationDay : new Date('1970-01-01'),
                           }}
                           modifiersClassNames={{
                             fertile: 'bg-blue-400/80 text-blue-foreground rounded-none',
@@ -336,3 +338,5 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
+
+    
