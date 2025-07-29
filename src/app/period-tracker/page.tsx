@@ -80,6 +80,21 @@ export default function PeriodTrackerPage() {
         data.lastPeriodDate = new Date(data.lastPeriodDate);
         form.reset(data);
         calculatePredictions(data);
+      } else {
+        const userDetails = localStorage.getItem('glowher-user');
+        if (userDetails) {
+            const userData = JSON.parse(userDetails);
+            if(userData.lastPeriodDate) {
+                const initialData = {
+                    lastPeriodDate: new Date(userData.lastPeriodDate),
+                    cycleLength: 28,
+                    lutealPhaseLength: 14,
+                };
+                form.reset(initialData);
+                calculatePredictions(initialData);
+                localStorage.setItem('glowher-period-tracker', JSON.stringify(initialData));
+            }
+        }
       }
     } catch (error) {
       console.error("Could not retrieve data from localStorage", error);
@@ -103,21 +118,21 @@ export default function PeriodTrackerPage() {
     // Calculate current phase
     const today = startOfDay(new Date());
     const daysIntoCycle = differenceInDays(today, data.lastPeriodDate);
-    if (daysIntoCycle >= 0 && daysIntoCycle < 5) {
+    
+    if (daysIntoCycle >= 0 && daysIntoCycle < 5) { // Assuming period lasts 5 days
       setCurrentPhase("Menstrual");
-    } else if (isWithinInterval(today, {start: fertileWindowStart, end: fertileWindowEnd})) {
-      if (isWithinInterval(today, {start: addDays(ovulationDay, -1), end: addDays(ovulationDay, 1)})) {
-        setCurrentPhase("Ovulatory");
-      } else {
-        setCurrentPhase("Follicular");
-      }
-    } else if (daysIntoCycle > differenceInDays(ovulationDay, data.lastPeriodDate) && daysIntoCycle < data.cycleLength) {
-        setCurrentPhase("Luteal");
-    } else {
-        setCurrentPhase("Follicular");
+    } else if (isWithinInterval(today, { start: ovulationDay, end: ovulationDay })) {
+      setCurrentPhase("Ovulatory");
+    } else if (isWithinInterval(today, { start: fertileWindowStart, end: addDays(ovulationDay, -1) })) {
+      setCurrentPhase("Follicular"); // Technically also includes pre-ovulation fertile days
+    } else if (isWithinInterval(today, {start: addDays(ovulationDay, 1), end: nextPeriodStart})) {
+      setCurrentPhase("Luteal");
+    } else { // Default to follicular if not in any other phase yet
+      setCurrentPhase("Follicular");
     }
     
-    setCountdown(differenceInDays(nextPeriodStart, today));
+    const daysUntilNextPeriod = differenceInDays(nextPeriodStart, today);
+    setCountdown(daysUntilNextPeriod > 0 ? daysUntilNextPeriod : 0);
   }
 
   function onSubmit(values: CycleData) {
@@ -237,9 +252,9 @@ export default function PeriodTrackerPage() {
                 <CardHeader>
                     <CardTitle className="font-headline text-3xl">Your Cycle Calendar</CardTitle>
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground pt-2">
-                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-pink-300"></span> Predicted Period</div>
-                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-blue-300"></span> Fertile Window</div>
-                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-green-400"></span> Ovulation</div>
+                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-red-400/80"></span> Predicted Period</div>
+                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-blue-400/80"></span> Fertile Window</div>
+                        <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-green-500/80"></span> Ovulation</div>
                     </div>
                 </CardHeader>
                 <CardContent className="flex justify-center">
@@ -254,9 +269,9 @@ export default function PeriodTrackerPage() {
                             ovulation: predictions ? [predictions.ovulationDay] : [],
                           }}
                           modifiersClassNames={{
-                            fertile: 'bg-blue-300/50 text-blue-800 rounded-md',
-                            period: 'bg-pink-300/60 text-pink-900 rounded-md',
-                            ovulation: 'bg-green-400/70 text-green-900 rounded-full font-bold',
+                            fertile: 'bg-blue-400/80 text-blue-foreground rounded-none',
+                            period: 'bg-red-400/80 text-red-foreground rounded-none',
+                            ovulation: 'bg-green-500/80 text-green-foreground rounded-full font-bold',
                           }}
                         className="p-0"
                     />
