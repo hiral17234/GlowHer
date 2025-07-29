@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { CalendarIcon, ChevronLeft, Bed, Star, BookText, Moon, Award, Info, Sparkles } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Bed, Star, BookText, Moon, Award, Info, Sparkles, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { SleepLogHistory } from '@/components/glowher/SleepLogHistory';
@@ -90,12 +90,13 @@ export default function SleepTrackerPage() {
                     goodSleepDays++;
                 }
 
-                if (i === 0) {
-                    lastQuality = log.sleepQuality[0];
-                }
-                if(lastQuality !== -1 && log.sleepQuality[0] >= 7){
-                    if (i === 0) consistentQualityDays = 1;
-                    else consistentQualityDays++;
+                if(log.sleepQuality[0] >= 7){
+                    if (i === 0) {
+                        consistentQualityDays = 1;
+                    }
+                    else if (lastQuality !== -1 && lastQuality >= 7) {
+                        consistentQualityDays++;
+                    }
                 } else {
                     consistentQualityDays = 0; // Reset streak
                 }
@@ -212,7 +213,7 @@ export default function SleepTrackerPage() {
     }
   }
 
-  const qualityLabel = qualityOptions.find(q => q.value >= (sleepQualityValue?.[0] ?? 0))?.label ?? 'Fair';
+  const qualityLabel = qualityOptions.find(q => q.value <= (sleepQualityValue?.[0] ?? 0))?.label ?? 'Fair';
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200">
@@ -381,6 +382,15 @@ export default function SleepTrackerPage() {
                             <span className="font-semibold flex items-center gap-2"><Star className="text-indigo-500"/> Quality</span>
                             <span className="font-bold text-lg text-slate-800 dark:text-slate-200">{qualityLabel}</span>
                         </div>
+                        {sleepDurationValue?.[0] < 4 && (
+                            <Alert variant="destructive">
+                                <AlertTriangle className="h-4 w-4" />
+                                <AlertTitle>Take Care!</AlertTitle>
+                                <AlertDescription>
+                                    Getting less than 4 hours of sleep can impact your health. Prioritize rest when you can.
+                                </AlertDescription>
+                            </Alert>
+                        )}
                     </CardContent>
                 </Card>
                 {currentPhase && phaseTips[currentPhase] && (
@@ -426,5 +436,3 @@ export default function SleepTrackerPage() {
     </div>
   );
 }
-
-    
