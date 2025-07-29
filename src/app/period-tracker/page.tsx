@@ -232,7 +232,7 @@ export default function PeriodTrackerPage() {
                              <FormLabel>Luteal Phase Length (optional)</FormLabel>
                              <TooltipProvider>
                                <Tooltip>
-                                 <TooltipTrigger asChild>
+                                 <TooltipTrigger>
                                    <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
                                  </TooltipTrigger>
                                  <TooltipContent>
@@ -338,5 +338,3 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
-
-    
