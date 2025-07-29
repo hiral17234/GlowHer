@@ -105,7 +105,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
     backgroundPosition: 'center',
     backgroundAttachment: 'local',
   } : {
-    backgroundColor: 'white',
+    backgroundColor: 'hsl(var(--background))',
   };
 
   return (
@@ -181,7 +181,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         className={cn(
             'min-h-[250px] w-full p-3 text-base bg-transparent focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300',
             !value && 'text-muted-foreground',
-             themeUrl ? 'text-white' : 'text-black'
+             themeUrl ? 'text-white' : 'text-foreground'
         )}
         data-placeholder={placeholder}
         style={{
