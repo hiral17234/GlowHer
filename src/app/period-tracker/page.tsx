@@ -100,7 +100,7 @@ export default function PeriodTrackerPage() {
     } catch (error) {
       console.error("Could not retrieve data from localStorage", error);
     }
-  }, []);
+  }, [form]);
 
   function calculatePredictions(data: CycleData) {
     const today = startOfDay(new Date());
@@ -108,11 +108,17 @@ export default function PeriodTrackerPage() {
     const cycleLength = data.cycleLength;
     const lutealPhase = data.lutealPhaseLength || 14;
     
-    const nextPeriodStart = startOfDay(addDays(lastPeriod, cycleLength));
+    // Find the most recent cycle start date before or on today
+    let currentCycleStartDate = lastPeriod;
+    while (addDays(currentCycleStartDate, cycleLength) < today) {
+        currentCycleStartDate = addDays(currentCycleStartDate, cycleLength);
+    }
+    
+    const nextPeriodStart = startOfDay(addDays(currentCycleStartDate, cycleLength));
     const ovulationDay = startOfDay(addDays(nextPeriodStart, -lutealPhase));
     const fertileWindowStart = startOfDay(addDays(ovulationDay, -5));
     const fertileWindowEnd = startOfDay(addDays(ovulationDay, 1));
-    const periodEnd = startOfDay(addDays(lastPeriod, 4)); // Assume 5-day period
+    const periodEnd = startOfDay(addDays(currentCycleStartDate, 4)); // Assume 5-day period
 
     const newPredictions = {
       nextPeriod: Array.from({ length: 5 }, (_, i) => addDays(nextPeriodStart, i)),
@@ -122,7 +128,7 @@ export default function PeriodTrackerPage() {
     setPredictions(newPredictions);
 
     // Calculate current phase
-    if (isWithinInterval(today, { start: lastPeriod, end: periodEnd })) {
+    if (isWithinInterval(today, { start: currentCycleStartDate, end: periodEnd })) {
       setCurrentPhase("Menstrual");
     } else if (isSameDay(today, ovulationDay)) {
         setCurrentPhase("Ovulatory");
@@ -130,12 +136,12 @@ export default function PeriodTrackerPage() {
       setCurrentPhase("Follicular");
     } else if (isWithinInterval(today, { start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1) })) {
       setCurrentPhase("Luteal");
-    } else if (differenceInDays(today, lastPeriod) > 0 && differenceInDays(ovulationDay, today) > 0) {
+    } else if (differenceInDays(today, lastPeriod) >= 0 && differenceInDays(ovulationDay, today) > 0) {
       setCurrentPhase("Follicular");
     } else if (differenceInDays(today, ovulationDay) > 0 && differenceInDays(nextPeriodStart, today) > 0) {
       setCurrentPhase("Luteal");
     } else {
-        // Default to follicular if somehow it falls through (e.g. on the exact start of a new cycle after predictions)
+        // Default to follicular if somehow it falls through
         setCurrentPhase("Follicular");
     }
     
@@ -237,8 +243,10 @@ export default function PeriodTrackerPage() {
                              <FormLabel>Luteal Phase Length (optional)</FormLabel>
                              <TooltipProvider>
                                <Tooltip>
-                                 <TooltipTrigger type="button">
-                                   <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                 <TooltipTrigger asChild>
+                                   <button type="button" aria-label="Luteal phase info">
+                                     <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                   </button>
                                  </TooltipTrigger>
                                  <TooltipContent>
                                    <p className="max-w-xs">
@@ -284,6 +292,7 @@ export default function PeriodTrackerPage() {
                             {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end},
                             predictions.ovulationDay
                         ] : []}
+                        month={predictions?.nextPeriod[0]}
                         defaultMonth={predictions?.nextPeriod[0] || new Date()}
                         modifiers={{
                             fertile: predictions ? {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end} : [],
@@ -307,7 +316,7 @@ export default function PeriodTrackerPage() {
                     <CardTitle>Next Period In</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-4xl font-bold text-primary-foreground">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
+                    <p className="text-4xl font-bold text-foreground">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
                   </CardContent>
                 </Card>
                 <Card>
@@ -315,10 +324,12 @@ export default function PeriodTrackerPage() {
                     <CardTitle>Current Phase</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {currentPhase && (
+                    {currentPhase ? (
                       <Badge className={cn("text-lg", phaseTips[currentPhase].color)}>
                         {phaseTips[currentPhase].title}
                       </Badge>
+                    ) : (
+                        <p>Calculating...</p>
                     )}
                   </CardContent>
                 </Card>
@@ -343,3 +354,5 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
+
+    
