@@ -23,7 +23,7 @@ type WeeklyData = {
 const chartConfig = {
     hours: {
         label: "Hours Slept",
-        color: "hsl(var(--primary))",
+        color: "hsl(262 82% 60%)",
     },
 } satisfies ChartConfig;
 
@@ -70,16 +70,16 @@ export function SleepLogHistory() {
     }
 
     return (
-        <Card className="shadow-lg">
+        <Card className="shadow-lg bg-white dark:bg-slate-800/50">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><History/> Sleep Trends: Last 7 Days</CardTitle>
-                <CardDescription>Your sleep duration over the past week.</CardDescription>
+                <CardTitle className="flex items-center gap-2 font-bold"><History className="text-indigo-500"/> Weekly Sleep Trend</CardTitle>
+                <CardDescription>Your sleep duration over the past 7 days.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={weeklyData} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                           <CartesianGrid vertical={false} />
+                           <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-700"/>
                             <XAxis
                                 dataKey="name"
                                 stroke="hsl(var(--muted-foreground))"
@@ -95,11 +95,11 @@ export function SleepLogHistory() {
                                 tickFormatter={(value) => `${value}h`}
                             />
                             <ChartTooltip
-                                cursor={{ fill: 'hsl(var(--accent))', radius: 4 }}
+                                cursor={{ fill: 'hsl(262 82% 95%)', radius: 4 }}
                                 content={<ChartTooltipContent
                                     formatter={(value, name, props) => (
                                         <div className="flex flex-col">
-                                            <span className="font-bold">{props.payload.hours.toFixed(1)} hours</span>
+                                            <span className="font-bold text-indigo-500">{props.payload.hours.toFixed(1)} hours</span>
                                         </div>
                                     )}
                                     labelFormatter={(label, payload) => {
@@ -112,7 +112,7 @@ export function SleepLogHistory() {
                                     }}
                                 />}
                             />
-                            <Bar dataKey="hours" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Hours"/>
+                            <Bar dataKey="hours" fill="hsl(262 82% 60%)" radius={[4, 4, 0, 0]} name="Hours"/>
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartContainer>
@@ -120,3 +120,6 @@ export function SleepLogHistory() {
         </Card>
     );
 }
+
+
+    

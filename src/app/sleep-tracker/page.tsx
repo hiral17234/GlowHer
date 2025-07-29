@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -16,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { CalendarIcon, ChevronLeft, Bed, Star, BookText, History, Info, Moon, Award } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Bed, Star, BookText, Moon, Award, Info, Sparkles } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { SleepLogHistory } from '@/components/glowher/SleepLogHistory';
@@ -36,11 +37,18 @@ type FormData = z.infer<typeof FormSchema>;
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-sleep-log-';
 
 const phaseTips: { [key: string]: { title: string; tip: string } } = {
-    Menstrual: { title: "Menstrual Phase", tip: "Your body is working hard. Try going to bed a little earlier to support recovery." },
-    Follicular: { title: "Follicular Phase", tip: "As energy returns, consistent sleep helps regulate hormones for the upcoming cycle events." },
-    Ovulatory: { title: "Ovulatory Phase", tip: "Some may experience a slight increase in body temperature, which can affect sleep. Keep your room cool for better rest." },
-    Luteal: { title: "Luteal Phase", tip: "Progesterone is rising, which can make you feel more tired. Prioritizing rest is key during this time." }
+    Menstrual: { title: "Sleep & Your Menstrual Phase", tip: "Your body is working hard. Try going to bed a little earlier to support recovery and manage fatigue." },
+    Follicular: { title: "Sleep & Your Follicular Phase", tip: "As energy returns, consistent sleep helps regulate hormones for the upcoming cycle events. Aim for 7-9 hours." },
+    Ovulatory: { title: "Sleep & Your Ovulatory Phase", tip: "A slight rise in body temperature can sometimes disrupt sleep. Keep your bedroom cool and comfortable." },
+    Luteal: { title: "Sleep & Your Luteal Phase", tip: "Rising progesterone can make you feel more tired. This is a key time to prioritize rest and wind down before bed." }
 };
+
+const qualityOptions = [
+    { value: 2, label: 'Poor', icon: '😩' },
+    { value: 5, label: 'Fair', icon: '😐' },
+    { value: 8, label: 'Good', icon: '🙂' },
+    { value: 10, label: 'Excellent', icon: '😴' },
+  ];
 
 export default function SleepTrackerPage() {
   const router = useRouter();
@@ -55,7 +63,7 @@ export default function SleepTrackerPage() {
     defaultValues: {
       logDate: subDays(new Date(), 1), // Default to yesterday
       sleepDuration: [8],
-      sleepQuality: [5],
+      sleepQuality: [8],
       notes: "",
     },
   });
@@ -85,7 +93,7 @@ export default function SleepTrackerPage() {
                 if (i === 0) {
                     lastQuality = log.sleepQuality[0];
                 }
-                if (Math.abs(log.sleepQuality[0] - (lastQuality !== -1 ? lastQuality : log.sleepQuality[0])) <= 1) {
+                if(lastQuality !== -1 && log.sleepQuality[0] >= 7){
                     if (i === 0) consistentQualityDays = 1;
                     else consistentQualityDays++;
                 } else {
@@ -138,14 +146,21 @@ export default function SleepTrackerPage() {
         }
     } catch(e) { console.error("Error determining cycle phase:", e)}
 
-    // A one-time load when the component mounts to pre-fill today's data if it exists.
-    const key = `${LOCAL_STORAGE_KEY_PREFIX}${format(form.getValues('logDate'), 'yyyy-MM-dd')}`;
+    const initialLogDate = form.getValues('logDate');
+    const key = `${LOCAL_STORAGE_KEY_PREFIX}${format(initialLogDate, 'yyyy-MM-dd')}`;
     try {
         const savedData = localStorage.getItem(key);
         if (savedData) {
             const parsedData = JSON.parse(savedData);
             parsedData.logDate = new Date(parsedData.logDate);
             form.reset(parsedData);
+        } else {
+            form.reset({
+              logDate: initialLogDate,
+              sleepDuration: [8],
+              sleepQuality: [8],
+              notes: "",
+            });
         }
     } catch(e) { console.error(e) }
     calculateAchievements();
@@ -167,7 +182,7 @@ export default function SleepTrackerPage() {
         form.reset({
           logDate: logDate,
           sleepDuration: [8],
-          sleepQuality: [5],
+          sleepQuality: [8],
           notes: "",
         });
       }
@@ -197,12 +212,10 @@ export default function SleepTrackerPage() {
     }
   }
 
-  const qualityLabels: { [key: number]: string } = {
-    1: 'Very Poor', 2: 'Poor', 3: 'Fair', 4: 'Fair', 5: 'Good', 6: 'Good', 7: 'Very Good', 8: 'Excellent', 9: 'Excellent', 10: 'Restorative'
-  };
+  const qualityLabel = qualityOptions.find(q => q.value >= (sleepQualityValue?.[0] ?? 0))?.label ?? 'Fair';
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
@@ -214,15 +227,18 @@ export default function SleepTrackerPage() {
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">How Did You Sleep?</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Track your sleep to uncover patterns and improve your rest.</p>
+        <div className="text-center mb-10">
+            <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900 dark:text-white">Sleep Tracker</h1>
+            <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">Track your sleep to uncover patterns and improve your rest.</p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-                <Card className="shadow-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div className="lg:col-span-3 space-y-8">
+                <Card className="shadow-lg bg-white dark:bg-slate-800/50">
                     <CardHeader>
-                        <CardTitle>Log Last Night's Sleep</CardTitle>
+                        <CardTitle className="flex items-center gap-3 text-2xl font-bold">
+                            <Moon className="text-indigo-500"/>
+                            Log Last Night's Sleep
+                        </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                     <Form {...form}>
@@ -232,13 +248,13 @@ export default function SleepTrackerPage() {
                             name="logDate"
                             render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel className="text-lg font-semibold">Night Of</FormLabel>
+                                <FormLabel className="font-semibold text-slate-700 dark:text-slate-300">Night Of</FormLabel>
                                 <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
                                     <Button
                                         variant={"outline"}
-                                        className={"w-[240px] pl-3 text-left font-normal"}
+                                        className={"w-[240px] pl-3 text-left font-normal bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600"}
                                     >
                                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -265,8 +281,8 @@ export default function SleepTrackerPage() {
                             name="sleepDuration"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                                    <Bed/> Sleep Duration: {field.value?.[0] ?? 0} hours
+                                <FormLabel className="font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                                    <Bed/> Sleep Duration: <span className="font-bold text-indigo-500">{field.value?.[0] ?? 0} hours</span>
                                 </FormLabel>
                                 <FormControl>
                                 <Slider
@@ -274,32 +290,44 @@ export default function SleepTrackerPage() {
                                     max={16}
                                     step={0.5}
                                     onValueChange={field.onChange}
+                                    className="[&>span>span]:bg-indigo-500 [&>span]:bg-indigo-200 dark:[&>span]:bg-indigo-900"
                                 />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                             )}
                         />
-
-                        <FormField
+                         <FormField
                             control={form.control}
                             name="sleepQuality"
                             render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                                <Star /> Sleep Quality: {qualityLabels[sleepQualityValue?.[0] ?? 5]} ({sleepQualityValue?.[0]}/10)
-                                </FormLabel>
-                                <FormControl>
-                                <Slider
-                                    value={field.value}
-                                    max={10}
-                                    min={1}
-                                    step={1}
-                                    onValueChange={field.onChange}
-                                />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
+                                <FormItem>
+                                    <FormLabel className="font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                                        <Star /> Sleep Quality: <span className="font-bold text-indigo-500">{qualityLabel}</span>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <div className="flex justify-between gap-2 pt-2">
+                                            {qualityOptions.map(option => (
+                                                <Button
+                                                    key={option.value}
+                                                    type="button"
+                                                    variant={sleepQualityValue[0] === option.value ? 'default' : 'outline'}
+                                                    onClick={() => field.onChange([option.value])}
+                                                    className={cn(
+                                                        "flex-1 h-16 text-lg transition-all",
+                                                        sleepQualityValue[0] === option.value && "bg-indigo-500 hover:bg-indigo-600 text-white"
+                                                    )}
+                                                >
+                                                    <div className="flex flex-col items-center">
+                                                        <span className="text-2xl">{option.icon}</span>
+                                                        <span className="text-xs mt-1">{option.label}</span>
+                                                    </div>
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
                             )}
                         />
 
@@ -308,13 +336,13 @@ export default function SleepTrackerPage() {
                             name="notes"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                                <BookText /> Sleep Notes
+                                <FormLabel className="font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                                    <BookText /> Sleep Notes
                                 </FormLabel>
                                 <FormControl>
                                 <Textarea
                                     placeholder="e.g., Woke up twice, felt restless, had a weird dream..."
-                                    className="resize-none"
+                                    className="resize-none bg-slate-50 dark:bg-slate-700"
                                     {...field}
                                 />
                                 </FormControl>
@@ -326,7 +354,7 @@ export default function SleepTrackerPage() {
                             )}
                         />
 
-                        <Button type="submit" size="lg" className="w-full">Save Log</Button>
+                        <Button type="submit" size="lg" className="w-full bg-indigo-500 hover:bg-indigo-600 text-white dark:text-white">Save Sleep Log</Button>
                         </form>
                     </Form>
                     </CardContent>
@@ -336,27 +364,27 @@ export default function SleepTrackerPage() {
                   <SleepLogHistory key={logKey} />
                 </div>
             </div>
-            <div className="lg:col-span-1 space-y-6">
-                <Card>
+            <div className="lg:col-span-2 space-y-6">
+                <Card className="bg-white dark:bg-slate-800/50 shadow-lg">
                     <CardHeader>
-                        <CardTitle className="font-headline flex items-center gap-2">
-                            <Moon /> Today's Sleep Summary
+                        <CardTitle className="font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+                            <Sparkles className="text-indigo-400" /> Sleep Summary
                         </CardTitle>
-                        <CardDescription>A quick look at your last logged sleep.</CardDescription>
+                        <CardDescription>Your last logged night.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-muted">
-                            <span className="font-semibold flex items-center gap-2"><Bed/> Duration</span>
-                            <span className="font-bold text-lg">{sleepDurationValue?.[0] ?? 'N/A'} hours</span>
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-slate-100 dark:bg-slate-700/50">
+                            <span className="font-semibold flex items-center gap-2"><Bed className="text-indigo-500"/> Duration</span>
+                            <span className="font-bold text-lg text-slate-800 dark:text-slate-200">{sleepDurationValue?.[0] ?? 'N/A'} hours</span>
                         </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-muted">
-                            <span className="font-semibold flex items-center gap-2"><Star/> Quality</span>
-                            <span className="font-bold text-lg">{qualityLabels[sleepQualityValue?.[0] ?? 5]}</span>
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-slate-100 dark:bg-slate-700/50">
+                            <span className="font-semibold flex items-center gap-2"><Star className="text-indigo-500"/> Quality</span>
+                            <span className="font-bold text-lg text-slate-800 dark:text-slate-200">{qualityLabel}</span>
                         </div>
                     </CardContent>
                 </Card>
                 {currentPhase && phaseTips[currentPhase] && (
-                    <Alert className={cn("bg-secondary/30 border-secondary/50")}>
+                    <Alert className="bg-indigo-100 border-indigo-200 text-indigo-800 dark:bg-indigo-900/30 dark:border-indigo-500/30 dark:text-indigo-200 [&>svg]:text-indigo-500 dark:[&>svg]:text-indigo-400">
                         <Info className="h-4 w-4" />
                         <AlertTitle className="font-bold">{phaseTips[currentPhase].title}</AlertTitle>
                         <AlertDescription>
@@ -364,29 +392,29 @@ export default function SleepTrackerPage() {
                         </AlertDescription>
                     </Alert>
                 )}
-                 <Card className="shadow-lg">
+                 <Card className="shadow-lg bg-white dark:bg-slate-800/50">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Award /> Achievements</CardTitle>
+                        <CardTitle className="flex items-center gap-2 font-bold text-slate-900 dark:text-white"><Award className="text-amber-500"/> Achievements</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className={cn(
-                            "flex items-center gap-3 p-3 rounded-lg transition-all",
-                            achievements.star ? "bg-yellow-400/20 text-yellow-700" : "bg-muted text-muted-foreground opacity-60"
+                            "flex items-center gap-4 p-4 rounded-lg transition-all",
+                            achievements.star ? "bg-amber-400/20 text-amber-800 dark:bg-amber-400/10 dark:text-amber-300" : "bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 opacity-70"
                         )}>
-                            <Award className="h-6 w-6" />
+                            <Award className="h-8 w-8" />
                             <div>
                                 <h4 className="font-semibold">Sleep Star</h4>
                                 <p className="text-sm">Log 8+ hours of sleep for 3 days.</p>
                             </div>
                         </div>
                         <div className={cn(
-                            "flex items-center gap-3 p-3 rounded-lg transition-all",
-                             achievements.queen ? "bg-purple-400/20 text-purple-700" : "bg-muted text-muted-foreground opacity-60"
+                            "flex items-center gap-4 p-4 rounded-lg transition-all",
+                             achievements.queen ? "bg-purple-400/20 text-purple-800 dark:bg-purple-400/10 dark:text-purple-300" : "bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 opacity-70"
                         )}>
-                             <Award className="h-6 w-6" />
+                             <Award className="h-8 w-8" />
                             <div>
                                 <h4 className="font-semibold">Rest Queen</h4>
-                                <p className="text-sm">Maintain consistent sleep quality for a week.</p>
+                                <p className="text-sm">Maintain 'Good' or 'Excellent' sleep for a week.</p>
                             </div>
                         </div>
                     </CardContent>
