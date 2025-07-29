@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,14 +12,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Bold, Italic, Underline } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Textarea } from '@/components/ui/textarea';
+
 
 const moods = [
     { name: 'Happy', emoji: '😄' },
@@ -56,7 +58,6 @@ export default function MoodJournalPage() {
   const { toast } = useToast();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showCustomMoodInput, setShowCustomMoodInput] = useState(false);
-  const editorRef = useRef<HTMLDivElement | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -81,12 +82,6 @@ export default function MoodJournalPage() {
         form.setValue('customMood', '');
     }
   }, [selectedMood, form]);
-
-  useEffect(() => {
-    if (editorRef.current && notesValue !== editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = notesValue || "";
-    }
-  }, [notesValue]);
 
   useEffect(() => {
     if (isSameDay(logDate, currentDate)) return;
@@ -130,11 +125,6 @@ export default function MoodJournalPage() {
         console.error("Failed to save to localStorage", error);
     }
   }
-
-  const applyFormat = (command: string) => {
-    document.execCommand(command, false);
-    editorRef.current?.focus();
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -286,21 +276,13 @@ export default function MoodJournalPage() {
                         <FormLabel className="text-lg font-semibold flex items-center gap-2">
                           <BookText /> Journal Entry
                         </FormLabel>
-                        <div className="rounded-md border border-input">
-                            <div className="p-2 border-b">
-                                <Button type="button" variant="ghost" size="icon" onMouseDown={(e) => { e.preventDefault(); applyFormat('bold'); }}><Bold/></Button>
-                                <Button type="button" variant="ghost" size="icon" onMouseDown={(e) => { e.preventDefault(); applyFormat('italic'); }}><Italic/></Button>
-                                <Button type="button" variant="ghost" size="icon" onMouseDown={(e) => { e.preventDefault(); applyFormat('underline'); }}><Underline/></Button>
-                            </div>
-                            <FormControl>
-                                <div
-                                    ref={editorRef}
-                                    contentEditable={true}
-                                    onInput={(e) => field.onChange(e.currentTarget.innerHTML)}
-                                    className="min-h-[250px] w-full rounded-b-md bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    />
-                            </FormControl>
-                        </div>
+                        <FormControl>
+                           <Textarea
+                            placeholder="Anything on your mind today?"
+                            className="resize-none min-h-[250px]"
+                            {...field}
+                          />
+                        </FormControl>
                         <FormDescription className="text-right">
                           {notesValue?.length || 0} / 1000
                         </FormDescription>
