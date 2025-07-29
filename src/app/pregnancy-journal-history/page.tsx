@@ -13,7 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { ChevronLeft, Calendar, BookText, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 
@@ -119,7 +118,6 @@ export default function PregnancyJournalHistoryPage() {
           </Card>
         </div>
       </main>
-      <AppFooter />
     </div>
   );
 }

@@ -13,7 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { ChevronLeft, Calendar, Smile, BookText, Image as ImageIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
@@ -134,7 +133,6 @@ export default function MoodHistoryPage() {
           </Card>
         </div>
       </main>
-      <AppFooter />
     </div>
   );
 }

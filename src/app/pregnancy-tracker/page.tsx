@@ -16,7 +16,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -893,7 +892,6 @@ export default function PregnancyTrackerPage() {
                 </div>
 
             </main>
-            <AppFooter/>
         </div>
     )
   }
@@ -977,7 +975,6 @@ export default function PregnancyTrackerPage() {
             </CardContent>
         </Card>
       </main>
-      <AppFooter/>
     </div>
   );
 }

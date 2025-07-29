@@ -15,7 +15,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -534,8 +533,6 @@ export default function WaterTrackerPage() {
       >
         <Plus className="h-8 w-8" />
       </Button>
-
-      <AppFooter />
     </div>
   );
 

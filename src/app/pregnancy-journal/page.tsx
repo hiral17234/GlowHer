@@ -14,7 +14,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { CalendarIcon, ChevronLeft, BookText, History, ImageIcon, PlusCircle, X } from 'lucide-react';
 import { RichTextEditor } from '@/components/glowher/RichTextEditor';
 import Image from 'next/image';
@@ -303,7 +302,6 @@ export default function PregnancyJournalPage() {
           </Card>
         </div>
       </main>
-      <AppFooter />
     </div>
   );
 }

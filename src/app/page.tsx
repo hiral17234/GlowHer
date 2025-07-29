@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { LoaderCircle } from 'lucide-react';
 
 export default function HomePage() {
@@ -56,7 +55,6 @@ export default function HomePage() {
 
         <WellnessDashboard />
       </main>
-      <AppFooter />
     </div>
   );
 }

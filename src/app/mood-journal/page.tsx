@@ -15,7 +15,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Image as ImageIcon, X } from 'lucide-react';
@@ -441,7 +440,6 @@ export default function MoodJournalPage() {
           </Card>
         </div>
       </main>
-      <AppFooter />
     </div>
   );
 }

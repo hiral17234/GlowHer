@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { ChevronLeft, Calendar, Tag, Smile, Edit } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -125,7 +124,6 @@ export default function LogHistoryPage() {
           </Card>
         </div>
       </main>
-      <AppFooter />
     </div>
   );
 }

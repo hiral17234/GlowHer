@@ -14,7 +14,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
-import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { CalendarIcon, ChevronLeft, Bed, Star, BookText, Moon, Award, Info, Sparkles, AlertTriangle, History } from 'lucide-react';
@@ -490,7 +489,6 @@ export default function SleepTrackerPage() {
             </div>
         </div>
       </main>
-      <AppFooter />
     </div>
   );
 }
