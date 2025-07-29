@@ -16,9 +16,10 @@ import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { CalendarIcon, ChevronLeft, Bed, Star, BookText, History, Info, Moon } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Bed, Star, BookText, History, Info, Moon, Award } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { SleepLogHistory } from '@/components/glowher/SleepLogHistory';
 
 
 const FormSchema = z.object({
@@ -46,6 +47,8 @@ export default function SleepTrackerPage() {
   const { toast } = useToast();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentPhase, setCurrentPhase] = useState<keyof typeof phaseTips | null>(null);
+  const [achievements, setAchievements] = useState<{ star: boolean, queen: boolean }>({ star: false, queen: false });
+  const [logKey, setLogKey] = useState(0);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -61,6 +64,47 @@ export default function SleepTrackerPage() {
   const notesValue = form.watch("notes");
   const sleepDurationValue = form.watch("sleepDuration");
   const sleepQualityValue = form.watch("sleepQuality");
+
+  const calculateAchievements = () => {
+    try {
+        let goodSleepDays = 0;
+        let consistentQualityDays = 0;
+        let lastQuality = -1;
+        const today = startOfDay(new Date());
+
+        for (let i = 0; i < 7; i++) {
+            const dateToCheck = subDays(today, i);
+            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+            const logData = localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}${dateKey}`);
+            if (logData) {
+                const log: FormData = JSON.parse(logData);
+                if(log.sleepDuration[0] >= 8) {
+                    goodSleepDays++;
+                }
+
+                if (i === 0) {
+                    lastQuality = log.sleepQuality[0];
+                    consistentQualityDays = 1;
+                } else {
+                    if (Math.abs(log.sleepQuality[0] - lastQuality) <= 1) {
+                        consistentQualityDays++;
+                    } else {
+                        consistentQualityDays = 1; // Reset streak
+                    }
+                    lastQuality = log.sleepQuality[0];
+                }
+            } else {
+                if (i > 0) consistentQualityDays = 0;
+            }
+        }
+        setAchievements({
+            star: goodSleepDays >= 3,
+            queen: consistentQualityDays >= 7,
+        });
+    } catch (e) {
+        console.error("Error calculating achievements", e);
+    }
+  };
 
   useEffect(() => {
     // Determine current cycle phase
@@ -104,6 +148,8 @@ export default function SleepTrackerPage() {
             form.reset(parsedData);
         }
     } catch(e) { console.error(e) }
+    calculateAchievements();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
 
@@ -139,6 +185,8 @@ export default function SleepTrackerPage() {
             title: "Sleep Logged!",
             description: "Your entry for the night has been successfully saved.",
         });
+        calculateAchievements();
+        setLogKey(prevKey => prevKey + 1); // Force re-render of history
     } catch (error) {
         toast({
             variant: "destructive",
@@ -174,13 +222,7 @@ export default function SleepTrackerPage() {
             <div className="lg:col-span-2">
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <div className="flex justify-between items-center">
-                            <CardTitle>Log Last Night's Sleep</CardTitle>
-                            <Button variant="outline" onClick={() => { /* Implement history view */ }}>
-                                <History className="mr-2 h-4 w-4" />
-                                View History
-                            </Button>
-                        </div>
+                        <CardTitle>Log Last Night's Sleep</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                     <Form {...form}>
@@ -289,6 +331,10 @@ export default function SleepTrackerPage() {
                     </Form>
                     </CardContent>
                 </Card>
+
+                <div className="mt-8">
+                  <SleepLogHistory key={logKey} />
+                </div>
             </div>
             <div className="lg:col-span-1 space-y-6">
                 <Card>
@@ -318,6 +364,33 @@ export default function SleepTrackerPage() {
                         </AlertDescription>
                     </Alert>
                 )}
+                 <Card className="shadow-lg">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Award /> Achievements</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className={cn(
+                            "flex items-center gap-3 p-3 rounded-lg transition-all",
+                            achievements.star ? "bg-yellow-400/20 text-yellow-700" : "bg-muted text-muted-foreground opacity-60"
+                        )}>
+                            <Award className="h-6 w-6" />
+                            <div>
+                                <h4 className="font-semibold">Sleep Star</h4>
+                                <p className="text-sm">Log 8+ hours of sleep for 3 days.</p>
+                            </div>
+                        </div>
+                        <div className={cn(
+                            "flex items-center gap-3 p-3 rounded-lg transition-all",
+                             achievements.queen ? "bg-purple-400/20 text-purple-700" : "bg-muted text-muted-foreground opacity-60"
+                        )}>
+                             <Award className="h-6 w-6" />
+                            <div>
+                                <h4 className="font-semibold">Rest Queen</h4>
+                                <p className="text-sm">Maintain consistent sleep quality for a week.</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
       </main>
