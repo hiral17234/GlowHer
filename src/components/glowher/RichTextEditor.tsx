@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
-import { Bold, Italic, Underline } from 'lucide-react';
+import { Bold, Italic, Underline, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -11,14 +11,16 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
-const execCmd = (command: string) => {
+const execCmd = (command: string, value?: string) => {
     if (typeof window !== 'undefined' && document) {
-        document.execCommand(command, false);
+        document.execCommand(command, false, value);
     }
 };
 
+
 export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
+  const colorInputRef = useRef<HTMLInputElement>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -41,6 +43,16 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     handleInput(); // Ensure state is updated after command
   };
   
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    editorRef.current?.focus();
+    execCmd('foreColor', e.target.value);
+    handleInput();
+  };
+
+  const handleColorButtonClick = () => {
+    colorInputRef.current?.click();
+  };
+
   // This effect synchronizes the editor's content with the external value,
   // but only if the content is different. This prevents the cursor jump issue.
   useEffect(() => {
@@ -92,6 +104,22 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         >
           <Underline className="h-4 w-4" />
         </Button>
+        <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onMouseDown={(e) => { e.preventDefault(); handleColorButtonClick(); }}
+        >
+          <Palette className="h-4 w-4" />
+        </Button>
+        <input
+            type="color"
+            ref={colorInputRef}
+            className="h-0 w-0 opacity-0 absolute"
+            onChange={handleColorChange}
+            aria-label="Font Color"
+        />
       </div>
       <div
         ref={editorRef}
