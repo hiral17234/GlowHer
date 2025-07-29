@@ -8,7 +8,7 @@ import { z } from "zod";
 import { format, subDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import {
   CalendarIcon,
@@ -34,6 +35,7 @@ import {
   Angry,
   Bed,
   Smile,
+  BookText,
 } from 'lucide-react';
 
 const symptomsList = [
@@ -73,6 +75,7 @@ const FormSchema = z.object({
   otherSymptom: z.string().optional(),
   mood: z.string({ required_error: "Please select a mood." }),
   moodIntensity: z.array(z.number()).optional(),
+  notes: z.string().max(300, { message: "Notes must be 300 characters or less." }).optional(),
 });
 
 export default function LogSymptomsPage() {
@@ -85,8 +88,11 @@ export default function LogSymptomsPage() {
       logDate: new Date(),
       symptoms: [],
       moodIntensity: [5],
+      notes: "",
     },
   });
+
+  const notesValue = form.watch("notes");
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast({
@@ -270,6 +276,29 @@ export default function LogSymptomsPage() {
                     )}
                   />
 
+                  <FormField
+                    control={form.control}
+                    name="notes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                          <BookText /> Personal Notes
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Anything else you’d like to record today?"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-right">
+                          {notesValue?.length || 0} / 300
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <Button type="submit" size="lg" className="w-full">Save Log</Button>
                 </form>
               </Form>
@@ -281,5 +310,3 @@ export default function LogSymptomsPage() {
     </div>
   );
 }
-
-    
