@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSame
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Leaf, Dumbbell, Pill, Bed, HeartHandshake } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,23 +38,43 @@ type Predictions = {
 const phaseTips = {
     Menstrual: {
         title: "Menstrual Phase",
-        tip: "This is day 1 of your cycle. Your body is shedding the uterine lining. Focus on rest and nourishment. Gentle activities like walking or stretching can be beneficial.",
-        color: "bg-red-500/10 text-red-700",
+        color: "bg-red-500/10 text-red-700 border-red-500/20",
+        tips: {
+            diet: "Focus on iron-rich foods like spinach and lentils to replenish iron stores. Stay hydrated with water and herbal teas.",
+            exercise: "Gentle activities like walking, stretching, or light yoga are best. Listen to your body and rest when you need to.",
+            painRelief: "Use a warm compress on your abdomen. Consider magnesium supplements to ease cramps. OTC pain relievers can be used if needed (with a doctor's advice).",
+            moodSupport: "Prioritize rest and self-care. Journaling can help process emotions. A comforting cup of chamomile tea can be very soothing."
+        }
     },
     Follicular: {
         title: "Follicular Phase",
-        tip: "After your period, your energy levels start rising as your body prepares for ovulation. It's a great time for creative projects and more intense workouts.",
-        color: "bg-blue-500/10 text-blue-700",
+        color: "bg-blue-500/10 text-blue-700 border-blue-500/20",
+        tips: {
+            diet: "Energy levels are rising! Fuel up with lean proteins, fresh vegetables, and whole grains. This is a great time for sprouted and fermented foods.",
+            exercise: "Your energy is increasing, so you can gradually ramp up your workouts. Try cardio, dancing, or more vigorous forms of yoga.",
+            painRelief: "This phase is usually pain-free for most. Focus on nourishing your body to prepare for ovulation.",
+            moodSupport: "You may feel more creative and outgoing. It's a great time to start new projects or socialize with friends."
+        }
     },
     Ovulatory: {
         title: "Ovulatory Phase",
-        tip: "This is your most fertile time. You're likely at your peak energy. It's a great day for connecting with others and enjoying high-impact activities.",
-        color: "bg-green-500/10 text-green-700",
+        color: "bg-green-500/10 text-green-700 border-green-500/20",
+        tips: {
+            diet: "Eat light and clean. Focus on antioxidant-rich fruits and vegetables to support your body. Fiber is important to help process hormones.",
+            exercise: "This is your peak energy phase! High-impact workouts like HIIT, running, or spinning are great options.",
+            painRelief: "Some may experience mild cramping (mittelschmerz). A warm bath can help.",
+            moodSupport: "You might feel more social and communicative. It's an excellent time for connection and collaboration."
+        }
     },
     Luteal: {
         title: "Luteal Phase",
-        tip: "After ovulation, your energy may start to decrease as your body prepares for the next period. Focus on self-care and calming activities. Complex carbs can help with mood.",
-        color: "bg-yellow-500/10 text-yellow-700",
+        color: "bg-yellow-500/10 text-yellow-700 border-yellow-500/20",
+        tips: {
+            diet: "Focus on foods that stabilize blood sugar and mood, like complex carbs (sweet potatoes, oats), and healthy fats (avocado, nuts). Reduce caffeine and processed foods.",
+            exercise: "Energy may start to decline. Shift to strength training, pilates, or swimming. Listen to your body's cues to slow down.",
+            painRelief: "If you experience PMS symptoms like bloating or breast tenderness, reducing salt intake can help. Magnesium can also ease pre-menstrual cramps.",
+            moodSupport: "This is a time for winding down. Prioritize self-care and calming activities. Meditation or a good book can help manage mood swings."
+        }
     },
 };
 
@@ -331,14 +351,41 @@ export default function PeriodTrackerPage() {
             )}
 
             {currentPhase && (
-                 <Card className={cn("mt-6", phaseTips[currentPhase].color, "border-0")}>
+                <Card className={cn("mt-6 border-2", phaseTips[currentPhase].color)}>
                     <CardHeader>
-                        <CardTitle className="font-headline">Tips for your {phaseTips[currentPhase].title}</CardTitle>
+                        <CardTitle className="font-headline text-2xl">Wellness Tips for your {phaseTips[currentPhase].title}</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <p>{phaseTips[currentPhase].tip}</p>
+                    <CardContent className="space-y-4">
+                        <div className="flex items-start gap-4">
+                            <Leaf className="h-6 w-6 text-green-600 mt-1" />
+                            <div>
+                                <h4 className="font-semibold">Diet Tips</h4>
+                                <p className="text-sm">{phaseTips[currentPhase].tips.diet}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start gap-4">
+                            <Dumbbell className="h-6 w-6 text-blue-600 mt-1" />
+                            <div>
+                                <h4 className="font-semibold">Exercise Tips</h4>
+                                <p className="text-sm">{phaseTips[currentPhase].tips.exercise}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start gap-4">
+                            <HeartHandshake className="h-6 w-6 text-red-600 mt-1" />
+                            <div>
+                                <h4 className="font-semibold">Pain & Symptom Relief</h4>
+                                <p className="text-sm">{phaseTips[currentPhase].tips.painRelief}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start gap-4">
+                            <Bed className="h-6 w-6 text-indigo-600 mt-1" />
+                            <div>
+                                <h4 className="font-semibold">Rest & Mood Support</h4>
+                                <p className="text-sm">{phaseTips[currentPhase].tips.moodSupport}</p>
+                            </div>
+                        </div>
                     </CardContent>
-                 </Card>
+                </Card>
             )}
           </div>
         </div>
@@ -348,5 +395,3 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
-
-    
