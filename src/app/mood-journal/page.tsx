@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { format, subDays, isSameDay } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/glowher/RichTextEditor';
 
 
 const moods = [
@@ -277,11 +277,11 @@ export default function MoodJournalPage() {
                           <BookText /> Journal Entry
                         </FormLabel>
                         <FormControl>
-                           <Textarea
+                           <RichTextEditor
+                            value={field.value}
+                            onChange={field.onChange}
                             placeholder="Anything on your mind today?"
-                            className="resize-none min-h-[250px]"
-                            {...field}
-                          />
+                           />
                         </FormControl>
                         <FormDescription className="text-right">
                           {notesValue?.length || 0} / 1000
@@ -326,3 +326,5 @@ export default function MoodJournalPage() {
     </div>
   );
 }
+
+    
