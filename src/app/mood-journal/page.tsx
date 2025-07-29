@@ -19,7 +19,8 @@ import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const moods = [
     { name: 'Happy', emoji: '😄' },
@@ -137,8 +138,8 @@ export default function MoodJournalPage() {
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
+        <div className="max-w-3xl mx-auto space-y-8">
+          <div className="text-center">
             <h1 className="font-headline text-4xl md:text-5xl font-bold">How Are You Feeling Today?</h1>
             <p className="mt-2 text-lg text-muted-foreground">Log your emotions to understand yourself better.</p>
           </div>
@@ -147,7 +148,7 @@ export default function MoodJournalPage() {
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>New Journal Entry</CardTitle>
-                    <Button variant="outline" onClick={() => { /* Implement history page later */ }}>
+                    <Button variant="outline" onClick={() => router.push('/mood-history')}>
                         <History className="mr-2 h-4 w-4" />
                         View History
                     </Button>
@@ -294,9 +295,35 @@ export default function MoodJournalPage() {
               </Form>
             </CardContent>
           </Card>
+
+          <Card className="shadow-lg bg-secondary/20">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Brain className="text-secondary-foreground"/>
+                    Mood & Cycle Insights
+                </CardTitle>
+                <CardDescription>Understanding how your cycle can influence your emotions.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                 <Alert>
+                    <AlertTitle className="font-semibold">Luteal Phase (Pre-Period)</AlertTitle>
+                    <AlertDescription>
+                        It's common to feel more anxious or irritable during this time. Try mindfulness exercises, reduce caffeine, and prioritize sleep.
+                    </AlertDescription>
+                </Alert>
+                 <Alert>
+                    <AlertTitle className="font-semibold">Menstrual Phase (During Period)</AlertTitle>
+                    <AlertDescription>
+                       Energy levels can be low. Be kind to yourself. Gentle activities and nourishing foods can make a big difference.
+                    </AlertDescription>
+                </Alert>
+            </CardContent>
+          </Card>
         </div>
       </main>
       <AppFooter />
     </div>
   );
 }
+
+    
