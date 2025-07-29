@@ -164,7 +164,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         onInput={handleInput}
         onBlur={handleBlur}
         className={cn(
-            'min-h-[250px] w-full p-3 text-base bg-background/50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300',
+            'min-h-[250px] w-full p-3 text-base bg-transparent focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300',
             !value && 'text-muted-foreground'
         )}
         data-placeholder={placeholder}
