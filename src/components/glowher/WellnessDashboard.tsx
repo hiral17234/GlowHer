@@ -64,7 +64,7 @@ const wellnessFeatures = [
       icon: Baby,
       title: 'Pregnancy Tracker',
       description: 'Enter due date, view week-by-week updates',
-      href: '#',
+      href: '/pregnancy-tracker',
       color: 'text-green-500',
       bgColor: 'bg-green-500/10'
     },
