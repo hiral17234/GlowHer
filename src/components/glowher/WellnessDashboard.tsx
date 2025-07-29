@@ -56,7 +56,7 @@ const wellnessFeatures = [
       icon: BookOpen,
       title: 'Mood Journal',
       description: 'Daily mood + notes, view history',
-      href: '#',
+      href: '/mood-journal',
       color: 'text-yellow-500',
       bgColor: 'bg-yellow-500/10'
     },
