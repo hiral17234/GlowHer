@@ -32,7 +32,7 @@ const wellnessFeatures = [
       icon: Heart,
       title: 'Log Symptoms & Moods',
       description: 'Select symptoms & emotional state',
-      href: '#',
+      href: '/log-symptoms',
       color: 'text-pink-500',
       bgColor: 'bg-pink-500/10'
     },
