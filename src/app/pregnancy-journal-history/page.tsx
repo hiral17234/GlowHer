@@ -14,13 +14,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { AppFooter } from '@/components/glowher/AppFooter';
-import { ChevronLeft, Calendar, BookText } from 'lucide-react';
+import { ChevronLeft, Calendar, BookText, ImageIcon } from 'lucide-react';
+import Image from 'next/image';
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-pregnancy-journal-';
 
 type LogData = {
   logDate: string;
   notes: string;
+  themeUrl?: string;
+  imageUrl?: string;
 };
 
 export default function PregnancyJournalHistoryPage() {
@@ -82,13 +85,31 @@ export default function PregnancyJournalHistoryPage() {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="pt-4 space-y-4">
-                        <div className="flex items-start gap-2">
-                            <BookText className="h-5 w-5 text-secondary-foreground mt-1" />
-                            <div className="w-full">
-                                <h4 className="font-semibold mb-2">Notes:</h4>
-                                <p className="text-muted-foreground bg-muted/50 p-3 rounded-md border whitespace-pre-wrap">{log.notes}</p>
+                        {log.notes && (
+                            <div className="flex items-start gap-2">
+                                <BookText className="h-5 w-5 text-secondary-foreground mt-1" />
+                                <div className="w-full">
+                                    <h4 className="font-semibold mb-2">Journal Entry:</h4>
+                                     <div 
+                                        className="prose max-w-none text-foreground bg-muted/50 p-3 rounded-md border min-h-[100px] bg-cover bg-center"
+                                        style={{ 
+                                            backgroundImage: log.themeUrl ? `url(${log.themeUrl})` : 'none',
+                                        }}
+                                        dangerouslySetInnerHTML={{ __html: log.notes }} 
+                                    >
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        )}
+                        {log.imageUrl && (
+                             <div className="flex items-start gap-2">
+                                <ImageIcon className="h-5 w-5 text-secondary-foreground mt-1" />
+                                <div className="w-full">
+                                    <h4 className="font-semibold mb-2">Attached Image:</h4>
+                                    <Image src={log.imageUrl} alt="Journal image" width={200} height={200} className="rounded-md border object-cover"/>
+                                </div>
+                            </div>
+                        )}
                       </AccordionContent>
                     </AccordionItem>
                   ))}
@@ -102,3 +123,5 @@ export default function PregnancyJournalHistoryPage() {
     </div>
   );
 }
+
+    
