@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Image as ImageIcon } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Image as ImageIcon, X } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RichTextEditor } from '@/components/glowher/RichTextEditor';
 import Image from 'next/image';
@@ -56,8 +56,9 @@ const FormSchema = z.object({
   mood: z.string({ required_error: "Please select a mood." }),
   customMood: z.string().optional(),
   moodIntensity: z.array(z.number()).optional(),
-  notes: z.string().max(10000, { message: "Notes must be 10000 characters or less." }).optional(), // Increased for images
+  notes: z.string().max(1000, { message: "Notes must be 1000 characters or less." }).optional(),
   themeUrl: z.string().optional(),
+  imageUrl: z.string().optional(),
 }).refine(data => {
     return data.mood !== 'Custom' || (data.mood === 'Custom' && data.customMood && data.customMood.length > 0);
 }, {
@@ -74,6 +75,8 @@ export default function MoodJournalPage() {
   const { toast } = useToast();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showCustomMoodInput, setShowCustomMoodInput] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -84,6 +87,7 @@ export default function MoodJournalPage() {
       notes: "",
       customMood: "",
       themeUrl: "",
+      imageUrl: "",
     },
   });
 
@@ -111,6 +115,11 @@ export default function MoodJournalPage() {
         const parsedData = JSON.parse(savedData);
         parsedData.logDate = new Date(parsedData.logDate);
         form.reset(parsedData);
+        if (parsedData.imageUrl) {
+            setImagePreview(parsedData.imageUrl);
+        } else {
+            setImagePreview(null);
+        }
       } else {
         form.reset({
           logDate: logDate,
@@ -119,7 +128,9 @@ export default function MoodJournalPage() {
           notes: "",
           customMood: "",
           themeUrl: "",
+          imageUrl: "",
         });
+        setImagePreview(null);
       }
       setCurrentDate(logDate);
     } catch (error) {
@@ -144,6 +155,19 @@ export default function MoodJournalPage() {
         console.error("Failed to save to localStorage", error);
     }
   }
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+            const dataUrl = readerEvent.target?.result as string;
+            form.setValue('imageUrl', dataUrl);
+            setImagePreview(dataUrl);
+        };
+        reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -338,12 +362,52 @@ export default function MoodJournalPage() {
                            />
                         </FormControl>
                         <FormDescription className="text-right">
-                          {notesValue?.length || 0} / 10000
+                          {notesValue?.length || 0} / 1000
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+
+                    <FormItem>
+                        <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                            <ImageIcon /> Attach an Image
+                        </FormLabel>
+                        <FormControl>
+                            <div>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    onChange={handleImageUpload}
+                                    accept="image/*"
+                                />
+                                {!imagePreview ? (
+                                    <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
+                                        <PlusCircle className="mr-2 h-4 w-4" />
+                                        Add Image
+                                    </Button>
+                                ) : (
+                                    <div className="relative w-48 h-48">
+                                        <Image src={imagePreview} alt="Preview" layout="fill" className="object-cover rounded-md border" />
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute top-1 right-1 h-7 w-7"
+                                            onClick={() => {
+                                                setImagePreview(null);
+                                                form.setValue('imageUrl', '');
+                                            }}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        </FormControl>
+                    </FormItem>
+
 
                   <Button type="submit" size="lg" className="w-full">Save Entry</Button>
                 </form>

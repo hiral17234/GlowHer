@@ -14,8 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { AppFooter } from '@/components/glowher/AppFooter';
-import { ChevronLeft, Calendar, Smile, BookText } from 'lucide-react';
+import { ChevronLeft, Calendar, Smile, BookText, Image as ImageIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-mood-journal-';
 
@@ -26,6 +27,7 @@ type LogData = {
   moodIntensity?: number[];
   notes?: string;
   themeUrl?: string;
+  imageUrl?: string;
 };
 
 export default function MoodHistoryPage() {
@@ -104,12 +106,22 @@ export default function MoodHistoryPage() {
                                     <div 
                                         className="prose max-w-none text-foreground bg-muted/50 p-3 rounded-md border min-h-[100px] bg-cover bg-center"
                                         style={{ 
-                                            backgroundImage: log.themeUrl ? `url(${log.themeUrl})` : 'none',
-                                            color: log.themeUrl ? 'white' : 'inherit'
+                                            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), ${log.themeUrl ? `url(${log.themeUrl})` : 'none'}`,
+                                            color: 'inherit'
                                         }}
                                         dangerouslySetInnerHTML={{ __html: log.notes }} 
                                     >
                                     </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {log.imageUrl && (
+                             <div className="flex items-start gap-2">
+                                <ImageIcon className="h-5 w-5 text-secondary-foreground mt-1" />
+                                <div className="w-full">
+                                    <h4 className="font-semibold mb-2">Attached Image:</h4>
+                                    <Image src={log.imageUrl} alt="Journal image" width={200} height={200} className="rounded-md border object-cover"/>
                                 </div>
                             </div>
                         )}

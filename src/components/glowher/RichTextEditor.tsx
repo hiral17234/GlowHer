@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
-import { Bold, Italic, Underline, Palette, Image as ImageIcon } from 'lucide-react';
+import { Bold, Italic, Underline, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -21,7 +21,6 @@ const execCmd = (command: string, value?: string) => {
 export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const colorInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const isTypingRef = useRef(false);
   const lastValue = useRef(value);
 
@@ -64,48 +63,12 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
     colorInputRef.current?.click();
   };
   
-  const handleImageButtonMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      editorRef.current?.focus();
-      fileInputRef.current?.click();
-  }
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (readerEvent) => {
-            const dataUrl = readerEvent.target?.result;
-            if (typeof dataUrl === 'string' && editorRef.current) {
-                const imgHtml = `<img src="${dataUrl}" style="max-width: 100%; height: auto; border-radius: 8px;" /><p><br></p>`;
-                
-                editorRef.current.focus();
-                execCmd('insertHTML', imgHtml);
-                
-                // Set cursor after the inserted image
-                const range = document.createRange();
-                const sel = window.getSelection();
-                if (sel && editorRef.current.lastChild) {
-                    range.setStartAfter(editorRef.current.lastChild);
-                    range.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-
-                handleInput();
-            }
-        };
-        reader.readAsDataURL(file);
-    }
-  };
-
-  const editorStyle: React.CSSProperties = themeUrl ? {
-    backgroundImage: `url(${themeUrl})`,
+  const editorStyle: React.CSSProperties = {
+    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), ${themeUrl ? `url(${themeUrl})` : 'none'}`,
+    backgroundColor: themeUrl ? 'transparent' : 'hsl(var(--background))',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundAttachment: 'local',
-  } : {
-    backgroundColor: 'hsl(var(--background))',
   };
 
   return (
@@ -147,15 +110,6 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         >
           <Palette className="h-4 w-4" />
         </Button>
-        <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            onMouseDown={handleImageButtonMouseDown}
-        >
-          <ImageIcon className="h-4 w-4" />
-        </Button>
         <input
             type="color"
             ref={colorInputRef}
@@ -163,14 +117,6 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
             onInput={handleColorChange}
             onChange={handleColorChange}
             aria-label="Font Color"
-        />
-        <input
-            type="file"
-            ref={fileInputRef}
-            className="h-0 w-0 opacity-0 absolute"
-            onChange={handleImageUpload}
-            aria-label="Insert Image"
-            accept="image/*"
         />
       </div>
       <div
@@ -181,7 +127,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         className={cn(
             'min-h-[250px] w-full p-3 text-base bg-transparent focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300',
             !value && 'text-muted-foreground',
-             themeUrl ? 'text-white' : 'text-foreground'
+            'text-foreground'
         )}
         data-placeholder={placeholder}
         style={{
