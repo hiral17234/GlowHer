@@ -18,9 +18,10 @@ import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Image as ImageIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RichTextEditor } from '@/components/glowher/RichTextEditor';
+import Image from 'next/image';
 
 
 const moods = [
@@ -34,6 +35,13 @@ const moods = [
     { name: 'Loved', emoji: '😍' },
 ];
 
+const themes = [
+    { name: 'None', url: '' },
+    { name: 'Nature', url: 'https://placehold.co/800x400.png?text=Nature' },
+    { name: 'Abstract', url: 'https://placehold.co/800x400.png?text=Abstract' },
+    { name: 'Sky', url: 'https://placehold.co/800x400.png?text=Sky' },
+];
+
 const FormSchema = z.object({
   logDate: z.date({
     required_error: "A date is required.",
@@ -42,6 +50,7 @@ const FormSchema = z.object({
   customMood: z.string().optional(),
   moodIntensity: z.array(z.number()).optional(),
   notes: z.string().max(1000, { message: "Notes must be 1000 characters or less." }).optional(),
+  themeUrl: z.string().optional(),
 }).refine(data => {
     return data.mood !== 'Custom' || (data.mood === 'Custom' && data.customMood && data.customMood.length > 0);
 }, {
@@ -67,12 +76,14 @@ export default function MoodJournalPage() {
       moodIntensity: [5],
       notes: "",
       customMood: "",
+      themeUrl: "",
     },
   });
 
   const notesValue = form.watch("notes");
   const logDate = form.watch("logDate");
   const selectedMood = form.watch("mood");
+  const selectedTheme = form.watch("themeUrl");
 
   useEffect(() => {
     if(selectedMood === 'Custom') {
@@ -100,6 +111,7 @@ export default function MoodJournalPage() {
           moodIntensity: [5],
           notes: "",
           customMood: "",
+          themeUrl: "",
         });
       }
       setCurrentDate(logDate);
@@ -268,6 +280,40 @@ export default function MoodJournalPage() {
                     )}
                   />
 
+                   <FormField
+                        control={form.control}
+                        name="themeUrl"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                                <ImageIcon /> Journal Theme
+                            </FormLabel>
+                            <FormControl>
+                                <div className="flex gap-4 pt-2">
+                                    {themes.map(theme => (
+                                        <button
+                                            key={theme.name}
+                                            type="button"
+                                            className={cn(
+                                                "w-20 h-14 rounded-lg border-2 overflow-hidden transition-all duration-200 transform hover:scale-105",
+                                                field.value === theme.url ? "border-primary ring-2 ring-primary/50" : "border-muted"
+                                            )}
+                                            onClick={() => field.onChange(theme.url)}
+                                        >
+                                            {theme.url ? (
+                                                <Image src={theme.url} alt={theme.name} width={80} height={56} className="object-cover w-full h-full"/>
+                                            ) : (
+                                                <div className="w-full h-full bg-muted flex items-center justify-center text-sm">None</div>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+
                   <FormField
                     control={form.control}
                     name="notes"
@@ -281,6 +327,7 @@ export default function MoodJournalPage() {
                             value={field.value}
                             onChange={field.onChange}
                             placeholder="Anything on your mind today?"
+                            themeUrl={selectedTheme}
                            />
                         </FormControl>
                         <FormDescription className="text-right">
@@ -326,5 +373,3 @@ export default function MoodJournalPage() {
     </div>
   );
 }
-
-    
