@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, differenceInDays } from 'date-fns';
-import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, Yoga } from 'lucide-react';
+import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, HeartPulse } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -445,7 +445,7 @@ export default function FitnessGoalsPage() {
                        
                         <Card className="shadow-xl">
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2"><Yoga /> Guided Prenatal Yoga</CardTitle>
+                                <CardTitle className="flex items-center gap-2"><HeartPulse /> Guided Prenatal Yoga</CardTitle>
                                 <CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription>
                             </CardHeader>
                             <CardContent>
