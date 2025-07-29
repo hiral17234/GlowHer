@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSame
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Leaf, Dumbbell, Pill, Bed, HeartHandshake } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Leaf, Dumbbell, Pill, Bed, HeartHandshake, AlertTriangle, CalendarClock, Target, CheckCircle } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const formSchema = z.object({
   lastPeriodDate: z.date({ required_error: "Last period date is required." }),
@@ -84,7 +85,10 @@ export default function PeriodTrackerPage() {
   const [predictions, setPredictions] = useState<Predictions | null>(null);
   const [currentPhase, setCurrentPhase] = useState<keyof typeof phaseTips | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [daysSinceLastPeriod, setDaysSinceLastPeriod] = useState<number | null>(null);
   const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
+  const [showIrregularityAlert, setShowIrregularityAlert] = useState(false);
+
 
   const form = useForm<CycleData>({
     resolver: zodResolver(formSchema),
@@ -129,6 +133,8 @@ export default function PeriodTrackerPage() {
     const cycleLength = data.cycleLength;
     const lutealPhase = data.lutealPhaseLength || 14;
     
+    setShowIrregularityAlert(cycleLength < 21 || cycleLength > 35);
+
     let currentCycleStartDate = lastPeriod;
     while (addDays(currentCycleStartDate, cycleLength) <= today) {
         currentCycleStartDate = addDays(currentCycleStartDate, cycleLength);
@@ -137,29 +143,33 @@ export default function PeriodTrackerPage() {
     const nextPeriodStart = startOfDay(addDays(currentCycleStartDate, cycleLength));
     const ovulationDay = startOfDay(addDays(nextPeriodStart, -lutealPhase));
     const fertileWindowStart = startOfDay(addDays(ovulationDay, -5));
-    const periodEnd = startOfDay(addDays(currentCycleStartDate, 4)); 
+    const fertileWindowEnd = ovulationDay;
+    const periodEnd = startOfDay(addDays(currentCycleStartDate, 4)); // Assume 5 day period
 
     const newPredictions = {
         nextPeriod: Array.from({ length: 5 }, (_, i) => addDays(nextPeriodStart, i)),
-        fertileWindow: { start: fertileWindowStart, end: ovulationDay },
+        fertileWindow: { start: fertileWindowStart, end: fertileWindowEnd },
         ovulationDay: ovulationDay,
     };
     setPredictions(newPredictions);
 
+    // Determine current phase
     if (isWithinInterval(today, { start: currentCycleStartDate, end: periodEnd })) {
       setCurrentPhase("Menstrual");
-    } else if (isSameDay(today, ovulationDay)) {
-        setCurrentPhase("Ovulatory");
     } else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: addDays(ovulationDay, -1) })) {
       setCurrentPhase("Follicular");
+    } else if (isSameDay(today, ovulationDay)) {
+        setCurrentPhase("Ovulatory");
     } else if (isWithinInterval(today, { start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1) })) {
       setCurrentPhase("Luteal");
     } else {
+      // Default to follicular if somehow in between ranges
       setCurrentPhase("Follicular");
     }
     
     const daysUntilNextPeriod = differenceInDays(nextPeriodStart, today);
     setCountdown(daysUntilNextPeriod >= 0 ? daysUntilNextPeriod : 0);
+    setDaysSinceLastPeriod(differenceInDays(today, currentCycleStartDate));
     setCalendarMonth(nextPeriodStart);
   }
 
@@ -254,17 +264,17 @@ export default function PeriodTrackerPage() {
                       render={({ field }) => (
                         <FormItem>
                            <div className="flex items-center gap-2">
-                             <FormLabel>Luteal Phase Length (optional)</FormLabel>
+                             <FormLabel>Luteal Phase Length</FormLabel>
                              <TooltipProvider>
                                <Tooltip>
                                  <TooltipTrigger asChild>
-                                   <button type="button" aria-label="Luteal phase info">
+                                   <button type="button" aria-label="Luteal phase info" onClick={(e) => e.preventDefault()}>
                                      <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
                                    </button>
                                  </TooltipTrigger>
                                  <TooltipContent>
                                    <p className="max-w-xs">
-                                    The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. This is different from your period (menstruation), which is when you bleed.
+                                     The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. This is different from your period (menstruation), which is when you bleed.
                                    </p>
                                  </TooltipContent>
                                </Tooltip>
@@ -322,33 +332,67 @@ export default function PeriodTrackerPage() {
                     />
                 </CardContent>
             </Card>
+            
+            {showIrregularityAlert && (
+              <Alert variant="destructive" className="mt-6">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Cycle Length Notice</AlertTitle>
+                <AlertDescription>
+                  Your average cycle length is outside the typical 21-35 day range. While this is normal for some, you may want to consult a healthcare provider if you have concerns.
+                </AlertDescription>
+              </Alert>
+            )}
 
             {predictions && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Next Period In</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-4xl font-bold text-foreground">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Current Phase</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {currentPhase ? (
-                      <Badge className={cn("text-lg", phaseTips[currentPhase].color)}>
-                        {phaseTips[currentPhase].title}
-                      </Badge>
-                    ) : (
-                        <p>Calculating...</p>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
+                <div className="mt-6">
+                    <h3 className="text-2xl font-headline mb-4">Mini Tracker Summary</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <Card>
+                            <CardHeader className="flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Next Period In</CardTitle>
+                                <Target className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-bold">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Current Phase</CardTitle>
+                                <CalendarClock className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                {currentPhase ? (
+                                    <Badge className={cn("text-md", phaseTips[currentPhase].color)}>
+                                        {phaseTips[currentPhase].title}
+                                    </Badge>
+                                ) : (
+                                    <p className="text-2xl font-bold">...</p>
+                                )}
+                            </CardContent>
+                        </Card>
+                        <Card>
+                             <CardHeader className="flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Day of Cycle</CardTitle>
+                                <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-bold">{daysSinceLastPeriod !== null ? `${daysSinceLastPeriod + 1}` : 'N/A'}</p>
+                            </CardContent>
+                        </Card>
+                         <Card>
+                             <CardHeader className="flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Symptoms Logged</CardTitle>
+                                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-bold">No</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             )}
+
 
             {currentPhase && (
                 <Card className={cn("mt-6 border-2", phaseTips[currentPhase].color)}>
@@ -395,3 +439,5 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
+
+    
