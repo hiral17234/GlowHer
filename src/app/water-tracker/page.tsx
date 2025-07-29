@@ -195,7 +195,7 @@ export default function WaterTrackerPage() {
     } catch (e) { console.error("Error calculating streak:", e); }
 
 
-  }, [currentDateKey]);
+  }, [currentDateKey, settingsForm, reminderForm]);
 
   const playReminderSound = () => {
     if (audioRef.current) {
@@ -238,7 +238,7 @@ export default function WaterTrackerPage() {
         playReminderSound();
       }
     }
-  }, [dailyLog, currentDateKey]);
+  }, [dailyLog, currentDateKey, reminderForm, toast]);
 
   const handleSetUnit = (newUnit: Unit) => {
     const oldGoalInCups = goal;
