@@ -6,7 +6,7 @@ import { format, subDays, startOfDay } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { History } from 'lucide-react';
-import { ChartTooltipContent } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 
 const LOCAL_STORAGE_PREFIX = 'glowher-water-tracker-';
 
@@ -20,6 +20,18 @@ type WeeklyData = {
     actual: number;
     goal: number;
 };
+
+const chartConfig = {
+    actual: {
+        label: "Actual",
+        color: "hsl(var(--primary))",
+    },
+    goal: {
+        label: "Goal",
+        color: "hsl(var(--primary))",
+    }
+} satisfies ChartConfig;
+
 
 export function WaterLogHistory() {
     const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
@@ -80,41 +92,46 @@ export function WaterLogHistory() {
                 <CardDescription>Your hydration performance over the last 7 days.</CardDescription>
             </CardHeader>
             <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={weeklyData}>
-                        <XAxis
-                            dataKey="name"
-                            stroke="#888888"
-                            fontSize={12}
-                            tickLine={false}
-                            axisLine={false}
-                        />
-                        <YAxis
-                            stroke="#888888"
-                            fontSize={12}
-                            tickLine={false}
-                            axisLine={false}
-                            tickFormatter={(value) => `${value}`}
-                            label={{ value: 'Cups', angle: -90, position: 'insideLeft' }}
-                        />
-                        <Tooltip
-                            content={<ChartTooltipContent
-                                formatter={(value, name) => (
-                                    <div className="flex flex-col">
-                                        <span className="font-bold capitalize">{name}: {value} cups</span>
-                                    </div>
-                                )}
-                                labelFormatter={(label, payload) => {
-                                    const date = payload?.[0]?.payload.date;
-                                    return <div className="font-bold">{format(new Date(date), 'MMMM d')}</div>
-                                }}
-                            />}
-                            cursor={{ fill: 'hsl(var(--accent))', radius: 4 }}
-                         />
-                        <Bar dataKey="actual" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Actual"/>
-                        <Bar dataKey="goal" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} opacity={0.3} name="Goal"/>
-                    </BarChart>
-                </ResponsiveContainer>
+                <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={weeklyData}>
+                            <XAxis
+                                dataKey="name"
+                                stroke="#888888"
+                                fontSize={12}
+                                tickLine={false}
+                                axisLine={false}
+                            />
+                            <YAxis
+                                stroke="#888888"
+                                fontSize={12}
+                                tickLine={false}
+                                axisLine={false}
+                                tickFormatter={(value) => `${value}`}
+                                label={{ value: 'Cups', angle: -90, position: 'insideLeft' }}
+                            />
+                            <Tooltip
+                                content={<ChartTooltipContent
+                                    formatter={(value, name) => (
+                                        <div className="flex flex-col">
+                                            <span className="font-bold capitalize">{name}: {value} cups</span>
+                                        </div>
+                                    )}
+                                    labelFormatter={(label, payload) => {
+                                        const date = payload?.[0]?.payload.date;
+                                        if (date) {
+                                            return <div className="font-bold">{format(new Date(date), 'MMMM d')}</div>
+                                        }
+                                        return null;
+                                    }}
+                                />}
+                                cursor={{ fill: 'hsl(var(--accent))', radius: 4 }}
+                            />
+                            <Bar dataKey="actual" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Actual"/>
+                            <Bar dataKey="goal" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} opacity={0.3} name="Goal"/>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </ChartContainer>
             </CardContent>
         </Card>
     );
