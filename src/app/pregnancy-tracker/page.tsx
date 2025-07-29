@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, addWeeks, subDays, diffe
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video, CheckSquare, Square, ThumbsUp } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video, CheckSquare, Square, ThumbsUp, PartyPopper } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -517,10 +517,28 @@ const babyLookVideos: { [key: number]: string } = {
 };
 
 
+const milestoneMessages: { [key: number]: { title: string; description: string } } = {
+    13: { title: "Trimester 1 Complete!", description: "You've made it through the first trimester! Many of the early discomforts may start to fade." },
+    27: { title: "Welcome to the Third Trimester!", description: "You're on the home stretch! Your baby will be doing a lot of growing from here." },
+    30: { title: "Just 10 Weeks to Go!", description: "You've reached 30 weeks! Time to start finalizing preparations for your baby's arrival." },
+    37: { title: "Your Baby is Full-Term!", description: "Congratulations! Your baby is considered full-term and could arrive any day now." },
+    40: { title: "Happy Due Date!", description: "The big day is here! Remember, due dates are just an estimate. Your baby will arrive when they're ready." },
+};
+
+const supportiveMessages: { [key: number]: string } = {
+    9: "Feeling overwhelmed in week 9 is common. Your body is doing incredible work. You’re doing amazing.",
+    15: "Your baby is growing fast — and so are you. Don’t forget to rest today.",
+    22: "Seeing your baby on the ultrasound is a magical moment. Cherish this halfway point!",
+    34: "Feeling breathless? Your baby is taking up a lot of space. This is normal, but take it easy.",
+    38: "The waiting game is tough, but you're so close to meeting your little one. You've got this.",
+};
+
+
 export default function PregnancyTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [pregnancyDetails, setPregnancyDetails] = useState<PregnancyDetails | null>(null);
+  const displayedToastWeekRef = useRef<number | null>(null);
 
   const pregnancyForm = useForm<PregnancyFormData>({
     resolver: zodResolver(pregnancyFormSchema),
@@ -536,7 +554,6 @@ export default function PregnancyTrackerPage() {
         notes: "",
     },
   });
-
 
   useEffect(() => {
     try {
@@ -559,7 +576,37 @@ export default function PregnancyTrackerPage() {
     } catch (error) {
         console.error("Could not retrieve symptoms from localStorage", error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (pregnancyDetails && pregnancyDetails.gestationalAgeWeeks !== displayedToastWeekRef.current) {
+        const week = pregnancyDetails.gestationalAgeWeeks;
+        const milestone = milestoneMessages[week];
+        const supportiveMessage = supportiveMessages[week];
+
+        if(milestone){
+            toast({
+                title: (
+                    <div className="flex items-center gap-2">
+                        <PartyPopper className="text-yellow-400" />
+                        <span className="font-bold">{milestone.title}</span>
+                    </div>
+                ),
+                description: milestone.description,
+                duration: 5000,
+            });
+        } else if (supportiveMessage) {
+            toast({
+                title: "A Little Note For You",
+                description: supportiveMessage,
+                duration: 5000,
+            });
+        }
+        displayedToastWeekRef.current = week;
+    }
+  }, [pregnancyDetails, toast]);
+
 
   const calculateDetails = (dueDate: Date) => {
     const today = startOfDay(new Date());
@@ -934,5 +981,3 @@ export default function PregnancyTrackerPage() {
     </div>
   );
 }
-
-    
