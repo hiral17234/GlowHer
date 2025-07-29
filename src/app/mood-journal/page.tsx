@@ -37,9 +37,16 @@ const moods = [
 
 const themes = [
     { name: 'None', url: '' },
-    { name: 'Nature', url: 'https://placehold.co/800x400.png?text=Nature' },
-    { name: 'Abstract', url: 'https://placehold.co/800x400.png?text=Abstract' },
-    { name: 'Sky', url: 'https://placehold.co/800x400.png?text=Sky' },
+    { name: 'Theme 1', url: 'https://i.pinimg.com/736x/b7/c8/55/b7c855729051d9b0c53f9d8ac14f44e5.jpg' },
+    { name: 'Theme 2', url: 'https://i.pinimg.com/736x/af/eb/54/afeb548a9f2ea67f3114a8ad8cd00f70.jpg' },
+    { name: 'Theme 3', url: 'https://i.pinimg.com/736x/bb/86/15/bb8615133e2463ad2c9ac0d787f71fa9.jpg' },
+    { name: 'Theme 4', url: 'https://i.pinimg.com/736x/20/44/87/204487aa4ed5b8ca3901600ff4802639.jpg' },
+    { name: 'Theme 5', url: 'https://i.pinimg.com/736x/48/90/bd/4890bd90b28f004d7dd8b422e436ade7.jpg' },
+    { name: 'Theme 6', url: 'https://i.pinimg.com/736x/85/33/00/853300d5833ad64bb1973764ceca7d63.jpg' },
+    { name: 'Theme 7', url: 'https://i.pinimg.com/736x/15/ea/4a/15ea4a490a6a162a02c03745a1ff567b.jpg' },
+    { name: 'Theme 8', url: 'https://i.pinimg.com/736x/c9/3c/90/c93c90c8be46f81e413eee311036c58d.jpg' },
+    { name: 'Theme 9', url: 'https://i.pinimg.com/736x/cd/4b/90/cd4b901784885e7a2e0d577ab99500f2.jpg' },
+    { name: 'Theme 10', url: 'https://i.pinimg.com/736x/d4/9f/3d/d49f3d3546a8e3f7ff584331dbd56c0b.jpg' },
 ];
 
 const FormSchema = z.object({
@@ -289,7 +296,7 @@ export default function MoodJournalPage() {
                                 <ImageIcon /> Journal Theme
                             </FormLabel>
                             <FormControl>
-                                <div className="flex gap-4 pt-2">
+                                <div className="flex flex-wrap gap-4 pt-2">
                                     {themes.map(theme => (
                                         <button
                                             key={theme.name}
