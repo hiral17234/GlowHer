@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,9 +17,8 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
-import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Bold, Italic, Underline } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const moods = [
@@ -40,7 +39,7 @@ const FormSchema = z.object({
   mood: z.string({ required_error: "Please select a mood." }),
   customMood: z.string().optional(),
   moodIntensity: z.array(z.number()).optional(),
-  notes: z.string().max(500, { message: "Notes must be 500 characters or less." }).optional(),
+  notes: z.string().max(1000, { message: "Notes must be 1000 characters or less." }).optional(),
 }).refine(data => {
     return data.mood !== 'Custom' || (data.mood === 'Custom' && data.customMood && data.customMood.length > 0);
 }, {
@@ -57,6 +56,7 @@ export default function MoodJournalPage() {
   const { toast } = useToast();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showCustomMoodInput, setShowCustomMoodInput] = useState(false);
+  const editorRef = useRef<HTMLDivElement | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -81,6 +81,12 @@ export default function MoodJournalPage() {
         form.setValue('customMood', '');
     }
   }, [selectedMood, form]);
+
+  useEffect(() => {
+    if (editorRef.current && notesValue !== editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = notesValue || "";
+    }
+  }, [notesValue]);
 
   useEffect(() => {
     if (isSameDay(logDate, currentDate)) return;
@@ -124,6 +130,11 @@ export default function MoodJournalPage() {
         console.error("Failed to save to localStorage", error);
     }
   }
+
+  const applyFormat = (command: string) => {
+    document.execCommand(command, false);
+    editorRef.current?.focus();
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -275,15 +286,23 @@ export default function MoodJournalPage() {
                         <FormLabel className="text-lg font-semibold flex items-center gap-2">
                           <BookText /> Journal Entry
                         </FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Anything on your mind today?"
-                            className="resize-none min-h-[250px]"
-                            {...field}
-                          />
-                        </FormControl>
+                        <div className="rounded-md border border-input">
+                            <div className="p-2 border-b">
+                                <Button type="button" variant="ghost" size="icon" onMouseDown={(e) => { e.preventDefault(); applyFormat('bold'); }}><Bold/></Button>
+                                <Button type="button" variant="ghost" size="icon" onMouseDown={(e) => { e.preventDefault(); applyFormat('italic'); }}><Italic/></Button>
+                                <Button type="button" variant="ghost" size="icon" onMouseDown={(e) => { e.preventDefault(); applyFormat('underline'); }}><Underline/></Button>
+                            </div>
+                            <FormControl>
+                                <div
+                                    ref={editorRef}
+                                    contentEditable={true}
+                                    onInput={(e) => field.onChange(e.currentTarget.innerHTML)}
+                                    className="min-h-[250px] w-full rounded-b-md bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                            </FormControl>
+                        </div>
                         <FormDescription className="text-right">
-                          {notesValue?.length || 0} / 500
+                          {notesValue?.length || 0} / 1000
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
