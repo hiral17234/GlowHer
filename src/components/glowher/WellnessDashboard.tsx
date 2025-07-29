@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -71,8 +72,8 @@ const wellnessFeatures = [
     {
       icon: Activity,
       title: 'Fitness Goals',
-      description: 'Set fitness targets, log progress',
-      href: '#',
+      description: 'Set fitness targets, log progress, get cycle-aware tips',
+      href: '/fitness-goals',
       color: 'text-teal-500',
       bgColor: 'bg-teal-500/10'
     },
