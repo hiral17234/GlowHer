@@ -64,7 +64,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
   };
   
   const editorStyle: React.CSSProperties = {
-    backgroundImage: `${themeUrl ? `url(${themeUrl})` : 'none'}`,
+    backgroundImage: themeUrl ? `url(${themeUrl})` : 'none',
     backgroundColor: themeUrl ? 'transparent' : 'hsl(var(--background))',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
