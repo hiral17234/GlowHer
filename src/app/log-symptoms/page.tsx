@@ -24,7 +24,7 @@ import {
   Wind,
   CircleDot,
   ArrowLeftRight,
-  Stomach,
+  Thermometer,
   Cookie,
   Moon,
   Plus,
@@ -41,9 +41,9 @@ const symptomsList = [
     { id: 'backache', label: 'Backache', icon: ArrowLeftRight },
     { id: 'breastTenderness', label: 'Breast Tenderness', icon: Shell },
     { id: 'fatigue', label: 'Fatigue', icon: Bed },
-    { id: 'nausea', label: 'Nausea', icon: Stomach },
+    { id: 'nausea', label: 'Nausea', icon: Thermometer },
     { id: 'foodCravings', label: 'Food Cravings', icon: Cookie },
-    { id: 'diarrheaConstipation', label: 'Diarrhea / Constipation', icon: Stomach },
+    { id: 'diarrheaConstipation', label: 'Diarrhea / Constipation', icon: Thermometer },
     { id: 'moodSwings', label: 'Mood Swings', icon: Angry },
     { id: 'insomnia', label: 'Insomnia', icon: Moon },
   ];
@@ -164,7 +164,7 @@ export default function LogSymptomsPage() {
                                         checked={field.value?.includes(item.id)}
                                         onCheckedChange={(checked) => {
                                           return checked
-                                            ? field.onChange([...field.value, item.id])
+                                            ? field.onChange([...(field.value || []), item.id])
                                             : field.onChange(
                                                 field.value?.filter(
                                                   (value) => value !== item.id
