@@ -76,9 +76,22 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         const reader = new FileReader();
         reader.onload = (readerEvent) => {
             const dataUrl = readerEvent.target?.result;
-            if (typeof dataUrl === 'string') {
-                const img = `<img src="${dataUrl}" style="max-width: 100%; border-radius: 8px;" />`;
-                execCmd('insertHTML', img);
+            if (typeof dataUrl === 'string' && editorRef.current) {
+                const imgHtml = `<img src="${dataUrl}" style="max-width: 100%; height: auto; border-radius: 8px;" /><p><br></p>`;
+                
+                editorRef.current.focus();
+                execCmd('insertHTML', imgHtml);
+                
+                // Set cursor after the inserted image
+                const range = document.createRange();
+                const sel = window.getSelection();
+                if (sel && editorRef.current.lastChild) {
+                    range.setStartAfter(editorRef.current.lastChild);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+
                 handleInput();
             }
         };
@@ -91,7 +104,9 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundAttachment: 'local',
-  } : {};
+  } : {
+    backgroundColor: 'white',
+  };
 
   return (
     <div className="w-full rounded-md border border-input focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
@@ -165,7 +180,8 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         onBlur={handleBlur}
         className={cn(
             'min-h-[250px] w-full p-3 text-base bg-transparent focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300',
-            !value && 'text-muted-foreground'
+            !value && 'text-muted-foreground',
+             themeUrl ? 'text-white' : 'text-black'
         )}
         data-placeholder={placeholder}
         style={{

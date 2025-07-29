@@ -102,13 +102,13 @@ export default function MoodHistoryPage() {
                                 <div className="w-full">
                                     <h4 className="font-semibold mb-2">Journal Entry:</h4>
                                     <div 
-                                        className="text-foreground bg-muted/50 p-3 rounded-md border min-h-[100px] bg-cover bg-center"
-                                        style={{ backgroundImage: log.themeUrl ? `url(${log.themeUrl})` : 'none' }}
-                                    >
-                                      <div 
-                                        className="prose prose-sm max-w-none" 
+                                        className="prose max-w-none text-foreground bg-muted/50 p-3 rounded-md border min-h-[100px] bg-cover bg-center"
+                                        style={{ 
+                                            backgroundImage: log.themeUrl ? `url(${log.themeUrl})` : 'none',
+                                            color: log.themeUrl ? 'white' : 'inherit'
+                                        }}
                                         dangerouslySetInnerHTML={{ __html: log.notes }} 
-                                      />
+                                    >
                                     </div>
                                 </div>
                             </div>
@@ -126,5 +126,3 @@ export default function MoodHistoryPage() {
     </div>
   );
 }
-
-    
