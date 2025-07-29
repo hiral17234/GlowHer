@@ -3,11 +3,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSameDay } from 'date-fns';
+import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSameDay, subDays } from 'date-fns';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { ChevronLeft, Droplet, Plus, Minus, GlassWater, Info, Goal } from 'lucide-react';
+import { ChevronLeft, Droplet, Plus, Minus, GlassWater, Info, Goal, History } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,16 +17,21 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { WaterLogHistory } from '@/components/glowher/WaterLogHistory';
 
 const FormSchema = z.object({
   goal: z.coerce.number().min(1, "Goal must be at least 1.").positive(),
 });
 
 type SettingsFormData = z.infer<typeof FormSchema>;
-
 type Unit = 'cups' | 'ml' | 'oz';
+type WaterLogEntry = { time: string; amount: number }; // amount in cups
+type DailyLog = {
+    entries: WaterLogEntry[];
+};
+
 
 const unitConversions = {
   cups: 1,
@@ -57,8 +62,8 @@ export default function WaterTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [currentDate, setCurrentDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [intake, setIntake] = useState(0); // Always stored in cups
+  const [currentDateKey, setCurrentDateKey] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [dailyLog, setDailyLog] = useState<DailyLog>({ entries: [] });
   const [goal, setGoal] = useState(8); // Always stored in cups
   const [unit, setUnit] = useState<Unit>('cups');
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
@@ -85,11 +90,11 @@ export default function WaterTrackerPage() {
 
     // Load today's intake
     try {
-        const savedIntake = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${currentDate}`);
-        if (savedIntake) {
-            setIntake(JSON.parse(savedIntake));
+        const savedLog = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${currentDateKey}`);
+        if (savedLog) {
+            setDailyLog(JSON.parse(savedLog));
         } else {
-            setIntake(0);
+            setDailyLog({ entries: [] });
         }
     } catch(e) { console.error(e)}
 
@@ -124,13 +129,13 @@ export default function WaterTrackerPage() {
         }
     } catch(e) { console.error(e)}
 
-  }, [currentDate, form]);
+  }, [currentDateKey, form]);
 
   useEffect(() => {
     try {
-        localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${currentDate}`, JSON.stringify(intake));
+        localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${currentDateKey}`, JSON.stringify(dailyLog));
     } catch(e) { console.error(e) }
-  }, [intake, currentDate]);
+  }, [dailyLog, currentDateKey]);
 
   const handleSetUnit = (newUnit: Unit) => {
     const oldGoalInCups = goal;
@@ -158,22 +163,35 @@ export default function WaterTrackerPage() {
     });
   };
 
+  const totalIntake = dailyLog.entries.reduce((sum, entry) => sum + entry.amount, 0);
+
   const changeIntake = (amount: number) => { // amount is always in cups
-    const newIntake = intake + amount;
-    setIntake(prev => Math.max(0, prev + amount));
+    if (amount < 0 && totalIntake <= 0) return;
+
+    const newEntry: WaterLogEntry = { time: new Date().toISOString(), amount };
+    const newEntries = [...dailyLog.entries, newEntry];
+
+    // When removing, we just remove the last entry. A bit simplistic but works.
+    if (amount < 0) {
+      newEntries.pop(); // remove the new negative entry
+      newEntries.pop(); // remove the last positive entry
+    }
+
+    setDailyLog({ entries: newEntries });
 
     if (amount > 0) {
         const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+        const newTotalIntake = newEntries.reduce((sum, entry) => sum + entry.amount, 0);
         toast({
             title: randomMessage,
-            description: `You've logged ${Math.round((intake + amount) * unitConversions[unit])} ${unit} so far.`,
+            description: `You've logged ${Math.round(newTotalIntake * unitConversions[unit])} ${unit} so far.`,
         });
     }
   };
   
-  const intakeInCurrentUnit = intake * unitConversions[unit];
+  const intakeInCurrentUnit = totalIntake * unitConversions[unit];
   const goalInCurrentUnit = goal * unitConversions[unit];
-  const progress = goal > 0 ? (intake / goal) * 100 : 0;
+  const progress = goal > 0 ? (totalIntake / goal) * 100 : 0;
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -194,12 +212,11 @@ export default function WaterTrackerPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Tracker */}
-            <div className="lg:col-span-2">
-                <Card className="shadow-lg h-full">
+            <div className="lg:col-span-2 space-y-8">
+                <Card className="shadow-lg">
                     <CardHeader>
                         <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                           <GlassWater /> Today's Progress ({format(new Date(), "PPP")})
+                           <GlassWater /> Today's Progress ({format(new Date(currentDateKey), "PPP")})
                         </CardTitle>
                         <CardDescription>
                             Your goal is {Math.round(goalInCurrentUnit)} {unit}. You've had {Math.round(intakeInCurrentUnit)} {unit}.
@@ -215,12 +232,12 @@ export default function WaterTrackerPage() {
 
                         <div className="flex items-center gap-4 text-center">
                             {Array.from({ length: Math.ceil(goal) }).map((_, i) => (
-                                <Droplet key={i} className={cn("h-12 w-12 transition-colors duration-300", i < intake ? "text-blue-400 fill-blue-400" : "text-gray-300")} />
+                                <Droplet key={i} className={cn("h-12 w-12 transition-colors duration-300", i < totalIntake ? "text-blue-400 fill-blue-400" : "text-gray-300")} />
                             ))}
                         </div>
 
                         <div className="flex items-center justify-center gap-4 pt-4">
-                            <Button size="lg" variant="outline" onClick={() => changeIntake(-1)}>
+                            <Button size="lg" variant="outline" onClick={() => changeIntake(-1)} disabled={totalIntake <= 0}>
                                 <Minus className="mr-2 h-5 w-5"/> Remove Cup
                             </Button>
                             <Button size="lg" onClick={() => changeIntake(1)}>
@@ -238,10 +255,12 @@ export default function WaterTrackerPage() {
                         )}
                     </CardContent>
                 </Card>
+
+                <WaterLogHistory />
+
             </div>
 
-            {/* Settings */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 space-y-8">
                 <Card className="shadow-lg">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Goal/> Your Goal</CardTitle>
@@ -278,6 +297,29 @@ export default function WaterTrackerPage() {
                         </Form>
                     </CardContent>
                 </Card>
+
+                <Card className="shadow-lg">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><History/> Daily Log</CardTitle>
+                        <CardDescription>Your intake for {format(new Date(currentDateKey), "PPP")}.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {dailyLog.entries.filter(e => e.amount > 0).length > 0 ? (
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                {dailyLog.entries.filter(e => e.amount > 0).map((entry, index) => (
+                                    <li key={index} className="flex justify-between border-b pb-1">
+                                        <span>{format(new Date(entry.time), 'p')}</span>
+                                        <span className="font-medium text-foreground">
+                                            +{entry.amount * unitConversions[unit]} {unit}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-sm text-center text-muted-foreground py-4">No water logged yet today.</p>
+                        )}
+                    </CardContent>
+                </Card>
             </div>
         </div>
       </main>
@@ -286,3 +328,4 @@ export default function WaterTrackerPage() {
     </div>
   );
 }
+
