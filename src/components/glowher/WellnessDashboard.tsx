@@ -24,7 +24,7 @@ const wellnessFeatures = [
       icon: CalendarDays,
       title: 'Period Tracker',
       description: 'Input Last Period, Cycle Length, Predict Next Period',
-      href: '#',
+      href: '/period-tracker',
       color: 'text-red-500',
       bgColor: 'bg-red-500/10'
     },
