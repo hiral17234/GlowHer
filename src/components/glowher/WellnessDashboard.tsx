@@ -48,7 +48,7 @@ const wellnessFeatures = [
       icon: Bed,
       title: 'Sleep Tracker',
       description: 'Log hours & quality, view trends',
-      href: '#',
+      href: '/sleep-tracker',
       color: 'text-indigo-500',
       bgColor: 'bg-indigo-500/10'
     },
