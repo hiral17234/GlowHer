@@ -40,7 +40,7 @@ const wellnessFeatures = [
       icon: Droplet,
       title: 'Water Intake Tracker',
       description: 'Add glasses, view progress, set daily goal',
-      href: '#',
+      href: '/water-tracker',
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10'
     },
