@@ -22,17 +22,21 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
   const editorRef = useRef<HTMLDivElement>(null);
   const colorInputRef = useRef<HTMLInputElement>(null);
   const isTypingRef = useRef(false);
+  const lastValue = useRef(value);
 
   useEffect(() => {
-    if (editorRef.current && !isTypingRef.current && value !== editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = value || "";
+    if (editorRef.current && !isTypingRef.current && value !== lastValue.current) {
+        editorRef.current.innerHTML = value || "";
+        lastValue.current = value;
     }
   }, [value]);
 
   const handleInput = () => {
     if (editorRef.current) {
       isTypingRef.current = true;
-      onChange(editorRef.current.innerHTML);
+      const newValue = editorRef.current.innerHTML;
+      lastValue.current = newValue;
+      onChange(newValue);
     }
   };
   
@@ -59,7 +63,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
   };
 
   const editorStyle: React.CSSProperties = themeUrl ? {
-    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url(${themeUrl})`,
+    backgroundImage: `url(${themeUrl})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundAttachment: 'local',
@@ -119,7 +123,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         onInput={handleInput}
         onBlur={handleBlur}
         className={cn(
-            'min-h-[250px] w-full p-3 text-base bg-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300',
+            'min-h-[250px] w-full p-3 text-base bg-background/50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300',
             !value && 'text-muted-foreground'
         )}
         data-placeholder={placeholder}
