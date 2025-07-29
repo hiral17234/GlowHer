@@ -133,7 +133,8 @@ export default function PeriodTrackerPage() {
     const cycleLength = data.cycleLength;
     const lutealPhase = data.lutealPhaseLength || 14;
     
-    setShowIrregularityAlert(cycleLength < 21 || cycleLength > 35);
+    const daysSince = differenceInDays(today, lastPeriod);
+    setShowIrregularityAlert(daysSince > 35);
 
     let currentCycleStartDate = lastPeriod;
     while (addDays(currentCycleStartDate, cycleLength) <= today) {
@@ -336,9 +337,9 @@ export default function PeriodTrackerPage() {
             {showIrregularityAlert && (
               <Alert variant="destructive" className="mt-6">
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Cycle Length Notice</AlertTitle>
+                <AlertTitle>Irregular Cycle Notice</AlertTitle>
                 <AlertDescription>
-                  Your average cycle length is outside the typical 21-35 day range. While this is normal for some, you may want to consult a healthcare provider if you have concerns.
+                   It's been over 35 days since your last period. While this can be normal, you may want to consult a healthcare provider if you have concerns.
                 </AlertDescription>
               </Alert>
             )}
@@ -353,7 +354,7 @@ export default function PeriodTrackerPage() {
                                 <Target className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <p className="text-2xl font-bold">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
+                                <p className="text-2xl font-bold text-foreground">{countdown !== null ? `${countdown} days` : 'N/A'}</p>
                             </CardContent>
                         </Card>
                         <Card>
