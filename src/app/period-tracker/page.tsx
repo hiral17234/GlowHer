@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, isWithinInterval } from 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { AppFooter } from '@/components/glowher/AppFooter';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const formSchema = z.object({
   lastPeriodDate: z.date({ required_error: "Last period date is required." }),
@@ -229,7 +230,21 @@ export default function PeriodTrackerPage() {
                       name="lutealPhaseLength"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Luteal Phase Length (optional, 10-18 days)</FormLabel>
+                          <div className="flex items-center gap-2">
+                             <FormLabel>Luteal Phase Length (optional, 10-18 days)</FormLabel>
+                             <TooltipProvider>
+                               <Tooltip>
+                                 <TooltipTrigger asChild>
+                                   <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                 </TooltipTrigger>
+                                 <TooltipContent>
+                                   <p className="max-w-xs">
+                                    The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. Your period is the phase when you bleed.
+                                   </p>
+                                 </TooltipContent>
+                               </Tooltip>
+                             </TooltipProvider>
+                           </div>
                           <FormControl>
                             <Input type="number" min="10" max="18" {...field} />
                           </FormControl>
