@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AppFooter } from '@/components/glowher/AppFooter';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { CalendarIcon, ChevronLeft, Bed, Star, BookText, Moon, Award, Info, Sparkles, AlertTriangle } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Bed, Star, BookText, Moon, Award, Info, Sparkles, AlertTriangle, History } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { SleepLogHistory } from '@/components/glowher/SleepLogHistory';
@@ -35,6 +35,13 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-sleep-log-';
+
+type SleepLog = {
+    logDate: string;
+    sleepDuration: number[];
+    sleepQuality: number[];
+    notes?: string;
+}
 
 const phaseTips: { [key: string]: { title: string; tip: string } } = {
     Menstrual: { title: "Sleep & Your Menstrual Phase", tip: "Your body is working hard. Try going to bed a little earlier to support recovery and manage fatigue." },
@@ -57,6 +64,7 @@ export default function SleepTrackerPage() {
   const [currentPhase, setCurrentPhase] = useState<keyof typeof phaseTips | null>(null);
   const [achievements, setAchievements] = useState<{ star: boolean, queen: boolean }>({ star: false, queen: false });
   const [logKey, setLogKey] = useState(0);
+  const [recentLogs, setRecentLogs] = useState<SleepLog[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -72,6 +80,11 @@ export default function SleepTrackerPage() {
   const notesValue = form.watch("notes");
   const sleepDurationValue = form.watch("sleepDuration");
   const sleepQualityValue = form.watch("sleepQuality");
+
+  const getQualityLabel = (value: number) => {
+    return qualityOptions.find(q => q.value <= value)?.label ?? 'Fair';
+  };
+
 
   const calculateAchievements = () => {
     try {
@@ -91,11 +104,12 @@ export default function SleepTrackerPage() {
                 }
 
                 if(log.sleepQuality[0] >= 7){
-                    if (i === 0) {
+                    if (i === 0 || lastQuality === -1) { // First day in streak
                         consistentQualityDays = 1;
-                    }
-                    else if (lastQuality !== -1 && lastQuality >= 7) {
+                    } else if (lastQuality >= 7) {
                         consistentQualityDays++;
+                    } else {
+                         consistentQualityDays = 0; // Reset streak
                     }
                 } else {
                     consistentQualityDays = 0; // Reset streak
@@ -103,6 +117,7 @@ export default function SleepTrackerPage() {
                 lastQuality = log.sleepQuality[0];
             } else {
                 consistentQualityDays = 0; // Reset streak if a day is missed
+                lastQuality = -1;
             }
         }
         setAchievements({
@@ -112,6 +127,24 @@ export default function SleepTrackerPage() {
     } catch (e) {
         console.error("Error calculating achievements", e);
         setAchievements({star: false, queen: false});
+    }
+  };
+
+  const loadRecentLogs = () => {
+    try {
+        const logs: SleepLog[] = [];
+        const today = startOfDay(new Date());
+        for (let i = 0; i < 7; i++) {
+            const date = subDays(today, i);
+            const dateKey = format(date, 'yyyy-MM-dd');
+            const savedLog = localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}${dateKey}`);
+            if (savedLog) {
+                logs.push(JSON.parse(savedLog));
+            }
+        }
+        setRecentLogs(logs);
+    } catch (error) {
+        console.error("Failed to load recent sleep logs", error);
     }
   };
 
@@ -165,6 +198,7 @@ export default function SleepTrackerPage() {
         }
     } catch(e) { console.error(e) }
     calculateAchievements();
+    loadRecentLogs();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
@@ -202,7 +236,8 @@ export default function SleepTrackerPage() {
             description: "Your entry for the night has been successfully saved.",
         });
         calculateAchievements();
-        setLogKey(prevKey => prevKey + 1); // Force re-render of history
+        loadRecentLogs();
+        setLogKey(prevKey => prevKey + 1); // Force re-render of history chart
     } catch (error) {
         toast({
             variant: "destructive",
@@ -213,7 +248,7 @@ export default function SleepTrackerPage() {
     }
   }
 
-  const qualityLabel = qualityOptions.find(q => q.value <= (sleepQualityValue?.[0] ?? 0))?.label ?? 'Fair';
+  const qualityLabel = getQualityLabel(sleepQualityValue?.[0] ?? 0);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200">
@@ -364,6 +399,29 @@ export default function SleepTrackerPage() {
                 <div className="mt-8">
                   <SleepLogHistory key={logKey} />
                 </div>
+                 <Card className="shadow-lg bg-white dark:bg-slate-800/50">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 font-bold"><History className="text-indigo-500"/> Recent Logs</CardTitle>
+                        <CardDescription>Your sleep entries from the last 7 days.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {recentLogs.length > 0 ? (
+                           <ul className="space-y-3">
+                                {recentLogs.map((log, index) => (
+                                    <li key={index} className="flex justify-between items-center p-3 rounded-lg bg-slate-100 dark:bg-slate-700/50">
+                                        <div className="font-semibold">{format(new Date(log.logDate), 'EEEE, MMM d')}</div>
+                                        <div className="flex items-center gap-4 text-sm">
+                                            <span><Bed className="inline-block mr-1 h-4 w-4" /> {log.sleepDuration[0]}h</span>
+                                            <span><Star className="inline-block mr-1 h-4 w-4" /> {getQualityLabel(log.sleepQuality[0])}</span>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-center text-slate-500 dark:text-slate-400 py-4">No recent sleep logs found.</p>
+                        )}
+                    </CardContent>
+                </Card>
             </div>
             <div className="lg:col-span-2 space-y-6">
                 <Card className="bg-white dark:bg-slate-800/50 shadow-lg">
