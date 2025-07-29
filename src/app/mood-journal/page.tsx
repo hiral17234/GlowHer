@@ -56,7 +56,7 @@ const FormSchema = z.object({
   mood: z.string({ required_error: "Please select a mood." }),
   customMood: z.string().optional(),
   moodIntensity: z.array(z.number()).optional(),
-  notes: z.string().max(1000, { message: "Notes must be 1000 characters or less." }).optional(),
+  notes: z.string().max(10000, { message: "Notes must be 10000 characters or less." }).optional(), // Increased for images
   themeUrl: z.string().optional(),
 }).refine(data => {
     return data.mood !== 'Custom' || (data.mood === 'Custom' && data.customMood && data.customMood.length > 0);
@@ -338,7 +338,7 @@ export default function MoodJournalPage() {
                            />
                         </FormControl>
                         <FormDescription className="text-right">
-                          {notesValue?.length || 0} / 1000
+                          {notesValue?.length || 0} / 10000
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

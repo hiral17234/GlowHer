@@ -1,12 +1,12 @@
 
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
-import { Bold, Italic, Underline, Palette } from 'lucide-react';
+import { Bold, Italic, Underline, Palette, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface RichTextEditorProps {
-  value: string;
+  value: string | undefined;
   onChange: (value: string) => void;
   placeholder?: string;
   themeUrl?: string;
@@ -21,6 +21,7 @@ const execCmd = (command: string, value?: string) => {
 export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const colorInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const isTypingRef = useRef(false);
   const lastValue = useRef(value);
 
@@ -59,7 +60,30 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
 
   const handleColorButtonMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    editorRef.current?.focus();
     colorInputRef.current?.click();
+  };
+  
+  const handleImageButtonMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      editorRef.current?.focus();
+      fileInputRef.current?.click();
+  }
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+            const dataUrl = readerEvent.target?.result;
+            if (typeof dataUrl === 'string') {
+                const img = `<img src="${dataUrl}" style="max-width: 100%; border-radius: 8px;" />`;
+                execCmd('insertHTML', img);
+                handleInput();
+            }
+        };
+        reader.readAsDataURL(file);
+    }
   };
 
   const editorStyle: React.CSSProperties = themeUrl ? {
@@ -71,7 +95,7 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
 
   return (
     <div className="w-full rounded-md border border-input focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-      <div className="p-2 border-b border-input flex items-center gap-1">
+      <div className="p-2 border-b border-input flex items-center gap-1 flex-wrap">
         <Button
             type="button"
             variant="outline"
@@ -108,6 +132,15 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
         >
           <Palette className="h-4 w-4" />
         </Button>
+        <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onMouseDown={handleImageButtonMouseDown}
+        >
+          <ImageIcon className="h-4 w-4" />
+        </Button>
         <input
             type="color"
             ref={colorInputRef}
@@ -115,6 +148,14 @@ export function RichTextEditor({ value, onChange, placeholder, themeUrl }: RichT
             onInput={handleColorChange}
             onChange={handleColorChange}
             aria-label="Font Color"
+        />
+        <input
+            type="file"
+            ref={fileInputRef}
+            className="h-0 w-0 opacity-0 absolute"
+            onChange={handleImageUpload}
+            aria-label="Insert Image"
+            accept="image/*"
         />
       </div>
       <div
