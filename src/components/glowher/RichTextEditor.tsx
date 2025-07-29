@@ -21,24 +21,14 @@ const execCmd = (command: string, value?: string) => {
 export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const colorInputRef = useRef<HTMLInputElement>(null);
-  const isMounted = useRef(false);
-
-  // This effect ensures that the editor's content is synchronized with the `value` prop
-  // only when the component mounts or when the value changes from an external source
-  // (e.g., loading data for a different date). It avoids resetting the content on every keystroke.
+  
+  // To prevent cursor jumping, we only set the innerHTML when the value prop changes from an external source.
   useEffect(() => {
     if (editorRef.current && value !== editorRef.current.innerHTML) {
       editorRef.current.innerHTML = value || "";
     }
   }, [value]);
 
-
-  // This effect marks the component as mounted. This helps prevent resetting the content
-  // on the initial render if a value already exists.
-  useEffect(() => {
-    isMounted.current = true;
-    return () => { isMounted.current = false; }
-  }, [])
 
   const handleInput = () => {
     if (editorRef.current) {
@@ -59,6 +49,8 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   };
 
   const handleColorButtonClick = () => {
+    // We prevent default to stop the editor from losing focus when the button is clicked.
+    // This is important for applying styles correctly.
     colorInputRef.current?.click();
   };
 
