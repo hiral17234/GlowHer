@@ -4,9 +4,9 @@
 import { useState, useEffect } from 'react';
 import { format, subDays, startOfDay } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { History } from 'lucide-react';
-import { ChartContainer, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 
 const LOCAL_STORAGE_PREFIX = 'glowher-sleep-log-';
 
@@ -79,6 +79,7 @@ export function SleepLogHistory() {
                 <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={weeklyData} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                           <CartesianGrid vertical={false} />
                             <XAxis
                                 dataKey="name"
                                 stroke="hsl(var(--muted-foreground))"
@@ -93,22 +94,23 @@ export function SleepLogHistory() {
                                 axisLine={false}
                                 tickFormatter={(value) => `${value}h`}
                             />
-                            <Tooltip
+                            <ChartTooltip
+                                cursor={{ fill: 'hsl(var(--accent))', radius: 4 }}
                                 content={<ChartTooltipContent
                                     formatter={(value, name, props) => (
                                         <div className="flex flex-col">
-                                            <span className="font-bold">{props.payload.hours} hours</span>
+                                            <span className="font-bold">{props.payload.hours.toFixed(1)} hours</span>
                                         </div>
                                     )}
                                     labelFormatter={(label, payload) => {
                                         const date = payload?.[0]?.payload.date;
                                         if (date) {
-                                            return <div className="font-bold">{format(new Date(date), 'MMMM d')}</div>
+                                            const formattedDate = format(new Date(date), 'EEEE, MMMM d');
+                                            return <div className="font-bold">{formattedDate}</div>
                                         }
                                         return null;
                                     }}
                                 />}
-                                cursor={{ fill: 'hsl(var(--accent))', radius: 4 }}
                             />
                             <Bar dataKey="hours" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Hours"/>
                         </BarChart>

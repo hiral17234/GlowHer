@@ -84,17 +84,16 @@ export default function SleepTrackerPage() {
 
                 if (i === 0) {
                     lastQuality = log.sleepQuality[0];
-                    consistentQualityDays = 1;
-                } else {
-                    if (Math.abs(log.sleepQuality[0] - lastQuality) <= 1) {
-                        consistentQualityDays++;
-                    } else {
-                        consistentQualityDays = 1; // Reset streak
-                    }
-                    lastQuality = log.sleepQuality[0];
                 }
+                if (Math.abs(log.sleepQuality[0] - (lastQuality !== -1 ? lastQuality : log.sleepQuality[0])) <= 1) {
+                    if (i === 0) consistentQualityDays = 1;
+                    else consistentQualityDays++;
+                } else {
+                    consistentQualityDays = 0; // Reset streak
+                }
+                lastQuality = log.sleepQuality[0];
             } else {
-                if (i > 0) consistentQualityDays = 0;
+                consistentQualityDays = 0; // Reset streak if a day is missed
             }
         }
         setAchievements({
@@ -103,6 +102,7 @@ export default function SleepTrackerPage() {
         });
     } catch (e) {
         console.error("Error calculating achievements", e);
+        setAchievements({star: false, queen: false});
     }
   };
 
