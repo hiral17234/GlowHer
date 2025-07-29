@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, isWithinInterval, isSame
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { ChevronLeft, Droplet, Plus, Minus, GlassWater, Info, Goal, History, Bell } from 'lucide-react';
+import { ChevronLeft, Droplet, Plus, Minus, GlassWater, Info, Goal, History, Bell, Flame, Award } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { WaterLogHistory } from '@/components/glowher/WaterLogHistory';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 
 
 const settingsFormSchema = z.object({
@@ -65,6 +66,13 @@ const motivationalMessages = [
     "Fantastic work!",
 ];
 
+const achievementTiers = [
+    { streak: 3, title: "Hydration Starter", description: "3-day streak!" },
+    { streak: 7, title: "Hydration Habit", description: "7-day streak!" },
+    { streak: 14, title: "Hydration Pro", description: "14-day streak!" },
+    { streak: 30, title: "Hydration Hero", description: "30-day streak!" },
+];
+
 const LOCAL_STORAGE_PREFIX = 'glowher-water-tracker-';
 const REMINDER_SOUND_URL = '/sounds/water-drop.mp3';
 
@@ -78,6 +86,7 @@ export default function WaterTrackerPage() {
   const [unit, setUnit] = useState<Unit>('cups');
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [hydrationStreak, setHydrationStreak] = useState(0);
 
 
   const settingsForm = useForm<SettingsFormData>({
@@ -101,6 +110,7 @@ export default function WaterTrackerPage() {
         audioRef.current = new Audio(REMINDER_SOUND_URL);
     }
     
+    let dailyGoal = 8;
     // Load settings from local storage
     try {
         const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
@@ -110,6 +120,7 @@ export default function WaterTrackerPage() {
                 setGoal(savedGoal);
                 setUnit(savedUnit);
                 settingsForm.setValue('goal', savedGoal * unitConversions[savedUnit]);
+                dailyGoal = savedGoal;
             }
         }
         const savedReminders = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}reminders`);
@@ -158,6 +169,31 @@ export default function WaterTrackerPage() {
             }
         }
     } catch(e) { console.error("Error determining cycle phase:", e)}
+    
+    // Calculate streak
+    try {
+        let streak = 0;
+        const today = startOfDay(new Date());
+        for (let i = 0; i < 30; i++) { // Check up to 30 days
+            const dateToCheck = subDays(today, i);
+            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+            const logData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${dateKey}`);
+            if (logData) {
+                const log: DailyLog = JSON.parse(logData);
+                const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
+                if (totalIntake >= dailyGoal) {
+                    streak++;
+                } else {
+                    break; // Streak is broken
+                }
+            } else {
+                // No log for a previous day breaks the streak
+                if (i > 0) break; 
+            }
+        }
+        setHydrationStreak(streak);
+    } catch (e) { console.error("Error calculating streak:", e); }
+
 
   }, [currentDateKey]);
 
@@ -202,7 +238,7 @@ export default function WaterTrackerPage() {
         playReminderSound();
       }
     }
-  }, [dailyLog, currentDateKey, reminderForm, toast]);
+  }, [dailyLog, currentDateKey]);
 
   const handleSetUnit = (newUnit: Unit) => {
     const oldGoalInCups = goal;
@@ -434,6 +470,33 @@ export default function WaterTrackerPage() {
                                 />
                             </form>
                         </Form>
+                    </CardContent>
+                </Card>
+                
+                <Card className="shadow-lg">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Award /> Achievements</CardTitle>
+                        <CardDescription>Keep up the great work!</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="flex items-center justify-center text-lg font-bold bg-accent/30 p-3 rounded-lg">
+                             <Flame className="mr-2 h-5 w-5 text-red-500" />
+                             {hydrationStreak > 0 ? `${hydrationStreak}-Day Hydration Streak!` : "Start a new streak today!"}
+                        </div>
+                        <div className="space-y-2">
+                            {achievementTiers.map((tier) => (
+                                <div key={tier.streak} className={cn(
+                                    "flex items-center gap-3 p-2 rounded-md transition-opacity",
+                                    hydrationStreak >= tier.streak ? "opacity-100 bg-secondary/30" : "opacity-50"
+                                )}>
+                                    <Award className={cn("h-6 w-6", hydrationStreak >= tier.streak ? "text-yellow-500" : "text-muted-foreground")} />
+                                    <div>
+                                        <p className="font-semibold">{tier.title}</p>
+                                        <p className="text-xs text-muted-foreground">{tier.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </CardContent>
                 </Card>
 
