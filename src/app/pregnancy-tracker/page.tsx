@@ -56,7 +56,7 @@ const weeklyDevelopment = Array.from({ length: 41 }, (_, i) => {
         development: `Key developments this week include the formation of the neural tube and the heart beginning to beat. Keep taking your prenatal vitamins!`,
         symptoms: `You may experience fatigue, nausea, and breast tenderness. These are common symptoms as your body adjusts.`,
         tips: "Stay hydrated and eat small, frequent meals to combat nausea. Listen to your body and rest when you need to.",
-        imageUrl: "https://placehold.co/600x400.png",
+        imageUrl: "https://i.pinimg.com/1200x/0e/40/40/0e4040ee25da30655d857de0fb12943b.jpg",
         aiHint: "fetus development"
     }
 });
