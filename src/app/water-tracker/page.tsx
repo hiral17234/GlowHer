@@ -166,7 +166,7 @@ export default function WaterTrackerPage() {
         const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
         toast({
             title: randomMessage,
-            description: `You've logged ${Math.round(newIntake * unitConversions[unit])} ${unit} so far.`,
+            description: `You've logged ${Math.round((intake + amount) * unitConversions[unit])} ${unit} so far.`,
         });
     }
   };
@@ -199,7 +199,7 @@ export default function WaterTrackerPage() {
                 <Card className="shadow-lg h-full">
                     <CardHeader>
                         <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                           <GlassWater /> Today's Progress ({format(new Date(currentDate), "PPP")})
+                           <GlassWater /> Today's Progress ({format(new Date(), "PPP")})
                         </CardTitle>
                         <CardDescription>
                             Your goal is {Math.round(goalInCurrentUnit)} {unit}. You've had {Math.round(intakeInCurrentUnit)} {unit}.
