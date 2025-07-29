@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -6,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, addWeeks, subDays, diffe
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -317,7 +318,7 @@ const weeklyDevelopment = [
         title: "Week 26: Eyes Are Opening",
         size: "Your baby is the size of a bunch of scallions or a kale.",
         development: "👁️ The baby's eyelids, previously fused shut, are beginning to open and blink.\n\n💡 The retinas are developing, and the eyes can now perceive light and dark.\n\n🧠 Brainwave activity for hearing and sight is now recordable.\n\n🫁 The lungs are continuing to mature, producing more surfactant.\n\n💨 Rhythmic breathing movements are occurring about 10-20% of the time.\n\nIMMUNE system is developing as it receives antibodies from you through the placenta.\n\n⚖️ The baby is gaining about a third of an ounce each day.\n\nNAILS on fingers and toes are now fully grown.",
-        bodyChanges: "📈 Your blood pressure may start to rise slightly after hitting a low point mid-pregnancy. Your doctor will monitor it closely for signs of preeclampsia.\n\n🤰 Your uterus is now about 2.5 inches above your belly button.\n\nYour center of gravity is very different, making you prone to clumsiness.\n\nSwelling in your feet and ankles can make your shoes feel tight.\n\nYour breasts are getting heavier and you might notice more colostrum leakage.\n\nBackaches are a constant companion for many.\n\nYour digestive system is still slow, leading to heartburn and constipation.\n\nYou're likely feeling the heat more due to your increased metabolism.",
+        bodyChanges: "📈 Your blood pressure may start to rise slightly after hitting a low point mid-pregnancy. Your doctor will monitor it closely for signs of preeclampsia.\n\n🤰 Your uterus is now about 2.5 inches above your belly button.\n\nYour center of gravity is very different, making you prone to clumsiness.\n\nSwelling in your feet and ankles can make your shoes feel tight.\n\nYour breasts might begin to produce small amounts of colostrum (early milk).\n\nBackaches are a constant companion for many.\n\nYour digestive system is still slow, leading to heartburn and constipation.\n\nYou're likely feeling the heat more due to your increased metabolism.",
         symptoms: "😴 You may have significant trouble sleeping due to your size, heartburn, leg cramps, or general discomfort.\n\n⚡️ Braxton Hicks contractions may become more frequent or noticeable. They should be irregular and not painful.\n\n🤕 Headaches can occur, but you should report any severe or persistent headache to your doctor.\n\nVISION changes like blurriness can happen, but should also be reported to your doctor.\n\nSwelling (edema) in your hands, feet, and face is something to watch.\n\nIncreased forgetfulness or 'pregnancy brain'.\n\nFeeling overwhelmed or anxious about the upcoming birth is normal.\n\nStrong fetal movements are a daily reassurance.",
         tips: "🛁 Create a relaxing bedtime routine to promote better sleep: a warm bath, reading a book, or listening to calming music.\n\n🛌 Use a fortress of pillows to support your body in a comfortable side-sleeping position.\n\n🚨 Learn the difference between Braxton Hicks and real labor contractions. Real contractions become stronger, longer, and closer together over time.\n\n👩‍⚕️ Be aware of the signs of preeclampsia: severe headache, vision changes, sudden swelling, and upper abdominal pain. Call your provider immediately if you experience these.\n\n👶 Finalize your choice for a pediatrician and make sure they are accepting new patients.\n\n🚗 Look into infant CPR and first aid classes for you and your partner.\n\n🗣️ Talk to your partner about the division of labor after the baby arrives.\n\n🧘‍♀️ Practice relaxation and breathing techniques you're learning in childbirth class.",
         imageUrl: "https://i.pinimg.com/1200x/0e/40/40/0e4040ee25da30655d857de0fb12943b.jpg",
@@ -485,6 +486,12 @@ const trimesterVideos: { [key: number]: string } = {
     3: "https://www.youtube.com/embed/lpDW00nQhUo",
 };
 
+const babyLookVideos: { [key: number]: string } = {
+    1: "https://www.youtube.com/embed/D_jxGJsEY2A",
+    2: "https://www.youtube.com/embed/H6mZRds0dHo",
+    3: "https://www.youtube.com/embed/f2dcTHQXwTI",
+};
+
 
 export default function PregnancyTrackerPage() {
   const router = useRouter();
@@ -566,6 +573,7 @@ export default function PregnancyTrackerPage() {
   
   const currentWeekData = pregnancyDetails ? weeklyDevelopment[pregnancyDetails.gestationalAgeWeeks] : null;
   const currentVideoUrl = pregnancyDetails ? trimesterVideos[pregnancyDetails.trimester] : null;
+  const babyLookVideoUrl = pregnancyDetails ? babyLookVideos[pregnancyDetails.trimester] : null;
 
   if (pregnancyDetails) {
     return (
@@ -617,7 +625,7 @@ export default function PregnancyTrackerPage() {
                 </div>
 
                 {currentWeekData && (
-                    <Card className="shadow-lg">
+                    <Card className="shadow-lg mb-8">
                         <CardHeader>
                              <CardTitle className="font-headline text-3xl">{currentWeekData.title}</CardTitle>
                              <CardDescription>{currentWeekData.size}</CardDescription>
@@ -654,6 +662,28 @@ export default function PregnancyTrackerPage() {
                         </CardContent>
                     </Card>
                 )}
+
+                {babyLookVideoUrl && (
+                     <Card className="shadow-lg">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                                <Video /> Here is what your baby might look like now
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="aspect-video">
+                                <iframe
+                                    className="w-full h-full rounded-lg"
+                                    src={babyLookVideoUrl}
+                                    title="Baby Look YouTube video player"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+
 
                 <div className="mt-8 flex justify-center gap-4">
                     <Button onClick={() => router.push('/pregnancy-journal')}>
