@@ -314,7 +314,7 @@ export default function WaterTrackerPage() {
 
                         <div className="flex items-center gap-4 text-center">
                             {Array.from({ length: Math.ceil(goal) }).map((_, i) => (
-                                <Droplet key={i} className={cn("h-10 w-10 md:h-12 md:w-12 transition-all duration-500 ease-in-out", i < totalIntake ? "text-blue-400 fill-blue-400" : "text-gray-300 dark:text-gray-600")} />
+                                <Droplet key={i} className={cn("h-10 w-10 md:h-12 md:w-12 transition-all duration-500 ease-in-out", i < totalIntake ? "text-secondary fill-secondary" : "text-muted-foreground/30")} />
                             ))}
                         </div>
 
@@ -327,7 +327,7 @@ export default function WaterTrackerPage() {
                             </Button>
                         </div>
                          {currentPhase && phaseTips[currentPhase] && (
-                            <Alert className="mt-6 bg-blue-500/10 border-blue-500/20">
+                            <Alert className="mt-6 bg-secondary/30 border-secondary/50">
                                 <Info className="h-4 w-4" />
                                 <AlertTitle>Tip for your {currentPhase} Phase</AlertTitle>
                                 <AlertDescription>
