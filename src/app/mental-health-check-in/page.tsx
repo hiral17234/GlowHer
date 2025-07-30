@@ -32,7 +32,7 @@ export default function MentalHealthCheckInPage() {
                     </div>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <Button onClick={handleBegin} className="bg-white/90 text-slate-900 hover:bg-white px-10 py-8 text-xl font-bold">Begin</Button>
-                        <Button variant="outline" onClick={() => router.push('/mental-health-history')} className="text-white border-white/50 hover:bg-white/10 hover:text-white px-8 py-6 text-lg">
+                        <Button variant="outline" onClick={() => router.push('/mental-health-history')} className="bg-white text-black hover:bg-white/90 px-8 py-6 text-lg">
                             <History className="mr-2 h-5 w-5" />
                             View History
                         </Button>
