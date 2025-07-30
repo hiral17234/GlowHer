@@ -70,8 +70,4 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  /* Set dark theme as default */
-  html {
-      @apply dark;
-  }
 }
