@@ -170,8 +170,8 @@ export default function MoodJournalPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="container mx-auto px-4 py-6 z-10">
+    <div className="flex flex-col min-h-screen text-foreground" style={{ backgroundImage: "url('https://i.pinimg.com/736x/e5/56/3b/e5563b287cdd04ec1dcbb4f03408b145.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+      <header className="container mx-auto px-4 py-6 z-10 bg-black/10 backdrop-blur-sm">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
           <Button variant="ghost" onClick={() => router.push('/')}>
@@ -183,12 +183,12 @@ export default function MoodJournalPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-8">
-          <div className="text-center">
+          <div className="text-center p-4 rounded-lg bg-black/20 backdrop-blur-sm">
             <h1 className="font-headline text-4xl md:text-5xl font-bold">How Are You Feeling Today?</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Log your emotions to understand yourself better.</p>
+            <p className="mt-2 text-lg text-foreground/80">Log your emotions to understand yourself better.</p>
           </div>
 
-          <Card className="shadow-lg">
+          <Card className="shadow-lg bg-background/80 backdrop-blur-md border-white/20">
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>New Journal Entry</CardTitle>
@@ -415,7 +415,7 @@ export default function MoodJournalPage() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-lg bg-secondary/20">
+          <Card className="shadow-lg bg-secondary/20 backdrop-blur-md border-white/20">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Brain className="text-secondary-foreground"/>
