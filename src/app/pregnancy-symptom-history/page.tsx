@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import {
   Accordion,
   AccordionContent,
@@ -74,12 +74,16 @@ export default function PregnancySymptomHistoryPage() {
                 </div>
               ) : (
                 <Accordion type="single" collapsible className="w-full">
-                  {logs.map((log) => (
+                  {logs.map((log) => {
+                    const logDate = new Date(log.logDate);
+                    if (!isValid(logDate)) return null;
+
+                    return (
                     <AccordionItem key={log.logDate} value={log.logDate}>
                       <AccordionTrigger className="text-lg font-semibold hover:no-underline">
                         <div className="flex items-center gap-4">
                             <Calendar className="h-5 w-5 text-primary" />
-                            {format(new Date(log.logDate), 'EEEE, MMMM d, yyyy')}
+                            {format(logDate, 'EEEE, MMMM d, yyyy')}
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="pt-4 space-y-4">
@@ -109,7 +113,8 @@ export default function PregnancySymptomHistoryPage() {
                         )}
                       </AccordionContent>
                     </AccordionItem>
-                  ))}
+                    )
+                  })}
                 </Accordion>
               )}
             </CardContent>
