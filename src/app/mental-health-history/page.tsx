@@ -25,7 +25,12 @@ type LogData = {
 };
 
 const auraIcons: { [key: string]: React.ElementType } = {
-    Cloud, Fire, Leaf, Water: Droplet, Sun, Moon
+    'Cloud': Cloud,
+    'Fire': Flame,
+    'Leaf': Leaf,
+    'Water': Droplet,
+    'Sun': Sun,
+    'Moon': Moon
 };
 
 export default function MentalHealthHistoryPage() {
