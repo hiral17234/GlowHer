@@ -7,7 +7,7 @@ import { addDays, format, startOfDay, differenceInDays, isWithinInterval, isSame
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Droplet, Sun, Moon, Wind } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Droplet, Sun, Moon, Wind, Heart, Brain, Dumbbell, Utensils, MessageSquare, Coffee, Shield } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,55 +31,55 @@ type CycleData = z.infer<typeof formSchema>;
 
 type CyclePhase = 'Menstrual' | 'Follicular' | 'Ovulation' | 'Luteal' | 'None';
 
-const phaseTips: Record<CyclePhase, { title: string; icon: React.ElementType; tips: string[] }> = {
+const phaseTips: Record<CyclePhase, { title: string; icon: React.ElementType; tips: { icon: React.ElementType, text: string }[] }> = {
     Menstrual: {
         title: "Menstrual Phase: Rest & Reflect",
         icon: Wind,
         tips: [
-            "Your body is shedding its lining. Prioritize rest and gentle movement like stretching or walking.",
-            "Iron-rich foods like leafy greens, red meat, and legumes can help replenish what's lost.",
-            "Herbal teas like ginger or raspberry leaf can soothe cramps and provide comfort.",
-            "This is a great time for introspection and journaling. Be gentle with yourself."
+            { icon: Heart, text: "Your body is shedding its lining. Prioritize rest and gentle movement like stretching or walking." },
+            { icon: Utensils, text: "Iron-rich foods like leafy greens, red meat, and legumes can help replenish what's lost." },
+            { icon: Coffee, text: "Herbal teas like ginger or raspberry leaf can soothe cramps and provide comfort." },
+            { icon: Brain, text: "This is a great time for introspection and journaling. Be gentle with yourself." }
         ]
     },
     Follicular: {
         title: "Follicular Phase: Energize & Create",
         icon: Sun,
         tips: [
-            "Your energy is returning as estrogen rises. It's a great time for more dynamic workouts.",
-            "Focus on lean proteins and complex carbs to fuel your body for the week ahead.",
-            "This is a creative and productive phase. Start new projects and brainstorm ideas.",
-            "Your skin may be at its best now. Enjoy the glow!"
+            { icon: Dumbbell, text: "Your energy is returning as estrogen rises. It's a great time for more dynamic workouts." },
+            { icon: Utensils, text: "Focus on lean proteins and complex carbs to fuel your body for the week ahead." },
+            { icon: Brain, text: "This is a creative and productive phase. Start new projects and brainstorm ideas." },
+            { icon: Shield, text: "Your skin may be at its best now. Enjoy the glow and try a new face mask!" }
         ]
     },
     Ovulation: {
         title: "Ovulation: Connect & Shine",
         icon: Sun,
         tips: [
-            "You're at your peak fertility and energy. High-intensity workouts can feel great now.",
-            "Your libido may be higher. It's a great time for connection with your partner.",
-            "Communication skills are often enhanced. Perfect for important conversations or social events.",
-            "Light, fresh foods like salads and fruits can complement your high energy."
+            { icon: Dumbbell, text: "You're at your peak fertility and energy. High-intensity workouts can feel great now." },
+            { icon: Heart, text: "Your libido may be higher. It's a great time for connection with your partner." },
+            { icon: MessageSquare, text: "Communication skills are often enhanced. Perfect for important conversations or social events." },
+            { icon: Utensils, text: "Light, fresh foods like salads and fruits can complement your high energy." }
         ]
     },
     Luteal: {
         title: "Luteal Phase: Nurture & Wind Down",
         icon: Moon,
         tips: [
-            "As progesterone rises, you might feel more inward or experience PMS. Prioritize self-care.",
-            "Magnesium-rich foods like nuts, seeds, and dark chocolate can help with mood and cravings.",
-            "Focus on calming activities like yoga, reading, or taking warm baths to manage potential irritability.",
-            "Listen to your body. If you feel tired, scale back on intense exercise and get more rest."
+            { icon: Brain, text: "As progesterone rises, you might feel more inward or experience PMS. Prioritize self-care." },
+            { icon: Utensils, text: "Magnesium-rich foods like nuts, seeds, and dark chocolate can help with mood and cravings." },
+            { icon: Dumbbell, text: "Focus on calming activities like yoga, reading, or taking warm baths to manage potential irritability." },
+            { icon: Heart, text: "Listen to your body. If you feel tired, scale back on intense exercise and get more rest." }
         ]
     },
     None: {
         title: "Your Cycle Summary",
         icon: Info,
         tips: [
-            "Enter your cycle details to get personalized tips for each phase of your cycle.",
-            "Tracking helps you understand your body's unique rhythm.",
-            "Note how your energy, mood, and symptoms change throughout the month.",
-            "This knowledge empowers you to tailor your lifestyle for optimal well-being."
+            { icon: Heart, text: "Enter your cycle details to get personalized tips for each phase of your cycle." },
+            { icon: Brain, text: "Tracking helps you understand your body's unique rhythm." },
+            { icon: Dumbbell, text: "Note how your energy, mood, and symptoms change throughout the month." },
+            { icon: Utensils, text: "This knowledge empowers you to tailor your lifestyle for optimal well-being." }
         ]
     }
 };
@@ -101,13 +101,12 @@ export default function PeriodTrackerPage() {
     },
   });
 
-  const { reset, getValues } = form;
-  const { lastPeriodDate, cycleLength, lutealPhaseLength } = getValues();
+  const { reset } = form;
 
-  const calculatePredictions = () => {
-    const { lastPeriodDate, cycleLength, lutealPhaseLength } = getValues();
+  const calculatePredictions = (formData: CycleData) => {
+    const { lastPeriodDate, cycleLength, lutealPhaseLength = 14 } = formData;
 
-    if (lastPeriodDate && cycleLength && lutealPhaseLength) {
+    if (lastPeriodDate && cycleLength) {
         const today = startOfDay(new Date());
         let currentCycleStart = startOfDay(new Date(lastPeriodDate));
 
@@ -187,6 +186,7 @@ export default function PeriodTrackerPage() {
         const data = JSON.parse(storedData);
         data.lastPeriodDate = new Date(data.lastPeriodDate);
         reset(data);
+        calculatePredictions(data);
       } else {
         const userDetails = localStorage.getItem('glowher-user');
         if (userDetails) {
@@ -199,21 +199,15 @@ export default function PeriodTrackerPage() {
                 };
                 reset(initialData);
                 localStorage.setItem('glowher-period-tracker', JSON.stringify(initialData));
+                calculatePredictions(initialData);
             }
         }
       }
-      calculatePredictions();
     } catch (error) {
       console.error("Could not retrieve data from localStorage", error);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reset]);
-
-
-  useEffect(() => {
-      calculatePredictions();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastPeriodDate, cycleLength, lutealPhaseLength]);
 
 
   function onSubmit(values: CycleData) {
@@ -223,7 +217,7 @@ export default function PeriodTrackerPage() {
         title: "Success!",
         description: "Your cycle predictions have been updated.",
       });
-      calculatePredictions();
+      calculatePredictions(values);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -251,7 +245,7 @@ export default function PeriodTrackerPage() {
             <main className="flex-grow container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
                     <div className="lg:col-span-2 w-full mx-auto">
-                        <Card className="shadow-lg bg-white/80 backdrop-blur-sm border-rose-200">
+                        <Card className="shadow-lg bg-white/80 backdrop-blur-sm border-rose-300">
                         <CardHeader>
                             <CardTitle className="font-headline text-3xl text-slate-800">Cycle Settings</CardTitle>
                             <CardDescription>Update your cycle details to refine predictions.</CardDescription>
@@ -271,7 +265,7 @@ export default function PeriodTrackerPage() {
                     </div>
 
                     <div className="lg:col-span-3 flex flex-col items-center gap-8">
-                         <Card className="shadow-lg bg-white/80 backdrop-blur-sm border-rose-200 w-full">
+                         <Card className="shadow-lg bg-white/80 backdrop-blur-sm border-rose-300 w-full">
                              <CardHeader>
                                 <CardTitle className="font-headline text-3xl text-slate-800">Your Cycle Calendar</CardTitle>
                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-sm text-slate-700">
@@ -302,10 +296,10 @@ export default function PeriodTrackerPage() {
                         <div className="w-full">
                             <h2 className="font-headline text-2xl text-slate-800 mb-4 text-center">Mini Tracker Summary</h2>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <Card className="bg-white/80 border-rose-200 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-rose-700">Next Period In</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.nextPeriodIn}</p></CardHeader></Card>
-                                <Card className="bg-white/80 border-rose-200 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-rose-700">Current Phase</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.currentPhase}</p></CardHeader></Card>
-                                <Card className="bg-white/80 border-rose-200 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-rose-700">Day of Cycle</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.dayOfCycle}</p></CardHeader></Card>
-                                <Card className="bg-white/80 border-rose-200 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-rose-700">Symptoms Today</CardTitle><p className="text-lg font-bold text-rose-900 truncate" title={summary.symptoms}>{summary.symptoms}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">⏳ Next Period In</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.nextPeriodIn}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">🌸 Current Phase</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.currentPhase}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">🗓️ Day of Cycle</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.dayOfCycle}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">🩺 Symptoms Today</CardTitle><p className="text-lg font-bold text-rose-900 truncate" title={summary.symptoms}>{summary.symptoms}</p></CardHeader></Card>
                             </div>
                         </div>
 
@@ -313,8 +307,13 @@ export default function PeriodTrackerPage() {
                             <currentPhaseInfo.icon className="h-5 w-5 text-rose-600" />
                             <AlertTitle className="font-headline text-xl text-slate-800">{currentPhaseInfo.title}</AlertTitle>
                             <AlertDescription>
-                                <ul className="mt-2 space-y-2 list-disc list-inside text-rose-700">
-                                    {currentPhaseInfo.tips.map((tip, i) => <li key={i}>{tip}</li>)}
+                                <ul className="mt-2 space-y-3">
+                                    {currentPhaseInfo.tips.map((tip, i) => (
+                                        <li key={i} className="flex items-start gap-2">
+                                            <tip.icon className="h-4 w-4 mt-1 text-rose-600 flex-shrink-0" />
+                                            <span>{tip.text}</span>
+                                        </li>
+                                    ))}
                                 </ul>
                             </AlertDescription>
                         </Alert>
@@ -325,3 +324,5 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
+
+    
