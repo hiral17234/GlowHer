@@ -311,7 +311,7 @@ export default function WaterTrackerPage() {
   const progress = goal > 0 ? (totalIntake / goal) * 100 : 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-white text-slate-800">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-white text-slate-800">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
@@ -333,7 +333,7 @@ export default function WaterTrackerPage() {
                 <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
                         <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                           <GlassWater /> Today's Progress ({format(new Date(currentDateKey), "PPP")})
+                           <GlassWater className="text-sky-500" /> Today's Progress ({format(new Date(currentDateKey), "PPP")})
                         </CardTitle>
                         <CardDescription className="text-slate-700">
                             Your goal is {Math.round(goalInCurrentUnit)} {unit}. You've had {Math.round(intakeInCurrentUnit)} {unit}.
@@ -380,7 +380,7 @@ export default function WaterTrackerPage() {
             <div className="lg:col-span-1 space-y-8">
                 <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Goal/> Your Goal</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><Goal className="text-sky-500"/> Your Goal</CardTitle>
                         <CardDescription className="text-slate-700">Set your daily hydration target.</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -417,7 +417,7 @@ export default function WaterTrackerPage() {
                 
                  <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Bell/> Hydration Reminders</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><Bell className="text-sky-500"/> Hydration Reminders</CardTitle>
                         <CardDescription className="text-slate-700">Get notified to keep up with your goal.</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -475,7 +475,7 @@ export default function WaterTrackerPage() {
                 
                 <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Award /> Achievements</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><Award className="text-sky-500" /> Achievements</CardTitle>
                         <CardDescription className="text-slate-700">Keep up the great work!</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -502,7 +502,7 @@ export default function WaterTrackerPage() {
 
                 <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><History/> Daily Log</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><History className="text-sky-500"/> Daily Log</CardTitle>
                         <CardDescription className="text-slate-700">Your intake for {format(new Date(currentDateKey), "PPP")}.</CardDescription>
                     </CardHeader>
                     <CardContent>

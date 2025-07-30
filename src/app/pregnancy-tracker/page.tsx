@@ -758,13 +758,12 @@ export default function PregnancyTrackerPage() {
 
   if (pregnancyDetails) {
     return (
-        <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/736x/4d/f1/6b/4df16bef06d3869b452e939c7ff925ce.jpg')"}}>
-            <div className="absolute inset-0 bg-black/50 z-0"/>
+        <div className="relative flex flex-col min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
             <div className="relative z-10 flex flex-col min-h-screen">
              <header className="container mx-auto px-4 py-6">
                 <div className="flex justify-between items-center">
-                <GlowHerLogo className="[&>span]:text-white" />
-                <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white">
+                <GlowHerLogo />
+                <Button variant="ghost" onClick={() => router.push('/')}>
                     <ChevronLeft className="mr-2 h-4 w-4" />
                     {t.backToDashboard}
                 </Button>
@@ -773,45 +772,45 @@ export default function PregnancyTrackerPage() {
 
             <main className="flex-grow container mx-auto px-4 py-8 space-y-8">
                 <div className="text-center">
-                    <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">{t.pageTitle}</h1>
-                    <p className="mt-2 text-lg text-slate-300">{t.progressText(pregnancyDetails.gestationalAgeWeeks, pregnancyDetails.gestationalAgeDays)}</p>
+                    <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900">{t.pageTitle}</h1>
+                    <p className="mt-2 text-lg text-slate-600">{t.progressText(pregnancyDetails.gestationalAgeWeeks, pregnancyDetails.gestationalAgeDays)}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                    <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
                         <CardHeader className="flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-300">{t.dueDate}</CardTitle>
-                            <CalendarIcon className="h-4 w-4 text-slate-400" />
+                            <CardTitle className="text-sm font-medium text-slate-600">{t.dueDate}</CardTitle>
+                            <CalendarIcon className="h-4 w-4 text-slate-500" />
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">{format(pregnancyDetails.dueDate, "MMM d, yyyy")}</p>
+                            <p className="text-2xl font-bold text-pink-500">{format(pregnancyDetails.dueDate, "MMM d, yyyy")}</p>
                         </CardContent>
                     </Card>
-                    <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                    <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
                         <CardHeader className="flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-300">{t.daysToGo}</CardTitle>
-                            <Baby className="h-4 w-4 text-slate-400" />
+                            <CardTitle className="text-sm font-medium text-slate-600">{t.daysToGo}</CardTitle>
+                            <Baby className="h-4 w-4 text-slate-500" />
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">{pregnancyDetails.daysLeft}</p>
+                            <p className="text-2xl font-bold text-blue-500">{pregnancyDetails.daysLeft}</p>
                         </CardContent>
                     </Card>
-                    <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                    <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
                         <CardHeader className="flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-300">{t.trimester}</CardTitle>
-                            <BarChart className="h-4 w-4 text-slate-400" />
+                            <CardTitle className="text-sm font-medium text-slate-600">{t.trimester}</CardTitle>
+                            <BarChart className="h-4 w-4 text-slate-500" />
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">{pregnancyDetails.trimester}</p>
+                            <p className="text-2xl font-bold text-purple-500">{pregnancyDetails.trimester}</p>
                         </CardContent>
                     </Card>
                 </div>
 
                 {currentWeekData && (
-                    <Card className="shadow-2xl bg-black/20 backdrop-blur-sm border-white/10 text-slate-200">
+                    <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                         <CardHeader>
-                             <CardTitle className="font-headline text-3xl text-teal-300">{t.weeklyTitle(currentWeekData.title)}</CardTitle>
-                             <CardDescription className="text-slate-400">{t.weeklySize(currentWeekData.size)}</CardDescription>
+                             <CardTitle className="font-headline text-3xl text-pink-600">{t.weeklyTitle(currentWeekData.title)}</CardTitle>
+                             <CardDescription className="text-slate-600">{t.weeklySize(currentWeekData.size)}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             {currentVideoUrl && (
@@ -830,32 +829,32 @@ export default function PregnancyTrackerPage() {
                                     <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={400} className="rounded-lg object-cover" />
                                 </div>
                                 <Tabs defaultValue="development" className="w-full">
-                                    <TabsList className="grid w-full grid-cols-4 bg-slate-900/50 text-slate-300">
-                                        <TabsTrigger value="development" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
-                                        <TabsTrigger value="body" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
-                                        <TabsTrigger value="symptoms" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
-                                        <TabsTrigger value="tips" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
+                                    <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
+                                        <TabsTrigger value="development" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
+                                        <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
+                                        <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
+                                        <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
                                     </TabsList>
-                                    <TabsContent value="development" className="mt-4 prose prose-invert max-w-none text-slate-300 text-sm whitespace-pre-wrap"><p>{currentWeekData.development}</p></TabsContent>
-                                    <TabsContent value="body" className="mt-4 prose prose-invert max-w-none text-slate-300 text-sm whitespace-pre-wrap"><p>{currentWeekData.bodyChanges}</p></TabsContent>
-                                    <TabsContent value="symptoms" className="mt-4 prose prose-invert max-w-none text-slate-300 text-sm whitespace-pre-wrap"><p>{currentWeekData.symptoms}</p></TabsContent>
-                                    <TabsContent value="tips" className="mt-4 prose prose-invert max-w-none text-slate-300 text-sm whitespace-pre-wrap"><p>{currentWeekData.tips}</p></TabsContent>
+                                    <TabsContent value="development" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.development}</p></TabsContent>
+                                    <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.bodyChanges}</p></TabsContent>
+                                    <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.symptoms}</p></TabsContent>
+                                    <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.tips}</p></TabsContent>
                                 </Tabs>
                            </div>
                         </CardContent>
                     </Card>
                 )}
 
-                <Card className="shadow-2xl bg-black/20 backdrop-blur-sm border-white/10 text-slate-200">
+                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                     <CardHeader>
                         <div className="flex justify-between items-center">
-                            <CardTitle className="font-headline text-2xl text-teal-300">{t.symptomTrackerTitle}</CardTitle>
-                            <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')} className="bg-slate-900/50 border-slate-600 hover:bg-slate-700">
+                            <CardTitle className="font-headline text-2xl text-pink-600">{t.symptomTrackerTitle}</CardTitle>
+                            <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')}>
                                 <History className="mr-2 h-4 w-4" />
                                 {t.viewHistory}
                             </Button>
                         </div>
-                        <CardDescription className="text-slate-400">{t.symptomTrackerDesc}</CardDescription>
+                        <CardDescription className="text-slate-600">{t.symptomTrackerDesc}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Form {...symptomForm}>
@@ -875,7 +874,7 @@ export default function PregnancyTrackerPage() {
                                                 return (
                                                 <FormItem
                                                     key={item.id}
-                                                    className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-slate-700 p-3 hover:bg-slate-700/50 transition-colors"
+                                                    className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-slate-300 p-3 hover:bg-pink-100/50 transition-colors"
                                                 >
                                                     <FormControl>
                                                     <Checkbox
@@ -889,10 +888,10 @@ export default function PregnancyTrackerPage() {
                                                                 )
                                                             );
                                                         }}
-                                                        className="data-[state=checked]:bg-teal-400 data-[state=checked]:border-teal-400"
+                                                        className="data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500"
                                                     />
                                                     </FormControl>
-                                                    <FormLabel className="font-normal flex items-center gap-2 cursor-pointer text-slate-200">
+                                                    <FormLabel className="font-normal flex items-center gap-2 cursor-pointer text-slate-800">
                                                      {item.label}
                                                     </FormLabel>
                                                 </FormItem>
@@ -910,11 +909,11 @@ export default function PregnancyTrackerPage() {
                                     name="notes"
                                     render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-slate-300">{t.customSymptoms}</FormLabel>
+                                        <FormLabel className="text-slate-700">{t.customSymptoms}</FormLabel>
                                         <FormControl>
                                         <Textarea
                                             placeholder={t.customSymptomsPlaceholder}
-                                            className="resize-none bg-slate-900/50 border-slate-600 text-slate-200"
+                                            className="resize-none"
                                             {...field}
                                         />
                                         </FormControl>
@@ -923,16 +922,16 @@ export default function PregnancyTrackerPage() {
                                     )}
                                 />
                                 <div className="flex items-center gap-4">
-                                     <Button type="submit" className="bg-teal-500 hover:bg-teal-600 text-white">
+                                     <Button type="submit" className="bg-pink-500 hover:bg-pink-600 text-white">
                                         <ThumbsUp className="mr-2 h-4 w-4" />
                                         {t.saveSymptoms}
                                     </Button>
                                     {loggedSymptoms.length > 0 && (
                                         <div className="flex flex-wrap gap-2 items-center">
-                                            <span className="text-sm font-semibold text-slate-400">{t.loggedToday}</span>
+                                            <span className="text-sm font-semibold text-slate-500">{t.loggedToday}</span>
                                             {loggedSymptoms.map(symptomId => {
                                                 const symptom = pregnancySymptoms.find(s => s.id === symptomId);
-                                                return symptom ? <Badge key={symptomId} variant="secondary" className="bg-teal-400/20 text-teal-200 border-none">{symptom.label}</Badge> : null;
+                                                return symptom ? <Badge key={symptomId} variant="secondary" className="bg-pink-100 text-pink-800 border-none">{symptom.label}</Badge> : null;
                                             })}
                                         </div>
                                     )}
@@ -943,9 +942,9 @@ export default function PregnancyTrackerPage() {
                 </Card>
 
                 {babyLookVideoUrl && (
-                     <Card className="shadow-2xl bg-black/20 backdrop-blur-sm border-white/10 text-slate-200">
+                     <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                         <CardHeader>
-                            <CardTitle className="font-headline text-2xl flex items-center gap-2 text-teal-300">
+                            <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
                                 <Video /> {t.babyLookTitle}
                             </CardTitle>
                         </CardHeader>
@@ -965,11 +964,11 @@ export default function PregnancyTrackerPage() {
 
 
                 <div className="mt-8 flex justify-center gap-4">
-                    <Button onClick={() => router.push('/pregnancy-journal')} className="bg-teal-500 hover:bg-teal-600 text-white">
+                    <Button onClick={() => router.push('/pregnancy-journal')} className="bg-pink-500 hover:bg-pink-600 text-white">
                         <ClipboardPlus className="mr-2 h-4 w-4"/>
                         {t.myJournal}
                     </Button>
-                    <Button variant="outline" onClick={() => setPregnancyDetails(null)} className="text-slate-200 border-slate-600 hover:bg-slate-700 hover:text-white">{t.resetDate}</Button>
+                    <Button variant="outline" onClick={() => setPregnancyDetails(null)}>{t.resetDate}</Button>
                 </div>
 
             </main>
@@ -979,23 +978,22 @@ export default function PregnancyTrackerPage() {
   }
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/736x/4d/f1/6b/4df16bef06d3869b452e939c7ff925ce.jpg')"}}>
-        <div className="absolute inset-0 bg-black/50 z-0"/>
+    <div className="relative flex flex-col min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
         <div className="relative z-10 flex flex-col min-h-screen">
         <header className="container mx-auto px-4 py-6">
             <div className="flex justify-between items-center">
-            <GlowHerLogo className="[&>span]:text-white"/>
-            <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:text-white hover:bg-white/10">
+            <GlowHerLogo />
+            <Button variant="ghost" onClick={() => router.push('/')}>
                 <ChevronLeft className="mr-2 h-4 w-4" />
                 {t.backToDashboard}
             </Button>
             </div>
       </header>
       <main className="flex-grow flex items-center justify-center container mx-auto px-4 py-8">
-        <Card className="w-full max-w-lg shadow-xl bg-black/20 backdrop-blur-sm border-white/20 text-slate-200">
+        <Card className="w-full max-w-lg shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
             <CardHeader>
-                <CardTitle className="font-headline text-3xl text-center text-teal-300">{t.getStartedTitle}</CardTitle>
-                <CardDescription className="text-center text-slate-400">{t.getStartedDesc}</CardDescription>
+                <CardTitle className="font-headline text-3xl text-center text-pink-600">{t.getStartedTitle}</CardTitle>
+                <CardDescription className="text-center text-slate-600">{t.getStartedDesc}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...pregnancyForm}>
@@ -1006,9 +1004,9 @@ export default function PregnancyTrackerPage() {
                             render={({ field }) => (
                                 <FormItem>
                                 <Tabs defaultValue={field.value} onValueChange={(value) => field.onChange(value as 'dueDate' | 'lmp')} className="w-full">
-                                    <TabsList className="grid w-full grid-cols-2 bg-slate-900/50 text-slate-300">
-                                        <TabsTrigger value="dueDate" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.useDueDate}</TabsTrigger>
-                                        <TabsTrigger value="lmp" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.useLMP}</TabsTrigger>
+                                    <TabsList className="grid w-full grid-cols-2 bg-pink-100/50 text-pink-800">
+                                        <TabsTrigger value="dueDate" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.useDueDate}</TabsTrigger>
+                                        <TabsTrigger value="lmp" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.useLMP}</TabsTrigger>
                                     </TabsList>
                                 </Tabs>
                                 </FormItem>
@@ -1020,7 +1018,7 @@ export default function PregnancyTrackerPage() {
                             name="date"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col items-center">
-                                <FormLabel className="text-lg font-semibold text-slate-200">
+                                <FormLabel className="text-lg font-semibold text-slate-700">
                                     {pregnancyForm.watch('calculationMethod') === 'dueDate' ? t.yourDueDate : t.lmpDate}
                                 </FormLabel>
                                 <Popover>
@@ -1028,7 +1026,7 @@ export default function PregnancyTrackerPage() {
                                     <FormControl>
                                         <Button
                                         variant={"outline"}
-                                        className={cn("w-[280px] text-left font-normal bg-slate-900/50 border-slate-600 text-slate-200 hover:bg-slate-700 hover:text-white", !field.value && "text-slate-400")}
+                                        className={cn("w-[280px] text-left font-normal", !field.value && "text-muted-foreground")}
                                         >
                                         {field.value ? format(field.value, "PPP") : <span>{t.pickDate}</span>}
                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -1050,7 +1048,7 @@ export default function PregnancyTrackerPage() {
                             )}
                         />
                         <div className="flex flex-col gap-2 pt-4">
-                            <Button type="submit" size="lg" className="w-full bg-teal-500 hover:bg-teal-600 text-white">
+                            <Button type="submit" size="lg" className="w-full bg-pink-500 hover:bg-pink-600 text-white">
                                 {pregnancyForm.watch('calculationMethod') === 'lmp' ? t.calculateAndTrack : t.trackPregnancy}
                             </Button>
                         </div>
