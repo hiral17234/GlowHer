@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Brain, ChevronLeft, Play, Music } from 'lucide-react';
+import { Brain, ChevronLeft, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const breathingCycle = [
@@ -19,7 +19,6 @@ export default function BreathePage() {
   const router = useRouter();
   const [cycleText, setCycleText] = useState('Get Ready...');
   const [isBreathing, setIsBreathing] = useState(false);
-  const [playMusic, setPlayMusic] = useState(false);
 
   useEffect(() => {
     if (!isBreathing) return;
@@ -41,7 +40,6 @@ export default function BreathePage() {
   const handleGoBack = () => router.back();
   const handleFinish = () => router.push('/');
   const startBreathing = () => setIsBreathing(true);
-  const handlePlayMusic = () => setPlayMusic(true);
 
   return (
     <div
@@ -67,28 +65,8 @@ export default function BreathePage() {
           {/* Blue breathing background */}
           <div className={cn("absolute inset-0 bg-blue-400 rounded-full opacity-50 blur-2xl", isBreathing && 'animate-breath')} />
           
-          {isBreathing && playMusic && (
-             <iframe
-                className="absolute inset-0 w-full h-full rounded-full opacity-50"
-                src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&controls=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}`}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-            ></iframe>
-          )}
-
-
-          {/* Breathing text & unmute button */}
           <div className="z-10 flex flex-col items-center justify-center">
             <p className="text-2xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready to begin?'}</p>
-
-            {isBreathing && !playMusic && (
-              <Button onClick={handlePlayMusic} variant="outline" className="bg-black/20 border-white/30 text-white hover:bg-black/40">
-                  <Music className="mr-2 h-4 w-4" />
-                  Play Music
-              </Button>
-            )}
           </div>
         </div>
 
@@ -107,6 +85,20 @@ export default function BreathePage() {
             <Button onClick={handleFinish} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
               Finish
             </Button>
+
+            <div className="mt-6">
+                <div className="aspect-video">
+                    <iframe
+                        className="w-full h-full rounded-lg"
+                        src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    ></iframe>
+                </div>
+            </div>
+
           </>
         )}
       </div>
