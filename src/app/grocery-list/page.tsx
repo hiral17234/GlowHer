@@ -193,159 +193,160 @@ export default function GroceryListPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="container mx-auto px-4 py-6"><div className="flex justify-between items-center"><GlowHerLogo /><Button variant="ghost" onClick={() => router.push('/')}><ChevronLeft className="mr-2 h-4 w-4" />Back to Dashboard</Button></div></header>
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="text-center mb-8"><h1 className="font-headline text-4xl md:text-5xl font-bold">Groceries</h1><p className="mt-2 text-lg text-muted-foreground">Manage your pantry and plan your shopping.</p></div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-1">
-                <Card className="shadow-lg sticky top-8">
-                    <CardHeader><CardTitle className="flex items-center gap-2"><Plus/> {editingItem ? 'Edit Item in Inventory' : 'Add to Inventory'}</CardTitle></CardHeader>
-                    <CardContent><Form {...inventoryForm}><form onSubmit={inventoryForm.handleSubmit(onInventorySubmit)} className="space-y-4">
-                        <FormField control={inventoryForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>Item Name</FormLabel><FormControl><Input placeholder="e.g., Almond Milk" {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                        <FormField control={inventoryForm.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger></FormControl><SelectContent>{categories.map(cat => (<SelectItem key={cat.name} value={cat.name}><div className="flex items-center gap-2"><cat.icon className="h-4 w-4" />{cat.name}</div></SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
-                        <FormField control={inventoryForm.control} name="quantity" render={({ field }) => (<FormItem><FormLabel>Quantity (Optional)</FormLabel><FormControl><Input placeholder="e.g., 1 carton" {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                        <FormField control={inventoryForm.control} name="storageLocation" render={({ field }) => (<FormItem><FormLabel>Storage Location</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a location" /></SelectTrigger></FormControl><SelectContent>{storageLocations.map(loc => (<SelectItem key={loc} value={loc}>{loc}</SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
-                        <FormField control={inventoryForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date (Optional)</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date()} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
-                        <Button type="submit" className="w-full bg-primary hover:bg-primary/90">{editingItem ? 'Update Item' : 'Add to Inventory'}</Button>
-                        {editingItem && <Button type="button" variant="ghost" className="w-full" onClick={() => { setEditingItem(null); inventoryForm.reset({ name: "", category: "Other", quantity: "", storageLocation: "Pantry" }); }}>Cancel Edit</Button>}
-                    </form></Form></CardContent>
-                </Card>
-            </div>
-            <div className="lg:col-span-2 space-y-6">
-                 {expiredItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription>Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
-                 {expiringItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
-                <Tabs defaultValue="inventory" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="inventory">My Groceries</TabsTrigger>
-                        <TabsTrigger value="shoppingList">Shopping List <Badge variant="secondary" className="ml-2">{shoppingList.length}</Badge></TabsTrigger>
-                        <TabsTrigger value="expired">Expired <Badge variant="destructive" className="ml-2">{expiredItems.length}</Badge></TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="inventory">
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                    <CardTitle>Your Inventory</CardTitle>
-                                    <div className="flex gap-2">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild><Button variant="outline"><SortAsc className="mr-2 h-4 w-4" />Sort By</Button></DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuItem onSelect={() => setSort('dateAdded-desc')}>Date Added (Newest)</DropdownMenuItem>
-                                                <DropdownMenuItem onSelect={() => setSort('dateAdded-asc')}>Date Added (Oldest)</DropdownMenuItem>
-                                                <DropdownMenuItem onSelect={() => setSort('name-asc')}>Name (A-Z)</DropdownMenuItem>
-                                                <DropdownMenuItem onSelect={() => setSort('expiryDate-asc')}>Expiry (Soonest)</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                </div>
-                                <div className="flex flex-wrap gap-2 pt-4">
-                                    <Button size="sm" variant={filter === 'All' ? 'secondary' : 'outline'} onClick={() => setFilter('All')}>All</Button>
-                                    {categories.map(cat => (<Button key={cat.name} size="sm" variant={filter === cat.name ? 'secondary' : 'outline'} onClick={() => setFilter(cat.name)}><cat.icon className="mr-2 h-4 w-4" />{cat.name}</Button>))}
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                {sortedAndFilteredList.length > 0 ? (
-                                <ul className="space-y-4">
-                                    {sortedAndFilteredList.map(item => {
-                                        const isExpiring = expiringItems.some(expItem => expItem.id === item.id);
-                                        const isExpired = expiredItems.some(expItem => expItem.id === item.id);
-                                        const CategoryIcon = getCategoryIcon(item.category);
-                                        return (
-                                        <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-muted" : "bg-card", isExpiring && !item.purchased && "bg-destructive/20 border border-destructive/30", isExpired && !item.purchased && "bg-destructive/20 border border-destructive/30")}>
-                                            <Checkbox id={item.id} checked={item.purchased} onCheckedChange={() => togglePurchased(item.id)} aria-label={`Mark ${item.name} as purchased`} className="mt-1" />
-                                            <div className="flex-grow">
-                                                <label htmlFor={item.id} className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</label>
-                                                <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                                                    <Badge variant="outline" className="flex items-center gap-1"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
-                                                    {item.quantity && <Badge variant="outline" className="flex items-center gap-1"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
-                                                    {item.storageLocation && <Badge variant="outline">{item.storageLocation}</Badge>}
-                                                    {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-destructive font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-1">
-                                                <Button variant="ghost" size="icon" onClick={() => handleEditClick(item)}><Edit className="h-4 w-4" /></Button>
-                                                <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                                            </div>
-                                        </li>
-                                        )})}
-                                </ul>
-                                ) : (<p className="text-center text-slate-400 py-8">{inventoryList.length === 0 ? "Your inventory is empty. Add an item to get started!" : `No items in the "${filter}" category.`}</p>)}
-                            </CardContent>
+    <div className="relative flex flex-col min-h-screen bg-cover bg-center text-foreground" style={{backgroundImage: "url('https://i.pinimg.com/736x/d5/a3/6d/d5a36de2f6c14f433311edadfb497991.jpg')"}}>
+        <div className="absolute inset-0 bg-black/50 z-0"/>
+        <div className="relative z-10 flex flex-col min-h-screen">
+            <header className="container mx-auto px-4 py-6"><div className="flex justify-between items-center"><GlowHerLogo /><Button variant="ghost" onClick={() => router.push('/')}><ChevronLeft className="mr-2 h-4 w-4" />Back to Dashboard</Button></div></header>
+            <main className="flex-grow container mx-auto px-4 py-8">
+                <div className="text-center mb-8"><h1 className="font-headline text-4xl md:text-5xl font-bold">Groceries</h1><p className="mt-2 text-lg text-muted-foreground">Manage your pantry and plan your shopping.</p></div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-1">
+                        <Card className="shadow-lg sticky top-8">
+                            <CardHeader><CardTitle className="flex items-center gap-2"><Plus/> {editingItem ? 'Edit Item in Inventory' : 'Add to Inventory'}</CardTitle></CardHeader>
+                            <CardContent><Form {...inventoryForm}><form onSubmit={inventoryForm.handleSubmit(onInventorySubmit)} className="space-y-4">
+                                <FormField control={inventoryForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>Item Name</FormLabel><FormControl><Input placeholder="e.g., Almond Milk" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                                <FormField control={inventoryForm.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger></FormControl><SelectContent>{categories.map(cat => (<SelectItem key={cat.name} value={cat.name}><div className="flex items-center gap-2"><cat.icon className="h-4 w-4" />{cat.name}</div></SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
+                                <FormField control={inventoryForm.control} name="quantity" render={({ field }) => (<FormItem><FormLabel>Quantity (Optional)</FormLabel><FormControl><Input placeholder="e.g., 1 carton" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                                <FormField control={inventoryForm.control} name="storageLocation" render={({ field }) => (<FormItem><FormLabel>Storage Location</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a location" /></SelectTrigger></FormControl><SelectContent>{storageLocations.map(loc => (<SelectItem key={loc} value={loc}>{loc}</SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
+                                <FormField control={inventoryForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date (Optional)</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date()} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
+                                <Button type="submit" className="w-full bg-primary hover:bg-primary/90">{editingItem ? 'Update Item' : 'Add to Inventory'}</Button>
+                                {editingItem && <Button type="button" variant="ghost" className="w-full" onClick={() => { setEditingItem(null); inventoryForm.reset({ name: "", category: "Other", quantity: "", storageLocation: "Pantry" }); }}>Cancel Edit</Button>}
+                            </form></Form></CardContent>
                         </Card>
-                    </TabsContent>
-                    <TabsContent value="shoppingList">
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle>Shopping List</CardTitle>
-                                <CardDescription>Add items you need to buy on your next trip.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Form {...shoppingListForm}>
-                                    <form onSubmit={shoppingListForm.handleSubmit(onShoppingListSubmit)} className="flex items-center gap-2 mb-6">
-                                        <FormField control={shoppingListForm.control} name="name" render={({ field }) => (<FormItem className="flex-grow"><FormControl><Input placeholder="e.g., Bananas" {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                                        <Button type="submit" className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />Add</Button>
-                                    </form>
-                                </Form>
+                    </div>
+                    <div className="lg:col-span-2 space-y-6">
+                        {expiredItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription>Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        <Tabs defaultValue="inventory" className="w-full">
+                            <TabsList className="grid w-full grid-cols-3">
+                                <TabsTrigger value="inventory">My Groceries</TabsTrigger>
+                                <TabsTrigger value="shoppingList">Shopping List <Badge variant="secondary" className="ml-2">{shoppingList.length}</Badge></TabsTrigger>
+                                <TabsTrigger value="expired">Expired <Badge variant="destructive" className="ml-2">{expiredItems.length}</Badge></TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="inventory">
+                                <Card className="shadow-lg">
+                                    <CardHeader>
+                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                            <CardTitle>Your Inventory</CardTitle>
+                                            <div className="flex gap-2">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild><Button variant="outline"><SortAsc className="mr-2 h-4 w-4" />Sort By</Button></DropdownMenuTrigger>
+                                                    <DropdownMenuContent>
+                                                        <DropdownMenuItem onSelect={() => setSort('dateAdded-desc')}>Date Added (Newest)</DropdownMenuItem>
+                                                        <DropdownMenuItem onSelect={() => setSort('dateAdded-asc')}>Date Added (Oldest)</DropdownMenuItem>
+                                                        <DropdownMenuItem onSelect={() => setSort('name-asc')}>Name (A-Z)</DropdownMenuItem>
+                                                        <DropdownMenuItem onSelect={() => setSort('expiryDate-asc')}>Expiry (Soonest)</DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2 pt-4">
+                                            <Button size="sm" variant={filter === 'All' ? 'secondary' : 'outline'} onClick={() => setFilter('All')}>All</Button>
+                                            {categories.map(cat => (<Button key={cat.name} size="sm" variant={filter === cat.name ? 'secondary' : 'outline'} onClick={() => setFilter(cat.name)}><cat.icon className="mr-2 h-4 w-4" />{cat.name}</Button>))}
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {sortedAndFilteredList.length > 0 ? (
+                                        <ul className="space-y-4">
+                                            {sortedAndFilteredList.map(item => {
+                                                const isExpiring = expiringItems.some(expItem => expItem.id === item.id);
+                                                const isExpired = expiredItems.some(expItem => expItem.id === item.id);
+                                                const CategoryIcon = getCategoryIcon(item.category);
+                                                return (
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-muted" : "bg-card", isExpiring && !item.purchased && "bg-destructive/20 border border-destructive/30", isExpired && !item.purchased && "bg-destructive/20 border border-destructive/30")}>
+                                                    <Checkbox id={item.id} checked={item.purchased} onCheckedChange={() => togglePurchased(item.id)} aria-label={`Mark ${item.name} as purchased`} className="mt-1" />
+                                                    <div className="flex-grow">
+                                                        <label htmlFor={item.id} className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</label>
+                                                        <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                            <Badge variant="outline" className="flex items-center gap-1"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
+                                                            {item.quantity && <Badge variant="outline" className="flex items-center gap-1"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
+                                                            {item.storageLocation && <Badge variant="outline">{item.storageLocation}</Badge>}
+                                                            {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-destructive font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <Button variant="ghost" size="icon" onClick={() => handleEditClick(item)}><Edit className="h-4 w-4" /></Button>
+                                                        <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                                                    </div>
+                                                </li>
+                                                )})}
+                                        </ul>
+                                        ) : (<p className="text-center text-slate-400 py-8">{inventoryList.length === 0 ? "Your inventory is empty. Add an item to get started!" : `No items in the "${filter}" category.`}</p>)}
+                                    </CardContent>
+                                </Card>
+                            </TabsContent>
+                            <TabsContent value="shoppingList">
+                                <Card className="shadow-lg">
+                                    <CardHeader>
+                                        <CardTitle>Shopping List</CardTitle>
+                                        <CardDescription>Add items you need to buy on your next trip.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Form {...shoppingListForm}>
+                                            <form onSubmit={shoppingListForm.handleSubmit(onShoppingListSubmit)} className="flex items-center gap-2 mb-6">
+                                                <FormField control={shoppingListForm.control} name="name" render={({ field }) => (<FormItem className="flex-grow"><FormControl><Input placeholder="e.g., Bananas" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                                                <Button type="submit" className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />Add</Button>
+                                            </form>
+                                        </Form>
 
-                                {shoppingList.length > 0 ? (
-                                    <ul className="space-y-2">
-                                        {shoppingList.map(item => (
-                                            <li key={item.id} className="flex items-center justify-between gap-4 p-3 rounded-lg bg-card">
-                                                <span className="font-medium">{item.name}</span>
-                                                <div className="flex gap-1">
-                                                    <Button variant="ghost" size="sm" onClick={() => moveShoppingItemToInventory(item)} className="text-primary hover:text-primary/90">
-                                                        Move to Inventory <ArrowRight className="h-4 w-4 ml-2"/>
-                                                    </Button>
-                                                    <Button variant="ghost" size="icon" onClick={() => deleteShoppingListItem(item.id)}>
-                                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                                    </Button>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <p className="text-center text-slate-400 py-8">Your shopping list is empty.</p>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                     <TabsContent value="expired">
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle>Expired Items</CardTitle>
-                                <CardDescription>These items are past their expiry date.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {expiredItems.length > 0 ? (
-                                <ul className="space-y-4">
-                                    {expiredItems.map(item => {
-                                        const CategoryIcon = getCategoryIcon(item.category);
-                                        return (
-                                        <li key={item.id} className="flex items-start gap-4 p-4 rounded-lg bg-destructive/20 border border-destructive/30">
-                                            <div className="flex-grow">
-                                                <p className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</p>
-                                                <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                                                    <Badge variant="outline" className="flex items-center gap-1"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
-                                                    {item.quantity && <Badge variant="outline" className="flex items-center gap-1"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
-                                                    {item.expiryDate && (<span className="flex items-center gap-1 text-destructive font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(item.expiryDate, 'MMM d')}</span>)}
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-1">
-                                                <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                                            </div>
-                                        </li>
-                                        )})}
-                                </ul>
-                                ) : (<p className="text-center text-slate-400 py-8">You have no expired items. Great job!</p>)}
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                </Tabs>
-            </div>
+                                        {shoppingList.length > 0 ? (
+                                            <ul className="space-y-2">
+                                                {shoppingList.map(item => (
+                                                    <li key={item.id} className="flex items-center justify-between gap-4 p-3 rounded-lg bg-card">
+                                                        <span className="font-medium">{item.name}</span>
+                                                        <div className="flex gap-1">
+                                                            <Button variant="ghost" size="sm" onClick={() => moveShoppingItemToInventory(item)} className="text-primary hover:text-primary/90">
+                                                                Move to Inventory <ArrowRight className="h-4 w-4 ml-2"/>
+                                                            </Button>
+                                                            <Button variant="ghost" size="icon" onClick={() => deleteShoppingListItem(item.id)}>
+                                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                                            </Button>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-center text-slate-400 py-8">Your shopping list is empty.</p>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </TabsContent>
+                            <TabsContent value="expired">
+                                <Card className="shadow-lg">
+                                    <CardHeader>
+                                        <CardTitle>Expired Items</CardTitle>
+                                        <CardDescription>These items are past their expiry date.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {expiredItems.length > 0 ? (
+                                        <ul className="space-y-4">
+                                            {expiredItems.map(item => {
+                                                const CategoryIcon = getCategoryIcon(item.category);
+                                                return (
+                                                <li key={item.id} className="flex items-start gap-4 p-4 rounded-lg bg-destructive/20 border border-destructive/30">
+                                                    <div className="flex-grow">
+                                                        <p className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</p>
+                                                        <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                            <Badge variant="outline" className="flex items-center gap-1"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
+                                                            {item.quantity && <Badge variant="outline" className="flex items-center gap-1"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
+                                                            {item.expiryDate && (<span className="flex items-center gap-1 text-destructive font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(item.expiryDate, 'MMM d')}</span>)}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                                                    </div>
+                                                </li>
+                                                )})}
+                                        </ul>
+                                        ) : (<p className="text-center text-slate-400 py-8">You have no expired items. Great job!</p>)}
+                                    </CardContent>
+                                </Card>
+                            </TabsContent>
+                        </Tabs>
+                    </div>
+                </div>
+            </main>
         </div>
-      </main>
     </div>
   );
 }
-
-    
