@@ -311,7 +311,7 @@ export default function WaterTrackerPage() {
   const progress = goal > 0 ? (totalIntake / goal) * 100 : 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-100 to-white text-slate-800">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-white text-slate-800">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
@@ -341,7 +341,7 @@ export default function WaterTrackerPage() {
                     </CardHeader>
                     <CardContent className="flex flex-col items-center justify-center space-y-6">
                         <div className="w-full relative">
-                            <Progress value={progress} className="h-8 bg-black/10 [&>span>span]:bg-sky-500" />
+                            <Progress value={progress} className="h-8 bg-sky-100 [&>span]:bg-sky-500" />
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <span className="text-lg font-bold text-white drop-shadow-md">{Math.round(progress)}%</span>
                             </div>
@@ -349,11 +349,11 @@ export default function WaterTrackerPage() {
 
                         <div className="flex items-center gap-4 text-center">
                             {Array.from({ length: Math.ceil(goal) }).map((_, i) => (
-                                <Droplet key={i} className={cn("h-10 w-10 md:h-12 md:w-12 transition-all duration-500 ease-in-out", i < totalIntake ? "text-sky-500 fill-sky-500" : "text-slate-300")} />
+                                <Droplet key={i} className={cn("h-10 w-10 md:h-12 md:w-12 transition-all duration-500 ease-in-out", i < totalIntake ? "text-sky-400 fill-sky-400" : "text-slate-300")} />
                             ))}
                         </div>
 
-                        <div className="hidden md:flex items-center justify-center gap-4 pt-4">
+                        <div className="flex md:flex items-center justify-center gap-4 pt-4">
                             <Button size="lg" variant="outline" onClick={() => changeIntake(-1)} disabled={totalIntake <= 0} className="bg-white/50 border-slate-300 hover:bg-white">
                                 <Minus className="mr-2 h-5 w-5"/> Remove Cup
                             </Button>
@@ -389,10 +389,10 @@ export default function WaterTrackerPage() {
                                 <div className="space-y-2">
                                     <FormLabel>Unit</FormLabel>
                                     <Tabs defaultValue={unit} onValueChange={(value) => handleSetUnit(value as Unit)} className="w-full">
-                                        <TabsList className="grid w-full grid-cols-3 bg-blue-200/50 text-sky-800">
-                                            <TabsTrigger value="cups" className="data-[state=active]:bg-white data-[state=active]:text-sky-600">Cups</TabsTrigger>
-                                            <TabsTrigger value="ml" className="data-[state=active]:bg-white data-[state=active]:text-sky-600">ml</TabsTrigger>
-                                            <TabsTrigger value="oz" className="data-[state=active]:bg-white data-[state=active]:text-sky-600">oz</TabsTrigger>
+                                        <TabsList className="grid w-full grid-cols-3 bg-blue-100/60 text-sky-800">
+                                            <TabsTrigger value="cups" className="data-[state=active]:bg-white data-[state=active]:text-sky-600 data-[state=active]:shadow-md">Cups</TabsTrigger>
+                                            <TabsTrigger value="ml" className="data-[state=active]:bg-white data-[state=active]:text-sky-600 data-[state=active]:shadow-md">ml</TabsTrigger>
+                                            <TabsTrigger value="oz" className="data-[state=active]:bg-white data-[state=active]:text-sky-600 data-[state=active]:shadow-md">oz</TabsTrigger>
                                         </TabsList>
                                     </Tabs>
                                 </div>
@@ -479,7 +479,7 @@ export default function WaterTrackerPage() {
                         <CardDescription className="text-slate-700">Keep up the great work!</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="flex items-center justify-center text-lg font-bold bg-blue-100/50 p-3 rounded-lg text-sky-800">
+                        <div className="flex items-center justify-center text-lg font-bold bg-blue-100/60 p-3 rounded-lg text-sky-800">
                              <Flame className="mr-2 h-5 w-5 text-red-500" />
                              {hydrationStreak > 0 ? `${hydrationStreak}-Day Hydration Streak!` : "Start a new streak today!"}
                         </div>

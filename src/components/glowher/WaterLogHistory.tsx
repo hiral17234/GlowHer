@@ -28,7 +28,7 @@ const chartConfig = {
     },
     goal: {
         label: "Goal",
-        color: "hsl(202 88% 51%)", // Bright Blue (sky-500)
+        color: "hsl(202 88% 80%)", 
     }
 } satisfies ChartConfig;
 
@@ -127,8 +127,8 @@ export function WaterLogHistory() {
                                 />}
                                 cursor={{ fill: 'hsla(202, 88%, 51%, 0.1)', radius: 4 }}
                             />
-                            <Bar dataKey="actual" fill="hsl(202 88% 51%)" radius={[4, 4, 0, 0]} name="Actual"/>
-                            <Bar dataKey="goal" fill="hsl(202 88% 51%)" radius={[4, 4, 0, 0]} opacity={0.3} name="Goal"/>
+                            <Bar dataKey="goal" fill="var(--color-goal)" radius={[4, 4, 0, 0]} name="Goal"/>
+                            <Bar dataKey="actual" fill="var(--color-actual)" radius={[4, 4, 0, 0]} name="Actual"/>
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartContainer>
