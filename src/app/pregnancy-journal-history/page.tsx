@@ -46,11 +46,11 @@ export default function PregnancyJournalHistoryPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="container mx-auto px-4 py-6 z-10">
+    <div className="flex flex-col min-h-screen text-foreground" style={{ backgroundImage: "url('https://i.pinimg.com/736x/e2/43/86/e243863fedaf6e675fd150476c75a35a.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+      <header className="container mx-auto px-4 py-6 z-10 bg-black/10 backdrop-blur-sm">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
-          <Button variant="ghost" onClick={() => router.push('/pregnancy-journal')}>
+          <Button variant="outline" onClick={() => router.push('/pregnancy-journal')} className="bg-white/80 text-black hover:bg-white">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Journal
           </Button>
@@ -59,12 +59,12 @@ export default function PregnancyJournalHistoryPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">Your Pregnancy Journal History</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Review your past notes and reflections.</p>
+          <div className="text-center mb-8 p-4 rounded-lg bg-black/20 backdrop-blur-sm">
+            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Your Pregnancy Journal History</h1>
+            <p className="mt-2 text-lg text-white/90">Review your past notes and reflections.</p>
           </div>
 
-          <Card className="shadow-lg">
+          <Card className="shadow-lg bg-background/80 backdrop-blur-md border-white/20">
             <CardContent className="p-6">
               {loading ? (
                 <p>Loading history...</p>
@@ -121,5 +121,3 @@ export default function PregnancyJournalHistoryPage() {
     </div>
   );
 }
-
-    
