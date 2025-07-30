@@ -150,8 +150,7 @@ export default function LogSymptomsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-cover bg-center bg-fixed" style={{backgroundImage: "url('https://i.pinimg.com/736x/1b/07/3a/1b073a8142ccd30c3a7d24457e2845f4.jpg')"}}>
-        <div className="flex flex-col min-h-screen bg-black/30 backdrop-blur-sm text-white">
+    <div className="flex flex-col min-h-screen bg-cover bg-center bg-fixed text-white" style={{backgroundImage: "url('https://i.pinimg.com/736x/1b/07/3a/1b073a8142ccd30c3a7d24457e2845f4.jpg')"}}>
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
@@ -164,9 +163,9 @@ export default function LogSymptomsPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8 p-4 rounded-lg bg-black/20 backdrop-blur-sm">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">How Are You Feeling Today?</h1>
-            <p className="mt-2 text-lg text-white/80">Track your symptoms and emotions to understand your body better.</p>
+          <div className="text-center mb-8 p-4 rounded-lg">
+            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white text-shadow-lg">How Are You Feeling Today?</h1>
+            <p className="mt-2 text-lg text-white/90 text-shadow-lg">Track your symptoms and emotions to understand your body better.</p>
           </div>
 
           <Card className="shadow-lg bg-black/20 backdrop-blur-lg border-white/20 text-white">
@@ -360,7 +359,6 @@ export default function LogSymptomsPage() {
           </Card>
         </div>
       </main>
-        </div>
     </div>
   );
 }
