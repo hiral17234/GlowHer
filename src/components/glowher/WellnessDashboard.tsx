@@ -144,8 +144,8 @@ export function WellnessDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-12 space-y-8">
-        <div className="flex justify-between items-center">
-            <Card className="flex-grow bg-accent/20 shadow-lg shadow-accent/20 text-center">
+        <div className="relative">
+            <Card className="flex-grow bg-accent/20 shadow-lg shadow-accent/20 text-center pr-16">
                 <CardHeader>
                     <CardTitle className="font-headline flex items-center justify-center gap-2 text-2xl">
                         <Sparkles className="text-accent-foreground" />
@@ -165,9 +165,9 @@ export function WellnessDashboard() {
                     )}
                 </CardContent>
             </Card>
-            <div className="ml-4">
-                <Button variant="ghost" size="icon" className="h-10 w-10">
-                    <Bell className="h-6 w-6" />
+            <div className="absolute top-1/2 right-4 -translate-y-1/2">
+                 <Button variant="ghost" size="icon" className="h-14 w-14 text-foreground/70 hover:text-foreground hover:bg-accent/50">
+                    <Bell className="h-8 w-8" />
                 </Button>
             </div>
         </div>
