@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, Leaf } from 'lucide-react';
 
+const videos = ["Nmmsl2X_--U", "FMrtSHAAPhM"];
+
 export default function LeafAuraPage() {
     const router = useRouter();
 
@@ -13,7 +15,7 @@ export default function LeafAuraPage() {
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold flex items-center gap-2">
                         <Leaf className="h-8 w-8 text-green-500" />
-                        Leaf Aura
+                        Leaf Aura (Nature)
                     </h1>
                     <Button variant="ghost" onClick={() => router.push('/breathe')}>
                         <ChevronLeft className="mr-2 h-4 w-4" />
@@ -22,9 +24,22 @@ export default function LeafAuraPage() {
                 </div>
             </header>
             <main className="flex-grow flex items-center justify-center">
-                <div className="w-full max-w-2xl mx-auto text-center p-6 space-y-6">
+                <div className="w-full max-w-4xl mx-auto text-center p-6 space-y-8">
                     <h2 className="text-3xl font-headline">Your Leaf Aura Music</h2>
-                    <p className="text-muted-foreground">This is the placeholder page for the Leaf aura. You can add the YouTube video here.</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {videos.map(videoId => (
+                            <div key={videoId} className="aspect-video">
+                                <iframe
+                                    className="w-full h-full rounded-lg shadow-xl"
+                                    src={`https://www.youtube.com/embed/${videoId}`}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </main>
         </div>

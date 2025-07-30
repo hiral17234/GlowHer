@@ -6,6 +6,7 @@ import { ChevronLeft, Flame } from 'lucide-react';
 
 export default function FireAuraPage() {
     const router = useRouter();
+    const videoId = "5gBJrZmbGLo";
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -24,7 +25,16 @@ export default function FireAuraPage() {
             <main className="flex-grow flex items-center justify-center">
                 <div className="w-full max-w-2xl mx-auto text-center p-6 space-y-6">
                     <h2 className="text-3xl font-headline">Your Fire Aura Music</h2>
-                    <p className="text-muted-foreground">This is the placeholder page for the Fire aura. You can add the YouTube video here.</p>
+                     <div className="aspect-video">
+                        <iframe
+                            className="w-full h-full rounded-lg shadow-xl"
+                            src={`https://www.youtube.com/embed/${videoId}`}
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
                 </div>
             </main>
         </div>
