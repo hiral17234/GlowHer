@@ -150,11 +150,11 @@ export default function LogSymptomsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-cover bg-center bg-fixed text-white" style={{backgroundImage: "url('https://i.pinimg.com/736x/1b/07/3a/1b073a8142ccd30c3a7d24457e2845f4.jpg')"}}>
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
-          <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white">
+          <Button variant="ghost" onClick={() => router.push('/')}>
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
@@ -164,15 +164,15 @@ export default function LogSymptomsPage() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8 p-4 rounded-lg">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white text-shadow-lg">How Are You Feeling Today?</h1>
-            <p className="mt-2 text-lg text-white/90 text-shadow-lg">Track your symptoms and emotions to understand your body better.</p>
+            <h1 className="font-headline text-4xl md:text-5xl font-bold">How Are You Feeling Today?</h1>
+            <p className="mt-2 text-lg text-muted-foreground">Track your symptoms and emotions to understand your body better.</p>
           </div>
 
-          <Card className="shadow-lg bg-black/20 backdrop-blur-lg border-white/20 text-white">
+          <Card className="shadow-lg">
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>Create a New Log</CardTitle>
-                    <Button variant="outline" onClick={() => router.push('/log-history')} className="bg-transparent hover:bg-white/10 border-white/30">
+                    <Button variant="outline" onClick={() => router.push('/log-history')}>
                         <History className="mr-2 h-4 w-4" />
                         View History
                     </Button>
@@ -192,7 +192,7 @@ export default function LogSymptomsPage() {
                             <FormControl>
                               <Button
                                 variant={"outline"}
-                                className={"w-[240px] pl-3 text-left font-normal bg-transparent hover:bg-white/10 border-white/30"}
+                                className={"w-[240px] pl-3 text-left font-normal"}
                               >
                                 {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -234,7 +234,7 @@ export default function LogSymptomsPage() {
                                 return (
                                   <FormItem
                                     key={item.id}
-                                    className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-white/10 transition-colors border-white/30"
+                                    className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-accent transition-colors"
                                   >
                                     <FormControl>
                                       <Checkbox
@@ -272,7 +272,7 @@ export default function LogSymptomsPage() {
                       <FormItem>
                         <FormLabel className="text-lg font-semibold flex items-center gap-2"><Plus/> Other</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter any other symptoms..." {...field} className="bg-transparent border-white/30 placeholder:text-white/60"/>
+                          <Input placeholder="Enter any other symptoms..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -295,8 +295,8 @@ export default function LogSymptomsPage() {
                                 type="button"
                                 variant={field.value === mood.name ? "secondary" : "outline"}
                                 className={cn(
-                                  "h-16 text-lg transition-all duration-200 transform hover:scale-105 bg-transparent hover:bg-white/10",
-                                  field.value === mood.name && "bg-white/20 border-2 border-primary ring-2 ring-primary/50"
+                                  "h-16 text-lg transition-all duration-200 transform hover:scale-105",
+                                  field.value === mood.name && "border-2 border-primary ring-2 ring-primary/50"
                                 )}
                                 onClick={() => field.onChange(mood.name)}
                               >
@@ -340,11 +340,11 @@ export default function LogSymptomsPage() {
                         <FormControl>
                           <Textarea
                             placeholder="Anything else you’d like to record today?"
-                            className="resize-none bg-transparent border-white/30 placeholder:text-white/60"
+                            className="resize-none"
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription className="text-right text-white/70">
+                        <FormDescription className="text-right text-muted-foreground">
                           {notesValue?.length || 0} / 300
                         </FormDescription>
                         <FormMessage />
