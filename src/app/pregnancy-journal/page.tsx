@@ -131,11 +131,11 @@ export default function PregnancyJournalPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="container mx-auto px-4 py-6 z-10">
+    <div className="flex flex-col min-h-screen text-foreground" style={{ backgroundImage: "url('https://i.pinimg.com/736x/e2/43/86/e243863fedaf6e675fd150476c75a35a.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+      <header className="container mx-auto px-4 py-6 z-10 bg-black/10 backdrop-blur-sm">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
-          <Button variant="ghost" onClick={() => router.push('/pregnancy-tracker')}>
+          <Button variant="outline" onClick={() => router.push('/pregnancy-tracker')} className="bg-white/80 text-black hover:bg-white">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Tracker
           </Button>
@@ -144,12 +144,12 @@ export default function PregnancyJournalPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-8">
-          <div className="text-center">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">Pregnancy Journal</h1>
-            <p className="mt-2 text-lg text-muted-foreground">A private space for your thoughts, questions, and feelings.</p>
+          <div className="text-center p-4 rounded-lg bg-black/20 backdrop-blur-sm">
+            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Pregnancy Journal</h1>
+            <p className="mt-2 text-lg text-white">A private space for your thoughts, questions, and feelings.</p>
           </div>
 
-          <Card className="shadow-lg">
+          <Card className="shadow-lg bg-background/80 backdrop-blur-md border-white/20">
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>New Journal Entry</CardTitle>
@@ -305,5 +305,3 @@ export default function PregnancyJournalPage() {
     </div>
   );
 }
-
-    
