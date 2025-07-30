@@ -24,6 +24,21 @@ export default function MindDumpPage() {
     const [selectedAura, setSelectedAura] = useState<string | null>(null);
 
     const handleDump = () => {
+        if (!selectedAura) {
+            toast({
+                variant: 'destructive',
+                title: 'Please select an aura',
+                description: 'Choose an aura that represents your mood to continue.',
+            });
+            return;
+        }
+        
+        try {
+            localStorage.setItem('selectedAura', selectedAura);
+        } catch (error) {
+            console.error("Could not save to localStorage", error);
+        }
+        
         toast({
             title: "Thoughts Dumped!",
             description: "Now, take a moment to breathe and reset.",

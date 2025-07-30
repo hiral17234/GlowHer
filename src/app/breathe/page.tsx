@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Brain } from 'lucide-react';
@@ -13,11 +13,36 @@ const breathingCycle = [
     { text: 'Exhale...', duration: 11000 },
 ];
 
+const auraSounds: { [key: string]: string } = {
+    Cloud: 'https://cdn.pixabay.com/audio/2023/02/06/ocean-waves.mp3',
+    Fire: 'https://cdn.pixabay.com/audio/2022/10/12/fire-crackling-loop.mp3',
+    Leaf: 'https://cdn.pixabay.com/audio/2023/03/15/forest-wind-leaves.mp3',
+    Water: 'https://cdn.pixabay.com/audio/2023/03/22/rain-ambience.mp3',
+    Sun: 'https://cdn.pixabay.com/audio/2023/02/06/forest-birds-singing.mp3',
+    Moon: 'https://cdn.pixabay.com/audio/2023/02/06/night-forest-crickets.mp3',
+};
+
+
 export default function BreathePage() {
     const router = useRouter();
     const [cycleText, setCycleText] = useState('Get Ready...');
+    const [audioSrc, setAudioSrc] = useState<string | null>(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
+
 
     useEffect(() => {
+        // Get aura from local storage and set audio
+        try {
+            const selectedAura = localStorage.getItem('selectedAura');
+            if (selectedAura && auraSounds[selectedAura]) {
+                setAudioSrc(auraSounds[selectedAura]);
+            }
+        } catch (error) {
+            console.error("Could not read from localStorage", error);
+        }
+
+
+        // Breathing animation logic
         const totalDuration = breathingCycle.reduce((sum, cycle) => sum + cycle.duration, 0);
 
         const cycleInterval = setInterval(() => {
@@ -32,12 +57,22 @@ export default function BreathePage() {
         return () => clearInterval(cycleInterval);
     }, []);
 
+    const handleFinish = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
+        router.push('/');
+    };
+
     return (
         <div 
             className="relative flex flex-col min-h-screen items-center justify-center p-4 overflow-hidden bg-cover bg-center"
             style={{ backgroundImage: "url('https://i.pinimg.com/736x/88/90/a8/8890a87eea99b61588a7e5646404dd57.jpg')" }}
             data-ai-hint="calm beach"
         >
+             {audioSrc && (
+                <audio ref={audioRef} src={audioSrc} autoPlay loop />
+            )}
              <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
 
             <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
@@ -54,7 +89,7 @@ export default function BreathePage() {
 
                 <p className="text-green-300 font-semibold">Your thoughts have been released. ✨</p>
                 <p className="text-white/90">Breathe with the circle...</p>
-                 <Button onClick={() => router.push('/')} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
+                 <Button onClick={handleFinish} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
                     Finish
                 </Button>
             </div>
