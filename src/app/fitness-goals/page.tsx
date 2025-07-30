@@ -261,7 +261,19 @@ export default function FitnessGoalsPage() {
                                 <CardContent>
                                     <Form {...pregnancyLogForm}><form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
                                         <FormField control={pregnancyLogForm.control} name="activity" render={({ field }) => (<FormItem><FormLabel>Activity</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="What did you do today?" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Stretching">Stretching</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
-                                        <FormField control={pregnancyLogForm.control} name="minutes" render={({ field }) => (<FormItem><FormLabel>Minutes Moved</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                        <FormField
+                                            control={pregnancyLogForm.control}
+                                            name="minutes"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Minutes Moved</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="number" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage/>
+                                                </FormItem>
+                                            )}
+                                        />
                                         {pregnancyGoalForm.getValues('trackMood') && <FormField control={pregnancyLogForm.control} name="feeling" render={({ field }) => (<FormItem><FormLabel>How did you feel after?</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select how you felt" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Energized">Energized</SelectItem><SelectItem value="Tired">Tired</SelectItem><SelectItem value="Sore">Sore</SelectItem><SelectItem value="Relaxed">Relaxed</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>}
                                         <FormField control={pregnancyLogForm.control} name="notes" render={({ field }) => (<FormItem><FormLabel>Notes (optional)</FormLabel><FormControl><Textarea placeholder="Any thoughts on today's movement?" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                         <Button type="submit" className="w-full">Log Movement</Button>
