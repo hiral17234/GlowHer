@@ -15,7 +15,9 @@ import {
   User,
   Sparkles,
   LoaderCircle,
-  Bell
+  Bell,
+  Info,
+  DollarSign
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { fetchThoughtOfTheDay } from '@/app/actions';
@@ -94,6 +96,22 @@ const wellnessFeatures = [
       href: '/mental-health-check-in',
       color: 'text-cyan-500',
       bgColor: 'bg-cyan-500/10'
+    },
+    {
+        icon: Info,
+        title: 'About',
+        description: 'Learn more about the project and its purpose.',
+        href: '/about',
+        color: 'text-gray-500',
+        bgColor: 'bg-gray-500/10'
+    },
+    {
+        icon: DollarSign,
+        title: 'Donate',
+        description: 'Support the project to keep it running.',
+        href: '/donate',
+        color: 'text-purple-500',
+        bgColor: 'bg-purple-500/10'
     },
     {
       icon: User,

@@ -36,7 +36,9 @@ export default function MentalHealthCheckInPage() {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             audioRef.current = new Audio('/sounds/ambient-sound.mp3');
-            audioRef.current.loop = true;
+            if(audioRef.current) {
+                audioRef.current.loop = true;
+            }
         }
     }, []);
 
@@ -146,7 +148,7 @@ export default function MentalHealthCheckInPage() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-slate-800 text-white selection:bg-teal-300 selection:text-slate-900">
+        <div className="flex flex-col min-h-screen bg-gray-900 text-white selection:bg-teal-300 selection:text-slate-900">
             <header className="absolute top-0 left-0 w-full container mx-auto px-4 py-6 z-10">
                 <div className="flex justify-between items-center">
                     <GlowHerLogo className="[&>span]:text-white" />
