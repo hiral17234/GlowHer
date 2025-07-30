@@ -9,6 +9,8 @@ import { LoaderCircle, AlertTriangle, ShoppingCart, Bell } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, isBefore, isToday } from 'date-fns';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
 
 type GroceryItem = {
   id: string;
@@ -28,6 +30,7 @@ export default function HomePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState<any>(null);
+  const [notifications, setNotifications] = useState<string[]>([]);
 
   useEffect(() => {
     try {
@@ -39,6 +42,8 @@ export default function HomePage() {
       }
       
       setUserData(JSON.parse(storedData));
+      
+      const currentNotifications: string[] = [];
 
       // Check for expiring groceries
       const savedInventory = localStorage.getItem('glowher-grocery-list');
@@ -56,6 +61,8 @@ export default function HomePage() {
         });
 
         if (expiringItems.length > 0) {
+            const expiringMessage = `Expiring soon: ${expiringItems.map(i => i.name).join(', ')}.`;
+            currentNotifications.push(expiringMessage);
             toast({
                 variant: "destructive",
                 title: (
@@ -75,18 +82,11 @@ export default function HomePage() {
       if(savedShoppingList) {
           const shoppingList: ShoppingListItem[] = JSON.parse(savedShoppingList);
           if (shoppingList.length > 0) {
-              toast({
-                  title: (
-                      <div className="flex items-center gap-2">
-                          <ShoppingCart className="h-5 w-5" />
-                          <span className="font-bold">Shopping List Reminder</span>
-                      </div>
-                  ),
-                  description: `You have ${shoppingList.length} item(s) on your shopping list.`,
-                  duration: 8000
-              });
+              const shoppingMessage = `You have ${shoppingList.length} item(s) on your shopping list.`;
+              currentNotifications.push(shoppingMessage);
           }
       }
+      setNotifications(currentNotifications);
 
     } catch (error) {
       console.error("Error during initial load:", error);
@@ -111,9 +111,31 @@ export default function HomePage() {
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
             <GlowHerLogo />
-            <Button variant="ghost" size="icon" className="h-12 w-12 text-foreground/70 hover:text-foreground hover:bg-accent/50">
-                <Bell className="h-6 w-6" />
-            </Button>
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-12 w-12 text-yellow-500 hover:text-yellow-600 hover:bg-yellow-500/10 relative">
+                        <Bell className="h-6 w-6" />
+                        {notifications.length > 0 && (
+                            <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">{notifications.length}</Badge>
+                        )}
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-80">
+                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {notifications.length > 0 ? (
+                        notifications.map((note, index) => (
+                            <DropdownMenuItem key={index} className="text-sm text-wrap">
+                               {note.includes("Expiring soon") && <AlertTriangle className="mr-2 h-4 w-4 text-destructive" />}
+                               {note.includes("shopping list") && <ShoppingCart className="mr-2 h-4 w-4 text-blue-500" />}
+                               {note}
+                            </DropdownMenuItem>
+                        ))
+                    ) : (
+                        <DropdownMenuItem>No new notifications</DropdownMenuItem>
+                    )}
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
       </header>
       <main className="flex-grow">
