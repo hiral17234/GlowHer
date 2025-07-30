@@ -1,9 +1,9 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
+import { addDays, format, startOfDay } from 'date-fns';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,12 +18,13 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Calendar } from '@/components/ui/calendar';
+import { Badge } from '@/components/ui/badge';
 
 
 const formSchema = z.object({
   lastPeriodDate: z.date({ required_error: "Last period date is required." }),
-  cycleLength: z.coerce.number().min(21).max(35),
-  lutealPhaseLength: z.coerce.number().min(10).max(18).optional(),
+  cycleLength: z.coerce.number().min(21, "Cycle must be at least 21 days").max(45, "Cycle can be at most 45 days"),
+  lutealPhaseLength: z.coerce.number().min(10, "Luteal phase is usually 10-18 days").max(18, "Luteal phase is usually 10-18 days").optional(),
 });
 
 type CycleData = z.infer<typeof formSchema>;
@@ -31,6 +32,10 @@ type CycleData = z.infer<typeof formSchema>;
 export default function PeriodTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
+  
+  const [predictedPeriods, setPredictedPeriods] = useState<Date[]>([]);
+  const [fertileWindows, setFertileWindows] = useState<Date[]>([]);
+  const [ovulationDays, setOvulationDays] = useState<Date[]>([]);
 
   const form = useForm<CycleData>({
     resolver: zodResolver(formSchema),
@@ -40,13 +45,16 @@ export default function PeriodTrackerPage() {
     },
   });
 
+  const { watch, reset } = form;
+  const watchedFields = watch();
+
   useEffect(() => {
     try {
       const storedData = localStorage.getItem('glowher-period-tracker');
       if (storedData) {
         const data = JSON.parse(storedData);
         data.lastPeriodDate = new Date(data.lastPeriodDate);
-        form.reset(data);
+        reset(data);
       } else {
         const userDetails = localStorage.getItem('glowher-user');
         if (userDetails) {
@@ -57,7 +65,7 @@ export default function PeriodTrackerPage() {
                     cycleLength: 28,
                     lutealPhaseLength: 14,
                 };
-                form.reset(initialData);
+                reset(initialData);
                 localStorage.setItem('glowher-period-tracker', JSON.stringify(initialData));
             }
         }
@@ -65,7 +73,51 @@ export default function PeriodTrackerPage() {
     } catch (error) {
       console.error("Could not retrieve data from localStorage", error);
     }
-  }, [form]);
+  }, [reset]);
+
+  useEffect(() => {
+    const { lastPeriodDate, cycleLength, lutealPhaseLength } = watchedFields;
+
+    if (lastPeriodDate && cycleLength && lutealPhaseLength) {
+        const calculatePredictions = () => {
+            const today = startOfDay(new Date());
+            let currentCycleStart = startOfDay(new Date(lastPeriodDate));
+
+            // Find the start date of the current or last completed cycle
+            while (addDays(currentCycleStart, cycleLength) < today) {
+                currentCycleStart = addDays(currentCycleStart, cycleLength);
+            }
+
+            const allPredictedPeriods: Date[] = [];
+            const allFertileWindows: Date[] = [];
+            const allOvulationDays: Date[] = [];
+            
+            // Calculate for the next 2 cycles
+            for (let i = 0; i < 2; i++) {
+                const nextPeriodStart = addDays(currentCycleStart, cycleLength * (i + 1));
+                
+                // Period Prediction (5 days)
+                for (let j = 0; j < 5; j++) {
+                    allPredictedPeriods.push(addDays(nextPeriodStart, j));
+                }
+                
+                // Ovulation Prediction
+                const ovulationDay = addDays(nextPeriodStart, -lutealPhaseLength);
+                allOvulationDays.push(ovulationDay);
+                
+                // Fertile Window (Ovulation day + 5 days before)
+                for (let j = 0; j < 6; j++) {
+                    allFertileWindows.push(addDays(ovulationDay, -j));
+                }
+            }
+
+            setPredictedPeriods(allPredictedPeriods);
+            setFertileWindows(allFertileWindows);
+            setOvulationDays(allOvulationDays);
+        };
+        calculatePredictions();
+    }
+  }, [watchedFields]);
 
 
   function onSubmit(values: CycleData) {
@@ -85,12 +137,12 @@ export default function PeriodTrackerPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-rose-50 text-slate-800">
        <div className="flex flex-col min-h-screen">
             <header className="container mx-auto px-4 py-6">
                 <div className="flex justify-between items-center">
                 <GlowHerLogo />
-                <Button variant="ghost" onClick={() => router.push('/')}>
+                <Button variant="ghost" onClick={() => router.push('/')} className="hover:bg-rose-200/50">
                     <ChevronLeft className="mr-2 h-4 w-4" />
                     Back to Dashboard
                 </Button>
@@ -98,12 +150,12 @@ export default function PeriodTrackerPage() {
             </header>
 
             <main className="flex-grow container mx-auto px-4 py-8">
-                <div className="flex justify-center">
-                    <div className="w-full max-w-md">
-                        <Card className="shadow-lg">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div className="w-full max-w-md mx-auto">
+                        <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-rose-100">
                         <CardHeader>
-                            <CardTitle className="font-headline text-3xl">Cycle Settings</CardTitle>
-                            <CardDescription>Update your cycle details to get started.</CardDescription>
+                            <CardTitle className="font-headline text-3xl text-rose-800">Cycle Settings</CardTitle>
+                            <CardDescription>Update your cycle details for accurate predictions.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Form {...form}>
@@ -169,7 +221,7 @@ export default function PeriodTrackerPage() {
                                             </TooltipTrigger>
                                             <TooltipContent>
                                             <p className="max-w-xs">
-                                                The luteal phase is the time between ovulation and your next period. It's usually 10-18 days. This is different from your period (menstruation), which is when you bleed.
+                                                The time between ovulation and your next period. Usually 10-18 days.
                                             </p>
                                             </TooltipContent>
                                         </Tooltip>
@@ -182,14 +234,42 @@ export default function PeriodTrackerPage() {
                                     </FormItem>
                                 )}
                                 />
-                                <div className="flex flex-col gap-2">
-                                    <Button type="submit" size="lg" className="w-full">Save Settings</Button>
-                                    <Button variant="outline" onClick={() => router.push('/personal-details')}>Edit Personal Details</Button>
-                                </div>
+                                <Button type="submit" size="lg" className="w-full bg-rose-500 hover:bg-rose-600 text-white">Save Settings</Button>
                             </form>
                             </Form>
                         </CardContent>
                         </Card>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                         <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-rose-100">
+                             <CardHeader>
+                                <CardTitle className="font-headline text-3xl text-rose-800">Your Cycle Calendar</CardTitle>
+                                <CardDescription>Predictions for your upcoming cycles.</CardDescription>
+                            </CardHeader>
+                             <CardContent>
+                                <Calendar
+                                    mode="single"
+                                    numberOfMonths={2}
+                                    className="p-0"
+                                    modifiers={{
+                                        predictedPeriod: predictedPeriods,
+                                        fertileWindow: fertileWindows,
+                                        ovulationDay: ovulationDays,
+                                    }}
+                                    modifiersClassNames={{
+                                        predictedPeriod: 'bg-red-400 text-white rounded-md',
+                                        fertileWindow: 'bg-blue-400 text-white rounded-md',
+                                        ovulationDay: 'bg-green-500 text-white rounded-md font-bold',
+                                    }}
+                                />
+                                <div className="mt-4 space-y-2 text-sm text-slate-700">
+                                    <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-red-400"></div><span>Predicted Period</span></div>
+                                    <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-blue-400"></div><span>Fertile Window</span></div>
+                                    <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-green-500"></div><span>Predicted Ovulation</span></div>
+                                </div>
+                             </CardContent>
+                         </Card>
                     </div>
                 </div>
             </main>
@@ -197,3 +277,5 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
+
+    
