@@ -311,11 +311,11 @@ export default function WaterTrackerPage() {
   const progress = goal > 0 ? (totalIntake / goal) * 100 : 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-sky-400 to-blue-500 text-slate-800">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-100 to-white text-slate-800">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
-          <GlowHerLogo className="[&>span]:text-white" />
-          <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white">
+          <GlowHerLogo />
+          <Button variant="ghost" onClick={() => router.push('/')} className="text-slate-700 hover:bg-slate-900/10 hover:text-slate-900">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
@@ -324,13 +324,13 @@ export default function WaterTrackerPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="text-center mb-8">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white text-shadow-lg">Water Intake Tracker</h1>
-            <p className="mt-2 text-lg text-white/90">Hydration is key to feeling your best. Log your water here.</p>
+            <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900">Water Intake Tracker</h1>
+            <p className="mt-2 text-lg text-slate-600">Hydration is key to feeling your best. Log your water here.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
-                <Card className="shadow-lg bg-white/30 backdrop-blur-md border-white/20">
+                <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
                         <CardTitle className="text-2xl font-bold flex items-center gap-2">
                            <GlassWater /> Today's Progress ({format(new Date(currentDateKey), "PPP")})
@@ -341,7 +341,7 @@ export default function WaterTrackerPage() {
                     </CardHeader>
                     <CardContent className="flex flex-col items-center justify-center space-y-6">
                         <div className="w-full relative">
-                            <Progress value={progress} className="h-8 bg-black/10 [&>span>span]:bg-blue-500" />
+                            <Progress value={progress} className="h-8 bg-black/10 [&>span>span]:bg-sky-500" />
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <span className="text-lg font-bold text-white drop-shadow-md">{Math.round(progress)}%</span>
                             </div>
@@ -349,20 +349,20 @@ export default function WaterTrackerPage() {
 
                         <div className="flex items-center gap-4 text-center">
                             {Array.from({ length: Math.ceil(goal) }).map((_, i) => (
-                                <Droplet key={i} className={cn("h-10 w-10 md:h-12 md:w-12 transition-all duration-500 ease-in-out", i < totalIntake ? "text-blue-400 fill-blue-400" : "text-white/30")} />
+                                <Droplet key={i} className={cn("h-10 w-10 md:h-12 md:w-12 transition-all duration-500 ease-in-out", i < totalIntake ? "text-sky-500 fill-sky-500" : "text-slate-300")} />
                             ))}
                         </div>
 
                         <div className="hidden md:flex items-center justify-center gap-4 pt-4">
-                            <Button size="lg" variant="outline" onClick={() => changeIntake(-1)} disabled={totalIntake <= 0} className="bg-white/50 border-blue-300 hover:bg-white">
+                            <Button size="lg" variant="outline" onClick={() => changeIntake(-1)} disabled={totalIntake <= 0} className="bg-white/50 border-slate-300 hover:bg-white">
                                 <Minus className="mr-2 h-5 w-5"/> Remove Cup
                             </Button>
-                            <Button size="lg" onClick={() => changeIntake(1)} className="bg-blue-500 text-white hover:bg-blue-600">
+                            <Button size="lg" onClick={() => changeIntake(1)} className="bg-sky-500 text-white hover:bg-sky-600">
                                 <Plus className="mr-2 h-5 w-5"/> Add Cup
                             </Button>
                         </div>
                          {currentPhase && phaseTips[currentPhase] && (
-                            <Alert className="mt-6 bg-blue-100/50 border-blue-400/50 text-slate-800 [&>svg]:text-blue-500">
+                            <Alert className="mt-6 bg-blue-100/50 border-blue-400/50 text-slate-800 [&>svg]:text-sky-500">
                                 <Info className="h-4 w-4" />
                                 <AlertTitle>Tip for your {currentPhase} Phase</AlertTitle>
                                 <AlertDescription>
@@ -372,13 +372,13 @@ export default function WaterTrackerPage() {
                         )}
                     </CardContent>
                 </Card>
-                <div className="bg-white/30 backdrop-blur-md border-white/20 p-4 rounded-lg">
+                <div className="bg-white/70 backdrop-blur-md border-white/20 p-4 rounded-lg">
                     <WaterLogHistory />
                 </div>
             </div>
 
             <div className="lg:col-span-1 space-y-8">
-                <Card className="shadow-lg bg-white/30 backdrop-blur-md border-white/20">
+                <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Goal/> Your Goal</CardTitle>
                         <CardDescription className="text-slate-700">Set your daily hydration target.</CardDescription>
@@ -389,10 +389,10 @@ export default function WaterTrackerPage() {
                                 <div className="space-y-2">
                                     <FormLabel>Unit</FormLabel>
                                     <Tabs defaultValue={unit} onValueChange={(value) => handleSetUnit(value as Unit)} className="w-full">
-                                        <TabsList className="grid w-full grid-cols-3 bg-blue-200/50 text-blue-800">
-                                            <TabsTrigger value="cups" className="data-[state=active]:bg-white data-[state=active]:text-blue-600">Cups</TabsTrigger>
-                                            <TabsTrigger value="ml" className="data-[state=active]:bg-white data-[state=active]:text-blue-600">ml</TabsTrigger>
-                                            <TabsTrigger value="oz" className="data-[state=active]:bg-white data-[state=active]:text-blue-600">oz</TabsTrigger>
+                                        <TabsList className="grid w-full grid-cols-3 bg-blue-200/50 text-sky-800">
+                                            <TabsTrigger value="cups" className="data-[state=active]:bg-white data-[state=active]:text-sky-600">Cups</TabsTrigger>
+                                            <TabsTrigger value="ml" className="data-[state=active]:bg-white data-[state=active]:text-sky-600">ml</TabsTrigger>
+                                            <TabsTrigger value="oz" className="data-[state=active]:bg-white data-[state=active]:text-sky-600">oz</TabsTrigger>
                                         </TabsList>
                                     </Tabs>
                                 </div>
@@ -409,13 +409,13 @@ export default function WaterTrackerPage() {
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit" className="w-full bg-blue-500 text-white hover:bg-blue-600">Save Goal</Button>
+                                <Button type="submit" className="w-full bg-sky-500 text-white hover:bg-sky-600">Save Goal</Button>
                             </form>
                         </Form>
                     </CardContent>
                 </Card>
                 
-                 <Card className="shadow-lg bg-white/30 backdrop-blur-md border-white/20">
+                 <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Bell/> Hydration Reminders</CardTitle>
                         <CardDescription className="text-slate-700">Get notified to keep up with your goal.</CardDescription>
@@ -435,7 +435,7 @@ export default function WaterTrackerPage() {
                                                 <Switch
                                                     checked={field.value}
                                                     onCheckedChange={field.onChange}
-                                                    className="data-[state=checked]:bg-blue-500"
+                                                    className="data-[state=checked]:bg-sky-500"
                                                 />
                                             </FormControl>
                                         </FormItem>
@@ -473,13 +473,13 @@ export default function WaterTrackerPage() {
                     </CardContent>
                 </Card>
                 
-                <Card className="shadow-lg bg-white/30 backdrop-blur-md border-white/20">
+                <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Award /> Achievements</CardTitle>
                         <CardDescription className="text-slate-700">Keep up the great work!</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="flex items-center justify-center text-lg font-bold bg-blue-100/50 p-3 rounded-lg text-blue-800">
+                        <div className="flex items-center justify-center text-lg font-bold bg-blue-100/50 p-3 rounded-lg text-sky-800">
                              <Flame className="mr-2 h-5 w-5 text-red-500" />
                              {hydrationStreak > 0 ? `${hydrationStreak}-Day Hydration Streak!` : "Start a new streak today!"}
                         </div>
@@ -500,7 +500,7 @@ export default function WaterTrackerPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="shadow-lg bg-white/30 backdrop-blur-md border-white/20">
+                <Card className="shadow-lg bg-white/70 backdrop-blur-md border-white/20">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><History/> Daily Log</CardTitle>
                         <CardDescription className="text-slate-700">Your intake for {format(new Date(currentDateKey), "PPP")}.</CardDescription>
@@ -528,7 +528,7 @@ export default function WaterTrackerPage() {
 
       <Button
         size="icon"
-        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg md:hidden bg-blue-500 hover:bg-blue-600 text-white"
+        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg md:hidden bg-sky-500 hover:bg-sky-600 text-white"
         onClick={() => changeIntake(1)}
         aria-label="Add a cup of water"
       >

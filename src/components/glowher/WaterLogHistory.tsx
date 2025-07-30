@@ -24,11 +24,11 @@ type WeeklyData = {
 const chartConfig = {
     actual: {
         label: "Actual",
-        color: "hsl(var(--primary))",
+        color: "hsl(202 88% 51%)", // Bright Blue (sky-500)
     },
     goal: {
         label: "Goal",
-        color: "hsl(var(--primary))",
+        color: "hsl(202 88% 51%)", // Bright Blue (sky-500)
     }
 } satisfies ChartConfig;
 
@@ -86,7 +86,7 @@ export function WaterLogHistory() {
     }
 
     return (
-        <Card className="shadow-lg">
+        <Card className="shadow-lg bg-white/50">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><History/> Weekly View</CardTitle>
                 <CardDescription>Your hydration performance over the last 7 days.</CardDescription>
@@ -97,18 +97,18 @@ export function WaterLogHistory() {
                         <BarChart data={weeklyData}>
                             <XAxis
                                 dataKey="name"
-                                stroke="#888888"
+                                stroke="#475569"
                                 fontSize={12}
                                 tickLine={false}
                                 axisLine={false}
                             />
                             <YAxis
-                                stroke="#888888"
+                                stroke="#475569"
                                 fontSize={12}
                                 tickLine={false}
                                 axisLine={false}
                                 tickFormatter={(value) => `${value}`}
-                                label={{ value: 'Cups', angle: -90, position: 'insideLeft' }}
+                                label={{ value: 'Cups', angle: -90, position: 'insideLeft', fill: '#475569' }}
                             />
                             <Tooltip
                                 content={<ChartTooltipContent
@@ -125,10 +125,10 @@ export function WaterLogHistory() {
                                         return null;
                                     }}
                                 />}
-                                cursor={{ fill: 'hsl(var(--accent))', radius: 4 }}
+                                cursor={{ fill: 'hsla(202, 88%, 51%, 0.1)', radius: 4 }}
                             />
-                            <Bar dataKey="actual" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Actual"/>
-                            <Bar dataKey="goal" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} opacity={0.3} name="Goal"/>
+                            <Bar dataKey="actual" fill="hsl(202 88% 51%)" radius={[4, 4, 0, 0]} name="Actual"/>
+                            <Bar dataKey="goal" fill="hsl(202 88% 51%)" radius={[4, 4, 0, 0]} opacity={0.3} name="Goal"/>
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartContainer>
