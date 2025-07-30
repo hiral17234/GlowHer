@@ -4,9 +4,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Brain, ChevronLeft, Play } from 'lucide-react';
+import { Brain, ChevronLeft, Play, Music } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ReactPlayer from 'react-player/youtube';
 
 const breathingCycle = [
   { text: 'Close your eyes and listen', duration: 5000 },
@@ -14,16 +13,14 @@ const breathingCycle = [
   { text: 'Exhale...', duration: 11000 },
 ];
 
+const YOUTUBE_VIDEO_ID = '-5qhNRmMilI';
+
 export default function BreathePage() {
   const router = useRouter();
   const [cycleText, setCycleText] = useState('Get Ready...');
   const [isBreathing, setIsBreathing] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const [playMusic, setPlayMusic] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  
   useEffect(() => {
     if (!isBreathing) return;
 
@@ -44,6 +41,7 @@ export default function BreathePage() {
   const handleGoBack = () => router.back();
   const handleFinish = () => router.push('/');
   const startBreathing = () => setIsBreathing(true);
+  const handlePlayMusic = () => setPlayMusic(true);
 
   return (
     <div
@@ -69,22 +67,28 @@ export default function BreathePage() {
           {/* Blue breathing background */}
           <div className={cn("absolute inset-0 bg-blue-400 rounded-full opacity-50 blur-2xl", isBreathing && 'animate-breath')} />
           
-          <div className="absolute opacity-0 pointer-events-none">
-            {isClient && (
-              <ReactPlayer
-                url="https://www.youtube.com/watch?v=-5qhNRmMilI"
-                playing={isBreathing}
-                loop={true}
-                controls={false}
-                width="1px"
-                height="1px"
-              />
-            )}
-          </div>
+          {isBreathing && playMusic && (
+             <iframe
+                className="absolute inset-0 w-full h-full rounded-full opacity-50"
+                src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&controls=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}`}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+            ></iframe>
+          )}
 
-          {/* Breathing text */}
+
+          {/* Breathing text & unmute button */}
           <div className="z-10 flex flex-col items-center justify-center">
             <p className="text-2xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready to begin?'}</p>
+
+            {isBreathing && !playMusic && (
+              <Button onClick={handlePlayMusic} variant="outline" className="bg-black/20 border-white/30 text-white hover:bg-black/40">
+                  <Music className="mr-2 h-4 w-4" />
+                  Play Music
+              </Button>
+            )}
           </div>
         </div>
 
