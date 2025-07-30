@@ -31,8 +31,11 @@ type CycleData = z.infer<typeof formSchema>;
 
 type Predictions = {
     nextPeriod: Date[];
-    fertileWindow: { start: Date; end: Date };
-    ovulationDay: Date;
+    secondPeriod: Date[];
+    nextFertileWindow: { start: Date; end: Date };
+    secondFertileWindow: { start: Date; end: Date };
+    nextOvulationDay: Date;
+    secondOvulationDay: Date;
 };
 
 const phaseTips = {
@@ -131,45 +134,61 @@ export default function PeriodTrackerPage() {
     const lastPeriod = startOfDay(data.lastPeriodDate);
     const cycleLength = data.cycleLength;
     const lutealPhase = data.lutealPhaseLength || 14;
-    
-    const daysSince = differenceInDays(today, lastPeriod);
-    setShowIrregularityAlert(daysSince > 35);
 
+    // Determine the start of the current cycle
     let currentCycleStartDate = lastPeriod;
     while (addDays(currentCycleStartDate, cycleLength) <= today) {
         currentCycleStartDate = addDays(currentCycleStartDate, cycleLength);
     }
     
-    const nextPeriodStart = startOfDay(addDays(currentCycleStartDate, cycleLength));
-    const ovulationDay = startOfDay(addDays(nextPeriodStart, -lutealPhase));
-    const fertileWindowStart = startOfDay(addDays(ovulationDay, -5));
-    const fertileWindowEnd = ovulationDay;
-    const periodEnd = startOfDay(addDays(currentCycleStartDate, 4)); // Assume 5 day period
+    const daysSince = differenceInDays(today, currentCycleStartDate);
+    setShowIrregularityAlert(daysSince > 35);
+    setDaysSinceLastPeriod(daysSince);
+
+    // --- First Prediction Cycle ---
+    const nextPeriodStart = addDays(currentCycleStartDate, cycleLength);
+    const nextOvulationDay = addDays(nextPeriodStart, -lutealPhase);
+    const nextFertileWindow = {
+        start: addDays(nextOvulationDay, -5),
+        end: nextOvulationDay,
+    };
+    
+    // --- Second Prediction Cycle ---
+    const secondPeriodStart = addDays(nextPeriodStart, cycleLength);
+    const secondOvulationDay = addDays(secondPeriodStart, -lutealPhase);
+    const secondFertileWindow = {
+        start: addDays(secondOvulationDay, -5),
+        end: secondOvulationDay,
+    };
 
     const newPredictions = {
         nextPeriod: Array.from({ length: 5 }, (_, i) => addDays(nextPeriodStart, i)),
-        fertileWindow: { start: fertileWindowStart, end: fertileWindowEnd },
-        ovulationDay: ovulationDay,
+        secondPeriod: Array.from({ length: 5 }, (_, i) => addDays(secondPeriodStart, i)),
+        nextFertileWindow: nextFertileWindow,
+        secondFertileWindow: secondFertileWindow,
+        nextOvulationDay: nextOvulationDay,
+        secondOvulationDay: secondOvulationDay,
     };
     setPredictions(newPredictions);
 
-    // Determine current phase
-    if (isWithinInterval(today, { start: currentCycleStartDate, end: periodEnd })) {
+    // Determine current phase based on the current cycle
+    const currentPeriodEnd = addDays(currentCycleStartDate, 4); // Assume 5 day period
+    const currentOvulationDay = addDays(addDays(currentCycleStartDate, cycleLength), -lutealPhase);
+
+    if (isWithinInterval(today, { start: currentCycleStartDate, end: currentPeriodEnd })) {
       setCurrentPhase("Menstrual");
-    } else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: addDays(ovulationDay, -1) })) {
+    } else if (isWithinInterval(today, { start: addDays(currentPeriodEnd, 1), end: addDays(currentOvulationDay, -1) })) {
       setCurrentPhase("Follicular");
-    } else if (isSameDay(today, ovulationDay)) {
+    } else if (isSameDay(today, currentOvulationDay)) {
         setCurrentPhase("Ovulatory");
-    } else if (isWithinInterval(today, { start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1) })) {
+    } else if (isWithinInterval(today, { start: addDays(currentOvulationDay, 1), end: addDays(nextPeriodStart, -1) })) {
       setCurrentPhase("Luteal");
     } else {
-      // Default to follicular if somehow in between ranges
-      setCurrentPhase("Follicular");
+      setCurrentPhase(null); // Should not happen in normal flow
     }
     
     const daysUntilNextPeriod = differenceInDays(nextPeriodStart, today);
     setCountdown(daysUntilNextPeriod >= 0 ? daysUntilNextPeriod : 0);
-    setDaysSinceLastPeriod(differenceInDays(today, currentCycleStartDate));
     setCalendarMonth(nextPeriodStart);
   }
 
@@ -311,22 +330,24 @@ export default function PeriodTrackerPage() {
                         <CardContent className="flex justify-center">
                             <Calendar
                                 mode="multiple"
-                                min={1}
+                                min={2}
                                 month={calendarMonth}
                                 onMonthChange={setCalendarMonth}
                                 selected={predictions ? [
                                     ...predictions.nextPeriod,
-                                    {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end},
+                                    ...predictions.secondPeriod,
+                                    {from: predictions.nextFertileWindow.start, to: predictions.nextFertileWindow.end},
+                                    {from: predictions.secondFertileWindow.start, to: predictions.secondFertileWindow.end},
                                 ] : []}
                                 modifiers={{
-                                    fertile: predictions ? {from: predictions.fertileWindow.start, to: predictions.fertileWindow.end} : [],
-                                    period: predictions ? predictions.nextPeriod : [],
-                                    ovulation: predictions ? predictions.ovulationDay : new Date('1970-01-01'),
+                                    period: (date) => predictions ? predictions.nextPeriod.some(d => isSameDay(d, date)) || predictions.secondPeriod.some(d => isSameDay(d, date)) : false,
+                                    fertile: (date) => predictions ? isWithinInterval(date, predictions.nextFertileWindow) || isWithinInterval(date, predictions.secondFertileWindow) : false,
+                                    ovulation: (date) => predictions ? isSameDay(date, predictions.nextOvulationDay) || isSameDay(date, predictions.secondOvulationDay) : false,
                                 }}
                                 modifiersClassNames={{
-                                    fertile: 'bg-blue-400 text-white rounded-none',
-                                    period: 'bg-red-400 text-white rounded-none',
-                                    ovulation: 'bg-green-500 text-white rounded-full font-bold',
+                                    period: 'bg-red-400 text-white rounded-none focus:bg-red-500 hover:bg-red-500',
+                                    fertile: 'bg-blue-400 text-white rounded-none focus:bg-blue-500 hover:bg-blue-500',
+                                    ovulation: 'bg-green-500 text-white rounded-full focus:bg-green-600 hover:bg-green-600 font-bold',
                                     today: 'bg-teal-400 text-white',
                                 }}
                                 className="p-0"
@@ -363,7 +384,7 @@ export default function PeriodTrackerPage() {
                                         <CalendarClock className="h-4 w-4 text-muted-foreground" />
                                     </CardHeader>
                                     <CardContent>
-                                        {currentPhase ? (
+                                        {currentPhase && phaseTips[currentPhase] ? (
                                             <Badge className={cn("text-md", phaseTips[currentPhase].color.replace('text-red-200', 'text-red-800').replace('text-blue-200', 'text-blue-800').replace('text-green-200', 'text-green-800').replace('text-yellow-200', 'text-yellow-800'))}>
                                                 {phaseTips[currentPhase].title}
                                             </Badge>
@@ -395,7 +416,7 @@ export default function PeriodTrackerPage() {
                     )}
 
 
-                    {currentPhase && (
+                    {currentPhase && phaseTips[currentPhase] && (
                         <Card className={cn("mt-6 border", phaseTips[currentPhase].color)}>
                             <CardHeader>
                                 <CardTitle className="font-headline text-2xl">Wellness Tips for your {phaseTips[currentPhase].title}</CardTitle>
