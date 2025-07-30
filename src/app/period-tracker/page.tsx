@@ -103,11 +103,9 @@ export default function PeriodTrackerPage() {
   });
 
   const { reset, watch } = form;
-  const watchedFields = watch();
+  const { lastPeriodDate, cycleLength, lutealPhaseLength } = watch();
 
   useEffect(() => {
-    const { lastPeriodDate, cycleLength, lutealPhaseLength } = watchedFields;
-
     if (!lastPeriodDate || !cycleLength) return;
 
     if (cycleLength > 35) {
@@ -182,7 +180,7 @@ export default function PeriodTrackerPage() {
         symptoms: symptomsToday,
     });
     
-  }, [watchedFields]);
+  }, [lastPeriodDate, cycleLength, lutealPhaseLength]);
 
 
   useEffect(() => {
@@ -373,3 +371,5 @@ export default function PeriodTrackerPage() {
         </div>
     </div>
   );
+}
+    
