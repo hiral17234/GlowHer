@@ -26,9 +26,9 @@ export default function MindDumpPage() {
     const handleDump = () => {
         toast({
             title: "Thoughts Dumped!",
-            description: "Your mind is a little clearer now. Take a deep breath.",
+            description: "Now, take a moment to breathe and reset.",
         });
-        router.push('/mental-health-check-in');
+        router.push('/breathe');
     };
 
     return (
