@@ -175,8 +175,8 @@ export default function HomePage() {
             <GlowHerLogo />
              <div className="flex items-center gap-2">
                 <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">
-                    <Button variant="ghost" size="icon" className="h-12 w-12 text-teal-500 hover:text-teal-600 hover:bg-teal-500/10">
-                        <Stethoscope className="h-6 w-6" />
+                    <Button variant="ghost" size="icon" className="h-14 w-14 rounded-full bg-teal-500/10 hover:bg-teal-500/20 text-teal-500 hover:text-teal-600">
+                        <Stethoscope className="h-7 w-7" />
                     </Button>
                 </a>
                 <DropdownMenu>
@@ -232,3 +232,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
