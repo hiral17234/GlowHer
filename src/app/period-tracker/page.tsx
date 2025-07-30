@@ -324,10 +324,10 @@ export default function PeriodTrackerPage() {
                                     ovulation: predictions ? predictions.ovulationDay : new Date('1970-01-01'),
                                 }}
                                 modifiersClassNames={{
-                                    fertile: 'bg-blue-400/80 text-blue-foreground rounded-none',
-                                    period: 'bg-red-400/80 text-red-foreground rounded-none',
-                                    ovulation: 'bg-green-500/80 text-green-foreground rounded-full font-bold',
-                                    today: 'bg-teal-400/80 text-black',
+                                    fertile: 'bg-blue-400/80 text-white rounded-none',
+                                    period: 'bg-red-400/80 text-white rounded-none',
+                                    ovulation: 'bg-green-500/80 text-white rounded-full font-bold',
+                                    today: 'bg-teal-400 text-white',
                                 }}
                                 className="p-0"
                             />
