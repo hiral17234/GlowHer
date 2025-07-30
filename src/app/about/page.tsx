@@ -122,6 +122,11 @@ export default function AboutPage() {
                            </p>
                         </div>
                     </section>
+
+                    <section className="text-center text-sm text-gray-500 pt-8 border-t border-gray-700">
+                        <p>&copy; {new Date().getFullYear()} GlowHer Wellness. All Rights Reserved.</p>
+                        <p className="mt-2">The content and features of this application are for informational purposes only. All images and videos used are the property of their respective owners. No copyright infringement is intended. Unauthorized duplication or distribution of this app is strictly prohibited.</p>
+                    </section>
                 </div>
             </main>
         </div>
