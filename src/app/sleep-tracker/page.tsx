@@ -250,7 +250,7 @@ export default function SleepTrackerPage() {
   const qualityLabel = getQualityLabel(sleepQualityValue?.[0] ?? 0);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 text-foreground">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
@@ -449,9 +449,9 @@ export default function SleepTrackerPage() {
                     </CardContent>
                 </Card>
                 {currentPhase && phaseTips[currentPhase] && (
-                    <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-200 [&>svg]:text-indigo-400">
+                    <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-800 dark:text-indigo-200 [&>svg]:text-indigo-500">
                         <Info className="h-4 w-4" />
-                        <AlertTitle className="font-bold">{phaseTips[currentPhase].title}</AlertTitle>
+                        <AlertTitle className="font-bold text-indigo-900 dark:text-indigo-100">{phaseTips[currentPhase].title}</AlertTitle>
                         <AlertDescription>
                             {phaseTips[currentPhase].tip}
                         </AlertDescription>
@@ -464,7 +464,7 @@ export default function SleepTrackerPage() {
                     <CardContent className="space-y-4">
                         <div className={cn(
                             "flex items-center gap-4 p-4 rounded-lg transition-all",
-                            achievements.star ? "bg-amber-500/20 text-amber-200" : "bg-muted text-muted-foreground opacity-70"
+                            achievements.star ? "bg-amber-500/20 text-amber-800" : "bg-muted text-muted-foreground opacity-70"
                         )}>
                             <Award className="h-8 w-8" />
                             <div>
