@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Brain, ChevronLeft, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import ReactPlayer from 'react-player/youtube';
 
 const breathingCycle = [
   { text: 'Close your eyes and listen', duration: 5000 },
@@ -17,8 +18,12 @@ export default function BreathePage() {
   const router = useRouter();
   const [cycleText, setCycleText] = useState('Get Ready...');
   const [isBreathing, setIsBreathing] = useState(false);
-  const [isUnmuted, setIsUnmuted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   useEffect(() => {
     if (!isBreathing) return;
 
@@ -39,14 +44,6 @@ export default function BreathePage() {
   const handleGoBack = () => router.back();
   const handleFinish = () => router.push('/');
   const startBreathing = () => setIsBreathing(true);
-
-  const handleUnmute = () => {
-    const iframe = document.getElementById('yt-player') as HTMLIFrameElement;
-    if (iframe) {
-      iframe.src = 'https://www.youtube.com/embed/-5qhNRmMilI?autoplay=1&mute=0&controls=0&loop=1&playlist=-5qhNRmMilI';
-      setIsUnmuted(true);
-    }
-  };
 
   return (
     <div
@@ -71,31 +68,23 @@ export default function BreathePage() {
         <div className="relative h-56 w-56 mx-auto flex items-center justify-center">
           {/* Blue breathing background */}
           <div className={cn("absolute inset-0 bg-blue-400 rounded-full opacity-50 blur-2xl", isBreathing && 'animate-breath')} />
+          
+          <div className="absolute opacity-0 pointer-events-none">
+            {isClient && (
+              <ReactPlayer
+                url="https://www.youtube.com/watch?v=-5qhNRmMilI"
+                playing={isBreathing}
+                loop={true}
+                controls={false}
+                width="1px"
+                height="1px"
+              />
+            )}
+          </div>
 
-          {/* YouTube audio embed */}
-          {isBreathing && (
-            <iframe
-              id="yt-player"
-              className="absolute w-1 h-1 opacity-0 pointer-events-none"
-              src="https://www.youtube.com/embed/-5qhNRmMilI?autoplay=1&mute=1&controls=0&loop=1&playlist=-5qhNRmMilI"
-              title="Background Music"
-              allow="autoplay"
-              frameBorder="0"
-            ></iframe>
-          )}
-
-          {/* Breathing text & unmute button */}
+          {/* Breathing text */}
           <div className="z-10 flex flex-col items-center justify-center">
             <p className="text-2xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready to begin?'}</p>
-
-            {isBreathing && !isUnmuted && (
-              <button
-                onClick={handleUnmute}
-                className="text-xs mt-2 bg-black/50 text-white px-2 py-1 rounded shadow-sm hover:bg-black/70"
-              >
-                🔊 Tap to unmute music
-              </button>
-            )}
           </div>
         </div>
 
