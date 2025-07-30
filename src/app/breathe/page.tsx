@@ -19,7 +19,6 @@ export default function BreathePage() {
   const router = useRouter();
   const [cycleText, setCycleText] = useState('Get Ready...');
   const [isBreathing, setIsBreathing] = useState(false);
-  const [isUnmuted, setIsUnmuted] = useState(false);
 
   useEffect(() => {
     if (!isBreathing) return;
@@ -43,16 +42,6 @@ export default function BreathePage() {
   const startBreathing = () => {
     setIsBreathing(true);
   };
-
-  const handleUnmute = () => {
-    const iframe = document.getElementById('yt-player') as HTMLIFrameElement;
-    if (iframe) {
-        // Reload the iframe with autoplay and unmuted. Loop and playlist are important for continuous play.
-        iframe.src = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=0&controls=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}`;
-        setIsUnmuted(true);
-    }
-  };
-
 
   return (
     <div
@@ -80,14 +69,6 @@ export default function BreathePage() {
           
           <div className="z-10 flex flex-col items-center justify-center">
             <p className="text-2xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready to begin?'}</p>
-            {isBreathing && !isUnmuted && (
-              <button
-                onClick={handleUnmute}
-                className="text-xs mt-2 bg-black/50 text-white px-2 py-1 rounded shadow-sm hover:bg-black/70"
-              >
-                🔊 Tap to unmute music
-              </button>
-            )}
           </div>
         </div>
 
@@ -103,20 +84,22 @@ export default function BreathePage() {
           <>
             <p className="text-green-300 font-semibold">Your thoughts have been released. ✨</p>
             <p className="text-white/90">Breathe with the circle...</p>
+            
+            {/* Simple Visible Video Player */}
+            <div className="aspect-video mt-4">
+                <iframe 
+                    className="w-full h-full rounded-lg"
+                    src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
+                    title="YouTube video player" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowFullScreen>
+                </iframe>
+            </div>
+
             <Button onClick={handleFinish} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
               Finish
             </Button>
-            
-            {/* The iframe is now visually hidden but present in the DOM for audio */}
-            <iframe
-                id="yt-player"
-                className="absolute w-0 h-0"
-                src={isBreathing ? `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}` : ''}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-            ></iframe>
           </>
         )}
       </div>
