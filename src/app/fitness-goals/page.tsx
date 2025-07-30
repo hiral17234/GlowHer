@@ -81,6 +81,7 @@ export default function FitnessGoalsPage() {
     const [weeklyLogs, setWeeklyLogs] = useState<any[]>([]);
     const [weeklyPregnancyLogs, setWeeklyPregnancyLogs] = useState<any[]>([]);
     const [streak, setStreak] = useState(0);
+    const [duration, setDuration] = useState({ hours: 0, minutes: 30 });
 
     // --- FORM HOOKS ---
     const defaultGoalForm = useForm<DefaultGoalData>({ resolver: zodResolver(defaultGoalSchema), defaultValues: { steps: 8000, workouts: 3 }});
@@ -102,7 +103,15 @@ export default function FitnessGoalsPage() {
 
                 const todayKey = format(new Date(), 'yyyy-MM-dd');
                 const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${todayKey}`);
-                if (savedLog) pregnancyLogForm.reset(JSON.parse(savedLog));
+                if (savedLog) {
+                    const logData = JSON.parse(savedLog);
+                    pregnancyLogForm.reset(logData);
+                    const totalMinutes = logData.minutes || 30;
+                    setDuration({
+                        hours: Math.floor(totalMinutes / 60),
+                        minutes: totalMinutes % 60,
+                    });
+                }
                 
                 loadWeeklyPregnancyLogs();
             } else {
@@ -118,7 +127,8 @@ export default function FitnessGoalsPage() {
                 loadWeeklyDefaultLogs();
             }
         } catch (e) { console.error("Error loading data from localStorage", e); }
-    }, [isPregnant, pregnancyGoalForm, pregnancyLogForm, defaultGoalForm, defaultLogForm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isPregnant]);
 
     // --- CYCLE/PREGNANCY PHASE DETERMINATION ---
     useEffect(() => {
@@ -171,26 +181,31 @@ export default function FitnessGoalsPage() {
     };
 
     const loadWeeklyPregnancyLogs = () => {
-        let currentStreak = 0;
         const today = startOfDay(new Date());
-        
-        // Start checking from yesterday backwards
-        for (let i = 1; i < 30; i++) {
-            const dateToCheck = subDays(today, i);
-            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-            if (localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${dateKey}`)) {
-                currentStreak++;
-            } else {
-                break; // Streak broken
+        const savedGoals = localStorage.getItem(PREGNANCY_GOALS_KEY);
+        const goalDays = savedGoals ? JSON.parse(savedGoals).days : 7;
+        let consecutiveDays = 0;
+    
+        // Check today's log first for streak calculation
+        const todayLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
+        if(todayLog) {
+            consecutiveDays = 1;
+        }
+
+        // Only continue checking if today's log exists
+        if (consecutiveDays > 0) {
+            for (let i = 1; i < 7; i++) {
+              const date = subDays(today, i);
+              const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+              if (log) {
+                consecutiveDays++;
+              } else {
+                break; // Stop if there's a gap in the streak
+              }
             }
         }
-        
-        // Check today separately and add to streak only if a log exists
-        if (localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`)) {
-            currentStreak++;
-        }
-        
-        setStreak(currentStreak);
+    
+        setStreak(consecutiveDays);
 
         const logs = Array.from({ length: 7 }, (_, i) => {
             const date = subDays(today, i);
@@ -205,7 +220,33 @@ export default function FitnessGoalsPage() {
     function onGoalSubmit(data: DefaultGoalData) { try { localStorage.setItem(DEFAULT_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!"}); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onPregnancyGoalSubmit(data: PregnancyGoalData) { try { localStorage.setItem(PREGNANCY_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!" }); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
-    function onPregnancyLogSubmit(data: PregnancyLogData) { try { localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Movement Logged!", description: "Wonderful job staying active!" }); loadWeeklyPregnancyLogs(); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
+    function onPregnancyLogSubmit(data: Omit<PregnancyLogData, 'minutes'>) {
+         try {
+            const totalMinutes = duration.hours * 60 + duration.minutes;
+            const finalData = { ...data, minutes: totalMinutes };
+            
+            // Validate against the schema before saving
+            const validation = pregnancyLogSchema.safeParse(finalData);
+            if(!validation.success) {
+                // Manually set form errors from Zod
+                validation.error.errors.forEach(err => {
+                    const path = err.path[0] as keyof PregnancyLogData;
+                    if(path === 'minutes') { // Special handling for combined field
+                         toast({ variant: 'destructive', title: "Invalid Duration", description: err.message });
+                    } else {
+                       pregnancyLogForm.setError(path, { type: 'manual', message: err.message });
+                    }
+                });
+                return;
+            }
+
+            localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(finalData)); 
+            toast({ title: "Movement Logged!", description: "Wonderful job staying active!" }); 
+            loadWeeklyPregnancyLogs(); 
+        } catch(e) { 
+            toast({ variant: 'destructive', title: "Error" }); 
+        }
+    }
     
     // --- EVENT HANDLERS ---
     const handlePregnancyToggle = (checked: boolean) => {
@@ -218,7 +259,7 @@ export default function FitnessGoalsPage() {
     const pregnancyVideoUrl = isPregnant && pregnancyTrimester ? pregnancyExercises[pregnancyTrimester!]?.videoUrl : null;
     const completedDays = weeklyPregnancyLogs.filter(d => d.moved).length;
     const goalDays = pregnancyGoalForm.getValues('days');
-    const progressPercentage = Math.round((completedDays / goalDays) * 100);
+    const progressPercentage = goalDays > 0 ? Math.round((completedDays / goalDays) * 100) : 0;
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -261,19 +302,28 @@ export default function FitnessGoalsPage() {
                                 <CardContent>
                                     <Form {...pregnancyLogForm}><form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
                                         <FormField control={pregnancyLogForm.control} name="activity" render={({ field }) => (<FormItem><FormLabel>Activity</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="What did you do today?" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Stretching">Stretching</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
-                                        <FormField
-                                            control={pregnancyLogForm.control}
-                                            name="minutes"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Minutes Moved</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="number" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage/>
-                                                </FormItem>
-                                            )}
-                                        />
+                                        
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <FormItem>
+                                                <FormLabel>Hours</FormLabel>
+                                                <Select onValueChange={(value) => setDuration(d => ({ ...d, hours: Number(value) }))} value={String(duration.hours)}>
+                                                    <FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl>
+                                                    <SelectContent>
+                                                        {[...Array(5).keys()].map(h => <SelectItem key={h} value={String(h)}>{h} hr</SelectItem>)}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                            <FormItem>
+                                                <FormLabel>Minutes</FormLabel>
+                                                <Select onValueChange={(value) => setDuration(d => ({ ...d, minutes: Number(value) }))} value={String(duration.minutes)}>
+                                                    <FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl>
+                                                    <SelectContent>
+                                                        {[...Array(12).keys()].map(m => m * 5).map(m => <SelectItem key={m} value={String(m)}>{m} min</SelectItem>)}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                        </div>
+
                                         {pregnancyGoalForm.getValues('trackMood') && <FormField control={pregnancyLogForm.control} name="feeling" render={({ field }) => (<FormItem><FormLabel>How did you feel after?</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select how you felt" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Energized">Energized</SelectItem><SelectItem value="Tired">Tired</SelectItem><SelectItem value="Sore">Sore</SelectItem><SelectItem value="Relaxed">Relaxed</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>}
                                         <FormField control={pregnancyLogForm.control} name="notes" render={({ field }) => (<FormItem><FormLabel>Notes (optional)</FormLabel><FormControl><Textarea placeholder="Any thoughts on today's movement?" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                         <Button type="submit" className="w-full">Log Movement</Button>
