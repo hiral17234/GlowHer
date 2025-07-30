@@ -40,8 +40,18 @@ export default function BreathePage() {
         } catch (error) {
             console.error("Could not read from localStorage", error);
         }
+    }, []);
 
+    useEffect(() => {
+        if (audioSrc && audioRef.current) {
+            audioRef.current.play().catch(error => {
+                // Autoplay was prevented.
+                console.error("Audio autoplay was prevented:", error);
+            });
+        }
+    }, [audioSrc]);
 
+    useEffect(() => {
         // Breathing animation logic
         const totalDuration = breathingCycle.reduce((sum, cycle) => sum + cycle.duration, 0);
 
@@ -82,7 +92,7 @@ export default function BreathePage() {
                 Back
             </Button>
              {audioSrc && (
-                <audio ref={audioRef} src={audioSrc} autoPlay loop />
+                <audio ref={audioRef} src={audioSrc} loop />
             )}
              <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
 
