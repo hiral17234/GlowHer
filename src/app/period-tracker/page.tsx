@@ -91,7 +91,7 @@ export default function PeriodTrackerPage() {
   const [predictedPeriods, setPredictedPeriods] = useState<Date[]>([]);
   const [fertileWindows, setFertileWindows] = useState<Date[]>([]);
   const [ovulationDays, setOvulationDays] = useState<Date[]>([]);
-  const [summary, setSummary] = useState({ nextPeriodIn: '--', currentPhase: 'None', dayOfCycle: '--', symptoms: 'N/A' });
+  const [summary, setSummary] = useState({ nextPeriodIn: '--', currentPhase: 'None' as CyclePhase, dayOfCycle: '--', symptoms: 'N/A' });
 
   const form = useForm<CycleData>({
     resolver: zodResolver(formSchema),
@@ -101,8 +101,8 @@ export default function PeriodTrackerPage() {
     },
   });
 
-  const { watch, reset, getValues } = form;
-  const { lastPeriodDate, cycleLength, lutealPhaseLength } = form.getValues();
+  const { reset, getValues } = form;
+  const { lastPeriodDate, cycleLength, lutealPhaseLength } = getValues();
 
   const calculatePredictions = () => {
     const { lastPeriodDate, cycleLength, lutealPhaseLength } = getValues();
@@ -210,6 +210,12 @@ export default function PeriodTrackerPage() {
   }, [reset]);
 
 
+  useEffect(() => {
+      calculatePredictions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastPeriodDate, cycleLength, lutealPhaseLength]);
+
+
   function onSubmit(values: CycleData) {
     try {
       localStorage.setItem('glowher-period-tracker', JSON.stringify(values));
@@ -247,7 +253,7 @@ export default function PeriodTrackerPage() {
                     <div className="lg:col-span-2 w-full mx-auto">
                         <Card className="shadow-lg bg-white/80 backdrop-blur-sm border-rose-200">
                         <CardHeader>
-                            <CardTitle className="font-headline text-3xl text-rose-800">Cycle Settings</CardTitle>
+                            <CardTitle className="font-headline text-3xl text-slate-800">Cycle Settings</CardTitle>
                             <CardDescription>Update your cycle details to refine predictions.</CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -267,7 +273,7 @@ export default function PeriodTrackerPage() {
                     <div className="lg:col-span-3 flex flex-col items-center gap-8">
                          <Card className="shadow-lg bg-white/80 backdrop-blur-sm border-rose-200 w-full">
                              <CardHeader>
-                                <CardTitle className="font-headline text-3xl text-rose-800">Your Cycle Calendar</CardTitle>
+                                <CardTitle className="font-headline text-3xl text-slate-800">Your Cycle Calendar</CardTitle>
                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-sm text-slate-700">
                                     <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-red-400"></div><span>Predicted Period</span></div>
                                     <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-blue-400"></div><span>Fertile Window</span></div>
@@ -277,7 +283,7 @@ export default function PeriodTrackerPage() {
                              <CardContent className="flex justify-center">
                                 <Calendar
                                     mode="single"
-                                    numberOfMonths={2}
+                                    numberOfMonths={1}
                                     className="p-0"
                                     modifiers={{
                                         predictedPeriod: predictedPeriods,
@@ -294,7 +300,7 @@ export default function PeriodTrackerPage() {
                          </Card>
 
                         <div className="w-full">
-                            <h2 className="font-headline text-2xl text-rose-800 mb-4 text-center">Mini Tracker Summary</h2>
+                            <h2 className="font-headline text-2xl text-slate-800 mb-4 text-center">Mini Tracker Summary</h2>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <Card className="bg-white/80 border-rose-200 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-rose-700">Next Period In</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.nextPeriodIn}</p></CardHeader></Card>
                                 <Card className="bg-white/80 border-rose-200 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-rose-700">Current Phase</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.currentPhase}</p></CardHeader></Card>
@@ -305,7 +311,7 @@ export default function PeriodTrackerPage() {
 
                          <Alert className="bg-rose-100/80 border-rose-300 w-full">
                             <currentPhaseInfo.icon className="h-5 w-5 text-rose-600" />
-                            <AlertTitle className="font-headline text-xl text-rose-800">{currentPhaseInfo.title}</AlertTitle>
+                            <AlertTitle className="font-headline text-xl text-slate-800">{currentPhaseInfo.title}</AlertTitle>
                             <AlertDescription>
                                 <ul className="mt-2 space-y-2 list-disc list-inside text-rose-700">
                                     {currentPhaseInfo.tips.map((tip, i) => <li key={i}>{tip}</li>)}
