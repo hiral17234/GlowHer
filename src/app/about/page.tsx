@@ -4,7 +4,7 @@
 import { useRouter } from 'next/navigation';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, CalendarDays, Heart, Droplet, Bed, BookOpen, Baby, Activity, ShoppingCart, Brain, Info, DollarSign, User } from 'lucide-react';
+import { ChevronLeft, CalendarDays, Heart, Droplet, Bed, BookOpen, Baby, Activity, ShoppingCart, Brain, Info, User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 
 const features = [
@@ -57,11 +57,6 @@ const features = [
         icon: Info,
         title: 'About',
         description: 'Learn more about the project, its features, and the creator.'
-    },
-    {
-        icon: DollarSign,
-        title: 'Donate',
-        description: 'If you find this app helpful, you can support its continued development and hosting costs.'
     },
     {
       icon: User,

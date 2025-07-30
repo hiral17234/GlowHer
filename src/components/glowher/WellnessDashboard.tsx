@@ -106,14 +106,6 @@ const wellnessFeatures = [
         bgColor: 'bg-gray-500/10'
     },
     {
-        icon: DollarSign,
-        title: 'Donate',
-        description: 'Support the project to keep it running.',
-        href: '/donate',
-        color: 'text-purple-500',
-        bgColor: 'bg-purple-500/10'
-    },
-    {
       icon: User,
       title: 'Personal Details',
       description: 'Opens on new page for profile & settings',
