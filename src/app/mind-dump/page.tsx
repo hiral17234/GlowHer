@@ -40,7 +40,7 @@ export default function MindDumpPage() {
                 ✨ Express Yourself Freely ✨
             </h1>
 
-            <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
+            <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
                 <div className="text-center">
                     <div className="flex items-center justify-center gap-2">
                         <Brain className="h-8 w-8 text-pink-300" />
