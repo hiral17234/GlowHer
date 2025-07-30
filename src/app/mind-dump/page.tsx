@@ -39,7 +39,7 @@ export default function MindDumpPage() {
         try {
             const todayKey = `glowher-mental-health-log-${format(new Date(), 'yyyy-MM-dd')}`;
             const dataToSave = {
-                note,
+                note: note,
                 aura: selectedAura,
                 logDate: new Date().toISOString(),
             };
