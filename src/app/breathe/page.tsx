@@ -33,7 +33,7 @@ export default function BreathePage() {
     return (
         <div 
             className="relative flex flex-col min-h-screen items-center justify-center p-4 overflow-hidden bg-cover bg-center"
-            style={{ backgroundImage: "url('https://placehold.co/1920x1080.png')" }}
+            style={{ backgroundImage: "url('https://i.pinimg.com/736x/88/90/a8/8890a87eea99b61588a7e5646404dd57.jpg')" }}
             data-ai-hint="calm beach"
         >
              <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
