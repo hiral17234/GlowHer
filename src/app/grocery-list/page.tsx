@@ -216,7 +216,7 @@ export default function GroceryListPage() {
             </div>
             <div className="lg:col-span-2 space-y-6">
                  {expiredItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription>Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
-                 {expiringItems.length > 0 && (<Alert className="bg-amber-500/10 border-amber-500/20 text-white"><AlertTriangle className="h-4 w-4 text-amber-400" /><AlertTitle className="text-amber-400">Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                 {expiringItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                 <Tabs defaultValue="inventory" className="w-full">
                     <TabsList className="grid w-full grid-cols-3 bg-black/20 backdrop-blur-sm border-white/20">
                         <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">My Groceries</TabsTrigger>
@@ -253,7 +253,7 @@ export default function GroceryListPage() {
                                         const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                         const CategoryIcon = getCategoryIcon(item.category);
                                         return (
-                                        <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-white/10" : "bg-black/10", isExpiring && !item.purchased && "bg-amber-500/20 border border-amber-500/30", isExpired && !item.purchased && "bg-destructive/20 border border-destructive/30")}>
+                                        <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-white/10" : "bg-black/10", isExpiring && !item.purchased && "bg-destructive/20 border border-destructive/30", isExpired && !item.purchased && "bg-destructive/20 border border-destructive/30")}>
                                             <Checkbox id={item.id} checked={item.purchased} onCheckedChange={() => togglePurchased(item.id)} aria-label={`Mark ${item.name} as purchased`} className="mt-1 border-white/50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" />
                                             <div className="flex-grow">
                                                 <label htmlFor={item.id} className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</label>
