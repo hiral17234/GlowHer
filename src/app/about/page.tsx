@@ -4,7 +4,7 @@
 import { useRouter } from 'next/navigation';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, CalendarDays, Heart, Droplet, Bed, BookOpen, Baby, Activity, ShoppingCart, Brain, Info, User } from 'lucide-react';
+import { ChevronLeft, CalendarDays, Heart, Droplet, Bed, BookOpen, Baby, Activity, ShoppingCart, Brain, Info, Settings } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 
 const features = [
@@ -59,9 +59,9 @@ const features = [
         description: 'Learn more about the project, its features, and the creator.'
     },
     {
-      icon: User,
-      title: 'Personal Details',
-      description: 'Manage your personal information to help us tailor the experience for you.'
+      icon: Settings,
+      title: 'Settings',
+      description: 'Manage your personal information and application settings.'
     },
 ];
 

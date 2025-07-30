@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -11,12 +12,11 @@ import {
   Activity,
   ShoppingCart,
   Brain,
-  User,
+  Settings,
   Sparkles,
   LoaderCircle,
   Bell,
-  Info,
-  DollarSign
+  Info
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { fetchThoughtOfTheDay } from '@/app/actions';
@@ -105,10 +105,10 @@ const wellnessFeatures = [
         bgColor: 'bg-gray-500/10'
     },
     {
-      icon: User,
-      title: 'Personal Details',
-      description: 'Opens on new page for profile & settings',
-      href: '/personal-details',
+      icon: Settings,
+      title: 'Settings',
+      description: 'Manage your profile and app preferences.',
+      href: '/settings',
       color: 'text-slate-500',
       bgColor: 'bg-slate-500/10'
     },
