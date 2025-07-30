@@ -66,7 +66,7 @@ const adviceMap: Record<string, Record<string, string>> = {
         "A quiet, steady dedication to my values.": "🧭 Your passion is a guiding principle, a compass that informs your choices. Tip: Reflect on one decision you made this week that aligned with your core values and feel the quiet strength in that consistency.",
     },
     energyFlame: {
-        "Like a slow, steady, controlled burn.": " tortoise You have sustainable, enduring energy. You are reliable and consistent. Tip: This steady flame is perfect for long-term projects. Break a large goal into small, manageable steps to make consistent progress.",
+        "Like a slow, steady, controlled burn.": "🐢 You have sustainable, enduring energy. You are reliable and consistent. Tip: This steady flame is perfect for long-term projects. Break a large goal into small, manageable steps to make consistent progress.",
         "Like a roaring, energetic bonfire.": "🦁 Your energy is high and infectious right now! You have the power to accomplish a lot. Tip: Harness this peak energy for a task that requires a big push, but also schedule downtime to avoid burning out.",
         "Like a tiny, flickering pilot light.": "💡 Your energy reserves are low, and that's okay. It’s a time for conservation and gentleness. Tip: Protect your pilot light. Say 'no' to one non-essential request this week and use that time for rest.",
         "Like scattered, unpredictable sparks.": "✨ Your energy may feel unfocused and erratic, pulling you in many directions. Tip: Ground yourself. Spend a few minutes with your feet on the earth or practice a simple breathing exercise to gather your sparks.",
@@ -145,123 +145,124 @@ export default function FireAuraPage() {
 
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-            <header className="container mx-auto px-4 py-6 z-10">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <Flame className="h-8 w-8 text-orange-500" />
-                        Fire Aura
-                    </h1>
-                    <Button variant="ghost" onClick={() => router.push('/breathe')}>
-                        <ChevronLeft className="mr-2 h-4 w-4" />
-                        Back to Breathing
-                    </Button>
-                </div>
-            </header>
-            <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
-                 <div className="w-full max-w-2xl mx-auto text-center p-6 space-y-6">
-                    <h2 className="text-3xl font-headline">Your Fire Aura Music</h2>
-                     <div className="aspect-video">
-                        <iframe
-                            className="w-full h-full rounded-lg shadow-xl"
-                            src={`https://www.youtube.com/embed/${videoId}`}
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
+        <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/1200x/52/79/d2/5279d2b1d028c0af35434cd92bab2555.jpg')"}}>
+            <div className="absolute inset-0 bg-black/60 z-0"/>
+            <div className="relative z-10 flex flex-col min-h-screen">
+                <header className="container mx-auto px-4 py-6 z-10">
+                    <div className="flex justify-between items-center">
+                        <h1 className="text-2xl font-bold flex items-center gap-2">
+                            <Flame className="h-8 w-8 text-orange-400" />
+                            Fire Aura
+                        </h1>
+                        <Button variant="ghost" onClick={() => router.push('/breathe')} className="text-white hover:bg-white/10 hover:text-white">
+                            <ChevronLeft className="mr-2 h-4 w-4" />
+                            Back to Breathing
+                        </Button>
                     </div>
-                </div>
-
-                <Card className="w-full max-w-4xl mx-auto shadow-lg">
-                    <CardHeader>
-                        <CardDescription>Turn on the music below to feel relaxed.</CardDescription>
-                        <CardTitle className="font-headline text-3xl flex items-center gap-2"><Wind /> Take a moment to breathe</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col md:flex-row items-center justify-center gap-8 text-center p-6">
-                        <div className="relative h-48 w-48 flex items-center justify-center">
-                             <div className={cn("absolute inset-0 bg-orange-400 rounded-full opacity-50 blur-xl", isBreathing && 'animate-breath-aura')} />
-                             <div className="z-10 flex flex-col items-center justify-center">
-                                <p className="text-xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready?'}</p>
-                            </div>
+                </header>
+                <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
+                    <div className="w-full max-w-2xl mx-auto text-center p-6 space-y-6 bg-black/20 backdrop-blur-sm rounded-xl">
+                        <h2 className="text-3xl font-headline">Your Fire Aura Music</h2>
+                        <div className="aspect-video">
+                            <iframe
+                                className="w-full h-full rounded-lg shadow-xl"
+                                src={`https://www.youtube.com/embed/${videoId}`}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
                         </div>
-                        {!isBreathing ? (
-                            <Button onClick={() => setIsBreathing(true)}>Begin Breathing</Button>
-                        ) : (
-                            <div className="text-left">
-                                <p className="text-green-600 dark:text-green-400 font-semibold">Breathing session started.</p>
-                                <p className="text-muted-foreground">Follow the prompts and sync your breath with the animation.</p>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                    </div>
 
-                 <Card className="w-full max-w-4xl mx-auto shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-2xl">5-4-3-2-1 Grounding</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <p className="flex items-center gap-2"><span className="font-bold text-orange-500">5</span><Eye className="inline-block h-5 w-5"/> Acknowledge five things you see around you.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-orange-500">4</span><Hand className="inline-block h-5 w-5"/> Acknowledge four things you can touch around you.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-orange-500">3</span><Ear className="inline-block h-5 w-5"/> Acknowledge three things you can hear.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-orange-500">2</span><Rss className="inline-block h-5 w-5"/> Acknowledge two things you can smell.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-orange-500">1</span><Wind className="inline-block h-5 w-5"/> Acknowledge one thing you can taste.</p>
-                    </CardContent>
-                </Card>
-                
-                 <Card className="w-full max-w-4xl mx-auto shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-2xl flex items-center gap-2"><Sparkles className="text-orange-400" /> Reflect on Your Inner Fire</CardTitle>
-                         <CardDescription>Answer these questions to get a personalized insight.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-8">
-                         {!quizStarted ? (
-                            <div className="text-center">
-                                <Button onClick={() => setQuizStarted(true)}>Start Reflection</Button>
+                    <Card className="w-full max-w-4xl mx-auto shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                        <CardHeader>
+                            <CardDescription className="text-slate-300">Turn on the music below to feel relaxed.</CardDescription>
+                            <CardTitle className="font-headline text-3xl flex items-center gap-2"><Wind /> Take a moment to breathe</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col md:flex-row items-center justify-center gap-8 text-center p-6">
+                            <div className="relative h-48 w-48 flex items-center justify-center">
+                                <div className={cn("absolute inset-0 bg-orange-400 rounded-full opacity-50 blur-xl", isBreathing && 'animate-breath-aura')} />
+                                <div className="z-10 flex flex-col items-center justify-center">
+                                    <p className="text-xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready?'}</p>
+                                </div>
                             </div>
-                        ) : (
-                            <div className="space-y-6">
-                                {fireQuizQuestions.map((q, index) => (
-                                    <div key={q.key}>
-                                        <p className="font-semibold mb-2">{index + 1}. {q.question}</p>
-                                        <RadioGroup onValueChange={(value) => handleAnswerChange(q.key, value)} value={answers[q.key]}>
-                                            {q.options.map(opt => (
-                                                 <div key={opt} className="flex items-center space-x-2">
-                                                    <RadioGroupItem value={opt} id={`${q.key}-${opt}`} />
-                                                    <Label htmlFor={`${q.key}-${opt}`}>{opt}</Label>
-                                                </div>
-                                            ))}
-                                        </RadioGroup>
-                                    </div>
-                                ))}
-                                <Button onClick={handleGetAdvice} className="w-full">
-                                    Get My Reflection
-                                </Button>
-                                {advice && (
-                                     <Alert className="mt-4 border-orange-300 bg-orange-50 dark:bg-orange-900/20">
-                                        <Lightbulb className="h-4 w-4 text-orange-500" />
-                                        <AlertTitle className="text-orange-700 dark:text-orange-300">Your Fire Reflection</AlertTitle>
-                                        <AlertDescription className="text-orange-600 dark:text-orange-200 whitespace-pre-wrap">
-                                            {advice}
-                                        </AlertDescription>
-                                    </Alert>
-                                )}
-                            </div>
-                        )}
-                    </CardContent>
-                 </Card>
-            </main>
-             <style jsx>{`
-                @keyframes breath-aura {
-                    0%, 100% { transform: scale(1.1); opacity: 0.9; } /* Inhale End / Exhale Start */
-                    50% { transform: scale(0.9); opacity: 0.7; } /* Inhale Mid / Exhale End */
-                }
-                .animate-breath-aura {
-                    animation: breath-aura 14s ease-in-out infinite;
-                }
-            `}</style>
+                            {!isBreathing ? (
+                                <Button onClick={() => setIsBreathing(true)} className="bg-orange-500 hover:bg-orange-600 text-white">Begin Breathing</Button>
+                            ) : (
+                                <div className="text-left">
+                                    <p className="text-green-300 font-semibold">Breathing session started.</p>
+                                    <p className="text-slate-300">Follow the prompts and sync your breath with the animation.</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    <Card className="w-full max-w-4xl mx-auto shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl">5-4-3-2-1 Grounding</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <p className="flex items-center gap-2"><span className="font-bold text-orange-500">5</span><Eye className="inline-block h-5 w-5"/> Acknowledge five things you see around you.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-orange-500">4</span><Hand className="inline-block h-5 w-5"/> Acknowledge four things you can touch around you.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-orange-500">3</span><Ear className="inline-block h-5 w-5"/> Acknowledge three things you can hear.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-orange-500">2</span><Rss className="inline-block h-5 w-5"/> Acknowledge two things you can smell.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-orange-500">1</span><Wind className="inline-block h-5 w-5"/> Acknowledge one thing you can taste.</p>
+                        </CardContent>
+                    </Card>
+                    
+                    <Card className="w-full max-w-4xl mx-auto shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl flex items-center gap-2"><Sparkles className="text-orange-400" /> Reflect on Your Inner Fire</CardTitle>
+                            <CardDescription className="text-slate-300">Answer these questions to get a personalized insight.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-8">
+                            {!quizStarted ? (
+                                <div className="text-center">
+                                    <Button onClick={() => setQuizStarted(true)} className="bg-orange-500 hover:bg-orange-600 text-white">Start Reflection</Button>
+                                </div>
+                            ) : (
+                                <div className="space-y-6">
+                                    {fireQuizQuestions.map((q, index) => (
+                                        <div key={q.key}>
+                                            <p className="font-semibold mb-2">{index + 1}. {q.question}</p>
+                                            <RadioGroup onValueChange={(value) => handleAnswerChange(q.key, value)} value={answers[q.key]}>
+                                                {q.options.map(opt => (
+                                                    <div key={opt} className="flex items-center space-x-2">
+                                                        <RadioGroupItem value={opt} id={`${q.key}-${opt}`} className="border-orange-400 text-orange-400 focus:ring-orange-400" />
+                                                        <Label htmlFor={`${q.key}-${opt}`}>{opt}</Label>
+                                                    </div>
+                                                ))}
+                                            </RadioGroup>
+                                        </div>
+                                    ))}
+                                    <Button onClick={handleGetAdvice} className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                                        Get My Reflection
+                                    </Button>
+                                    {advice && (
+                                        <Alert className="mt-4 border-orange-400/50 bg-orange-500/10 text-white">
+                                            <Lightbulb className="h-4 w-4 text-orange-400" />
+                                            <AlertTitle className="text-orange-300">Your Fire Reflection</AlertTitle>
+                                            <AlertDescription className="text-slate-200 whitespace-pre-wrap">
+                                                {advice}
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </main>
+                <style jsx>{`
+                    @keyframes breath-aura {
+                        0%, 100% { transform: scale(1.1); opacity: 0.9; } /* Inhale End / Exhale Start */
+                        50% { transform: scale(0.9); opacity: 0.7; } /* Inhale Mid / Exhale End */
+                    }
+                    .animate-breath-aura {
+                        animation: breath-aura 14s ease-in-out infinite;
+                    }
+                `}</style>
+            </div>
         </div>
     );
 }
-
-    
