@@ -7,7 +7,7 @@ import { addDays, format, startOfDay, differenceInDays, isWithinInterval, isSame
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Droplet, Sun, Moon, Wind, Heart, Brain, Dumbbell, Utensils, Coffee, Shield, CheckCircle2, Calendar as CalendarIconMini, CircleDotDashed, Activity } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Droplet, Sun, Moon, Wind, Heart, Brain, Dumbbell, Utensils, Coffee, Shield, CheckCircle2, Calendar as CalendarIconMini, CircleDotDashed, Activity, AlertTriangle } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,14 +16,14 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipProvider, TooltipContent } from '@/components/ui/tooltip';
 import { Calendar } from '@/components/ui/calendar';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 
 const formSchema = z.object({
   lastPeriodDate: z.date({ required_error: "Last period date is required." }),
-  cycleLength: z.coerce.number().min(21, "Cycle must be at least 21 days").max(45, "Cycle can be at most 45 days"),
+  cycleLength: z.coerce.number().min(21, "Cycle must be at least 21 days").max(45, "Cycles over 45 days are uncommon. Please verify."),
   lutealPhaseLength: z.coerce.number().min(10, "Luteal phase is usually 10-18 days").max(18, "Luteal phase is usually 10-18 days").optional(),
 });
 
@@ -92,6 +92,7 @@ export default function PeriodTrackerPage() {
   const [fertileWindows, setFertileWindows] = useState<Date[]>([]);
   const [ovulationDays, setOvulationDays] = useState<Date[]>([]);
   const [summary, setSummary] = useState({ nextPeriodIn: '--', currentPhase: 'None' as CyclePhase, dayOfCycle: '--', symptoms: 'No' });
+  const [cycleWarning, setCycleWarning] = useState<string | null>(null);
 
   const form = useForm<CycleData>({
     resolver: zodResolver(formSchema),
@@ -102,14 +103,18 @@ export default function PeriodTrackerPage() {
   });
 
   const { reset, watch } = form;
-  const lastPeriodDate = watch('lastPeriodDate');
-  const cycleLength = watch('cycleLength');
-  const lutealPhaseLength = watch('lutealPhaseLength');
+  const watchedFields = watch();
 
   useEffect(() => {
     const calculatePredictions = (formData: CycleData) => {
       const { lastPeriodDate, cycleLength, lutealPhaseLength = 14 } = formData;
   
+      if (cycleLength > 35) {
+          setCycleWarning("Cycles longer than 35 days can sometimes indicate an underlying issue. If this is unusual for you, it's a good idea to consult a doctor.");
+      } else {
+          setCycleWarning(null);
+      }
+
       if (lastPeriodDate && cycleLength) {
           const today = startOfDay(new Date());
           let currentCycleStart = startOfDay(new Date(lastPeriodDate));
@@ -177,10 +182,10 @@ export default function PeriodTrackerPage() {
           });
       }
     };
-    if(lastPeriodDate && cycleLength) {
-        calculatePredictions({ lastPeriodDate, cycleLength, lutealPhaseLength });
+    if(watchedFields.lastPeriodDate && watchedFields.cycleLength) {
+        calculatePredictions(watchedFields);
     }
-  }, [lastPeriodDate, cycleLength, lutealPhaseLength]);
+  }, [watchedFields]);
 
 
   useEffect(() => {
@@ -248,6 +253,16 @@ export default function PeriodTrackerPage() {
                     <p className="mt-2 text-lg text-slate-600">Your personal cycle and wellness guide</p>
                 </div>
 
+                 {cycleWarning && (
+                    <Alert variant="destructive" className="mb-8 max-w-2xl mx-auto">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>Irregular Cycle Length</AlertTitle>
+                        <AlertDescription>
+                            {cycleWarning}
+                        </AlertDescription>
+                    </Alert>
+                 )}
+
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
                     <div className="lg:col-span-2 w-full mx-auto">
                         <Card className="shadow-lg bg-white/80 backdrop-blur-sm border-rose-300">
@@ -259,7 +274,7 @@ export default function PeriodTrackerPage() {
                             <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                                 <FormField control={form.control} name="lastPeriodDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Last Period Start Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-end text-right font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
-                                <FormField control={form.control} name="cycleLength" render={({ field }) => (<FormItem><FormLabel>Average Cycle Length (days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                                <FormField control={form.control} name="cycleLength" render={({ field }) => (<FormItem><FormLabel>Average Cycle Length (days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                 <FormField control={form.control} name="lutealPhaseLength" render={({ field }) => (<FormItem><div className="flex items-center gap-2"><FormLabel>Luteal Phase Length</FormLabel><TooltipProvider><Tooltip><TooltipTrigger asChild><button type="button" aria-label="Luteal phase info" onClick={(e) => e.preventDefault()}><Info className="h-4 w-4 text-muted-foreground cursor-pointer" /></button></TooltipTrigger><TooltipContent><p className="max-w-xs">The time between ovulation and your next period. Usually 10-18 days.</p></TooltipContent></Tooltip></TooltipProvider></div><FormControl><Input type="number" placeholder="Default: 14" min="10" max="18" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                                 <Button type="submit" size="lg" className="w-full bg-rose-500 hover:bg-rose-600 text-white">Save & Calculate</Button>
                                 <Button type="button" variant="outline" className="w-full" onClick={() => router.push('/settings')}>Edit Personal Details</Button>
