@@ -103,13 +103,44 @@ export default function WaterTrackerPage() {
     },
   });
 
+  const calculateStreak = () => {
+        try {
+            let streak = 0;
+            const today = startOfDay(new Date());
+            let dailyGoal = 8; // Default
+            const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
+             if (savedSettings) {
+                dailyGoal = JSON.parse(savedSettings).goal || 8;
+            }
+
+            for (let i = 0; i < 30; i++) { // Check up to 30 days
+                const dateToCheck = subDays(today, i);
+                const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+                const logData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${dateKey}`);
+                if (logData) {
+                    const log: DailyLog = JSON.parse(logData);
+                    const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
+                    if (totalIntake >= dailyGoal) {
+                        streak++;
+                    } else {
+                        break; // Streak is broken
+                    }
+                } else {
+                    if (i > 0) break; // Streak broken if yesterday or earlier is missing
+                }
+            }
+            setHydrationStreak(streak);
+        } catch (e) {
+            console.error("Error calculating streak:", e);
+        }
+    };
+
   useEffect(() => {
     // Initialize audio on client
     if (typeof window !== 'undefined') {
         audioRef.current = new Audio(REMINDER_SOUND_URL);
     }
     
-    let dailyGoal = 8;
     // Load settings from local storage
     try {
         const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
@@ -119,7 +150,6 @@ export default function WaterTrackerPage() {
                 setGoal(savedGoal);
                 setUnit(savedUnit);
                 settingsForm.setValue('goal', savedGoal * unitConversions[savedUnit]);
-                dailyGoal = savedGoal;
             }
         }
         const savedReminders = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}reminders`);
@@ -169,30 +199,7 @@ export default function WaterTrackerPage() {
         }
     } catch(e) { console.error("Error determining cycle phase:", e)}
     
-    // Calculate streak
-    try {
-        let streak = 0;
-        const today = startOfDay(new Date());
-        for (let i = 0; i < 30; i++) { // Check up to 30 days
-            const dateToCheck = subDays(today, i);
-            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-            const logData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${dateKey}`);
-            if (logData) {
-                const log: DailyLog = JSON.parse(logData);
-                const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
-                if (totalIntake >= dailyGoal) {
-                    streak++;
-                } else {
-                    break; // Streak is broken
-                }
-            } else {
-                // No log for a previous day breaks the streak
-                if (i > 0) break; 
-            }
-        }
-        setHydrationStreak(streak);
-    } catch (e) { console.error("Error calculating streak:", e); }
-
+    calculateStreak();
 
   }, [currentDateKey, settingsForm, reminderForm]);
 
@@ -295,6 +302,8 @@ export default function WaterTrackerPage() {
     }
     
     setDailyLog({ entries: newEntries });
+    calculateStreak();
+
 
     if (amount > 0) {
         const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];

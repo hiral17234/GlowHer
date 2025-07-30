@@ -172,24 +172,27 @@ export default function FitnessGoalsPage() {
 
     const loadWeeklyPregnancyLogs = () => {
         const today = startOfDay(new Date());
-        const { days: goalDays = 3 } = pregnancyGoalForm.getValues();
         let currentStreak = 0;
-        let streakBroken = false;
         
+        for (let i = 0; i < 30; i++) { // check up to 30 days for a long streak
+            const dateToCheck = subDays(today, i);
+            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+            const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${dateKey}`);
+            if (savedLog) {
+                currentStreak++;
+            } else {
+                break; // Streak is broken
+            }
+        }
+        setStreak(currentStreak);
+
         const logs = Array.from({ length: 7 }, (_, i) => {
             const date = subDays(today, i);
             const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-            const moved = !!savedLog;
-            if (!streakBroken && moved) {
-                currentStreak++;
-            } else {
-                streakBroken = true;
-            }
-            return { name: format(date, 'EEE'), moved: moved ? 1 : 0 };
+            return { name: format(date, 'EEE'), moved: savedLog ? 1 : 0 };
         }).reverse();
         
         setWeeklyPregnancyLogs(logs);
-        setStreak(currentStreak);
     };
 
     // --- FORM SUBMISSION HANDLERS ---

@@ -88,11 +88,10 @@ export default function SleepTrackerPage() {
   const calculateAchievements = () => {
     try {
         let goodSleepDays = 0;
-        let consistentQualityDays = 0;
-        let lastQuality = -1;
+        let consistentQualityStreak = 0;
         const today = startOfDay(new Date());
 
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 7; i++) { // Check last 7 days for star achievement
             const dateToCheck = subDays(today, i);
             const dateKey = format(dateToCheck, 'yyyy-MM-dd');
             const logData = localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}${dateKey}`);
@@ -101,27 +100,28 @@ export default function SleepTrackerPage() {
                 if(log.sleepDuration[0] >= 8) {
                     goodSleepDays++;
                 }
-
-                if(log.sleepQuality[0] >= 7){
-                    if (i === 0 || lastQuality === -1) { // First day in streak
-                        consistentQualityDays = 1;
-                    } else if (lastQuality >= 7) {
-                        consistentQualityDays++;
-                    } else {
-                         consistentQualityDays = 0; // Reset streak
-                    }
-                } else {
-                    consistentQualityDays = 0; // Reset streak
-                }
-                lastQuality = log.sleepQuality[0];
-            } else {
-                consistentQualityDays = 0; // Reset streak if a day is missed
-                lastQuality = -1;
             }
         }
+        
+        for (let i = 0; i < 7; i++) { // Check last 7 days for queen achievement
+            const dateToCheck = subDays(today, i);
+            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+            const logData = localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}${dateKey}`);
+             if (logData) {
+                const log: FormData = JSON.parse(logData);
+                if (log.sleepQuality[0] >= 8) { // Good or Excellent
+                    consistentQualityStreak++;
+                } else {
+                    break; // Streak is broken
+                }
+            } else {
+                 break; // Streak is broken if a day is missed
+            }
+        }
+        
         setAchievements({
             star: goodSleepDays >= 3,
-            queen: consistentQualityDays >= 7,
+            queen: consistentQualityStreak >= 7,
         });
     } catch (e) {
         console.error("Error calculating achievements", e);
