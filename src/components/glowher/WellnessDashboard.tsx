@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -34,12 +33,12 @@ const wellnessFeatures = [
       bgColor: 'bg-red-500/10'
     },
     {
-      icon: Heart,
-      title: 'Log Symptoms & Moods',
-      description: 'Select symptoms & emotional state',
-      href: '/log-symptoms',
-      color: 'text-pink-500',
-      bgColor: 'bg-pink-500/10'
+      icon: Brain,
+      title: 'Mental Health Check-In',
+      description: 'A space to clear your mind and reflect.',
+      href: '/mental-health-check-in',
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-500/10'
     },
     {
       icon: Droplet,
@@ -89,13 +88,13 @@ const wellnessFeatures = [
       color: 'text-orange-500',
       bgColor: 'bg-orange-500/10'
     },
-    {
-      icon: Brain,
-      title: 'Mental Health Check-In',
-      description: 'A space to clear your mind and reflect.',
-      href: '/mental-health-check-in',
-      color: 'text-cyan-500',
-      bgColor: 'bg-cyan-500/10'
+     {
+      icon: Heart,
+      title: 'Log Symptoms & Moods',
+      description: 'Select symptoms & emotional state',
+      href: '/log-symptoms',
+      color: 'text-pink-500',
+      bgColor: 'bg-pink-500/10'
     },
     {
         icon: Info,
