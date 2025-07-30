@@ -23,29 +23,42 @@ export default function BreathePage() {
 
     // Load the YouTube Iframe API script
     useEffect(() => {
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode!.insertBefore(tag, firstScriptTag);
+        if (!(window as any).YT) { // Prevent duplicate script injection
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode!.insertBefore(tag, firstScriptTag);
+        }
 
-        // This function creates an <iframe> (and YouTube player)
-        // after the API code downloads.
         (window as any).onYouTubeIframeAPIReady = () => {
-            playerRef.current = new (window as any).YT.Player('youtube-player', {
-                height: '1',
-                width: '1',
-                videoId: YOUTUBE_VIDEO_ID,
-                playerVars: {
-                    playsinline: 1,
-                    loop: 1,
-                    playlist: YOUTUBE_VIDEO_ID, // Required for loop to work
-                    controls: 0,
-                },
-            });
+             if (!playerRef.current) {
+                playerRef.current = new (window as any).YT.Player('youtube-player', {
+                    height: '192', // 48 * 4
+                    width: '192', // 48 * 4
+                    videoId: YOUTUBE_VIDEO_ID,
+                    playerVars: {
+                        playsinline: 1,
+                        loop: 1,
+                        playlist: YOUTUBE_VIDEO_ID, // Required for loop to work
+                        controls: 0,
+                        autoplay: 0, // Don't autoplay on load
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                    }
+                });
+            }
         };
+        
+        function onPlayerReady(event: any) {
+            // The player is ready, but we wait for user interaction to play.
+        }
 
         return () => {
-            // Clean up the global function when the component unmounts
+            if (playerRef.current && typeof playerRef.current.destroy === 'function') {
+                 playerRef.current.destroy();
+                 playerRef.current = null;
+            }
              if ((window as any).onYouTubeIframeAPIReady) {
                 (window as any).onYouTubeIframeAPIReady = null;
             }
@@ -92,6 +105,7 @@ export default function BreathePage() {
     const startBreathing = () => {
         if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
             playerRef.current.playVideo();
+            playerRef.current.unMute();
         }
         setIsBreathing(true);
     }
@@ -107,9 +121,6 @@ export default function BreathePage() {
                 Back
             </Button>
             
-            {/* This div will be replaced by the YouTube iframe, positioned behind other elements */}
-            <div id="youtube-player" className="absolute top-0 left-0 w-px h-px -z-10"></div>
-
             <div className="absolute top-0 left-0 w-full h-full bg-black/10" />
 
             <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
@@ -119,13 +130,20 @@ export default function BreathePage() {
                 </div>
                 <p className="text-white/80">Write it. Dump it. Breathe.</p>
 
-                <div className="relative h-48 flex items-center justify-center">
+                <div className="relative h-48 w-48 mx-auto flex items-center justify-center">
                     <div 
                         className={cn(
-                            "absolute w-48 h-48 bg-blue-400 rounded-full opacity-50 blur-2xl",
+                            "absolute inset-0 bg-blue-400 rounded-full opacity-50 blur-2xl",
                              isBreathing && "animate-breath"
                         )} 
                     />
+                     <div 
+                        id="youtube-player" 
+                        className={cn(
+                            "absolute inset-0 rounded-full overflow-hidden transition-opacity duration-1000",
+                             isBreathing ? "opacity-30" : "opacity-0"
+                        )}
+                    ></div>
                     <p className="text-2xl font-semibold z-10">{isBreathing ? cycleText : 'Ready to begin?'}</p>
                 </div>
 
@@ -167,4 +185,5 @@ export default function BreathePage() {
             `}</style>
         </div>
     );
-}
+
+    
