@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CalendarIcon, ChevronLeft, Info, Droplet, Sun, Moon, Wind, Heart, Brain, Dumbbell, Utensils, Coffee, Shield, CheckCircle2, Calendar as CalendarIconMini, CircleDotDashed, Activity } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
