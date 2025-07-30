@@ -171,25 +171,21 @@ export default function FitnessGoalsPage() {
     };
 
     const loadWeeklyPregnancyLogs = () => {
-        const today = startOfDay(new Date());
         let currentStreak = 0;
-        
-        // Check today's log first
-        const todayKey = format(today, 'yyyy-MM-dd');
-        if (localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${todayKey}`)) {
-            currentStreak++;
-        }
-
-        // Then check previous days
-        for (let i = 1; i < 30; i++) { // check up to 29 previous days
+        const today = startOfDay(new Date());
+        // Check from yesterday backwards
+        for (let i = 1; i < 30; i++) {
             const dateToCheck = subDays(today, i);
             const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-            const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${dateKey}`);
-            if (savedLog) {
+            if (localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${dateKey}`)) {
                 currentStreak++;
             } else {
-                break; // Streak is broken
+                break; // Streak broken
             }
+        }
+        // Check today separately and add to streak
+        if (localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`)) {
+            currentStreak++;
         }
         setStreak(currentStreak);
 
@@ -291,12 +287,18 @@ export default function FitnessGoalsPage() {
                                 <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
                                 <CardContent className="space-y-2">
                                     <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-500/20" : "bg-muted")}>
-                                        <Flame className={cn("h-6 w-6", streak > 0 ? "text-amber-400" : "text-muted-foreground")} />
-                                        <div><p className="font-semibold">Consistency Streak</p><p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log a workout today to start a streak."}</p></div>
+                                        <Award className={cn("h-6 w-6", streak > 0 ? "text-red-500 fill-red-500" : "text-muted-foreground")} />
+                                        <div className={cn(streak > 0 && "font-bold text-slate-800")}>
+                                            <p className="font-semibold">Consistency Streak</p>
+                                            <p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log a workout today to start a streak."}</p>
+                                        </div>
                                     </div>
-                                     <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedDays >= goalDays ? "bg-primary/20" : "bg-muted")}>
-                                        <Star className={cn("h-6 w-6", completedDays >= goalDays ? "text-primary" : "text-muted-foreground")} />
-                                        <div><p className="font-semibold">Weekly Goal</p><p className="text-sm text-muted-foreground">{completedDays >= goalDays ? "You hit your goal this week!" : "Keep going to reach your weekly goal."}</p></div>
+                                    <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedDays >= goalDays ? "bg-primary/20" : "bg-muted")}>
+                                        <Award className={cn("h-6 w-6", completedDays >= goalDays ? "text-red-500 fill-red-500" : "text-muted-foreground")} />
+                                        <div className={cn(completedDays >= goalDays && "font-bold text-slate-800")}>
+                                            <p className="font-semibold">Weekly Goal</p>
+                                            <p className="text-sm text-muted-foreground">{completedDays >= goalDays ? "You hit your goal this week!" : "Keep going to reach your weekly goal."}</p>
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>

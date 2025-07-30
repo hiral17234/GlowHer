@@ -500,8 +500,8 @@ export default function WaterTrackerPage() {
                                     "flex items-center gap-3 p-2 rounded-md transition-opacity",
                                     hydrationStreak >= tier.streak ? "opacity-100 bg-blue-100/60" : "opacity-50"
                                 )}>
-                                    <Award className={cn("h-6 w-6", hydrationStreak >= tier.streak ? "text-yellow-500" : "text-slate-400")} />
-                                    <div>
+                                    <Award className={cn("h-6 w-6", hydrationStreak >= tier.streak ? "text-red-500 fill-red-500" : "text-slate-400")} />
+                                    <div className={cn(hydrationStreak >= tier.streak && "font-bold text-slate-800")}>
                                         <p className="font-semibold">{tier.title}</p>
                                         <p className="text-xs text-slate-600">{tier.description}</p>
                                     </div>

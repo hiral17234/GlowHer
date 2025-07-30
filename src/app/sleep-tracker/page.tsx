@@ -92,7 +92,7 @@ export default function SleepTrackerPage() {
         const today = startOfDay(new Date());
 
         // Check for 3-day streak of 8+ hours
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 3; i++) {
             const dateToCheck = subDays(today, i);
             const dateKey = format(dateToCheck, 'yyyy-MM-dd');
             const logData = localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}${dateKey}`);
@@ -101,12 +101,13 @@ export default function SleepTrackerPage() {
                 if (log.sleepDuration[0] >= 8) {
                     goodSleepStreak++;
                 } else {
-                    goodSleepStreak = 0; // Reset streak if a day is missed
+                    goodSleepStreak = 0;
+                    break;
                 }
             } else {
-                 goodSleepStreak = 0; // Reset streak if a day is missed
+                 goodSleepStreak = 0;
+                 break;
             }
-             if (goodSleepStreak >= 3) break;
         }
 
         // Check for 7-day streak of good/excellent quality
@@ -481,8 +482,8 @@ export default function SleepTrackerPage() {
                 {currentPhase && phaseTips[currentPhase] && (
                     <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-900 dark:text-indigo-100 [&>svg]:text-indigo-600">
                         <Info className="h-4 w-4" />
-                        <AlertTitle className="font-bold">{phaseTips[currentPhase].title}</AlertTitle>
-                        <AlertDescription>
+                        <AlertTitle className="font-bold text-slate-800">{phaseTips[currentPhase].title}</AlertTitle>
+                        <AlertDescription className="text-slate-700">
                             {phaseTips[currentPhase].tip}
                         </AlertDescription>
                     </Alert>
@@ -494,20 +495,20 @@ export default function SleepTrackerPage() {
                     <CardContent className="space-y-4">
                         <div className={cn(
                             "flex items-center gap-4 p-4 rounded-lg transition-all",
-                            achievements.star ? "bg-amber-500/20 text-amber-800" : "bg-muted text-muted-foreground opacity-70"
+                            achievements.star ? "bg-amber-500/20" : "bg-muted text-muted-foreground opacity-70"
                         )}>
-                            <Award className="h-8 w-8" />
-                            <div>
+                            <Award className={cn("h-8 w-8", achievements.star ? "text-red-500 fill-red-500" : "text-slate-400")} />
+                            <div className={cn(achievements.star && "font-bold text-slate-800")}>
                                 <h4 className="font-semibold">Sleep Star</h4>
                                 <p className="text-sm">Log 8+ hours of sleep for 3 days in a row.</p>
                             </div>
                         </div>
                         <div className={cn(
                             "flex items-center gap-4 p-4 rounded-lg transition-all",
-                             achievements.queen ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground opacity-70"
+                             achievements.queen ? "bg-primary/20" : "bg-muted text-muted-foreground opacity-70"
                         )}>
-                             <Award className="h-8 w-8" />
-                            <div>
+                             <Award className={cn("h-8 w-8", achievements.queen ? "text-red-500 fill-red-500" : "text-slate-400")} />
+                            <div className={cn(achievements.queen && "font-bold text-slate-800")}>
                                 <h4 className="font-semibold">Rest Queen</h4>
                                 <p className="text-sm">Maintain 'Good' or 'Excellent' sleep for a week.</p>
                             </div>
