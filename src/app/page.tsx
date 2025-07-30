@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby } from 'lucide-react';
+import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays } from 'date-fns';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,7 @@ type Notification = {
     icon: React.ElementType;
     message: string;
     color: string;
+    href: string;
 };
 
 
@@ -62,7 +63,7 @@ export default function HomePage() {
             const startDate = subDays(new Date(dueDate), 280);
             const totalDays = differenceInDays(new Date(), startDate);
             const gestationalAgeWeeks = Math.floor(totalDays / 7);
-            currentNotifications.push({ icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-500'});
+            currentNotifications.push({ icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-500', href: '/pregnancy-tracker' });
         }
       } else {
         const periodData = localStorage.getItem('glowher-period-tracker');
@@ -75,7 +76,7 @@ export default function HomePage() {
             const nextPeriodStart = addDays(currentCycleStartDate, data.cycleLength);
             const daysUntil = differenceInDays(nextPeriodStart, new Date());
             if(daysUntil >= 0 && daysUntil <= 7) {
-                currentNotifications.push({ icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-500'});
+                currentNotifications.push({ icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-500', href: '/period-tracker' });
             }
         }
       }
@@ -97,7 +98,7 @@ export default function HomePage() {
 
         if (expiringItems.length > 0) {
             const expiringMessage = `Expiring soon: ${expiringItems.map(i => i.name).join(', ')}.`;
-            currentNotifications.push({ icon: AlertTriangle, message: expiringMessage, color: 'text-destructive'});
+            currentNotifications.push({ icon: AlertTriangle, message: expiringMessage, color: 'text-destructive', href: '/grocery-list' });
             toast({
                 variant: "destructive",
                 title: (
@@ -118,27 +119,27 @@ export default function HomePage() {
           const shoppingList: ShoppingListItem[] = JSON.parse(savedShoppingList);
           if (shoppingList.length > 0) {
               const shoppingMessage = `You have ${shoppingList.length} item(s) on your shopping list.`;
-              currentNotifications.push({ icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-500'});
+              currentNotifications.push({ icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-500', href: '/grocery-list' });
           }
       }
       
       // Check sleep log for yesterday
       const sleepLog = localStorage.getItem(`glowher-sleep-log-${yesterdayKey}`);
       if (!sleepLog) {
-          currentNotifications.push({ icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-500'});
+          currentNotifications.push({ icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-500', href: '/sleep-tracker' });
       }
       
       // Check water log for today
       const waterLog = localStorage.getItem(`glowher-water-tracker-${todayKey}`);
       if (!waterLog || JSON.parse(waterLog).entries.length === 0) {
-          currentNotifications.push({ icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-500'});
+          currentNotifications.push({ icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-500', href: '/water-tracker' });
       }
       
       // Check fitness log for today
       const fitnessLogKey = isPregnant ? `glowher-preg-fitness-log-${todayKey}` : `glowher-fitness-log-${todayKey}`;
       const fitnessLog = localStorage.getItem(fitnessLogKey);
       if (!fitnessLog) {
-          currentNotifications.push({ icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-500'});
+          currentNotifications.push({ icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-500', href: '/fitness-goals' });
       }
 
       setNotifications(currentNotifications);
@@ -179,7 +180,7 @@ export default function HomePage() {
                     <DropdownMenuSeparator />
                     {notifications.length > 0 ? (
                         notifications.map((note, index) => (
-                            <DropdownMenuItem key={index} className="text-sm text-wrap flex items-start gap-2">
+                            <DropdownMenuItem key={index} onSelect={() => router.push(note.href)} className="text-sm text-wrap flex items-start gap-2 cursor-pointer">
                                <note.icon className={`mt-1 h-4 w-4 shrink-0 ${note.color}`} />
                                <span>{note.message}</span>
                             </DropdownMenuItem>
