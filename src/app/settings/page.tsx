@@ -110,7 +110,12 @@ export default function SettingsPage() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+        name: "",
+        gender: "",
+        dob: new Date(),
+        lastPeriodDate: undefined,
+    },
   });
   
   useEffect(() => {
