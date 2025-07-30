@@ -32,8 +32,8 @@ export default function BreathePage() {
         // after the API code downloads.
         (window as any).onYouTubeIframeAPIReady = () => {
             playerRef.current = new (window as any).YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
+                height: '1',
+                width: '1',
                 videoId: YOUTUBE_VIDEO_ID,
                 playerVars: {
                     playsinline: 1,
@@ -107,10 +107,10 @@ export default function BreathePage() {
                 Back
             </Button>
             
-            {/* This div will be replaced by the YouTube iframe */}
-            <div id="youtube-player" className="absolute w-0 h-0"></div>
+            {/* This div will be replaced by the YouTube iframe, positioned behind other elements */}
+            <div id="youtube-player" className="absolute top-0 left-0 w-px h-px -z-10"></div>
 
-            <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
+            <div className="absolute top-0 left-0 w-full h-full bg-black/10" />
 
             <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
                  <div className="flex items-center justify-center gap-2">
