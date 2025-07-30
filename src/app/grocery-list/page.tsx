@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Snacks, X } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 
@@ -35,7 +35,7 @@ const categories = [
     { name: 'Vegetables', icon: Carrot },
     { name: 'Dairy', icon: Milk },
     { name: 'Grains', icon: Wheat },
-    { name: 'Snacks', icon: Snacks },
+    { name: 'Snacks', icon: Cookie },
     { name: 'Other', icon: Plus },
 ];
 
@@ -290,5 +290,7 @@ export default function GroceryListPage() {
     </div>
   );
 }
+
+    
 
     
