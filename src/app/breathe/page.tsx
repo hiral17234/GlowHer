@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Brain, ChevronLeft, Play } from 'lucide-react';
@@ -13,25 +13,17 @@ const breathingCycle = [
     { text: 'Exhale...', duration: 11000 },
 ];
 
-const newAudioSrc = '/sounds/soulful-river-folk-tune-with-bamboo-flute-339826.mp3';
-
+const YOUTUBE_VIDEO_ID = '-5qhNRmMilI';
 
 export default function BreathePage() {
     const router = useRouter();
     const [cycleText, setCycleText] = useState('Get Ready...');
-    const [audioSrc, setAudioSrc] = useState<string | null>(null);
-    const audioRef = useRef<HTMLAudioElement>(null);
     const [isBreathing, setIsBreathing] = useState(false);
-
-
-    useEffect(() => {
-        setAudioSrc(newAudioSrc);
-    }, []);
+    const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
     useEffect(() => {
         if (!isBreathing) return;
 
-        // Breathing animation logic
         const totalDuration = breathingCycle.reduce((sum, cycle) => sum + cycle.duration, 0);
 
         const cycleInterval = setInterval(() => {
@@ -40,31 +32,31 @@ export default function BreathePage() {
             setTimeout(() => setCycleText(breathingCycle[2].text), breathingCycle[0].duration + breathingCycle[1].duration);
         }, totalDuration);
 
-        // Set initial text
         setCycleText(breathingCycle[0].text);
 
         return () => clearInterval(cycleInterval);
     }, [isBreathing]);
     
-    const handleGoBack = () => {
-        if (audioRef.current) {
-            audioRef.current.pause();
+    const stopPlaybackAndNavigate = (path: string) => {
+        setVideoUrl(null);
+        if (path === 'back') {
+            router.back();
+        } else {
+            router.push(path);
         }
-        router.back();
+    };
+
+    const handleGoBack = () => {
+        stopPlaybackAndNavigate('back');
     };
 
     const handleFinish = () => {
-        if (audioRef.current) {
-            audioRef.current.pause();
-        }
-        router.push('/');
+        stopPlaybackAndNavigate('/');
     };
     
     const startBreathing = () => {
         setIsBreathing(true);
-        if(audioRef.current) {
-            audioRef.current.play().catch(e => console.error("Error playing audio: ", e));
-        }
+        setVideoUrl(`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_VIDEO_ID}&controls=0`);
     }
 
     return (
@@ -77,9 +69,17 @@ export default function BreathePage() {
                 <ChevronLeft className="mr-2 h-4 w-4" />
                 Back
             </Button>
-             {audioSrc && (
-                <audio ref={audioRef} src={audioSrc} loop />
+            
+             {videoUrl && (
+                <iframe
+                    src={videoUrl}
+                    className="absolute w-0 h-0" // Hide the video player
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                    title="YouTube video player"
+                ></iframe>
             )}
+
              <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
 
             <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
