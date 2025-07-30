@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipProvider, TooltipContent } from '@/components/ui/tooltip';
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Calendar } from '@/components/ui/calendar';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -106,86 +106,83 @@ export default function PeriodTrackerPage() {
   const watchedFields = watch();
 
   useEffect(() => {
-    const calculatePredictions = (formData: CycleData) => {
-      const { lastPeriodDate, cycleLength, lutealPhaseLength = 14 } = formData;
-  
-      if (cycleLength > 35) {
-          setCycleWarning("Cycles longer than 35 days can sometimes indicate an underlying issue. If this is unusual for you, it's a good idea to consult a doctor.");
-      } else {
-          setCycleWarning(null);
-      }
+    const { lastPeriodDate, cycleLength, lutealPhaseLength } = watchedFields;
 
-      if (lastPeriodDate && cycleLength) {
-          const today = startOfDay(new Date());
-          let currentCycleStart = startOfDay(new Date(lastPeriodDate));
-  
-          while (addDays(currentCycleStart, cycleLength) <= today) {
-              currentCycleStart = addDays(currentCycleStart, cycleLength);
-          }
-  
-          const allPredictedPeriods: Date[] = [];
-          const allFertileWindows: Date[] = [];
-          const allOvulationDays: Date[] = [];
-          
-          for (let i = 0; i < 2; i++) {
-              const cycleStartDate = addDays(currentCycleStart, cycleLength * i);
-              const nextPeriodStart = addDays(cycleStartDate, cycleLength);
-              
-              const ovulationDay = addDays(nextPeriodStart, -lutealPhaseLength);
-              allOvulationDays.push(ovulationDay);
-              
-              // Fertile window is ovulation day + 5 days before it
-              for (let j = 0; j <= 5; j++) {
-                  allFertileWindows.push(addDays(ovulationDay, -j));
-              }
-              
-              // Period duration is 5 days
-              for (let j = 0; j < 5; j++) {
-                  allPredictedPeriods.push(addDays(nextPeriodStart, j));
-              }
-          }
-          
-          setPredictedPeriods(allPredictedPeriods);
-          setFertileWindows(allFertileWindows);
-          setOvulationDays(allOvulationDays);
-  
-          const upcomingPeriodStart = addDays(currentCycleStart, cycleLength);
-          const nextPeriodIn = differenceInDays(upcomingPeriodStart, today);
-          const dayOfCycle = differenceInDays(today, currentCycleStart) + 1;
-          
-          const periodEnd = addDays(currentCycleStart, 4);
-          const ovDay = addDays(upcomingPeriodStart, -lutealPhaseLength);
-          let phase: CyclePhase = 'None';
-          if (isWithinInterval(today, { start: currentCycleStart, end: periodEnd })) phase = 'Menstrual';
-          else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: addDays(ovDay, -1) })) phase = 'Follicular';
-          else if (isSameDay(today, ovDay)) phase = 'Ovulation';
-          else if (isWithinInterval(today, { start: addDays(ovDay, 1), end: addDays(upcomingPeriodStart, -1) })) phase = 'Luteal';
-  
-          const todayKey = `glowher-log-${format(today, 'yyyy-MM-dd')}`;
-          let symptomsToday = 'No';
-          try {
-              const log = localStorage.getItem(todayKey);
-              if (log) {
-                  const parsedLog = JSON.parse(log);
-                  const allSymptoms = [...(parsedLog.symptoms || []), parsedLog.otherSymptom].filter(Boolean);
-                  if (allSymptoms.length > 0) {
-                      symptomsToday = 'Yes';
-                  }
-              }
-          } catch(e) {}
-  
-          setSummary({
-              nextPeriodIn: nextPeriodIn >= 0 ? `${nextPeriodIn} days` : 'Today',
-              currentPhase: phase,
-              dayOfCycle: `${dayOfCycle}`,
-              symptoms: symptomsToday,
-          });
-      }
-    };
-    if(watchedFields.lastPeriodDate && watchedFields.cycleLength) {
-        calculatePredictions(watchedFields);
+    if (!lastPeriodDate || !cycleLength) return;
+
+    if (cycleLength > 35) {
+        setCycleWarning("Cycles longer than 35 days can sometimes indicate an underlying issue. If this is unusual for you, it's a good idea to consult a doctor.");
+    } else {
+        setCycleWarning(null);
     }
-  }, [watchedFields]);
+  
+    const lph = lutealPhaseLength || 14;
+    const today = startOfDay(new Date());
+    let currentCycleStart = startOfDay(new Date(lastPeriodDate));
+
+    while (addDays(currentCycleStart, cycleLength) <= today) {
+        currentCycleStart = addDays(currentCycleStart, cycleLength);
+    }
+
+    const allPredictedPeriods: Date[] = [];
+    const allFertileWindows: Date[] = [];
+    const allOvulationDays: Date[] = [];
+    
+    for (let i = 0; i < 2; i++) {
+        const cycleStartDate = addDays(currentCycleStart, cycleLength * i);
+        const nextPeriodStart = addDays(cycleStartDate, cycleLength);
+        
+        const ovulationDay = addDays(nextPeriodStart, -lph);
+        allOvulationDays.push(ovulationDay);
+        
+        // Fertile window is ovulation day + 5 days before it
+        for (let j = 0; j <= 5; j++) {
+            allFertileWindows.push(subDays(ovulationDay, j));
+        }
+        
+        // Period duration is 5 days
+        for (let j = 0; j < 5; j++) {
+            allPredictedPeriods.push(addDays(nextPeriodStart, j));
+        }
+    }
+    
+    setPredictedPeriods(allPredictedPeriods);
+    setFertileWindows(allFertileWindows);
+    setOvulationDays(allOvulationDays);
+
+    const upcomingPeriodStart = addDays(currentCycleStart, cycleLength);
+    const nextPeriodIn = differenceInDays(upcomingPeriodStart, today);
+    const dayOfCycle = differenceInDays(today, currentCycleStart) + 1;
+    
+    const periodEnd = addDays(currentCycleStart, 4);
+    const ovDay = addDays(upcomingPeriodStart, -lph);
+    let phase: CyclePhase = 'None';
+    if (isWithinInterval(today, { start: currentCycleStart, end: periodEnd })) phase = 'Menstrual';
+    else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: subDays(ovDay, 1) })) phase = 'Follicular';
+    else if (isSameDay(today, ovDay)) phase = 'Ovulation';
+    else if (isWithinInterval(today, { start: addDays(ovDay, 1), end: subDays(upcomingPeriodStart, 1) })) phase = 'Luteal';
+
+    const todayKey = `glowher-log-${format(today, 'yyyy-MM-dd')}`;
+    let symptomsToday = 'No';
+    try {
+        const log = localStorage.getItem(todayKey);
+        if (log) {
+            const parsedLog = JSON.parse(log);
+            const allSymptoms = [...(parsedLog.symptoms || []), parsedLog.otherSymptom].filter(Boolean);
+            if (allSymptoms.length > 0) {
+                symptomsToday = 'Yes';
+            }
+        }
+    } catch(e) {}
+
+    setSummary({
+        nextPeriodIn: nextPeriodIn >= 0 ? `${nextPeriodIn}` : '0',
+        currentPhase: phase,
+        dayOfCycle: `${dayOfCycle}`,
+        symptoms: symptomsToday,
+    });
+    
+  }, [watchedFields.lastPeriodDate, watchedFields.cycleLength, watchedFields.lutealPhaseLength]);
 
 
   useEffect(() => {
@@ -376,4 +373,5 @@ export default function PeriodTrackerPage() {
         </div>
     </div>
   );
-}
+
+    
