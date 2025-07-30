@@ -101,7 +101,10 @@ export default function PeriodTrackerPage() {
     },
   });
 
-  const { reset } = form;
+  const { reset, watch } = form;
+  const lastPeriodDate = watch('lastPeriodDate');
+  const cycleLength = watch('cycleLength');
+  const lutealPhaseLength = watch('lutealPhaseLength');
 
   const calculatePredictions = (formData: CycleData) => {
     const { lastPeriodDate, cycleLength, lutealPhaseLength = 14 } = formData;
@@ -110,7 +113,6 @@ export default function PeriodTrackerPage() {
         const today = startOfDay(new Date());
         let currentCycleStart = startOfDay(new Date(lastPeriodDate));
 
-        // Find the start date of the current or most recent cycle
         while (addDays(currentCycleStart, cycleLength) <= today) {
             currentCycleStart = addDays(currentCycleStart, cycleLength);
         }
@@ -119,21 +121,17 @@ export default function PeriodTrackerPage() {
         const allFertileWindows: Date[] = [];
         const allOvulationDays: Date[] = [];
         
-        // Calculate for the current/next 2 cycles
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             const cycleStartDate = addDays(currentCycleStart, cycleLength * i);
             const nextPeriodStart = addDays(cycleStartDate, cycleLength);
             
-            // Ovulation Prediction
             const ovulationDay = addDays(nextPeriodStart, -lutealPhaseLength);
             allOvulationDays.push(ovulationDay);
             
-            // Fertile Window (Ovulation day + 5 days before)
             for (let j = 0; j < 6; j++) {
                 allFertileWindows.push(addDays(ovulationDay, -j));
             }
             
-            // Period Prediction (5 days)
             for (let j = 0; j < 5; j++) {
                 allPredictedPeriods.push(addDays(nextPeriodStart, j));
             }
@@ -143,7 +141,6 @@ export default function PeriodTrackerPage() {
         setFertileWindows(allFertileWindows);
         setOvulationDays(allOvulationDays);
 
-        // Update Summary
         const upcomingPeriodStart = addDays(currentCycleStart, cycleLength);
         const nextPeriodIn = differenceInDays(upcomingPeriodStart, today);
         const dayOfCycle = differenceInDays(today, currentCycleStart) + 1;
@@ -156,21 +153,21 @@ export default function PeriodTrackerPage() {
         else if (isSameDay(today, ovDay)) phase = 'Ovulation';
         else if (isWithinInterval(today, { start: addDays(ovDay, 1), end: addDays(upcomingPeriodStart, -1) })) phase = 'Luteal';
 
-        // Get today's symptoms
         const todayKey = `glowher-log-${format(today, 'yyyy-MM-dd')}`;
         let symptomsToday = 'N/A';
         try {
             const log = localStorage.getItem(todayKey);
             if (log) {
                 const parsedLog = JSON.parse(log);
-                if (parsedLog.symptoms && parsedLog.symptoms.length > 0) {
-                    symptomsToday = parsedLog.symptoms.join(', ');
+                const allSymptoms = [...(parsedLog.symptoms || []), parsedLog.otherSymptom].filter(Boolean);
+                if (allSymptoms.length > 0) {
+                    symptomsToday = allSymptoms.join(', ');
                 }
             }
         } catch(e) {}
 
         setSummary({
-            nextPeriodIn: nextPeriodIn > 0 ? `${nextPeriodIn} days` : 'Today',
+            nextPeriodIn: nextPeriodIn >= 0 ? `${nextPeriodIn} days` : 'Today',
             currentPhase: phase,
             dayOfCycle: `${dayOfCycle}`,
             symptoms: symptomsToday,
@@ -186,7 +183,6 @@ export default function PeriodTrackerPage() {
         const data = JSON.parse(storedData);
         data.lastPeriodDate = new Date(data.lastPeriodDate);
         reset(data);
-        calculatePredictions(data);
       } else {
         const userDetails = localStorage.getItem('glowher-user');
         if (userDetails) {
@@ -199,15 +195,20 @@ export default function PeriodTrackerPage() {
                 };
                 reset(initialData);
                 localStorage.setItem('glowher-period-tracker', JSON.stringify(initialData));
-                calculatePredictions(initialData);
             }
         }
       }
     } catch (error) {
       console.error("Could not retrieve data from localStorage", error);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reset]);
+
+  useEffect(() => {
+    if(lastPeriodDate && cycleLength) {
+        calculatePredictions({ lastPeriodDate, cycleLength, lutealPhaseLength });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastPeriodDate, cycleLength, lutealPhaseLength]);
 
 
   function onSubmit(values: CycleData) {
@@ -296,14 +297,14 @@ export default function PeriodTrackerPage() {
                         <div className="w-full">
                             <h2 className="font-headline text-2xl text-slate-800 mb-4 text-center">Mini Tracker Summary</h2>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">⏳ Next Period In</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.nextPeriodIn}</p></CardHeader></Card>
-                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">🌸 Current Phase</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.currentPhase}</p></CardHeader></Card>
-                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">🗓️ Day of Cycle</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.dayOfCycle}</p></CardHeader></Card>
-                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800">🩺 Symptoms Today</CardTitle><p className="text-lg font-bold text-rose-900 truncate" title={summary.symptoms}>{summary.symptoms}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800 flex items-center justify-center gap-1">⏳ Next Period In</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.nextPeriodIn}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800 flex items-center justify-center gap-1">🌸 Current Phase</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.currentPhase}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800 flex items-center justify-center gap-1">🗓️ Day of Cycle</CardTitle><p className="text-2xl font-bold text-rose-900">{summary.dayOfCycle}</p></CardHeader></Card>
+                                <Card className="bg-white/80 border-rose-300 text-center"><CardHeader><CardTitle className="text-sm font-semibold text-slate-800 flex items-center justify-center gap-1">🩺 Symptoms Today</CardTitle><p className="text-lg font-bold text-rose-900 truncate" title={summary.symptoms}>{summary.symptoms}</p></CardHeader></Card>
                             </div>
                         </div>
 
-                         <Alert className="bg-rose-100/80 border-rose-300 w-full">
+                         <Alert className="bg-white/80 backdrop-blur-sm border-rose-300 w-full">
                             <currentPhaseInfo.icon className="h-5 w-5 text-rose-600" />
                             <AlertTitle className="font-headline text-xl text-slate-800">{currentPhaseInfo.title}</AlertTitle>
                             <AlertDescription>
