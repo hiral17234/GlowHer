@@ -106,76 +106,82 @@ export default function PeriodTrackerPage() {
   const cycleLength = watch('cycleLength');
   const lutealPhaseLength = watch('lutealPhaseLength');
 
-  const calculatePredictions = (formData: CycleData) => {
-    const { lastPeriodDate, cycleLength, lutealPhaseLength = 14 } = formData;
-
-    if (lastPeriodDate && cycleLength) {
-        const today = startOfDay(new Date());
-        let currentCycleStart = startOfDay(new Date(lastPeriodDate));
-
-        while (addDays(currentCycleStart, cycleLength) <= today) {
-            currentCycleStart = addDays(currentCycleStart, cycleLength);
-        }
-
-        const allPredictedPeriods: Date[] = [];
-        const allFertileWindows: Date[] = [];
-        const allOvulationDays: Date[] = [];
-        
-        for (let i = 0; i < 2; i++) {
-            const cycleStartDate = addDays(currentCycleStart, cycleLength * i);
-            const nextPeriodStart = addDays(cycleStartDate, cycleLength);
-            
-            const ovulationDay = addDays(nextPeriodStart, -lutealPhaseLength);
-            allOvulationDays.push(ovulationDay);
-            
-            // Fertile window is ovulation day + 5 days before it
-            for (let j = 0; j <= 5; j++) {
-                allFertileWindows.push(addDays(ovulationDay, -j));
-            }
-            
-            // Period duration is 5 days
-            for (let j = 0; j < 5; j++) {
-                allPredictedPeriods.push(addDays(nextPeriodStart, j));
-            }
-        }
-        
-        setPredictedPeriods(allPredictedPeriods);
-        setFertileWindows(allFertileWindows);
-        setOvulationDays(allOvulationDays);
-
-        const upcomingPeriodStart = addDays(currentCycleStart, cycleLength);
-        const nextPeriodIn = differenceInDays(upcomingPeriodStart, today);
-        const dayOfCycle = differenceInDays(today, currentCycleStart) + 1;
-        
-        const periodEnd = addDays(currentCycleStart, 4);
-        const ovDay = addDays(upcomingPeriodStart, -lutealPhaseLength);
-        let phase: CyclePhase = 'None';
-        if (isWithinInterval(today, { start: currentCycleStart, end: periodEnd })) phase = 'Menstrual';
-        else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: addDays(ovDay, -1) })) phase = 'Follicular';
-        else if (isSameDay(today, ovDay)) phase = 'Ovulation';
-        else if (isWithinInterval(today, { start: addDays(ovDay, 1), end: addDays(upcomingPeriodStart, -1) })) phase = 'Luteal';
-
-        const todayKey = `glowher-log-${format(today, 'yyyy-MM-dd')}`;
-        let symptomsToday = 'No';
-        try {
-            const log = localStorage.getItem(todayKey);
-            if (log) {
-                const parsedLog = JSON.parse(log);
-                const allSymptoms = [...(parsedLog.symptoms || []), parsedLog.otherSymptom].filter(Boolean);
-                if (allSymptoms.length > 0) {
-                    symptomsToday = 'Yes';
-                }
-            }
-        } catch(e) {}
-
-        setSummary({
-            nextPeriodIn: nextPeriodIn >= 0 ? `${nextPeriodIn} days` : 'Today',
-            currentPhase: phase,
-            dayOfCycle: `${dayOfCycle}`,
-            symptoms: symptomsToday,
-        });
+  useEffect(() => {
+    const calculatePredictions = (formData: CycleData) => {
+      const { lastPeriodDate, cycleLength, lutealPhaseLength = 14 } = formData;
+  
+      if (lastPeriodDate && cycleLength) {
+          const today = startOfDay(new Date());
+          let currentCycleStart = startOfDay(new Date(lastPeriodDate));
+  
+          while (addDays(currentCycleStart, cycleLength) <= today) {
+              currentCycleStart = addDays(currentCycleStart, cycleLength);
+          }
+  
+          const allPredictedPeriods: Date[] = [];
+          const allFertileWindows: Date[] = [];
+          const allOvulationDays: Date[] = [];
+          
+          for (let i = 0; i < 2; i++) {
+              const cycleStartDate = addDays(currentCycleStart, cycleLength * i);
+              const nextPeriodStart = addDays(cycleStartDate, cycleLength);
+              
+              const ovulationDay = addDays(nextPeriodStart, -lutealPhaseLength);
+              allOvulationDays.push(ovulationDay);
+              
+              // Fertile window is ovulation day + 5 days before it
+              for (let j = 0; j <= 5; j++) {
+                  allFertileWindows.push(addDays(ovulationDay, -j));
+              }
+              
+              // Period duration is 5 days
+              for (let j = 0; j < 5; j++) {
+                  allPredictedPeriods.push(addDays(nextPeriodStart, j));
+              }
+          }
+          
+          setPredictedPeriods(allPredictedPeriods);
+          setFertileWindows(allFertileWindows);
+          setOvulationDays(allOvulationDays);
+  
+          const upcomingPeriodStart = addDays(currentCycleStart, cycleLength);
+          const nextPeriodIn = differenceInDays(upcomingPeriodStart, today);
+          const dayOfCycle = differenceInDays(today, currentCycleStart) + 1;
+          
+          const periodEnd = addDays(currentCycleStart, 4);
+          const ovDay = addDays(upcomingPeriodStart, -lutealPhaseLength);
+          let phase: CyclePhase = 'None';
+          if (isWithinInterval(today, { start: currentCycleStart, end: periodEnd })) phase = 'Menstrual';
+          else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: addDays(ovDay, -1) })) phase = 'Follicular';
+          else if (isSameDay(today, ovDay)) phase = 'Ovulation';
+          else if (isWithinInterval(today, { start: addDays(ovDay, 1), end: addDays(upcomingPeriodStart, -1) })) phase = 'Luteal';
+  
+          const todayKey = `glowher-log-${format(today, 'yyyy-MM-dd')}`;
+          let symptomsToday = 'No';
+          try {
+              const log = localStorage.getItem(todayKey);
+              if (log) {
+                  const parsedLog = JSON.parse(log);
+                  const allSymptoms = [...(parsedLog.symptoms || []), parsedLog.otherSymptom].filter(Boolean);
+                  if (allSymptoms.length > 0) {
+                      symptomsToday = 'Yes';
+                  }
+              }
+          } catch(e) {}
+  
+          setSummary({
+              nextPeriodIn: nextPeriodIn >= 0 ? `${nextPeriodIn} days` : 'Today',
+              currentPhase: phase,
+              dayOfCycle: `${dayOfCycle}`,
+              symptoms: symptomsToday,
+          });
+      }
+    };
+    if(lastPeriodDate && cycleLength) {
+        calculatePredictions({ lastPeriodDate, cycleLength, lutealPhaseLength });
     }
-  };
+  }, [lastPeriodDate, cycleLength, lutealPhaseLength]);
+
 
   useEffect(() => {
     try {
@@ -204,12 +210,6 @@ export default function PeriodTrackerPage() {
     }
   }, [reset]);
 
-  useEffect(() => {
-    if(lastPeriodDate && cycleLength) {
-        calculatePredictions({ lastPeriodDate, cycleLength, lutealPhaseLength });
-    }
-  }, [lastPeriodDate, cycleLength, lutealPhaseLength]);
-
 
   function onSubmit(values: CycleData) {
     try {
@@ -218,7 +218,6 @@ export default function PeriodTrackerPage() {
         title: "Success!",
         description: "Your cycle predictions have been updated.",
       });
-      calculatePredictions(values);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -245,7 +244,7 @@ export default function PeriodTrackerPage() {
 
             <main className="flex-grow container mx-auto px-4 py-8">
                 <div className="text-center mb-10">
-                    <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900">Period Tracker</h1>
+                    <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-800">Period Tracker</h1>
                     <p className="mt-2 text-lg text-slate-600">Your personal cycle and wellness guide</p>
                 </div>
 
@@ -259,7 +258,7 @@ export default function PeriodTrackerPage() {
                         <CardContent>
                             <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                <FormField control={form.control} name="lastPeriodDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Last Period Start Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
+                                <FormField control={form.control} name="lastPeriodDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Last Period Start Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-end text-right font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
                                 <FormField control={form.control} name="cycleLength" render={({ field }) => (<FormItem><FormLabel>Average Cycle Length (days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                                 <FormField control={form.control} name="lutealPhaseLength" render={({ field }) => (<FormItem><div className="flex items-center gap-2"><FormLabel>Luteal Phase Length</FormLabel><TooltipProvider><Tooltip><TooltipTrigger asChild><button type="button" aria-label="Luteal phase info" onClick={(e) => e.preventDefault()}><Info className="h-4 w-4 text-muted-foreground cursor-pointer" /></button></TooltipTrigger><TooltipContent><p className="max-w-xs">The time between ovulation and your next period. Usually 10-18 days.</p></TooltipContent></Tooltip></TooltipProvider></div><FormControl><Input type="number" placeholder="Default: 14" min="10" max="18" {...field} /></FormControl><FormMessage /></FormItem>)}/>
                                 <Button type="submit" size="lg" className="w-full bg-rose-500 hover:bg-rose-600 text-white">Save & Calculate</Button>
