@@ -7,7 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronLeft, Trash2, Languages } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Trash2, Languages, Moon, Sun } from 'lucide-react';
+import { useTheme } from "next-themes";
+
 
 import { cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,8 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/hooks/use-language';
+import { Switch } from '@/components/ui/switch';
+
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -56,9 +60,10 @@ const translations = {
         lastPeriod: "Last Period Start Date",
         saveDetails: "Save Details",
         preferences: "Preferences",
-        preferencesDesc: "Customize the language of the app.",
+        preferencesDesc: "Customize the language and appearance of the app.",
         language: "Language",
         languagePlaceholder: "Select language",
+        darkMode: "Dark Mode",
         dangerZone: "Danger Zone",
         clearData: "Clear All Data",
         clearDataDesc: "This will permanently delete all your data from this browser.",
@@ -86,9 +91,10 @@ const translations = {
         lastPeriod: "अंतिम पीरियड की प्रारंभ तिथि",
         saveDetails: "विवरण सहेजें",
         preferences: "प्राथमिकताएं",
-        preferencesDesc: "ऐप की भाषा अनुकूलित करें।",
+        preferencesDesc: "ऐप की भाषा और उपस्थिति को अनुकूलित करें।",
         language: "भाषा",
         languagePlaceholder: "भाषा चुनें",
+        darkMode: "डार्क मोड",
         dangerZone: "खतरनाक क्षेत्र",
         clearData: "सभी डेटा साफ़ करें",
         clearDataDesc: "यह इस ब्राउज़र से आपके सभी डेटा को स्थायी रूप से हटा देगा।",
@@ -104,6 +110,7 @@ const translations = {
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
   
   const t = translations[language];
@@ -212,6 +219,18 @@ export default function SettingsPage() {
                         <CardDescription>{t.preferencesDesc}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <Label htmlFor="dark-mode" className="text-base flex items-center gap-2">
+                                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                <span className="ml-2">{t.darkMode}</span>
+                            </Label>
+                             <Switch
+                                id="dark-mode"
+                                checked={theme === 'dark'}
+                                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                            />
+                        </div>
                         <div className="flex items-center justify-between">
                             <Label htmlFor="language-switcher" className="text-base flex items-center gap-2"><Languages className="h-5 w-5" /> {t.language}</Label>
                             <Select value={language} onValueChange={(val) => setLanguage(val as 'en' | 'hi')}>
