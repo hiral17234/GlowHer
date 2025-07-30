@@ -87,23 +87,30 @@ export default function SleepTrackerPage() {
 
   const calculateAchievements = () => {
     try {
-        let goodSleepDays = 0;
+        let goodSleepStreak = 0;
         let consistentQualityStreak = 0;
         const today = startOfDay(new Date());
 
-        for (let i = 0; i < 7; i++) { // Check last 7 days for star achievement
+        // Check for 3-day streak of 8+ hours
+        for (let i = 0; i < 7; i++) {
             const dateToCheck = subDays(today, i);
             const dateKey = format(dateToCheck, 'yyyy-MM-dd');
             const logData = localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}${dateKey}`);
             if (logData) {
                 const log: FormData = JSON.parse(logData);
-                if(log.sleepDuration[0] >= 8) {
-                    goodSleepDays++;
+                if (log.sleepDuration[0] >= 8) {
+                    goodSleepStreak++;
+                } else {
+                    goodSleepStreak = 0; // Reset streak if a day is missed
                 }
+            } else {
+                 goodSleepStreak = 0; // Reset streak if a day is missed
             }
+             if (goodSleepStreak >= 3) break;
         }
-        
-        for (let i = 0; i < 7; i++) { // Check last 7 days for queen achievement
+
+        // Check for 7-day streak of good/excellent quality
+        for (let i = 0; i < 7; i++) {
             const dateToCheck = subDays(today, i);
             const dateKey = format(dateToCheck, 'yyyy-MM-dd');
             const logData = localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}${dateKey}`);
@@ -120,7 +127,7 @@ export default function SleepTrackerPage() {
         }
         
         setAchievements({
-            star: goodSleepDays >= 3,
+            star: goodSleepStreak >= 3,
             queen: consistentQualityStreak >= 7,
         });
     } catch (e) {
@@ -492,7 +499,7 @@ export default function SleepTrackerPage() {
                             <Award className="h-8 w-8" />
                             <div>
                                 <h4 className="font-semibold">Sleep Star</h4>
-                                <p className="text-sm">Log 8+ hours of sleep for 3 days.</p>
+                                <p className="text-sm">Log 8+ hours of sleep for 3 days in a row.</p>
                             </div>
                         </div>
                         <div className={cn(

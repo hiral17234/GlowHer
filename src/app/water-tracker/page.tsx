@@ -107,9 +107,10 @@ export default function WaterTrackerPage() {
         try {
             let streak = 0;
             const today = startOfDay(new Date());
-            let dailyGoal = 8; // Default
+            let dailyGoal = 8; // Default goal in cups
+            
             const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
-             if (savedSettings) {
+            if (savedSettings) {
                 dailyGoal = JSON.parse(savedSettings).goal || 8;
             }
 
@@ -123,10 +124,11 @@ export default function WaterTrackerPage() {
                     if (totalIntake >= dailyGoal) {
                         streak++;
                     } else {
-                        break; // Streak is broken
+                        break; // Streak is broken if goal not met
                     }
                 } else {
-                    if (i > 0) break; // Streak broken if yesterday or earlier is missing
+                    if (i === 0) continue; // Don't break streak on the current day if nothing is logged yet
+                    break; // Streak is broken if a previous day is missed
                 }
             }
             setHydrationStreak(streak);
@@ -149,7 +151,7 @@ export default function WaterTrackerPage() {
             if (savedGoal && savedUnit) {
                 setGoal(savedGoal);
                 setUnit(savedUnit);
-                settingsForm.setValue('goal', savedGoal * unitConversions[savedUnit]);
+                settingsForm.setValue('goal', Math.round(savedGoal * unitConversions[savedUnit]));
             }
         }
         const savedReminders = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}reminders`);

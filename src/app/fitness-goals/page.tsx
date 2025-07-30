@@ -174,7 +174,14 @@ export default function FitnessGoalsPage() {
         const today = startOfDay(new Date());
         let currentStreak = 0;
         
-        for (let i = 0; i < 30; i++) { // check up to 30 days for a long streak
+        // Check today's log first
+        const todayKey = format(today, 'yyyy-MM-dd');
+        if (localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${todayKey}`)) {
+            currentStreak++;
+        }
+
+        // Then check previous days
+        for (let i = 1; i < 30; i++) { // check up to 29 previous days
             const dateToCheck = subDays(today, i);
             const dateKey = format(dateToCheck, 'yyyy-MM-dd');
             const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${dateKey}`);
@@ -360,5 +367,3 @@ export default function FitnessGoalsPage() {
         </div>
     );
 }
-
-    
