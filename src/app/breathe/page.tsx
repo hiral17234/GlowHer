@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Brain, ChevronLeft } from 'lucide-react';
+import { Brain, ChevronLeft, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const breathingCycle = [
@@ -28,6 +28,7 @@ export default function BreathePage() {
     const [cycleText, setCycleText] = useState('Get Ready...');
     const [audioSrc, setAudioSrc] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const [isBreathing, setIsBreathing] = useState(false);
 
 
     useEffect(() => {
@@ -43,15 +44,8 @@ export default function BreathePage() {
     }, []);
 
     useEffect(() => {
-        if (audioSrc && audioRef.current) {
-            audioRef.current.play().catch(error => {
-                // Autoplay was prevented.
-                console.error("Audio autoplay was prevented:", error);
-            });
-        }
-    }, [audioSrc]);
+        if (!isBreathing) return;
 
-    useEffect(() => {
         // Breathing animation logic
         const totalDuration = breathingCycle.reduce((sum, cycle) => sum + cycle.duration, 0);
 
@@ -62,10 +56,10 @@ export default function BreathePage() {
         }, totalDuration);
 
         // Set initial text
-        setTimeout(() => setCycleText(breathingCycle[0].text), 2000);
+        setCycleText(breathingCycle[0].text);
 
         return () => clearInterval(cycleInterval);
-    }, []);
+    }, [isBreathing]);
     
     const handleGoBack = () => {
         if (audioRef.current) {
@@ -80,6 +74,13 @@ export default function BreathePage() {
         }
         router.push('/');
     };
+    
+    const startBreathing = () => {
+        setIsBreathing(true);
+        if(audioRef.current) {
+            audioRef.current.play().catch(e => console.error("Error playing audio: ", e));
+        }
+    }
 
     return (
         <div 
@@ -104,15 +105,31 @@ export default function BreathePage() {
                 <p className="text-white/80">Write it. Dump it. Breathe.</p>
 
                 <div className="relative h-48 flex items-center justify-center">
-                    <div className="absolute w-48 h-48 bg-blue-400 rounded-full opacity-50 blur-2xl animate-breath" />
-                    <p className="text-2xl font-semibold z-10">{cycleText}</p>
+                    <div 
+                        className={cn(
+                            "absolute w-48 h-48 bg-blue-400 rounded-full opacity-50 blur-2xl",
+                             isBreathing && "animate-breath"
+                        )} 
+                    />
+                    <p className="text-2xl font-semibold z-10">{isBreathing ? cycleText : 'Ready to begin?'}</p>
                 </div>
 
-                <p className="text-green-300 font-semibold">Your thoughts have been released. ✨</p>
-                <p className="text-white/90">Breathe with the circle...</p>
-                 <Button onClick={handleFinish} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
-                    Finish
-                </Button>
+                {!isBreathing && (
+                    <Button onClick={startBreathing} className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
+                        <Play className="mr-2 h-5 w-5"/>
+                        Begin Breathing
+                    </Button>
+                )}
+
+                {isBreathing && (
+                    <>
+                        <p className="text-green-300 font-semibold">Your thoughts have been released. ✨</p>
+                        <p className="text-white/90">Breathe with the circle...</p>
+                         <Button onClick={handleFinish} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
+                            Finish
+                        </Button>
+                    </>
+                )}
             </div>
              <style jsx>{`
                 @keyframes breath {
