@@ -54,40 +54,40 @@ const fireQuizQuestions = [
 
 const adviceMap: Record<string, Record<string, string>> = {
     fireFeeling: {
-      "A comforting warmth, like a fireplace.": "You seek comfort and safety. Your inner fire provides a gentle, reliable source of light. Tip: Nurture this warmth by creating cozy rituals, like enjoying a warm drink or reading a book in a quiet corner.",
-      "An exciting energy, like a bonfire.": "You're drawn to community and vibrant energy. Your inner fire thrives on connection and shared experiences. Tip: Organize a small gathering or join a group activity that excites you to fuel this social flame.",
-      "A powerful force of creation or destruction.": "You recognize the immense power within you. Your fire can transform things, create new paths, or clear away the old. Tip: Channel this power into a creative project or a decluttering session to harness its constructive force.",
-      "A flickering flame of a single candle.": "You find beauty in quiet introspection and simplicity. Your inner fire is a focused point of light in the darkness. Tip: Embrace moments of solitude. A short, five-minute meditation can help you connect with your inner candle.",
+      "A comforting warmth, like a fireplace.": "🏡 You seek comfort and safety. Your inner fire provides a gentle, reliable source of light. Tip: Nurture this warmth by creating cozy rituals, like enjoying a warm drink ☕ or reading a book in a quiet corner.",
+      "An exciting energy, like a bonfire.": "🎉 You're drawn to community and vibrant energy. Your inner fire thrives on connection and shared experiences. Tip: Organize a small gathering or join a group activity that excites you to fuel this social flame.",
+      "A powerful force of creation or destruction.": "💥 You recognize the immense power within you. Your fire can transform things, create new paths, or clear away the old. Tip: Channel this power into a creative project or a decluttering session to harness its constructive force.",
+      "A flickering flame of a single candle.": "🕯️ You find beauty in quiet introspection and simplicity. Your inner fire is a focused point of light in the darkness. Tip: Embrace moments of solitude. A short, five-minute meditation can help you connect with your inner candle.",
     },
     passionMeaning: {
-        "A deep love for my hobbies and interests.": "Your passion is rooted in personal joy and self-expression. Tip: Dedicate a small, sacred block of time this week exclusively to a hobby that makes you feel alive, no matter how simple.",
-        "A romantic connection with someone.": "Your passion is currently focused on partnership and shared intimacy. Tip: Plan a special, uninterrupted moment with your partner to share appreciation and connect on a deeper level.",
-        "A driving ambition towards a professional goal.": "Your passion is directed towards achievement and growth in your career. Tip: Acknowledge a recent professional win, no matter how small. Celebrate the progress you've already made.",
-        "A quiet, steady dedication to my values.": "Your passion is a guiding principle, a compass that informs your choices. Tip: Reflect on one decision you made this week that aligned with your core values and feel the quiet strength in that consistency.",
+        "A deep love for my hobbies and interests.": "🎨 Your passion is rooted in personal joy and self-expression. Tip: Dedicate a small, sacred block of time this week exclusively to a hobby that makes you feel alive, no matter how simple.",
+        "A romantic connection with someone.": "💞 Your passion is currently focused on partnership and shared intimacy. Tip: Plan a special, uninterrupted moment with your partner to share appreciation and connect on a deeper level.",
+        "A driving ambition towards a professional goal.": "💼 Your passion is directed towards achievement and growth in your career. Tip: Acknowledge a recent professional win, no matter how small. Celebrate the progress you've already made. 🏆",
+        "A quiet, steady dedication to my values.": "🧭 Your passion is a guiding principle, a compass that informs your choices. Tip: Reflect on one decision you made this week that aligned with your core values and feel the quiet strength in that consistency.",
     },
     energyFlame: {
-        "Like a slow, steady, controlled burn.": "You have sustainable, enduring energy. You are reliable and consistent. Tip: This steady flame is perfect for long-term projects. Break a large goal into small, manageable steps to make consistent progress.",
-        "Like a roaring, energetic bonfire.": "Your energy is high and infectious right now! You have the power to accomplish a lot. Tip: Harness this peak energy for a task that requires a big push, but also schedule downtime to avoid burning out.",
-        "Like a tiny, flickering pilot light.": "Your energy reserves are low, and that's okay. It’s a time for conservation and gentleness. Tip: Protect your pilot light. Say 'no' to one non-essential request this week and use that time for rest.",
-        "Like scattered, unpredictable sparks.": "Your energy may feel unfocused and erratic, pulling you in many directions. Tip: Ground yourself. Spend a few minutes with your feet on the earth or practice a simple breathing exercise to gather your sparks.",
+        "Like a slow, steady, controlled burn.": " tortoise You have sustainable, enduring energy. You are reliable and consistent. Tip: This steady flame is perfect for long-term projects. Break a large goal into small, manageable steps to make consistent progress.",
+        "Like a roaring, energetic bonfire.": "🦁 Your energy is high and infectious right now! You have the power to accomplish a lot. Tip: Harness this peak energy for a task that requires a big push, but also schedule downtime to avoid burning out.",
+        "Like a tiny, flickering pilot light.": "💡 Your energy reserves are low, and that's okay. It’s a time for conservation and gentleness. Tip: Protect your pilot light. Say 'no' to one non-essential request this week and use that time for rest.",
+        "Like scattered, unpredictable sparks.": "✨ Your energy may feel unfocused and erratic, pulling you in many directions. Tip: Ground yourself. Spend a few minutes with your feet on the earth or practice a simple breathing exercise to gather your sparks.",
     },
     creativeSpark: {
-        "A spark of inspiration for a new project.": "You are ready to create something new. Tip: Feed your muse by visiting a new place, listening to different music, or simply allowing yourself to daydream for 15 minutes without a goal.",
-        "A spark of connection in my relationships.": "You are seeking deeper bonds with others. Tip: Reach out to one person you care about with a simple, heartfelt message, asking them a thoughtful question about their life.",
-        "A spark of joy in my daily routine.": "You are looking to infuse the mundane with magic. Tip: Intentionally add one small, delightful thing to your day—wear your favorite color, buy the nice coffee, or play your favorite song loudly.",
-        "A spark of confidence in myself.": "You are seeking to build your inner strength and self-belief. Tip: Write down three things you like about yourself or three accomplishments you're proud of, and read them back to yourself.",
+        "A spark of inspiration for a new project.": "💡 You are ready to create something new. Tip: Feed your muse by visiting a new place, listening to different music, or simply allowing yourself to daydream for 15 minutes without a goal.",
+        "A spark of connection in my relationships.": "🤝 You are seeking deeper bonds with others. Tip: Reach out to one person you care about with a simple, heartfelt message, asking them a thoughtful question about their life.",
+        "A spark of joy in my daily routine.": "💖 You are looking to infuse the mundane with magic. Tip: Intentionally add one small, delightful thing to your day—wear your favorite color, buy the nice coffee, or play your favorite song loudly.",
+        "A spark of confidence in myself.": "💪 You are seeking to build your inner strength and self-belief. Tip: Write down three things you like about yourself or three accomplishments you're proud of, and read them back to yourself.",
     },
     challengeFire: {
-        "The fire of determination to overcome it.": "You face challenges head-on with persistence. Tip: Your determination is a great strength. Remember to also allow for moments of rest so your determination doesn't lead to burnout.",
-        "The fire of creativity to find a new way.": "You see obstacles as opportunities for innovation. Tip: When you feel stuck, change your physical environment. A short walk can often spark a new perspective.",
-        "The fire of patience to wait for the right moment.": "You possess the wisdom to know that not everything requires immediate action. Tip: Your patience is a superpower. Use your waiting time for reflection and gathering strength, not just for idleness.",
-        "The fire of courage to ask for help.": "You know that true strength lies in vulnerability and community. Tip: Identify one person in your support system you can lean on, and don't hesitate to reach out. It strengthens both of you.",
+        "The fire of determination to overcome it.": "🔥 You face challenges head-on with persistence. Tip: Your determination is a great strength. Remember to also allow for moments of rest so your determination doesn't lead to burnout.",
+        "The fire of creativity to find a new way.": "🎨 You see obstacles as opportunities for innovation. Tip: When you feel stuck, change your physical environment. A short walk can often spark a new perspective.",
+        "The fire of patience to wait for the right moment.": "⏳ You possess the wisdom to know that not everything requires immediate action. Tip: Your patience is a superpower. Use your waiting time for reflection and gathering strength, not just for idleness.",
+        "The fire of courage to ask for help.": "🫂 You know that true strength lies in vulnerability and community. Tip: Identify one person in your support system you can lean on, and don't hesitate to reach out. It strengthens both of you.",
     },
     burnAway: {
-        "Self-doubt and insecurity.": "You are ready to release the inner critic. Tip: When a doubtful thought arises, gently counter it with a past success or a quality you are proud of. Act as your own best friend.",
-        "Old habits that no longer serve me.": "You are prepared for positive change. Tip: Start small. Choose one old habit and replace it with a new, positive one for just one day. Celebrate that small victory.",
-        "Lingering resentment or anger.": "You are seeking peace by letting go of past hurts. Tip: Write down your feelings of resentment on a piece of paper, and then safely burn it (or tear it up) as a symbolic act of release.",
-        "The pressure of external expectations.": "You are ready to live more authentically for yourself. Tip: Practice tuning into your own needs. Ask yourself, 'What do *I* want right now?' before considering others' expectations.",
+        "Self-doubt and insecurity.": "🦋 You are ready to release the inner critic. Tip: When a doubtful thought arises, gently counter it with a past success or a quality you are proud of. Act as your own best friend.",
+        "Old habits that no longer serve me.": "🌱 You are prepared for positive change. Tip: Start small. Choose one old habit and replace it with a new, positive one for just one day. Celebrate that small victory.",
+        "Lingering resentment or anger.": "🕊️ You are seeking peace by letting go of past hurts. Tip: Write down your feelings of resentment on a piece of paper, and then safely burn it (or tear it up) as a symbolic act of release.",
+        "The pressure of external expectations.": "🎧 You are ready to live more authentically for yourself. Tip: Practice tuning into your own needs. Ask yourself, 'What do *I* want right now?' before considering others' expectations.",
     }
 };
 
@@ -159,6 +159,20 @@ export default function FireAuraPage() {
                 </div>
             </header>
             <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
+                 <div className="w-full max-w-2xl mx-auto text-center p-6 space-y-6">
+                    <h2 className="text-3xl font-headline">Your Fire Aura Music</h2>
+                     <div className="aspect-video">
+                        <iframe
+                            className="w-full h-full rounded-lg shadow-xl"
+                            src={`https://www.youtube.com/embed/${videoId}`}
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                </div>
+
                 <Card className="w-full max-w-4xl mx-auto shadow-lg">
                     <CardHeader>
                         <CardDescription>Turn on the music below to feel relaxed.</CardDescription>
@@ -236,21 +250,6 @@ export default function FireAuraPage() {
                         )}
                     </CardContent>
                  </Card>
-
-
-                <div className="w-full max-w-2xl mx-auto text-center p-6 space-y-6">
-                    <h2 className="text-3xl font-headline">Your Fire Aura Music</h2>
-                     <div className="aspect-video">
-                        <iframe
-                            className="w-full h-full rounded-lg shadow-xl"
-                            src={`https://www.youtube.com/embed/${videoId}`}
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
-                    </div>
-                </div>
             </main>
              <style jsx>{`
                 @keyframes breath-aura {
@@ -264,3 +263,5 @@ export default function FireAuraPage() {
         </div>
     );
 }
+
+    
