@@ -150,215 +150,220 @@ export default function LogSymptomsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="container mx-auto px-4 py-6 z-10">
-        <div className="flex justify-between items-center">
-          <GlowHerLogo />
-          <Button variant="ghost" onClick={() => router.push('/')}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
-        </div>
-      </header>
+    <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/736x/a8/c0/22/a8c02279a245ff9f59552f4707748b36.jpg')"}}>
+       <div className="absolute inset-0 bg-black/30 z-0"/>
+       <div className="relative z-10 flex flex-col min-h-screen text-white">
+        <header className="container mx-auto px-4 py-6">
+            <div className="flex justify-between items-center">
+            <GlowHerLogo />
+            <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:text-white hover:bg-white/10">
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Back to Dashboard
+            </Button>
+            </div>
+        </header>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8 p-4 rounded-lg">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">How Are You Feeling Today?</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Track your symptoms and emotions to understand your body better.</p>
-          </div>
+        <main className="flex-grow container mx-auto px-4 py-8">
+            <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8 p-4 rounded-lg">
+                <h1 className="font-headline text-4xl md:text-5xl font-bold text-shadow-lg">How Are You Feeling Today?</h1>
+                <p className="mt-2 text-lg text-white/90">Track your symptoms and emotions to understand your body better.</p>
+            </div>
 
-          <Card className="shadow-lg">
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    <CardTitle>Create a New Log</CardTitle>
-                    <Button variant="outline" onClick={() => router.push('/log-history')}>
-                        <History className="mr-2 h-4 w-4" />
-                        View History
-                    </Button>
-                </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                  <FormField
-                    control={form.control}
-                    name="logDate"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel className="text-lg font-semibold">Log Date</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={"w-[240px] pl-3 text-left font-normal"}
-                              >
-                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() || date < subDays(new Date(), 30) // Allow logging for a month
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+            <Card className="shadow-lg bg-black/20 backdrop-blur-lg border-white/20 text-white">
+                <CardHeader>
+                    <div className="flex justify-between items-center">
+                        <CardTitle>Create a New Log</CardTitle>
+                        <Button variant="outline" onClick={() => router.push('/log-history')} className="bg-transparent hover:bg-white/10 border-white/30 text-white">
+                            <History className="mr-2 h-4 w-4" />
+                            View History
+                        </Button>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                        control={form.control}
+                        name="logDate"
+                        render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel className="text-lg font-semibold">Log Date</FormLabel>
+                            <Popover>
+                            <PopoverTrigger asChild>
+                                <FormControl>
+                                <Button
+                                    variant={"outline"}
+                                    className={"w-[240px] pl-3 text-left font-normal bg-white/10 border-white/20 hover:bg-white/20"}
+                                >
+                                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                                </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                    date > new Date() || date < subDays(new Date(), 30) // Allow logging for a month
+                                }
+                                initialFocus
+                                />
+                            </PopoverContent>
+                            </Popover>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="symptoms"
-                    render={() => (
-                      <FormItem>
-                        <div className="mb-4">
-                            <FormLabel className="text-lg font-semibold">Select Symptoms You’re Experiencing</FormLabel>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                          {symptomsList.map((item) => (
-                            <FormField
-                              key={item.id}
-                              control={form.control}
-                              name="symptoms"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem
-                                    key={item.id}
-                                    className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-accent transition-colors"
-                                  >
-                                    <FormControl>
-                                      <Checkbox
-                                        checked={field.value?.includes(item.id)}
-                                        onCheckedChange={(checked) => {
-                                          return checked
-                                            ? field.onChange([...(field.value || []), item.id])
-                                            : field.onChange(
-                                                field.value?.filter(
-                                                  (value) => value !== item.id
-                                                )
-                                              );
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormLabel className="font-normal flex items-center gap-2 cursor-pointer">
-                                      <item.icon className="h-5 w-5 text-primary" />
-                                      {item.label}
-                                    </FormLabel>
-                                  </FormItem>
-                                );
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="otherSymptom"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-lg font-semibold flex items-center gap-2"><Plus/> Other</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter any other symptoms..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="mood"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                          <Smile /> Select Your Mood
-                        </FormLabel>
-                        <FormControl>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
-                            {moods.map((mood) => (
-                              <Button
-                                key={mood.name}
-                                type="button"
-                                variant={field.value === mood.name ? "secondary" : "outline"}
-                                className={cn(
-                                  "h-16 text-lg transition-all duration-200 transform hover:scale-105",
-                                  field.value === mood.name && "border-2 border-primary ring-2 ring-primary/50"
-                                )}
-                                onClick={() => field.onChange(mood.name)}
-                              >
-                                <span className="text-3xl mr-2">{mood.emoji}</span> {mood.name}
-                              </Button>
+                    <FormField
+                        control={form.control}
+                        name="symptoms"
+                        render={() => (
+                        <FormItem>
+                            <div className="mb-4">
+                                <FormLabel className="text-lg font-semibold">Select Symptoms You’re Experiencing</FormLabel>
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {symptomsList.map((item) => (
+                                <FormField
+                                key={item.id}
+                                control={form.control}
+                                name="symptoms"
+                                render={({ field }) => {
+                                    return (
+                                    <FormItem
+                                        key={item.id}
+                                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-white/20 p-3 hover:bg-white/10 transition-colors"
+                                    >
+                                        <FormControl>
+                                        <Checkbox
+                                            checked={field.value?.includes(item.id)}
+                                            onCheckedChange={(checked) => {
+                                            return checked
+                                                ? field.onChange([...(field.value || []), item.id])
+                                                : field.onChange(
+                                                    field.value?.filter(
+                                                    (value) => value !== item.id
+                                                    )
+                                                );
+                                            }}
+                                            className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                                        />
+                                        </FormControl>
+                                        <FormLabel className="font-normal flex items-center gap-2 cursor-pointer">
+                                        <item.icon className="h-5 w-5 text-primary" />
+                                        {item.label}
+                                        </FormLabel>
+                                    </FormItem>
+                                    );
+                                }}
+                                />
                             ))}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="moodIntensity"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-lg font-semibold">Mood Intensity ({field.value?.[0]}/10)</FormLabel>
-                        <FormControl>
-                          <Slider
-                            value={field.value}
-                            max={10}
-                            step={1}
-                            onValueChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                          <BookText /> Personal Notes
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Anything else you’d like to record today?"
-                            className="resize-none"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription className="text-right text-muted-foreground">
-                          {notesValue?.length || 0} / 300
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                        control={form.control}
+                        name="otherSymptom"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-lg font-semibold flex items-center gap-2"><Plus/> Other</FormLabel>
+                            <FormControl>
+                            <Input placeholder="Enter any other symptoms..." {...field} className="bg-white/10 border-white/20 placeholder:text-white/60"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
 
-                  <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">Save Log</Button>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+                    <FormField
+                        control={form.control}
+                        name="mood"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                            <Smile /> Select Your Mood
+                            </FormLabel>
+                            <FormControl>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                                {moods.map((mood) => (
+                                <Button
+                                    key={mood.name}
+                                    type="button"
+                                    variant={field.value === mood.name ? "secondary" : "outline"}
+                                    className={cn(
+                                    "h-16 text-lg transition-all duration-200 transform hover:scale-105 bg-white/10 border-white/20 hover:bg-white/20",
+                                    field.value === mood.name && "bg-primary text-primary-foreground border-primary"
+                                    )}
+                                    onClick={() => field.onChange(mood.name)}
+                                >
+                                    <span className="text-3xl mr-2">{mood.emoji}</span> {mood.name}
+                                </Button>
+                                ))}
+                            </div>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    
+                    <FormField
+                        control={form.control}
+                        name="moodIntensity"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-lg font-semibold">Mood Intensity ({field.value?.[0]}/10)</FormLabel>
+                            <FormControl>
+                            <Slider
+                                value={field.value}
+                                max={10}
+                                step={1}
+                                onValueChange={field.onChange}
+                                className="[&>span>span]:bg-primary [&>span]:bg-primary/20"
+                            />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="notes"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                            <BookText /> Personal Notes
+                            </FormLabel>
+                            <FormControl>
+                            <Textarea
+                                placeholder="Anything else you’d like to record today?"
+                                className="resize-none bg-white/10 border-white/20 placeholder:text-white/60"
+                                {...field}
+                            />
+                            </FormControl>
+                            <FormDescription className="text-right text-white/80">
+                            {notesValue?.length || 0} / 300
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+
+                    <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">Save Log</Button>
+                    </form>
+                </Form>
+                </CardContent>
+            </Card>
+            </div>
+        </main>
+      </div>
     </div>
   );
 }
