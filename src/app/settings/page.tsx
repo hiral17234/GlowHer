@@ -1,13 +1,13 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronLeft, Moon, Sun, Trash2, Languages } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Trash2, Languages } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
@@ -56,8 +56,7 @@ const translations = {
         lastPeriod: "Last Period Start Date",
         saveDetails: "Save Details",
         preferences: "Preferences",
-        preferencesDesc: "Customize the look and language of the app.",
-        theme: "Theme",
+        preferencesDesc: "Customize the language of the app.",
         language: "Language",
         languagePlaceholder: "Select language",
         dangerZone: "Danger Zone",
@@ -87,8 +86,7 @@ const translations = {
         lastPeriod: "अंतिम पीरियड की प्रारंभ तिथि",
         saveDetails: "विवरण सहेजें",
         preferences: "प्राथमिकताएं",
-        preferencesDesc: "ऐप का रंगरूप और भाषा अनुकूलित करें।",
-        theme: "थीम",
+        preferencesDesc: "ऐप की भाषा अनुकूलित करें।",
         language: "भाषा",
         languagePlaceholder: "भाषा चुनें",
         dangerZone: "खतरनाक क्षेत्र",
@@ -107,7 +105,6 @@ export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { language, setLanguage } = useLanguage();
-  const [theme, setTheme] = useState('light');
   
   const t = translations[language];
 
@@ -117,10 +114,6 @@ export default function SettingsPage() {
   });
   
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-
     try {
       const storedData = localStorage.getItem('glowher-user');
       if (storedData) {
@@ -153,18 +146,10 @@ export default function SettingsPage() {
     }
   }
 
-  const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
-
   const handleClearData = () => {
     try {
-        const theme = localStorage.getItem('theme');
         const lang = localStorage.getItem('glowher-language');
         localStorage.clear();
-        if(theme) localStorage.setItem('theme', theme);
         if(lang) localStorage.setItem('glowher-language', lang);
         toast({
             title: "Data Cleared",
@@ -222,13 +207,6 @@ export default function SettingsPage() {
                         <CardDescription>{t.preferencesDesc}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="theme-switcher" className="text-base flex items-center gap-2"><Sun className="inline h-5 w-5" /> / <Moon className="inline h-5 w-5" /> {t.theme}</Label>
-                            <div className="flex items-center gap-2 rounded-full border p-1">
-                                <Button variant={theme === 'light' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleThemeChange('light')}><Sun className="h-5 w-5" /></Button>
-                                <Button variant={theme === 'dark' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleThemeChange('dark')}><Moon className="h-5 w-5" /></Button>
-                            </div>
-                        </div>
                         <div className="flex items-center justify-between">
                             <Label htmlFor="language-switcher" className="text-base flex items-center gap-2"><Languages className="h-5 w-5" /> {t.language}</Label>
                             <Select value={language} onValueChange={(val) => setLanguage(val as 'en' | 'hi')}>
