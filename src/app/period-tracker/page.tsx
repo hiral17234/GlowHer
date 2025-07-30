@@ -45,8 +45,8 @@ export default function PeriodTrackerPage() {
     },
   });
 
-  const { watch, reset } = form;
-  const watchedFields = watch();
+  const { watch, reset, getValues } = form;
+  const { lastPeriodDate, cycleLength, lutealPhaseLength } = watch();
 
   useEffect(() => {
     try {
@@ -76,7 +76,7 @@ export default function PeriodTrackerPage() {
   }, [reset]);
 
   useEffect(() => {
-    const { lastPeriodDate, cycleLength, lutealPhaseLength } = watchedFields;
+    const { lastPeriodDate, cycleLength, lutealPhaseLength } = getValues();
 
     if (lastPeriodDate && cycleLength && lutealPhaseLength) {
         const calculatePredictions = () => {
@@ -117,7 +117,7 @@ export default function PeriodTrackerPage() {
         };
         calculatePredictions();
     }
-  }, [watchedFields]);
+  }, [lastPeriodDate, cycleLength, lutealPhaseLength, getValues]);
 
 
   function onSubmit(values: CycleData) {
@@ -277,5 +277,3 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
-
-    
