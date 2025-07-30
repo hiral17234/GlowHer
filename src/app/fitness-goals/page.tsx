@@ -219,7 +219,7 @@ export default function FitnessGoalsPage() {
     function onGoalSubmit(data: DefaultGoalData) { try { localStorage.setItem(DEFAULT_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!"}); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onPregnancyGoalSubmit(data: PregnancyGoalData) { try { localStorage.setItem(PREGNANCY_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!" }); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
-    function onPregnancyLogSubmit(data: Omit<PregnancyLogData, 'minutes'>) {
+    function onPregnancyLogSubmit(data: PregnancyLogData) {
          try {
             const totalMinutes = duration.hours * 60 + duration.minutes;
             const finalData = { ...data, minutes: totalMinutes };
