@@ -150,11 +150,12 @@ export default function LogSymptomsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-cover bg-center bg-fixed" style={{backgroundImage: "url('https://i.pinimg.com/736x/1b/07/3a/1b073a8142ccd30c3a7d24457e2845f4.jpg')"}}>
+        <div className="flex flex-col min-h-screen bg-black/20 backdrop-blur-sm">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
-          <Button variant="ghost" onClick={() => router.push('/')}>
+          <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
@@ -163,12 +164,12 @@ export default function LogSymptomsPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">How Are You Feeling Today?</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Track your symptoms and emotions to understand your body better.</p>
+          <div className="text-center mb-8 p-4 rounded-lg bg-black/10 backdrop-blur-sm">
+            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">How Are You Feeling Today?</h1>
+            <p className="mt-2 text-lg text-white/80">Track your symptoms and emotions to understand your body better.</p>
           </div>
 
-          <Card className="shadow-lg">
+          <Card className="shadow-lg bg-background/80 backdrop-blur-md">
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>Create a New Log</CardTitle>
@@ -359,6 +360,7 @@ export default function LogSymptomsPage() {
           </Card>
         </div>
       </main>
+        </div>
     </div>
   );
 }
