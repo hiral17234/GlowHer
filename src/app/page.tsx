@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { LoaderCircle, AlertTriangle, ShoppingCart, Bell } from 'lucide-react';
+import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { addDays, isBefore, isToday } from 'date-fns';
+import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
@@ -24,26 +24,61 @@ type ShoppingListItem = {
     name: string;
 };
 
+type Notification = {
+    icon: React.ElementType;
+    message: string;
+    color: string;
+};
+
 
 export default function HomePage() {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState<any>(null);
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
     try {
-      // Check for user data
       const storedData = localStorage.getItem('glowher-user');
       if (!storedData) {
         router.replace('/personal-details');
         return;
       }
       
-      setUserData(JSON.parse(storedData));
+      const parsedUserData = JSON.parse(storedData);
+      setUserData(parsedUserData);
       
-      const currentNotifications: string[] = [];
+      const currentNotifications: Notification[] = [];
+      const todayKey = format(new Date(), 'yyyy-MM-dd');
+      const yesterdayKey = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+
+      // Check for Period/Pregnancy status
+      const isPregnant = localStorage.getItem('glowher-fitness-is-pregnant') === 'true';
+      if (isPregnant) {
+        const pregData = localStorage.getItem('glowher-pregnancy-tracker');
+        if (pregData) {
+            const { dueDate } = JSON.parse(pregData);
+            const startDate = subDays(new Date(dueDate), 280);
+            const totalDays = differenceInDays(new Date(), startDate);
+            const gestationalAgeWeeks = Math.floor(totalDays / 7);
+            currentNotifications.push({ icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-500'});
+        }
+      } else {
+        const periodData = localStorage.getItem('glowher-period-tracker');
+        if (periodData) {
+            const data = JSON.parse(periodData);
+            let currentCycleStartDate = startOfDay(new Date(data.lastPeriodDate));
+            while (addDays(currentCycleStartDate, data.cycleLength) <= new Date()) {
+                currentCycleStartDate = addDays(currentCycleStartDate, data.cycleLength);
+            }
+            const nextPeriodStart = addDays(currentCycleStartDate, data.cycleLength);
+            const daysUntil = differenceInDays(nextPeriodStart, new Date());
+            if(daysUntil >= 0 && daysUntil <= 7) {
+                currentNotifications.push({ icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-500'});
+            }
+        }
+      }
 
       // Check for expiring groceries
       const savedInventory = localStorage.getItem('glowher-grocery-list');
@@ -62,7 +97,7 @@ export default function HomePage() {
 
         if (expiringItems.length > 0) {
             const expiringMessage = `Expiring soon: ${expiringItems.map(i => i.name).join(', ')}.`;
-            currentNotifications.push(expiringMessage);
+            currentNotifications.push({ icon: AlertTriangle, message: expiringMessage, color: 'text-destructive'});
             toast({
                 variant: "destructive",
                 title: (
@@ -83,14 +118,33 @@ export default function HomePage() {
           const shoppingList: ShoppingListItem[] = JSON.parse(savedShoppingList);
           if (shoppingList.length > 0) {
               const shoppingMessage = `You have ${shoppingList.length} item(s) on your shopping list.`;
-              currentNotifications.push(shoppingMessage);
+              currentNotifications.push({ icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-500'});
           }
       }
+      
+      // Check sleep log for yesterday
+      const sleepLog = localStorage.getItem(`glowher-sleep-log-${yesterdayKey}`);
+      if (!sleepLog) {
+          currentNotifications.push({ icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-500'});
+      }
+      
+      // Check water log for today
+      const waterLog = localStorage.getItem(`glowher-water-tracker-${todayKey}`);
+      if (!waterLog || JSON.parse(waterLog).entries.length === 0) {
+          currentNotifications.push({ icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-500'});
+      }
+      
+      // Check fitness log for today
+      const fitnessLogKey = isPregnant ? `glowher-preg-fitness-log-${todayKey}` : `glowher-fitness-log-${todayKey}`;
+      const fitnessLog = localStorage.getItem(fitnessLogKey);
+      if (!fitnessLog) {
+          currentNotifications.push({ icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-500'});
+      }
+
       setNotifications(currentNotifications);
 
     } catch (error) {
       console.error("Error during initial load:", error);
-      // If localStorage is not available or other errors occur, redirect
       router.replace('/personal-details');
     } finally {
         setLoading(false);
@@ -125,10 +179,9 @@ export default function HomePage() {
                     <DropdownMenuSeparator />
                     {notifications.length > 0 ? (
                         notifications.map((note, index) => (
-                            <DropdownMenuItem key={index} className="text-sm text-wrap">
-                               {note.includes("Expiring soon") && <AlertTriangle className="mr-2 h-4 w-4 text-destructive" />}
-                               {note.includes("shopping list") && <ShoppingCart className="mr-2 h-4 w-4 text-blue-500" />}
-                               {note}
+                            <DropdownMenuItem key={index} className="text-sm text-wrap flex items-start gap-2">
+                               <note.icon className={`mt-1 h-4 w-4 shrink-0 ${note.color}`} />
+                               <span>{note.message}</span>
                             </DropdownMenuItem>
                         ))
                     ) : (
