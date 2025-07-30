@@ -46,7 +46,7 @@ export default function MindDumpPage() {
              <div className="absolute top-0 left-0 w-full h-full bg-black/30 -z-10" />
 
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 text-shadow-lg animate-pulse">
-                Free Your Headspace
+                ✨ Free Your Headspace ✨
             </h1>
 
             <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
@@ -94,5 +94,3 @@ export default function MindDumpPage() {
         </div>
     );
 }
-
-
