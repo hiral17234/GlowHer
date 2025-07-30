@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -38,7 +39,7 @@ export default function BreathePage() {
     return () => clearInterval(cycleInterval);
   }, [isBreathing]);
 
-  const handleGoBack = () => router.back();
+  const handleGoBack = () => router.push('/mind-dump');
   
   const handleNext = () => {
       try {
