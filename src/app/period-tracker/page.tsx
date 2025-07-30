@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { addDays, format, startOfDay, differenceInDays, isWithinInterval, isSameDay } from 'date-fns';
+import { addDays, format, startOfDay, differenceInDays, isWithinInterval, isSameDay, subDays } from 'date-fns';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -325,7 +325,10 @@ export default function PeriodTrackerPage() {
                                         <p className="text-2xl font-bold text-slate-900">{summary.dayOfCycle}</p>
                                     </CardContent>
                                 </Card>
-                                 <Card className="bg-white/80 border-rose-300 text-center p-4 shadow-md flex flex-col justify-center items-center">
+                                 <Card 
+                                    className="bg-white/80 border-rose-300 text-center p-4 shadow-md flex flex-col justify-center items-center cursor-pointer hover:bg-rose-100/50 transition-colors"
+                                    onClick={() => router.push('/log-symptoms')}
+                                >
                                     <CardHeader className="p-2">
                                         <CardTitle className="text-sm font-medium text-slate-600 flex items-center justify-center gap-2">Symptoms Logged <CheckCircle2 className="h-4 w-4" /></CardTitle>
                                     </CardHeader>
