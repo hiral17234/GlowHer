@@ -185,5 +185,4 @@ export default function BreathePage() {
             `}</style>
         </div>
     );
-
-    
+}
