@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby, Check, X } from 'lucide-react';
+import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby, Check, X, Stethoscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays } from 'date-fns';
 import { Button } from '@/components/ui/button';
@@ -173,40 +173,47 @@ export default function HomePage() {
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
             <GlowHerLogo />
-             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-12 w-12 text-yellow-500 hover:text-yellow-600 hover:bg-yellow-500/10 relative">
-                        <Bell className="h-6 w-6" />
-                        {notifications.length > 0 && (
-                            <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">{notifications.length}</Badge>
-                        )}
+             <div className="flex items-center gap-2">
+                <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">
+                    <Button variant="ghost" size="icon" className="h-12 w-12 text-teal-500 hover:text-teal-600 hover:bg-teal-500/10">
+                        <Stethoscope className="h-6 w-6" />
                     </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
-                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {notifications.length > 0 ? (
-                        notifications.map((note) => (
-                            <DropdownMenuItem key={note.id} onSelect={() => router.push(note.href)} className="text-sm text-wrap flex items-start justify-between gap-2 cursor-pointer pr-2">
-                               <div className="flex items-start gap-2">
-                                <note.icon className={`mt-1 h-4 w-4 shrink-0 ${note.color}`} />
-                                <span>{note.message}</span>
-                               </div>
-                               <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-6 w-6 shrink-0"
-                                    onClick={(e) => handleDismissNotification(e, note.id)}
-                                >
-                                    <X className="h-4 w-4 text-muted-foreground"/>
-                                </Button>
-                            </DropdownMenuItem>
-                        ))
-                    ) : (
-                        <DropdownMenuItem disabled>No new notifications</DropdownMenuItem>
-                    )}
-                </DropdownMenuContent>
-            </DropdownMenu>
+                </a>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-12 w-12 text-yellow-500 hover:text-yellow-600 hover:bg-yellow-500/10 relative">
+                            <Bell className="h-6 w-6" />
+                            {notifications.length > 0 && (
+                                <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">{notifications.length}</Badge>
+                            )}
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-80">
+                        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {notifications.length > 0 ? (
+                            notifications.map((note) => (
+                                <DropdownMenuItem key={note.id} onSelect={() => router.push(note.href)} className="text-sm text-wrap flex items-start justify-between gap-2 cursor-pointer pr-2">
+                                <div className="flex items-start gap-2">
+                                    <note.icon className={`mt-1 h-4 w-4 shrink-0 ${note.color}`} />
+                                    <span>{note.message}</span>
+                                </div>
+                                <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 shrink-0"
+                                        onClick={(e) => handleDismissNotification(e, note.id)}
+                                    >
+                                        <X className="h-4 w-4 text-muted-foreground"/>
+                                    </Button>
+                                </DropdownMenuItem>
+                            ))
+                        ) : (
+                            <DropdownMenuItem disabled>No new notifications</DropdownMenuItem>
+                        )}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </div>
       </header>
       <main className="flex-grow">
