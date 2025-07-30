@@ -220,20 +220,6 @@ export default function HomePage() {
           </p>
         </section>
 
-        <section className="container mx-auto px-4 mb-12">
-            <div className="relative aspect-video max-w-3xl mx-auto">
-                <iframe 
-                    className="absolute top-0 left-0 w-full h-full rounded-lg shadow-2xl"
-                    src="https://www.youtube.com/embed/-5qhNRmMilI" 
-                    title="YouTube video player" 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen>
-                </iframe>
-            </div>
-        </section>
-
-
         <WellnessDashboard />
       </main>
     </div>
