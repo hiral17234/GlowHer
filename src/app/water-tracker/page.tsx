@@ -104,38 +104,50 @@ export default function WaterTrackerPage() {
   });
 
   const calculateStreak = () => {
-        try {
-            let streak = 0;
-            const today = startOfDay(new Date());
-            let dailyGoal = 8; // Default goal in cups
-            
-            const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
-            if (savedSettings) {
-                dailyGoal = JSON.parse(savedSettings).goal || 8;
-            }
-
-            for (let i = 0; i < 30; i++) { // Check up to 30 days
-                const dateToCheck = subDays(today, i);
-                const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-                const logData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${dateKey}`);
-                if (logData) {
-                    const log: DailyLog = JSON.parse(logData);
-                    const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
-                    if (totalIntake >= dailyGoal) {
-                        streak++;
-                    } else {
-                        break; // Streak is broken if goal not met
-                    }
-                } else {
-                    if (i === 0) continue; // Don't break streak on the current day if nothing is logged yet
-                    break; // Streak is broken if a previous day is missed
-                }
-            }
-            setHydrationStreak(streak);
-        } catch (e) {
-            console.error("Error calculating streak:", e);
+    try {
+        let currentStreak = 0;
+        const today = startOfDay(new Date());
+        let dailyGoal = 8; // Default goal in cups
+        
+        const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
+        if (savedSettings) {
+            dailyGoal = JSON.parse(savedSettings).goal || 8;
         }
-    };
+
+        // Check previous days
+        for (let i = 1; i <= 30; i++) {
+            const dateToCheck = subDays(today, i);
+            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+            const logData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${dateKey}`);
+
+            if (logData) {
+                const log: DailyLog = JSON.parse(logData);
+                const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
+                if (totalIntake >= dailyGoal) {
+                    currentStreak++;
+                } else {
+                    break; // Streak broken because goal not met
+                }
+            } else {
+                break; // Streak broken because a day was missed
+            }
+        }
+        
+        // Check today separately
+        const todayLogData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${format(today, 'yyyy-MM-dd')}`);
+        if(todayLogData) {
+            const log: DailyLog = JSON.parse(todayLogData);
+            const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
+            if (totalIntake >= dailyGoal) {
+                currentStreak++;
+            }
+        }
+
+        setHydrationStreak(currentStreak);
+    } catch (e) {
+        console.error("Error calculating streak:", e);
+    }
+};
 
   useEffect(() => {
     // Initialize audio on client
