@@ -234,6 +234,29 @@ export default function SleepTrackerPage() {
             title: "Sleep Logged!",
             description: "Your entry for the night has been successfully saved.",
         });
+
+        // Add conditional toasts based on sleep duration
+        const hours = data.sleepDuration[0];
+        if (hours < 3) {
+            toast({
+                variant: 'destructive',
+                title: "Please Be Careful",
+                description: "Consistently sleeping this little can be a sign of insomnia. Please consider speaking with a doctor.",
+            });
+        } else if (hours < 4) {
+             toast({
+                variant: 'destructive',
+                title: "Short Sleep Alert",
+                description: "Getting less than 4 hours of sleep can significantly impact your physical and mental health. Try to prioritize more rest.",
+            });
+        } else if (hours < 6) {
+             toast({
+                title: "Reminder",
+                description: "A healthy body needs healthy sleep. Aim for 7-9 hours to feel your best!",
+            });
+        }
+
+
         calculateAchievements();
         loadRecentLogs();
         setLogKey(prevKey => prevKey + 1); // Force re-render of history chart
@@ -449,9 +472,9 @@ export default function SleepTrackerPage() {
                     </CardContent>
                 </Card>
                 {currentPhase && phaseTips[currentPhase] && (
-                    <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-800 dark:text-indigo-200 [&>svg]:text-indigo-500">
+                    <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-900 dark:text-indigo-100 [&>svg]:text-indigo-600">
                         <Info className="h-4 w-4" />
-                        <AlertTitle className="font-bold text-indigo-900 dark:text-indigo-100">{phaseTips[currentPhase].title}</AlertTitle>
+                        <AlertTitle className="font-bold">{phaseTips[currentPhase].title}</AlertTitle>
                         <AlertDescription>
                             {phaseTips[currentPhase].tip}
                         </AlertDescription>
