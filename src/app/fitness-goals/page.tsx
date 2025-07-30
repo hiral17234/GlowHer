@@ -328,9 +328,10 @@ export default function FitnessGoalsPage() {
                              <Card className="shadow-lg">
                                 <CardHeader><CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle><CardDescription>Record your movement for today.</CardDescription></CardHeader>
                                 <CardContent>
-                                    <Form {...defaultLogForm}><form onChange={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
+                                    <Form {...defaultLogForm}><form onSubmit={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
                                         <FormField control={defaultLogForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/> Steps Taken</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                          <FormField control={defaultLogForm.control} name="workout" render={({ field }) => (<FormItem><FormLabel>Type of Workout</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout type (optional)" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Running">Running</SelectItem><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                         <Button type="submit" className="w-full">Log Activity</Button>
                                     </form></Form>
                                 </CardContent>
                             </Card>
