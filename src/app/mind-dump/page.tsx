@@ -1,0 +1,88 @@
+
+"use client";
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Brain } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+
+const auras = [
+    { name: 'Cloud', emoji: '☁️' },
+    { name: 'Fire', emoji: '🔥' },
+    { name: 'Leaf', emoji: '🌿' },
+    { name: 'Water', emoji: '💧' },
+    { name: 'Sun', emoji: '☀️' },
+    { name: 'Moon', emoji: '🌙' },
+];
+
+export default function MindDumpPage() {
+    const router = useRouter();
+    const { toast } = useToast();
+    const [selectedAura, setSelectedAura] = useState<string | null>(null);
+
+    const handleDump = () => {
+        toast({
+            title: "Thoughts Dumped!",
+            description: "Your mind is a little clearer now. Take a deep breath.",
+        });
+        router.push('/mental-health-check-in');
+    };
+
+    return (
+        <div 
+            className="flex flex-col min-h-screen items-center justify-center p-4 bg-cover bg-center"
+            style={{ backgroundImage: "url('https://i.pinimg.com/originals/a3/a4/3a/a3a43a7f85d5a7e3a9a1d4a7a3a43a7f.jpg')" }}
+        >
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 text-shadow-lg animate-pulse">
+                ✨ Express Yourself Freely ✨
+            </h1>
+
+            <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
+                <div className="text-center">
+                    <div className="flex items-center justify-center gap-2">
+                        <Brain className="h-8 w-8 text-pink-300" />
+                        <h2 className="text-3xl font-bold text-white">MindDump</h2>
+                    </div>
+                    <p className="text-white/80">Write it. Dump it. Breathe.</p>
+                </div>
+
+                <Textarea 
+                    placeholder="Write your thoughts here..."
+                    className="bg-white/20 border-white/30 text-white placeholder:text-white/70 min-h-[150px] text-base"
+                />
+
+                <div>
+                    <p className="text-center text-white/90 mb-3">Select the aura you want to feel relaxed</p>
+                    <div className="flex justify-center flex-wrap gap-3">
+                        {auras.map((aura) => (
+                            <button
+                                key={aura.name}
+                                onClick={() => setSelectedAura(aura.name)}
+                                className={cn(
+                                    "text-4xl p-3 rounded-full transition-all duration-200 transform hover:scale-110",
+                                    selectedAura === aura.name ? 'bg-white/30 ring-2 ring-pink-300' : 'bg-white/10'
+                                )}
+                            >
+                                {aura.emoji}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <Button 
+                    onClick={handleDump}
+                    className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl"
+                >
+                    Dump It
+                </Button>
+            </div>
+             <Button variant="link" onClick={() => router.push('/mental-health-check-in')} className="mt-4 text-white/70 hover:text-white">
+                Go Back
+            </Button>
+        </div>
+    );
+}
+
