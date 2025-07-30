@@ -8,8 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
-
 
 const auras = [
     { name: 'Cloud', emoji: '☁️' },
@@ -59,26 +57,18 @@ export default function MindDumpPage() {
 
     return (
         <div 
-            className="relative flex flex-col min-h-screen items-center justify-center p-4 overflow-hidden"
+            className="relative flex flex-col min-h-screen items-center justify-center p-4 overflow-hidden bg-gradient-to-br from-sky-200 to-purple-200"
         >
-            <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute top-0 left-0 w-full h-full object-cover -z-10"
-                src="https://videos.pexels.com/video-files/857251/857251-hd_1620_1080_25fps.mp4"
-            />
-             <div className="absolute top-0 left-0 w-full h-full bg-black/30 -z-10" />
+             <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
 
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 text-shadow-lg animate-pulse">
                 ✨ Free Your Headspace ✨
             </h1>
 
-            <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
+            <div className="w-full max-w-md bg-white/20 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
                 <div className="text-center">
                     <div className="flex items-center justify-center gap-2">
-                        <Brain className="h-8 w-8 text-pink-300" />
+                        <Brain className="h-8 w-8 text-purple-400" />
                         <h2 className="text-3xl font-bold text-white">MindDump</h2>
                     </div>
                     <p className="text-white/80">Write it. Dump it. Breathe.</p>
@@ -100,7 +90,7 @@ export default function MindDumpPage() {
                                 onClick={() => setSelectedAura(aura.name)}
                                 className={cn(
                                     "text-4xl p-3 rounded-full transition-all duration-200 transform hover:scale-110",
-                                    selectedAura === aura.name ? 'bg-white/30 ring-2 ring-pink-300' : 'bg-white/10'
+                                    selectedAura === aura.name ? 'bg-white/30 ring-2 ring-purple-300' : 'bg-white/10'
                                 )}
                             >
                                 {aura.emoji}
@@ -111,7 +101,7 @@ export default function MindDumpPage() {
 
                 <Button 
                     onClick={handleDump}
-                    className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl"
+                    className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-6 text-lg rounded-xl shadow-lg"
                 >
                     Dump It
                 </Button>

@@ -21,8 +21,16 @@ export default function BreathePage() {
   const { toast } = useToast();
   const [cycleText, setCycleText] = useState('Get Ready...');
   const [isBreathing, setIsBreathing] = useState(false);
+  const [aura, setAura] = useState('');
 
   useEffect(() => {
+    try {
+      const selectedAura = localStorage.getItem('tempGlowherAura');
+      if (selectedAura) {
+        setAura(selectedAura);
+      }
+    } catch(e) { console.error(e) }
+
     if (!isBreathing) return;
 
     const totalDuration = breathingCycle.reduce((sum, cycle) => sum + cycle.duration, 0);
@@ -42,21 +50,15 @@ export default function BreathePage() {
   const handleGoBack = () => router.push('/mind-dump');
   
   const handleNext = () => {
-      try {
-        const selectedAura = localStorage.getItem('selectedAura');
-        if (selectedAura) {
-            router.push(`/aura/${selectedAura.toLowerCase()}`);
-        } else {
-            toast({
-                variant: 'destructive',
-                title: 'No aura found',
-                description: 'Returning to homepage.',
-            });
-            router.push('/');
-        }
-      } catch (error) {
-        console.error("Could not read from localStorage", error);
-        router.push('/');
+      if (aura) {
+          router.push(`/aura/${aura.toLowerCase()}`);
+      } else {
+          toast({
+              variant: 'destructive',
+              title: 'No aura found',
+              description: 'Something went wrong. Please start the check-in again.',
+          });
+          router.push('/mental-health-check-in');
       }
   };
 
@@ -66,36 +68,32 @@ export default function BreathePage() {
 
   return (
     <div
-      className="relative flex flex-col min-h-screen items-center justify-center p-4 overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: "url('https://i.pinimg.com/736x/88/90/a8/8890a87eea99b61588a7e5646404dd57.jpg')" }}
-      data-ai-hint="calm beach"
+      className="relative flex flex-col min-h-screen items-center justify-center p-4 overflow-hidden bg-gradient-to-br from-sky-200 to-purple-200"
     >
-      <Button variant="ghost" onClick={handleGoBack} className="absolute top-6 left-6 text-white hover:text-white hover:bg-white/10 z-20">
+      <Button variant="ghost" onClick={handleGoBack} className="absolute top-6 left-6 text-slate-800 hover:text-slate-900 hover:bg-black/5 z-20">
         <ChevronLeft className="mr-2 h-4 w-4" />
         Back
       </Button>
 
       <div className="absolute top-0 left-0 w-full h-full bg-black/10" />
 
-      <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
+      <div className="w-full max-w-md bg-white/20 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
         <div className="flex items-center justify-center gap-2">
-          <Brain className="h-8 w-8 text-pink-300" />
+          <Brain className="h-8 w-8 text-purple-300" />
           <h2 className="text-3xl font-bold text-white">MindDump</h2>
         </div>
         <p className="text-white/80">Write it. Dump it. Breathe.</p>
 
         <div className="relative h-56 w-56 mx-auto flex items-center justify-center">
-          {/* Blue breathing background */}
-          <div className={cn("absolute inset-0 bg-blue-400 rounded-full opacity-50 blur-2xl", isBreathing && 'animate-breath')} />
+          <div className={cn("absolute inset-0 bg-purple-400 rounded-full opacity-50 blur-2xl", isBreathing && 'animate-breath')} />
           
           <div className="z-10 flex flex-col items-center justify-center">
             <p className="text-2xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready to begin?'}</p>
           </div>
         </div>
 
-        {/* Action buttons */}
         {!isBreathing && (
-          <Button onClick={startBreathing} className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
+          <Button onClick={startBreathing} className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-6 text-lg rounded-xl mt-4 shadow-lg">
             <Play className="mr-2 h-5 w-5" />
             Begin Breathing
           </Button>
@@ -106,11 +104,10 @@ export default function BreathePage() {
             <p className="text-green-300 font-semibold">Your thoughts have been released. ✨</p>
             <p className="text-white/90">Breathe with the circle...</p>
             
-            {/* Simple Visible Video Player */}
-            <div className="aspect-video mt-4">
+            <div className="aspect-video mt-4 rounded-lg overflow-hidden">
                 <iframe 
-                    className="w-full h-full rounded-lg"
-                    src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
+                    className="w-full h-full"
+                    src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_VIDEO_ID}&controls=0`}
                     title="YouTube video player" 
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -118,14 +115,13 @@ export default function BreathePage() {
                 </iframe>
             </div>
 
-            <Button onClick={handleNext} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
+            <Button onClick={handleNext} className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-6 text-lg rounded-xl mt-4 shadow-lg">
               Next
             </Button>
           </>
         )}
       </div>
 
-      {/* Breathing animation */}
       <style jsx>{`
         @keyframes breath {
           0%, 100% {
