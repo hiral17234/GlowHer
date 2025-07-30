@@ -79,7 +79,7 @@ export default function BreathePage() {
           Back
         </Button>
 
-        <div className="w-full max-w-md bg-black/20 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
+        <div className="w-full max-w-md bg-black/20 backdrop-blur-xl rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
           <div className="flex items-center justify-center gap-2">
             <Brain className="h-8 w-8 text-purple-300" />
             <h2 className="text-3xl font-bold text-white">MindDump</h2>
