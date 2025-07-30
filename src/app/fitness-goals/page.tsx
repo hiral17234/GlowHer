@@ -173,7 +173,8 @@ export default function FitnessGoalsPage() {
     const loadWeeklyPregnancyLogs = () => {
         let currentStreak = 0;
         const today = startOfDay(new Date());
-        // Check from yesterday backwards
+        
+        // Start checking from yesterday backwards
         for (let i = 1; i < 30; i++) {
             const dateToCheck = subDays(today, i);
             const dateKey = format(dateToCheck, 'yyyy-MM-dd');
@@ -183,10 +184,12 @@ export default function FitnessGoalsPage() {
                 break; // Streak broken
             }
         }
-        // Check today separately and add to streak
+        
+        // Check today separately and add to streak only if a log exists
         if (localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`)) {
             currentStreak++;
         }
+        
         setStreak(currentStreak);
 
         const logs = Array.from({ length: 7 }, (_, i) => {
