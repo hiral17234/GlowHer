@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronLeft, Moon, Sun, Trash2 } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Moon, Sun, Trash2, Languages } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
+import { useLanguage } from '@/hooks/use-language';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -40,6 +41,7 @@ const formSchema = z.object({
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { language, setLanguage } = useLanguage();
   const [theme, setTheme] = useState('light');
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -93,13 +95,15 @@ export default function SettingsPage() {
   const handleClearData = () => {
     try {
         const theme = localStorage.getItem('theme');
+        const lang = localStorage.getItem('glowher-language');
         localStorage.clear();
         if(theme) localStorage.setItem('theme', theme);
+        if(lang) localStorage.setItem('glowher-language', lang);
         toast({
             title: "Data Cleared",
             description: "All app data has been removed. The app will now reload.",
         });
-        setTimeout(() => router.push('/'), 1000);
+        setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
         toast({
             variant: "destructive",
@@ -147,16 +151,28 @@ export default function SettingsPage() {
 
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle className="font-headline text-2xl">Appearance</CardTitle>
-                        <CardDescription>Customize the look and feel of the app.</CardDescription>
+                        <CardTitle className="font-headline text-2xl">Preferences</CardTitle>
+                        <CardDescription>Customize the look and language of the app.</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="theme-switcher" className="text-base">Theme</Label>
+                            <Label htmlFor="theme-switcher" className="text-base flex items-center gap-2"><Sun className="inline h-5 w-5" /> / <Moon className="inline h-5 w-5" /> Theme</Label>
                             <div className="flex items-center gap-2 rounded-full border p-1">
                                 <Button variant={theme === 'light' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleThemeChange('light')}><Sun className="h-5 w-5" /></Button>
                                 <Button variant={theme === 'dark' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleThemeChange('dark')}><Moon className="h-5 w-5" /></Button>
                             </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <Label htmlFor="language-switcher" className="text-base flex items-center gap-2"><Languages className="h-5 w-5" /> Language</Label>
+                            <Select value={language} onValueChange={setLanguage}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select language" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="en">English</SelectItem>
+                                    <SelectItem value="hi">हिन्दी (Hindi)</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </CardContent>
                 </Card>
