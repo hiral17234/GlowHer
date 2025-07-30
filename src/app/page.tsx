@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { LoaderCircle, AlertTriangle } from 'lucide-react';
+import { LoaderCircle, AlertTriangle, ShoppingCart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, isBefore, isToday } from 'date-fns';
 
@@ -15,6 +15,12 @@ type GroceryItem = {
   expiryDate?: string;
   purchased: boolean;
 };
+
+type ShoppingListItem = {
+    id: string;
+    name: string;
+};
+
 
 export default function HomePage() {
   const router = useRouter();
@@ -34,9 +40,9 @@ export default function HomePage() {
       setUserData(JSON.parse(storedData));
 
       // Check for expiring groceries
-      const savedList = localStorage.getItem('glowher-grocery-list');
-      if (savedList) {
-        const groceryList: GroceryItem[] = JSON.parse(savedList).map((item: any) => ({
+      const savedInventory = localStorage.getItem('glowher-grocery-list');
+      if (savedInventory) {
+        const groceryList: GroceryItem[] = JSON.parse(savedInventory).map((item: any) => ({
             ...item,
             expiryDate: item.expiryDate ? new Date(item.expiryDate).toISOString() : undefined,
         }));
@@ -61,6 +67,24 @@ export default function HomePage() {
                 duration: 8000,
             });
         }
+      }
+
+      // Check for items on shopping list
+      const savedShoppingList = localStorage.getItem('glowher-shopping-list');
+      if(savedShoppingList) {
+          const shoppingList: ShoppingListItem[] = JSON.parse(savedShoppingList);
+          if (shoppingList.length > 0) {
+              toast({
+                  title: (
+                      <div className="flex items-center gap-2">
+                          <ShoppingCart className="h-5 w-5" />
+                          <span className="font-bold">Shopping List Reminder</span>
+                      </div>
+                  ),
+                  description: `You have ${shoppingList.length} item(s) on your shopping list.`,
+                  duration: 8000
+              });
+          }
       }
 
     } catch (error) {

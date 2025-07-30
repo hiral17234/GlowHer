@@ -14,11 +14,13 @@ import {
   Brain,
   User,
   Sparkles,
-  LoaderCircle
+  LoaderCircle,
+  Bell
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { fetchThoughtOfTheDay } from '@/app/actions';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 const wellnessFeatures = [
     {
@@ -80,7 +82,7 @@ const wellnessFeatures = [
     {
       icon: ShoppingCart,
       title: 'Grocery List',
-      description: 'Add items + expiry date, get alerts',
+      description: 'Manage your inventory and shopping list',
       href: '/grocery-list',
       color: 'text-orange-500',
       bgColor: 'bg-orange-500/10'
@@ -142,26 +144,33 @@ export function WellnessDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-12 space-y-8">
-        <Card className="bg-accent/20 shadow-lg shadow-accent/20 text-center">
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center justify-center gap-2 text-2xl">
-                    <Sparkles className="text-accent-foreground" />
-                    Thought of the Day
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                {isLoading ? (
-                    <div className="flex items-center justify-center gap-2">
-                        <LoaderCircle className="h-5 w-5 animate-spin"/>
-                        <span>Generating...</span>
-                    </div>
-                ) : (
-                    <p className="font-serif italic text-lg text-accent-foreground/80">
-                        "{thought}"
-                    </p>
-                )}
-            </CardContent>
-        </Card>
+        <div className="flex justify-between items-center">
+            <Card className="flex-grow bg-accent/20 shadow-lg shadow-accent/20 text-center">
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center justify-center gap-2 text-2xl">
+                        <Sparkles className="text-accent-foreground" />
+                        Thought of the Day
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {isLoading ? (
+                        <div className="flex items-center justify-center gap-2">
+                            <LoaderCircle className="h-5 w-5 animate-spin"/>
+                            <span>Generating...</span>
+                        </div>
+                    ) : (
+                        <p className="font-serif italic text-lg text-accent-foreground/80">
+                            "{thought}"
+                        </p>
+                    )}
+                </CardContent>
+            </Card>
+            <div className="ml-4">
+                <Button variant="ghost" size="icon" className="h-10 w-10">
+                    <Bell className="h-6 w-6" />
+                </Button>
+            </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {wellnessFeatures.map((feature) => (
@@ -171,5 +180,3 @@ export function WellnessDashboard() {
     </div>
   );
 }
-
-    
