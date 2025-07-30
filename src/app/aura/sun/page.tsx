@@ -108,11 +108,13 @@ export default function SunAuraPage() {
             </main>
              <style jsx>{`
                 @keyframes breath-aura {
-                0%, 100% { transform: scale(0.9); opacity: 0.7; }
-                50% { transform: scale(1.1); opacity: 0.9; }
+                    0% { transform: scale(0.9); opacity: 0.7; }
+                    29% { transform: scale(1.1); opacity: 0.9; }
+                    57% { transform: scale(1.1); opacity: 0.9; }
+                    100% { transform: scale(0.9); opacity: 0.7; }
                 }
                 .animate-breath-aura {
-                animation: breath-aura 14s ease-in-out infinite;
+                    animation: breath-aura 14s ease-in-out infinite;
                 }
             `}</style>
         </div>
