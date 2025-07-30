@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X, Tag, Package } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 
@@ -26,6 +26,8 @@ const groceryItemSchema = z.object({
   name: z.string().min(1, "Item name is required."),
   category: z.string().optional(),
   expiryDate: z.date().optional(),
+  quantity: z.string().optional(),
+  storageLocation: z.string().optional(),
 });
 
 type GroceryItem = z.infer<typeof groceryItemSchema> & { id: string; purchased: boolean };
@@ -38,6 +40,8 @@ const categories = [
     { name: 'Snacks', icon: Cookie },
     { name: 'Other', icon: Plus },
 ];
+
+const storageLocations = ['Fridge', 'Freezer', 'Pantry'];
 
 const LOCAL_STORAGE_KEY = 'glowher-grocery-list';
 
@@ -52,6 +56,8 @@ export default function GroceryListPage() {
     defaultValues: {
       name: "",
       category: "Other",
+      quantity: "",
+      storageLocation: "Pantry",
     },
   });
 
@@ -142,7 +148,7 @@ export default function GroceryListPage() {
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -176,6 +182,41 @@ export default function GroceryListPage() {
                                                             {cat.name}
                                                         </div>
                                                     </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                 <FormField
+                                    control={form.control}
+                                    name="quantity"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Quantity (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g., 1 carton" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="storageLocation"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Storage Location (Optional)</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a location" />
+                                            </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {storageLocations.map(loc => (
+                                                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -250,18 +291,21 @@ export default function GroceryListPage() {
                             {filteredList.map(item => {
                                 const isExpiring = expiringItems.some(expItem => expItem.id === item.id);
                                 return (
-                                <li key={item.id} className={cn("flex items-center gap-4 p-4 rounded-lg", item.purchased ? "bg-muted/50" : "bg-card", isExpiring && !item.purchased && "bg-destructive/10 border border-destructive/20")}>
+                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg", item.purchased ? "bg-muted/50" : "bg-card", isExpiring && !item.purchased && "bg-destructive/10 border border-destructive/20")}>
                                     <Checkbox
                                         id={item.id}
                                         checked={item.purchased}
                                         onCheckedChange={() => togglePurchased(item.id)}
+                                        className="mt-1"
                                     />
                                     <div className="flex-grow">
                                         <label htmlFor={item.id} className={cn("font-medium", item.purchased && "line-through text-muted-foreground")}>
                                             {item.name}
                                         </label>
-                                        <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                            <Badge variant="outline">{item.category}</Badge>
+                                        <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                            <Badge variant="outline" className="flex items-center gap-1"><Tag className="h-3 w-3" />{item.category}</Badge>
+                                            {item.quantity && <Badge variant="outline" className="flex items-center gap-1"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
+                                            {item.storageLocation && <Badge variant="outline">{item.storageLocation}</Badge>}
                                             {item.expiryDate && (
                                                 <span className={cn("flex items-center gap-1", isExpiring && "text-destructive font-semibold")}>
                                                     {isExpiring && <AlertTriangle className="h-4 w-4" />}
@@ -290,7 +334,3 @@ export default function GroceryListPage() {
     </div>
   );
 }
-
-    
-
-    
