@@ -59,8 +59,9 @@ export default function HealingReflectionPage() {
     };
 
     return (
-        <div className="relative flex flex-col min-h-screen items-center justify-center p-4 bg-gray-900 text-white selection:bg-teal-300 selection:text-slate-900">
-             <main className="w-full max-w-lg mx-auto">
+        <div className="relative flex flex-col min-h-screen items-center justify-center p-4 bg-cover bg-center text-white selection:bg-teal-300 selection:text-slate-900" style={{backgroundImage: "url('https://i.pinimg.com/736x/9d/6a/7b/9d6a7bc03e8fc4a82e39bf4872852045.jpg')"}}>
+             <div className="absolute inset-0 bg-black/30 z-0"/>
+             <main className="relative z-10 w-full max-w-lg mx-auto">
                 <Card className="shadow-2xl bg-black/20 backdrop-blur-lg border-white/10">
                     <CardHeader className="text-center">
                         <div className="flex justify-center items-center mb-4">

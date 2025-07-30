@@ -182,7 +182,7 @@ export default function PeriodTrackerPage() {
         symptoms: symptomsToday,
     });
     
-  }, [watchedFields.lastPeriodDate, watchedFields.cycleLength, watchedFields.lutealPhaseLength]);
+  }, [watchedFields]);
 
 
   useEffect(() => {
@@ -373,5 +373,3 @@ export default function PeriodTrackerPage() {
         </div>
     </div>
   );
-
-    
