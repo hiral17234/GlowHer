@@ -4,7 +4,7 @@
 import { useRouter } from 'next/navigation';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, History } from 'lucide-react';
 
 export default function MentalHealthCheckInPage() {
     const router = useRouter();
@@ -25,10 +25,18 @@ export default function MentalHealthCheckInPage() {
                 </div>
             </header>
             <main className="flex-grow flex items-center justify-center">
-                 <div className="text-center text-white p-6">
-                    <h1 className="text-4xl md:text-5xl font-headline mb-4">Take a moment.</h1>
-                    <p className="text-lg md:text-xl text-white/80 mb-8 max-w-xl mx-auto">This is a space to clear your mind. Write whatever you feel, and watch it fade away. Nothing is saved.</p>
-                    <Button onClick={handleBegin} className="bg-white/90 text-slate-900 hover:bg-white px-10 py-8 text-xl font-bold">Begin</Button>
+                 <div className="text-center text-white p-6 space-y-8">
+                    <div>
+                        <h1 className="text-4xl md:text-5xl font-headline mb-4">Take a moment.</h1>
+                        <p className="text-lg md:text-xl text-white/80 mb-8 max-w-xl mx-auto">This is a space to clear your mind. Write whatever you feel, and watch it fade away. Your entry will be saved for private reflection.</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <Button onClick={handleBegin} className="bg-white/90 text-slate-900 hover:bg-white px-10 py-8 text-xl font-bold">Begin</Button>
+                        <Button variant="outline" onClick={() => router.push('/mental-health-history')} className="text-white border-white/50 hover:bg-white/10 hover:text-white px-8 py-6 text-lg">
+                            <History className="mr-2 h-5 w-5" />
+                            View History
+                        </Button>
+                    </div>
                 </div>
             </main>
         </div>

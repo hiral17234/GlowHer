@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
+
 
 const auras = [
     { name: 'Cloud', emoji: '☁️' },
@@ -22,6 +24,7 @@ export default function MindDumpPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [selectedAura, setSelectedAura] = useState<string | null>(null);
+    const [note, setNote] = useState("");
 
     const handleDump = () => {
         if (!selectedAura) {
@@ -34,20 +37,27 @@ export default function MindDumpPage() {
         }
         
         try {
+            const todayKey = `glowher-mental-health-log-${format(new Date(), 'yyyy-MM-dd')}`;
+            const dataToSave = {
+                note,
+                aura: selectedAura,
+                logDate: new Date().toISOString(),
+            };
+            localStorage.setItem(todayKey, JSON.stringify(dataToSave));
             localStorage.setItem('selectedAura', selectedAura);
         } catch (error) {
             console.error("Could not save to localStorage", error);
              toast({
                 variant: 'destructive',
-                title: 'Could not save aura',
-                description: 'There was an issue saving your selection. Please try again.',
+                title: 'Could not save entry',
+                description: 'There was an issue saving your entry. Please try again.',
             });
             return;
         }
         
         toast({
-            title: "Thoughts Dumped!",
-            description: "Now, take a moment to breathe and reset.",
+            title: "Thoughts Saved!",
+            description: "Your entry has been saved. Now, take a moment to breathe and reset.",
         });
         router.push('/breathe');
     };
@@ -82,6 +92,8 @@ export default function MindDumpPage() {
                 <Textarea 
                     placeholder="Write your thoughts here..."
                     className="bg-white/20 border-white/30 text-white placeholder:text-white/70 min-h-[150px] text-base"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
                 />
 
                 <div>
