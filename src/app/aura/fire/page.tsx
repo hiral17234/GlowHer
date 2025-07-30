@@ -3,13 +3,12 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Flame, Wind, Ear, Eye, Hand, Rss, Sparkles, LoaderCircle, Lightbulb } from 'lucide-react';
+import { ChevronLeft, Flame, Wind, Ear, Eye, Hand, Rss, Sparkles, Lightbulb } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from '@/components/ui/label';
-import { generateFireAuraAdvice } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
@@ -53,6 +52,46 @@ const fireQuizQuestions = [
     },
 ];
 
+const adviceMap: Record<string, Record<string, string>> = {
+    fireFeeling: {
+      "A comforting warmth, like a fireplace.": "You seek comfort and safety. Your inner fire provides a gentle, reliable source of light. Tip: Nurture this warmth by creating cozy rituals, like enjoying a warm drink or reading a book in a quiet corner.",
+      "An exciting energy, like a bonfire.": "You're drawn to community and vibrant energy. Your inner fire thrives on connection and shared experiences. Tip: Organize a small gathering or join a group activity that excites you to fuel this social flame.",
+      "A powerful force of creation or destruction.": "You recognize the immense power within you. Your fire can transform things, create new paths, or clear away the old. Tip: Channel this power into a creative project or a decluttering session to harness its constructive force.",
+      "A flickering flame of a single candle.": "You find beauty in quiet introspection and simplicity. Your inner fire is a focused point of light in the darkness. Tip: Embrace moments of solitude. A short, five-minute meditation can help you connect with your inner candle.",
+    },
+    passionMeaning: {
+        "A deep love for my hobbies and interests.": "Your passion is rooted in personal joy and self-expression. Tip: Dedicate a small, sacred block of time this week exclusively to a hobby that makes you feel alive, no matter how simple.",
+        "A romantic connection with someone.": "Your passion is currently focused on partnership and shared intimacy. Tip: Plan a special, uninterrupted moment with your partner to share appreciation and connect on a deeper level.",
+        "A driving ambition towards a professional goal.": "Your passion is directed towards achievement and growth in your career. Tip: Acknowledge a recent professional win, no matter how small. Celebrate the progress you've already made.",
+        "A quiet, steady dedication to my values.": "Your passion is a guiding principle, a compass that informs your choices. Tip: Reflect on one decision you made this week that aligned with your core values and feel the quiet strength in that consistency.",
+    },
+    energyFlame: {
+        "Like a slow, steady, controlled burn.": "You have sustainable, enduring energy. You are reliable and consistent. Tip: This steady flame is perfect for long-term projects. Break a large goal into small, manageable steps to make consistent progress.",
+        "Like a roaring, energetic bonfire.": "Your energy is high and infectious right now! You have the power to accomplish a lot. Tip: Harness this peak energy for a task that requires a big push, but also schedule downtime to avoid burning out.",
+        "Like a tiny, flickering pilot light.": "Your energy reserves are low, and that's okay. It’s a time for conservation and gentleness. Tip: Protect your pilot light. Say 'no' to one non-essential request this week and use that time for rest.",
+        "Like scattered, unpredictable sparks.": "Your energy may feel unfocused and erratic, pulling you in many directions. Tip: Ground yourself. Spend a few minutes with your feet on the earth or practice a simple breathing exercise to gather your sparks.",
+    },
+    creativeSpark: {
+        "A spark of inspiration for a new project.": "You are ready to create something new. Tip: Feed your muse by visiting a new place, listening to different music, or simply allowing yourself to daydream for 15 minutes without a goal.",
+        "A spark of connection in my relationships.": "You are seeking deeper bonds with others. Tip: Reach out to one person you care about with a simple, heartfelt message, asking them a thoughtful question about their life.",
+        "A spark of joy in my daily routine.": "You are looking to infuse the mundane with magic. Tip: Intentionally add one small, delightful thing to your day—wear your favorite color, buy the nice coffee, or play your favorite song loudly.",
+        "A spark of confidence in myself.": "You are seeking to build your inner strength and self-belief. Tip: Write down three things you like about yourself or three accomplishments you're proud of, and read them back to yourself.",
+    },
+    challengeFire: {
+        "The fire of determination to overcome it.": "You face challenges head-on with persistence. Tip: Your determination is a great strength. Remember to also allow for moments of rest so your determination doesn't lead to burnout.",
+        "The fire of creativity to find a new way.": "You see obstacles as opportunities for innovation. Tip: When you feel stuck, change your physical environment. A short walk can often spark a new perspective.",
+        "The fire of patience to wait for the right moment.": "You possess the wisdom to know that not everything requires immediate action. Tip: Your patience is a superpower. Use your waiting time for reflection and gathering strength, not just for idleness.",
+        "The fire of courage to ask for help.": "You know that true strength lies in vulnerability and community. Tip: Identify one person in your support system you can lean on, and don't hesitate to reach out. It strengthens both of you.",
+    },
+    burnAway: {
+        "Self-doubt and insecurity.": "You are ready to release the inner critic. Tip: When a doubtful thought arises, gently counter it with a past success or a quality you are proud of. Act as your own best friend.",
+        "Old habits that no longer serve me.": "You are prepared for positive change. Tip: Start small. Choose one old habit and replace it with a new, positive one for just one day. Celebrate that small victory.",
+        "Lingering resentment or anger.": "You are seeking peace by letting go of past hurts. Tip: Write down your feelings of resentment on a piece of paper, and then safely burn it (or tear it up) as a symbolic act of release.",
+        "The pressure of external expectations.": "You are ready to live more authentically for yourself. Tip: Practice tuning into your own needs. Ask yourself, 'What do *I* want right now?' before considering others' expectations.",
+    }
+};
+
+
 export default function FireAuraPage() {
     const router = useRouter();
     const videoId = "5gBJrZmbGLo";
@@ -63,7 +102,6 @@ export default function FireAuraPage() {
     // Quiz State
     const [quizStarted, setQuizStarted] = useState(false);
     const [answers, setAnswers] = useState<Record<string, string>>({});
-    const [loadingAdvice, setLoadingAdvice] = useState(false);
     const [advice, setAdvice] = useState("");
 
     useEffect(() => {
@@ -87,7 +125,7 @@ export default function FireAuraPage() {
         setAnswers(prev => ({ ...prev, [key]: value }));
     };
 
-    const handleGetAdvice = async () => {
+    const handleGetAdvice = () => {
         if (Object.keys(answers).length !== fireQuizQuestions.length) {
             toast({
                 variant: 'destructive',
@@ -96,20 +134,13 @@ export default function FireAuraPage() {
             });
             return;
         }
-        setLoadingAdvice(true);
-        setAdvice("");
-        try {
-            const result = await generateFireAuraAdvice(answers);
-            if (result.success && result.advice) {
-                setAdvice(result.advice);
-            } else {
-                toast({ variant: 'destructive', title: "Error", description: result.error || "Could not generate advice." });
-            }
-        } catch (error) {
-            toast({ variant: 'destructive', title: "Error", description: "An unexpected error occurred." });
-        } finally {
-            setLoadingAdvice(false);
-        }
+
+        const generatedAdvice = fireQuizQuestions.map(q => {
+            const answer = answers[q.key];
+            return adviceMap[q.key]?.[answer] || '';
+        }).filter(Boolean).join('\n\n');
+        
+        setAdvice(generatedAdvice);
     };
 
 
@@ -189,8 +220,8 @@ export default function FireAuraPage() {
                                         </RadioGroup>
                                     </div>
                                 ))}
-                                <Button onClick={handleGetAdvice} disabled={loadingAdvice} className="w-full">
-                                    {loadingAdvice ? <><LoaderCircle className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : "Get My Reflection"}
+                                <Button onClick={handleGetAdvice} className="w-full">
+                                    Get My Reflection
                                 </Button>
                                 {advice && (
                                      <Alert className="mt-4 border-orange-300 bg-orange-50 dark:bg-orange-900/20">
@@ -223,10 +254,8 @@ export default function FireAuraPage() {
             </main>
              <style jsx>{`
                 @keyframes breath-aura {
-                    0% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
-                    29% { transform: scale(0.9); opacity: 0.7; } /* Inhale Start */
-                    57% { transform: scale(0.9); opacity: 0.7; } /* Hold End */
-                    100% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
+                    0%, 100% { transform: scale(1.1); opacity: 0.9; } /* Inhale End / Exhale Start */
+                    50% { transform: scale(0.9); opacity: 0.7; } /* Inhale Mid / Exhale End */
                 }
                 .animate-breath-aura {
                     animation: breath-aura 14s ease-in-out infinite;
