@@ -105,45 +105,47 @@ export default function WaterTrackerPage() {
 
   const calculateStreak = () => {
     try {
-        let currentStreak = 0;
+        let streak = 0;
         const today = startOfDay(new Date());
-        let dailyGoal = 8; // Default goal in cups
+        let dailyGoal = 8;
         
         const savedSettings = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}settings`);
         if (savedSettings) {
             dailyGoal = JSON.parse(savedSettings).goal || 8;
         }
 
-        // Check previous days
-        for (let i = 1; i <= 30; i++) {
-            const dateToCheck = subDays(today, i);
-            const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-            const logData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${dateKey}`);
-
-            if (logData) {
-                const log: DailyLog = JSON.parse(logData);
-                const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
-                if (totalIntake >= dailyGoal) {
-                    currentStreak++;
-                } else {
-                    break; // Streak broken because goal not met
-                }
-            } else {
-                break; // Streak broken because a day was missed
+        // Check today's log first. If today's goal isn't met, streak is 0.
+        const todayLogData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${format(today, 'yyyy-MM-dd')}`);
+        if(todayLogData) {
+            const todayLog: DailyLog = JSON.parse(todayLogData);
+            const todayIntake = todayLog.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
+            if (todayIntake >= dailyGoal) {
+                streak = 1;
             }
         }
         
-        // Check today separately
-        const todayLogData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${format(today, 'yyyy-MM-dd')}`);
-        if(todayLogData) {
-            const log: DailyLog = JSON.parse(todayLogData);
-            const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
-            if (totalIntake >= dailyGoal) {
-                currentStreak++;
+        // If today's goal was met, check previous days
+        if (streak > 0) {
+            for (let i = 1; i <= 30; i++) {
+                const dateToCheck = subDays(today, i);
+                const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+                const logData = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${dateKey}`);
+
+                if (logData) {
+                    const log: DailyLog = JSON.parse(logData);
+                    const totalIntake = log.entries?.reduce((sum, entry) => sum + entry.amount, 0) || 0;
+                    if (totalIntake >= dailyGoal) {
+                        streak++;
+                    } else {
+                        break; // Streak broken because goal not met
+                    }
+                } else {
+                    break; // Streak broken because a day was missed
+                }
             }
         }
 
-        setHydrationStreak(currentStreak);
+        setHydrationStreak(streak);
     } catch (e) {
         console.error("Error calculating streak:", e);
     }
