@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -250,7 +250,7 @@ export default function SleepTrackerPage() {
   const qualityLabel = getQualityLabel(sleepQualityValue?.[0] ?? 0);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
           <GlowHerLogo />
@@ -263,15 +263,15 @@ export default function SleepTrackerPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="text-center mb-10">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900 dark:text-white">Sleep Tracker</h1>
-            <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">Track your sleep to uncover patterns and improve your rest.</p>
+            <h1 className="font-headline text-4xl md:text-5xl font-bold">Sleep Tracker</h1>
+            <p className="mt-2 text-lg text-muted-foreground">Track your sleep to uncover patterns and improve your rest.</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             <div className="lg:col-span-3 space-y-8">
-                <Card className="shadow-lg bg-white dark:bg-slate-800/50">
+                <Card className="shadow-lg">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3 text-2xl font-bold">
-                            <Moon className="text-indigo-500"/>
+                            <Moon className="text-indigo-400"/>
                             Log Last Night's Sleep
                         </CardTitle>
                     </CardHeader>
@@ -283,13 +283,13 @@ export default function SleepTrackerPage() {
                             name="logDate"
                             render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel className="font-semibold text-slate-700 dark:text-slate-300">Night Of</FormLabel>
+                                <FormLabel className="font-semibold">Night Of</FormLabel>
                                 <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
                                     <Button
                                         variant={"outline"}
-                                        className={"w-[240px] pl-3 text-left font-normal bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600"}
+                                        className={"w-[240px] pl-3 text-left font-normal"}
                                     >
                                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -316,8 +316,8 @@ export default function SleepTrackerPage() {
                             name="sleepDuration"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                    <Bed/> Sleep Duration: <span className="font-bold text-indigo-500">{field.value?.[0] ?? 0} hours</span>
+                                <FormLabel className="font-semibold flex items-center gap-2">
+                                    <Bed/> Sleep Duration: <span className="font-bold text-indigo-400">{field.value?.[0] ?? 0} hours</span>
                                 </FormLabel>
                                 <FormControl>
                                 <Slider
@@ -325,7 +325,6 @@ export default function SleepTrackerPage() {
                                     max={16}
                                     step={0.5}
                                     onValueChange={field.onChange}
-                                    className="[&>span>span]:bg-indigo-500 [&>span]:bg-indigo-200 dark:[&>span]:bg-indigo-900"
                                 />
                                 </FormControl>
                                 <FormMessage />
@@ -337,8 +336,8 @@ export default function SleepTrackerPage() {
                             name="sleepQuality"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                        <Star /> Sleep Quality: <span className="font-bold text-indigo-500">{qualityLabel}</span>
+                                    <FormLabel className="font-semibold flex items-center gap-2">
+                                        <Star /> Sleep Quality: <span className="font-bold text-indigo-400">{qualityLabel}</span>
                                     </FormLabel>
                                     <FormControl>
                                         <div className="flex justify-between gap-2 pt-2">
@@ -346,11 +345,10 @@ export default function SleepTrackerPage() {
                                                 <Button
                                                     key={option.value}
                                                     type="button"
-                                                    variant={sleepQualityValue[0] === option.value ? 'default' : 'outline'}
+                                                    variant={sleepQualityValue[0] === option.value ? 'secondary' : 'outline'}
                                                     onClick={() => field.onChange([option.value])}
                                                     className={cn(
                                                         "flex-1 h-16 text-lg transition-all",
-                                                        sleepQualityValue[0] === option.value && "bg-indigo-500 hover:bg-indigo-600 text-white"
                                                     )}
                                                 >
                                                     <div className="flex flex-col items-center">
@@ -371,13 +369,13 @@ export default function SleepTrackerPage() {
                             name="notes"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                                <FormLabel className="font-semibold flex items-center gap-2">
                                     <BookText /> Sleep Notes
                                 </FormLabel>
                                 <FormControl>
                                 <Textarea
                                     placeholder="e.g., Woke up twice, felt restless, had a weird dream..."
-                                    className="resize-none bg-slate-50 dark:bg-slate-700"
+                                    className="resize-none"
                                     {...field}
                                 />
                                 </FormControl>
@@ -389,7 +387,7 @@ export default function SleepTrackerPage() {
                             )}
                         />
 
-                        <Button type="submit" size="lg" className="w-full bg-indigo-500 hover:bg-indigo-600 text-white dark:text-white">Save Sleep Log</Button>
+                        <Button type="submit" size="lg" className="w-full">Save Sleep Log</Button>
                         </form>
                     </Form>
                     </CardContent>
@@ -398,16 +396,16 @@ export default function SleepTrackerPage() {
                 <div className="mt-8">
                   <SleepLogHistory key={logKey} />
                 </div>
-                 <Card className="shadow-lg bg-white dark:bg-slate-800/50">
+                 <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 font-bold"><History className="text-indigo-500"/> Recent Logs</CardTitle>
+                        <CardTitle className="flex items-center gap-2 font-bold"><History className="text-indigo-400"/> Recent Logs</CardTitle>
                         <CardDescription>Your sleep entries from the last 7 days.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         {recentLogs.length > 0 ? (
                            <ul className="space-y-3">
                                 {recentLogs.map((log, index) => (
-                                    <li key={index} className="flex justify-between items-center p-3 rounded-lg bg-slate-100 dark:bg-slate-700/50">
+                                    <li key={index} className="flex justify-between items-center p-3 rounded-lg bg-muted">
                                         <div className="font-semibold">{format(new Date(log.logDate), 'EEEE, MMM d')}</div>
                                         <div className="flex items-center gap-4 text-sm">
                                             <span><Bed className="inline-block mr-1 h-4 w-4" /> {log.sleepDuration[0]}h</span>
@@ -417,27 +415,27 @@ export default function SleepTrackerPage() {
                                 ))}
                             </ul>
                         ) : (
-                            <p className="text-center text-slate-500 dark:text-slate-400 py-4">No recent sleep logs found.</p>
+                            <p className="text-center text-muted-foreground py-4">No recent sleep logs found.</p>
                         )}
                     </CardContent>
                 </Card>
             </div>
             <div className="lg:col-span-2 space-y-6">
-                <Card className="bg-white dark:bg-slate-800/50 shadow-lg">
+                <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle className="font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+                        <CardTitle className="font-bold flex items-center gap-2">
                             <Sparkles className="text-indigo-400" /> Sleep Summary
                         </CardTitle>
                         <CardDescription>Your last logged night.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-slate-100 dark:bg-slate-700/50">
-                            <span className="font-semibold flex items-center gap-2"><Bed className="text-indigo-500"/> Duration</span>
-                            <span className="font-bold text-lg text-slate-800 dark:text-slate-200">{sleepDurationValue?.[0] ?? 'N/A'} hours</span>
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-muted">
+                            <span className="font-semibold flex items-center gap-2"><Bed className="text-indigo-400"/> Duration</span>
+                            <span className="font-bold text-lg">{sleepDurationValue?.[0] ?? 'N/A'} hours</span>
                         </div>
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-slate-100 dark:bg-slate-700/50">
-                            <span className="font-semibold flex items-center gap-2"><Star className="text-indigo-500"/> Quality</span>
-                            <span className="font-bold text-lg text-slate-800 dark:text-slate-200">{qualityLabel}</span>
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-muted">
+                            <span className="font-semibold flex items-center gap-2"><Star className="text-indigo-400"/> Quality</span>
+                            <span className="font-bold text-lg">{qualityLabel}</span>
                         </div>
                         {sleepDurationValue?.[0] < 4 && (
                             <Alert variant="destructive">
@@ -451,7 +449,7 @@ export default function SleepTrackerPage() {
                     </CardContent>
                 </Card>
                 {currentPhase && phaseTips[currentPhase] && (
-                    <Alert className="bg-indigo-100 border-indigo-200 text-indigo-800 dark:bg-indigo-900/30 dark:border-indigo-500/30 dark:text-indigo-200 [&>svg]:text-indigo-500 dark:[&>svg]:text-indigo-400">
+                    <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-200 [&>svg]:text-indigo-400">
                         <Info className="h-4 w-4" />
                         <AlertTitle className="font-bold">{phaseTips[currentPhase].title}</AlertTitle>
                         <AlertDescription>
@@ -459,14 +457,14 @@ export default function SleepTrackerPage() {
                         </AlertDescription>
                     </Alert>
                 )}
-                 <Card className="shadow-lg bg-white dark:bg-slate-800/50">
+                 <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 font-bold text-slate-900 dark:text-white"><Award className="text-amber-500"/> Achievements</CardTitle>
+                        <CardTitle className="flex items-center gap-2 font-bold"><Award className="text-amber-400"/> Achievements</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className={cn(
                             "flex items-center gap-4 p-4 rounded-lg transition-all",
-                            achievements.star ? "bg-amber-400/20 text-amber-800 dark:bg-amber-400/10 dark:text-amber-300" : "bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 opacity-70"
+                            achievements.star ? "bg-amber-500/20 text-amber-200" : "bg-muted text-muted-foreground opacity-70"
                         )}>
                             <Award className="h-8 w-8" />
                             <div>
@@ -476,7 +474,7 @@ export default function SleepTrackerPage() {
                         </div>
                         <div className={cn(
                             "flex items-center gap-4 p-4 rounded-lg transition-all",
-                             achievements.queen ? "bg-purple-400/20 text-purple-800 dark:bg-purple-400/10 dark:text-purple-300" : "bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 opacity-70"
+                             achievements.queen ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground opacity-70"
                         )}>
                              <Award className="h-8 w-8" />
                             <div>

@@ -65,7 +65,7 @@ const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
 const IS_PREGNANT_KEY = 'glowher-fitness-is-pregnant';
 
 // --- DATA ---
-const cycleExercises = { Menstrual: { title: "Menstrual Phase: Rest & Recover", icon: Heart, color: "bg-red-500/10 text-red-700", suggestions: ["Gentle walking", "Restorative yoga", "Light stretching"] }, Follicular: { title: "Follicular Phase: Energize", icon: Lightbulb, color: "bg-blue-500/10 text-blue-700", suggestions: ["Brisk walking or jogging", "Dancing", "Light cardio"] }, Ovulatory: { title: "Ovulatory Phase: Peak Power", icon: Dumbbell, color: "bg-green-500/10 text-green-700", suggestions: ["High-Intensity Interval Training (HIIT)", "Running", "Strength training"] }, Luteal: { title: "Luteal Phase: Wind Down", icon: Wind, color: "bg-yellow-500/10 text-yellow-700", suggestions: ["Pilates", "Swimming", "Moderate strength training"] }};
+const cycleExercises = { Menstrual: { title: "Menstrual Phase: Rest & Recover", icon: Heart, color: "bg-red-500/10 text-red-400 border-red-500/20", suggestions: ["Gentle walking", "Restorative yoga", "Light stretching"] }, Follicular: { title: "Follicular Phase: Energize", icon: Lightbulb, color: "bg-blue-500/10 text-blue-400 border-blue-500/20", suggestions: ["Brisk walking or jogging", "Dancing", "Light cardio"] }, Ovulatory: { title: "Ovulatory Phase: Peak Power", icon: Dumbbell, color: "bg-green-500/10 text-green-400 border-green-500/20", suggestions: ["High-Intensity Interval Training (HIIT)", "Running", "Strength training"] }, Luteal: { title: "Luteal Phase: Wind Down", icon: Wind, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", suggestions: ["Pilates", "Swimming", "Moderate strength training"] }};
 const pregnancyExercises = { '1st Trimester': { title: "First Trimester: Build a Foundation", icon: Heart, suggestions: ["Walking", "Prenatal yoga", "Swimming"], videoUrl: "https://www.youtube.com/embed/Ia6dNwVs1M8" }, '2nd Trimester': { title: "Second Trimester: Maintain Strength", icon: Dumbbell, suggestions: ["Modified strength training", "Swimming", "Stationary cycling"], videoUrl: "https://www.youtube.com/embed/XhqntqSGKsc" }, '3rd Trimester': { title: "Third Trimester: Prepare for Birth", icon: Brain, suggestions: ["Walking", "Stretching", "Birth ball exercises"], videoUrl: "https://www.youtube.com/embed/qkhLev3bKd0" }};
 const prenatalYogaVideoUrl = "https://www.youtube.com/embed/zmUJWKM98hM";
 
@@ -280,12 +280,12 @@ export default function FitnessGoalsPage() {
                             <Card className="shadow-lg">
                                 <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
                                 <CardContent className="space-y-2">
-                                    <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-100 dark:bg-amber-900/20" : "bg-muted")}>
-                                        <Flame className={cn("h-6 w-6", streak > 0 ? "text-amber-500" : "text-muted-foreground")} />
+                                    <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-500/20" : "bg-muted")}>
+                                        <Flame className={cn("h-6 w-6", streak > 0 ? "text-amber-400" : "text-muted-foreground")} />
                                         <div><p className="font-semibold">Consistency Streak</p><p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log a workout today to start a streak."}</p></div>
                                     </div>
-                                     <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedDays >= goalDays ? "bg-green-100 dark:bg-green-900/20" : "bg-muted")}>
-                                        <Star className={cn("h-6 w-6", completedDays >= goalDays ? "text-green-500" : "text-muted-foreground")} />
+                                     <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedDays >= goalDays ? "bg-primary/20" : "bg-muted")}>
+                                        <Star className={cn("h-6 w-6", completedDays >= goalDays ? "text-primary" : "text-muted-foreground")} />
                                         <div><p className="font-semibold">Weekly Goal</p><p className="text-sm text-muted-foreground">{completedDays >= goalDays ? "You hit your goal this week!" : "Keep going to reach your weekly goal."}</p></div>
                                     </div>
                                 </CardContent>
@@ -329,9 +329,9 @@ export default function FitnessGoalsPage() {
                                 </CardContent>
                             </Card>
                             {relevantSuggestions && !isPregnant ? (
-                                <Card className={`shadow-lg ${relevantSuggestions.color} border-0`}>
-                                    <CardHeader><CardTitle className="flex items-center gap-2"><relevantSuggestions.icon/> {relevantSuggestions.title}</CardTitle><CardDescription className="text-foreground/70">Exercises aligned with your current menstrual phase.</CardDescription></CardHeader>
-                                    <CardContent><ul className="space-y-2">{relevantSuggestions.suggestions.map(s => (<li key={s} className="flex items-center gap-2"><Check className="h-4 w-4 text-green-600"/><span>{s}</span></li>))}</ul></CardContent>
+                                <Card className={cn("shadow-lg border", relevantSuggestions.color)}>
+                                    <CardHeader><CardTitle className="flex items-center gap-2"><relevantSuggestions.icon/> {relevantSuggestions.title}</CardTitle><CardDescription className="text-foreground/80">Exercises aligned with your current menstrual phase.</CardDescription></CardHeader>
+                                    <CardContent><ul className="space-y-2">{relevantSuggestions.suggestions.map(s => (<li key={s} className="flex items-center gap-2"><Check className="h-4 w-4 text-green-500"/><span>{s}</span></li>))}</ul></CardContent>
                                 </Card>
                             ) : !isPregnant && (
                                 <Alert><Info className="h-4 w-4" /><AlertTitle>Enter Your Cycle Data</AlertTitle><AlertDescription>To get personalized fitness suggestions, please enter your details in the Period Tracker.</AlertDescription></Alert>
@@ -342,9 +342,9 @@ export default function FitnessGoalsPage() {
 
                 {isPregnant && (
                      <div className="mt-12 space-y-8">
-                        <div className="flex items-center justify-center mb-4 p-4 rounded-md bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800">
-                           <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400 mr-3" />
-                           <p className="font-bold text-red-800 dark:text-red-200 text-center">Do consult your doctor before doing this and proceed only if comfortable.</p>
+                        <div className="flex items-center justify-center mb-4 p-4 rounded-md bg-destructive/10 border border-destructive/20">
+                           <AlertTriangle className="h-6 w-6 text-destructive mr-3" />
+                           <p className="font-bold text-destructive text-center">Do consult your doctor before doing this and proceed only if comfortable.</p>
                        </div>
                         {pregnancyVideoUrl && (<Card className="shadow-xl"><CardHeader><CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle></CardHeader><CardContent><div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div></CardContent></Card>)}
                         <Card className="shadow-xl">

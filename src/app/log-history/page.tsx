@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -108,7 +109,7 @@ export default function LogHistoryPage() {
                         {log.notes && (
                             <div>
                                 <h4 className="font-semibold mb-2">Notes:</h4>
-                                <p className="text-muted-foreground bg-muted/50 p-3 rounded-md border">{log.notes}</p>
+                                <p className="text-muted-foreground bg-muted p-3 rounded-md border">{log.notes}</p>
                             </div>
                         )}
                          <Button variant="link" className="p-0 h-auto" onClick={() => router.push('/log-symptoms')}>

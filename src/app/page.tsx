@@ -51,7 +51,7 @@ export default function HomePage() {
     try {
       const storedData = localStorage.getItem('glowher-user');
       if (!storedData) {
-        router.replace('/personal-details');
+        router.replace('/settings'); // Redirect to settings if no user data
         return;
       }
       
@@ -71,7 +71,7 @@ export default function HomePage() {
             const startDate = subDays(new Date(dueDate), 280);
             const totalDays = differenceInDays(new Date(), startDate);
             const gestationalAgeWeeks = Math.floor(totalDays / 7);
-            currentNotifications.push({ id: 'preg-status', icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-500', href: '/pregnancy-tracker' });
+            currentNotifications.push({ id: 'preg-status', icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-400', href: '/pregnancy-tracker' });
         }
       } else {
         const periodData = localStorage.getItem('glowher-period-tracker');
@@ -84,7 +84,7 @@ export default function HomePage() {
             const nextPeriodStart = addDays(currentCycleStartDate, data.cycleLength);
             const daysUntil = differenceInDays(nextPeriodStart, new Date());
             if(daysUntil >= 0 && daysUntil <= 7) {
-                currentNotifications.push({ id: 'period-status', icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-500', href: '/period-tracker' });
+                currentNotifications.push({ id: 'period-status', icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-400', href: '/period-tracker' });
             }
         }
       }
@@ -127,34 +127,34 @@ export default function HomePage() {
           const shoppingList: ShoppingListItem[] = JSON.parse(savedShoppingList);
           if (shoppingList.length > 0) {
               const shoppingMessage = `You have ${shoppingList.length} item(s) on your shopping list.`;
-              currentNotifications.push({ id: 'shopping-list', icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-500', href: '/grocery-list' });
+              currentNotifications.push({ id: 'shopping-list', icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-400', href: '/grocery-list' });
           }
       }
       
       // Check sleep log for yesterday
       const sleepLog = localStorage.getItem(`glowher-sleep-log-${yesterdayKey}`);
       if (!sleepLog) {
-          currentNotifications.push({ id: 'sleep-log', icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-500', href: '/sleep-tracker' });
+          currentNotifications.push({ id: 'sleep-log', icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-400', href: '/sleep-tracker' });
       }
       
       // Check water log for today
       const waterLog = localStorage.getItem(`glowher-water-tracker-${todayKey}`);
       if (!waterLog || JSON.parse(waterLog).entries.length === 0) {
-          currentNotifications.push({ id: 'water-log', icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-500', href: '/water-tracker' });
+          currentNotifications.push({ id: 'water-log', icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-400', href: '/water-tracker' });
       }
       
       // Check fitness log for today
       const fitnessLogKey = isPregnant ? `glowher-preg-fitness-log-${todayKey}` : `glowher-fitness-log-${todayKey}`;
       const fitnessLog = localStorage.getItem(fitnessLogKey);
       if (!fitnessLog) {
-          currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-500', href: '/fitness-goals' });
+          currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-400', href: '/fitness-goals' });
       }
 
       setNotifications(currentNotifications);
 
     } catch (error) {
       console.error("Error during initial load:", error);
-      router.replace('/personal-details');
+      router.replace('/settings');
     } finally {
         setLoading(false);
     }
@@ -176,13 +176,13 @@ export default function HomePage() {
             <GlowHerLogo />
              <div className="flex items-center gap-2">
                 <Link href="/ai-assistant">
-                    <Button variant="ghost" size="icon" className="h-14 w-14 rounded-full bg-teal-500/10 hover:bg-teal-500/20 text-teal-500 hover:text-teal-600">
+                    <Button variant="ghost" size="icon" className="h-14 w-14 rounded-full bg-primary/10 hover:bg-primary/20 text-primary hover:text-primary">
                         <Stethoscope className="h-7 w-7" />
                     </Button>
                 </Link>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-12 w-12 text-yellow-500 hover:text-yellow-600 hover:bg-yellow-500/10 relative">
+                        <Button variant="ghost" size="icon" className="h-12 w-12 text-yellow-400 hover:text-yellow-500 hover:bg-yellow-400/10 relative">
                             <Bell className="h-6 w-6" />
                             {notifications.length > 0 && (
                                 <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">{notifications.length}</Badge>

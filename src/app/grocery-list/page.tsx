@@ -285,7 +285,7 @@ export default function GroceryListPage() {
                                             <li key={item.id} className="flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/50">
                                                 <span className="font-medium">{item.name}</span>
                                                 <div className="flex gap-1">
-                                                    <Button variant="ghost" size="sm" onClick={() => moveShoppingItemToInventory(item)} className="text-green-600 hover:text-green-700 hover:bg-green-100">
+                                                    <Button variant="ghost" size="sm" onClick={() => moveShoppingItemToInventory(item)} className="text-primary hover:text-primary/90 hover:bg-primary/10">
                                                         Move to Inventory <ArrowRight className="h-4 w-4 ml-2"/>
                                                     </Button>
                                                     <Button variant="ghost" size="icon" onClick={() => deleteShoppingListItem(item.id)}>

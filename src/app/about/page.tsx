@@ -70,11 +70,11 @@ export default function AboutPage() {
     const router = useRouter();
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-900 text-white selection:bg-teal-300 selection:text-slate-900">
-            <header className="sticky top-0 left-0 w-full bg-gray-900/80 backdrop-blur-lg container mx-auto px-4 py-6 z-20">
+        <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20">
+            <header className="sticky top-0 left-0 w-full bg-background/80 backdrop-blur-lg container mx-auto px-4 py-6 z-20">
                 <div className="flex justify-between items-center">
-                    <GlowHerLogo className="[&>span]:text-white" />
-                    <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:text-white hover:bg-white/10">
+                    <GlowHerLogo />
+                    <Button variant="ghost" onClick={() => router.push('/')}>
                         <ChevronLeft className="mr-2 h-4 w-4" />
                         Back to Dashboard
                     </Button>
@@ -83,23 +83,23 @@ export default function AboutPage() {
             <main className="flex-grow container mx-auto px-4 py-12">
                 <div className="max-w-4xl mx-auto space-y-12">
                     <section className="text-center">
-                        <h1 className="text-4xl md:text-5xl font-headline text-teal-300">About GlowHer Wellness</h1>
-                        <p className="mt-4 text-lg text-gray-300">
+                        <h1 className="text-4xl md:text-5xl font-headline text-primary">About GlowHer Wellness</h1>
+                        <p className="mt-4 text-lg text-muted-foreground">
                             GlowHer Wellness is your personal sanctuary for holistic well-being. It is thoughtfully designed to help you connect with your body, understand your natural rhythms, and cultivate a daily practice of self-care. Whether you're tracking your cycle, navigating pregnancy, or simply seeking a moment of calm, this app provides the tools you need to nurture your mind and body.
                         </p>
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-headline text-center text-teal-300 mb-8">Features at a Glance</h2>
+                        <h2 className="text-3xl font-headline text-center text-primary mb-8">Features at a Glance</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {features.map(feature => (
-                                <Card key={feature.title} className="bg-white/5 border-white/10 text-white flex flex-col">
+                                <Card key={feature.title} className="bg-card flex flex-col">
                                     <CardHeader className="flex-row items-center gap-4">
-                                        <feature.icon className={`w-8 h-8 ${feature.color || 'text-teal-400'}`} />
+                                        <feature.icon className="w-8 h-8 text-primary" />
                                         <CardTitle className="text-xl">{feature.title}</CardTitle>
                                     </CardHeader>
                                     <CardContent className="flex-grow">
-                                        <CardDescription className="text-gray-400">{feature.description}</CardDescription>
+                                        <CardDescription>{feature.description}</CardDescription>
                                     </CardContent>
                                 </Card>
                             ))}
@@ -107,15 +107,15 @@ export default function AboutPage() {
                     </section>
 
                     <section className="text-center">
-                        <h2 className="text-3xl font-headline text-teal-300">Created with Love</h2>
-                        <div className="mt-4 text-lg text-gray-300 space-y-2">
+                        <h2 className="text-3xl font-headline text-primary">Created with Love</h2>
+                        <div className="mt-4 text-lg text-muted-foreground space-y-2">
                            <p>
                                 This application was built by:
                            </p>
-                           <p className="font-bold text-white text-xl">
+                           <p className="font-bold text-foreground text-xl">
                                 Hiral Goyal
                            </p>
-                           <p className="text-gray-400">
+                           <p className="text-sm text-muted-foreground">
                                 B-Tech, MAC Student
                                 <br/>
                                 MITS College, Gwalior (MP)
@@ -123,7 +123,7 @@ export default function AboutPage() {
                         </div>
                     </section>
 
-                    <section className="text-center text-sm text-gray-500 pt-8 border-t border-gray-700">
+                    <section className="text-center text-sm text-muted-foreground pt-8 border-t border-border">
                         <p>&copy; {new Date().getFullYear()} GlowHer Wellness. All Rights Reserved.</p>
                         <p className="mt-2">The content and features of this application are for informational purposes only. All images and videos used are the property of their respective owners. No copyright infringement is intended. Unauthorized duplication or distribution of this app is strictly prohibited.</p>
                     </section>
