@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Brain, ChevronLeft, Play } from 'lucide-react';
@@ -19,26 +19,61 @@ export default function BreathePage() {
     const router = useRouter();
     const [cycleText, setCycleText] = useState('Get Ready...');
     const [isBreathing, setIsBreathing] = useState(false);
-    const [videoUrl, setVideoUrl] = useState<string | null>(null);
+    const playerRef = useRef<any>(null); // Ref to hold the YouTube player instance
+
+    // Load the YouTube Iframe API script
+    useEffect(() => {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode!.insertBefore(tag, firstScriptTag);
+
+        // This function creates an <iframe> (and YouTube player)
+        // after the API code downloads.
+        (window as any).onYouTubeIframeAPIReady = () => {
+            playerRef.current = new (window as any).YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: YOUTUBE_VIDEO_ID,
+                playerVars: {
+                    playsinline: 1,
+                    loop: 1,
+                    playlist: YOUTUBE_VIDEO_ID, // Required for loop to work
+                    controls: 0,
+                },
+            });
+        };
+
+        return () => {
+            // Clean up the global function when the component unmounts
+             if ((window as any).onYouTubeIframeAPIReady) {
+                (window as any).onYouTubeIframeAPIReady = null;
+            }
+        }
+
+    }, []);
 
     useEffect(() => {
         if (!isBreathing) return;
 
         const totalDuration = breathingCycle.reduce((sum, cycle) => sum + cycle.duration, 0);
 
-        const cycleInterval = setInterval(() => {
+        const runCycle = () => {
             setCycleText(breathingCycle[0].text);
             setTimeout(() => setCycleText(breathingCycle[1].text), breathingCycle[0].duration);
             setTimeout(() => setCycleText(breathingCycle[2].text), breathingCycle[0].duration + breathingCycle[1].duration);
-        }, totalDuration);
-
-        setCycleText(breathingCycle[0].text);
+        };
+        
+        runCycle(); // Run immediately
+        const cycleInterval = setInterval(runCycle, totalDuration);
 
         return () => clearInterval(cycleInterval);
     }, [isBreathing]);
     
     const stopPlaybackAndNavigate = (path: string) => {
-        setVideoUrl(null);
+        if (playerRef.current && typeof playerRef.current.stopVideo === 'function') {
+            playerRef.current.stopVideo();
+        }
         if (path === 'back') {
             router.back();
         } else {
@@ -55,8 +90,10 @@ export default function BreathePage() {
     };
     
     const startBreathing = () => {
+        if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
+            playerRef.current.playVideo();
+        }
         setIsBreathing(true);
-        setVideoUrl(`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_VIDEO_ID}&controls=0`);
     }
 
     return (
@@ -70,17 +107,10 @@ export default function BreathePage() {
                 Back
             </Button>
             
-             {videoUrl && (
-                <iframe
-                    src={videoUrl}
-                    className="absolute w-0 h-0" // Hide the video player
-                    allow="autoplay; encrypted-media"
-                    allowFullScreen
-                    title="YouTube video player"
-                ></iframe>
-            )}
+            {/* This div will be replaced by the YouTube iframe */}
+            <div id="youtube-player" className="absolute w-0 h-0"></div>
 
-             <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
+            <div className="absolute top-0 left-0 w-full h-full bg-black/10 -z-10" />
 
             <div className="w-full max-w-md bg-black/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-center text-white">
                  <div className="flex items-center justify-center gap-2">
