@@ -22,7 +22,7 @@ export default function AiAssistantPage() {
             </header>
             <main className="flex-grow">
                 <iframe
-                    src="https://chat.deepseek.com/"
+                    src="https://cdn.botpress.cloud/webchat/v3.1/shareable.html?configUrl=https://files.bpcontent.cloud/2025/07/30/10/20250730105020-MU3DHHU1.json"
                     className="w-full h-full border-none"
                     title="AI Assistant"
                 ></iframe>
