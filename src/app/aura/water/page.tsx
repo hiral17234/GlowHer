@@ -3,7 +3,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Droplet, Wind, Ear, Eye, Hand, Rss, Sparkles, Lightbulb } from 'lucide-react';
+import { ChevronLeft, Droplet, Wind, Ear, Eye, Hand, Rss, Sparkles, Lightbulb, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -158,7 +158,7 @@ export default function WaterAuraPage() {
                         </Button>
                     </div>
                 </header>
-                <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
+                <main className="flex-grow flex flex-col items-center justify-center p-4 md:p-6 space-y-8">
                     <div className="w-full max-w-5xl mx-auto text-center p-6 space-y-6 bg-black/20 backdrop-blur-sm rounded-xl">
                         <h2 className="text-3xl font-headline">Your Water Aura Music</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -248,6 +248,9 @@ export default function WaterAuraPage() {
                                             <AlertDescription className="text-slate-200 whitespace-pre-wrap">
                                                 {advice}
                                             </AlertDescription>
+                                            <Button onClick={() => router.push('/aura/healing-reflection')} className="mt-4 bg-cyan-500 hover:bg-cyan-600">
+                                                Next <ArrowRight className="ml-2 h-4 w-4" />
+                                            </Button>
                                         </Alert>
                                     )}
                                 </div>

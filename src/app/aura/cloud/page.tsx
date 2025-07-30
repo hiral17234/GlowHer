@@ -3,7 +3,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Cloud, Wind, Ear, Eye, Hand, Rss, Sparkles, Lightbulb } from 'lucide-react';
+import { ChevronLeft, Cloud, Wind, Ear, Eye, Hand, Rss, Sparkles, Lightbulb, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -245,6 +245,9 @@ export default function CloudAuraPage() {
                                             <AlertDescription className="text-slate-200 whitespace-pre-wrap">
                                                 {advice}
                                             </AlertDescription>
+                                            <Button onClick={() => router.push('/aura/healing-reflection')} className="mt-4 bg-blue-500 hover:bg-blue-600">
+                                                Next <ArrowRight className="ml-2 h-4 w-4" />
+                                            </Button>
                                         </Alert>
                                     )}
                                 </div>

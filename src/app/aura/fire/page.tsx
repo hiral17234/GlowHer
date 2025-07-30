@@ -3,7 +3,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Flame, Wind, Ear, Eye, Hand, Rss, Sparkles, Lightbulb } from 'lucide-react';
+import { ChevronLeft, Flame, Wind, Ear, Eye, Hand, Rss, Sparkles, Lightbulb, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -160,7 +160,7 @@ export default function FireAuraPage() {
                         </Button>
                     </div>
                 </header>
-                <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
+                <main className="flex-grow flex flex-col items-center justify-center p-4 md:p-6 space-y-8">
                     <div className="w-full max-w-2xl mx-auto text-center p-6 space-y-6 bg-black/20 backdrop-blur-sm rounded-xl">
                         <h2 className="text-3xl font-headline">Your Fire Aura Music</h2>
                         <div className="aspect-video">
@@ -246,6 +246,9 @@ export default function FireAuraPage() {
                                             <AlertDescription className="text-slate-200 whitespace-pre-wrap">
                                                 {advice}
                                             </AlertDescription>
+                                            <Button onClick={() => router.push('/aura/healing-reflection')} className="mt-4 bg-orange-500 hover:bg-orange-600">
+                                                Next <ArrowRight className="ml-2 h-4 w-4" />
+                                            </Button>
                                         </Alert>
                                     )}
                                 </div>
