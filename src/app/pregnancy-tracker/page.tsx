@@ -496,7 +496,7 @@ const weeklyDevelopment = [
         title: "Week 40: Due Date!",
         size: "Your baby is the size of a small pumpkin.",
         development: "👶 The baby is fully developed and just waiting for the signal to begin their journey into the world.\n\n⚖️ The average baby at this stage weighs between 6 and 9 pounds and is 19 to 22 inches long.\n\nHAIR and nails are continuing to grow.\n\nThe vernix caseosa is still protecting their skin.\n\nThey are snugly tucked into your pelvis.\n\nLUNGS are ready and waiting to take that first breath.\n\nAll organ systems are mature and ready for life on the outside.\n\nThey are biding their time until their birthday arrives.",
-        bodyChanges: "📅 Your due date is here, but it's just an estimate. Only about 5% of babies are born on their actual due date.\n\nTry not to be discouraged if your due date comes and goes. It's very common to go a bit beyond 40 weeks, especially with a first baby.\n\nYour provider will be monitoring you and the baby very closely.\n\nThey will likely discuss induction options with you if you go to 41 or 42 weeks.\n\nYour body is physically and hormonally primed for labor.\n\nYour cervix is likely effaced and may be dilated.\n\nYour patience is being tested to its absolute limit.\n\nYou are on high alert for any sign of labor starting.",
+        bodyChanges: "📅 Your due date is here, but it's just an estimate. Only about 5% of babies are born on their actual due date.\n\nTry not to be discouraged if your due date comes and goes. It's very common to go a bit beyond 40 weeks, especially with a first baby.\n\nYour provider will be monitoring you and the baby very closely.\n\nThey will likely discuss induction options with you if you go to 41 or 42 weeks.\n\nYour body is physically and hormonally primed for labor.\n\nYour cervix is likely effaced and may be slightly dilated.\n\nYour patience is being tested to its absolute limit.\n\nYou are on high alert for any sign of labor starting.",
         symptoms: "😣 You are likely feeling a potent combination of being physically miserable and incredibly excited.\n\n😴 Sleep is something that happens to other people.\n\nEverything hurts: your back, your hips, your pelvis.\n\nWalking is a chore.\n\nStrong, frequent Braxton Hicks keep you guessing.\n\nConstant pressure on your bladder and rectum.\n\nExtreme impatience and frustration are normal if your due date passes.\n\nYou are ready to not be pregnant anymore.",
         tips: "🌶️ If you're feeling antsy, you can try some methods that are *thought* to encourage labor, like walking, having sex, or eating spicy food (with your doctor's approval, of course). There's little scientific evidence, but it can make you feel more proactive.\n\nsoon you'll be holding your baby! This is the most important thing to remember.\n\nTrust your body and your baby. They know the right time.\n\nIf you're scheduled for an induction, ask your provider questions so you know what to expect.\n\nRest as much as humanly possible.\n\nStay in close contact with your provider.\n\nLean on your support system.\n\nTake one day at a time. Your baby will be here before you know it.",
         imageUrl: "https://i.pinimg.com/1200x/0e/40/40/0e4040ee25da30655d857de0fb12943b.jpg",
@@ -758,11 +758,13 @@ export default function PregnancyTrackerPage() {
 
   if (pregnancyDetails) {
     return (
-        <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-slate-100">
-             <header className="container mx-auto px-4 py-6 z-10">
+        <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/736x/4d/f1/6b/4df16bef06d3869b452e939c7ff925ce.jpg')"}}>
+            <div className="absolute inset-0 bg-black/50 z-0"/>
+            <div className="relative z-10 flex flex-col min-h-screen">
+             <header className="container mx-auto px-4 py-6">
                 <div className="flex justify-between items-center">
                 <GlowHerLogo className="[&>span]:text-white" />
-                <Button variant="ghost" onClick={() => router.push('/')} className="text-slate-200 hover:text-white hover:bg-white/10">
+                <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white">
                     <ChevronLeft className="mr-2 h-4 w-4" />
                     {t.backToDashboard}
                 </Button>
@@ -776,7 +778,7 @@ export default function PregnancyTrackerPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="shadow-lg bg-white/5 border-white/10 text-white">
+                    <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                         <CardHeader className="flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-slate-300">{t.dueDate}</CardTitle>
                             <CalendarIcon className="h-4 w-4 text-slate-400" />
@@ -785,7 +787,7 @@ export default function PregnancyTrackerPage() {
                             <p className="text-2xl font-bold">{format(pregnancyDetails.dueDate, "MMM d, yyyy")}</p>
                         </CardContent>
                     </Card>
-                    <Card className="shadow-lg bg-white/5 border-white/10 text-white">
+                    <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                         <CardHeader className="flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-slate-300">{t.daysToGo}</CardTitle>
                             <Baby className="h-4 w-4 text-slate-400" />
@@ -794,7 +796,7 @@ export default function PregnancyTrackerPage() {
                             <p className="text-2xl font-bold">{pregnancyDetails.daysLeft}</p>
                         </CardContent>
                     </Card>
-                    <Card className="shadow-lg bg-white/5 border-white/10 text-white">
+                    <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                         <CardHeader className="flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-slate-300">{t.trimester}</CardTitle>
                             <BarChart className="h-4 w-4 text-slate-400" />
@@ -806,7 +808,7 @@ export default function PregnancyTrackerPage() {
                 </div>
 
                 {currentWeekData && (
-                    <Card className="shadow-2xl bg-slate-800/50 border-white/10 text-slate-200">
+                    <Card className="shadow-2xl bg-black/20 backdrop-blur-sm border-white/10 text-slate-200">
                         <CardHeader>
                              <CardTitle className="font-headline text-3xl text-teal-300">{t.weeklyTitle(currentWeekData.title)}</CardTitle>
                              <CardDescription className="text-slate-400">{t.weeklySize(currentWeekData.size)}</CardDescription>
@@ -828,7 +830,7 @@ export default function PregnancyTrackerPage() {
                                     <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={400} className="rounded-lg object-cover" />
                                 </div>
                                 <Tabs defaultValue="development" className="w-full">
-                                    <TabsList className="grid w-full grid-cols-4 bg-slate-700/50 text-slate-300">
+                                    <TabsList className="grid w-full grid-cols-4 bg-slate-900/50 text-slate-300">
                                         <TabsTrigger value="development" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
                                         <TabsTrigger value="body" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
                                         <TabsTrigger value="symptoms" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
@@ -844,11 +846,11 @@ export default function PregnancyTrackerPage() {
                     </Card>
                 )}
 
-                <Card className="shadow-2xl bg-slate-800/50 border-white/10 text-slate-200">
+                <Card className="shadow-2xl bg-black/20 backdrop-blur-sm border-white/10 text-slate-200">
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="font-headline text-2xl text-teal-300">{t.symptomTrackerTitle}</CardTitle>
-                            <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700">
+                            <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')} className="bg-slate-900/50 border-slate-600 hover:bg-slate-700">
                                 <History className="mr-2 h-4 w-4" />
                                 {t.viewHistory}
                             </Button>
@@ -912,7 +914,7 @@ export default function PregnancyTrackerPage() {
                                         <FormControl>
                                         <Textarea
                                             placeholder={t.customSymptomsPlaceholder}
-                                            className="resize-none bg-slate-700/50 border-slate-600 text-slate-200"
+                                            className="resize-none bg-slate-900/50 border-slate-600 text-slate-200"
                                             {...field}
                                         />
                                         </FormControl>
@@ -941,7 +943,7 @@ export default function PregnancyTrackerPage() {
                 </Card>
 
                 {babyLookVideoUrl && (
-                     <Card className="shadow-2xl bg-slate-800/50 border-white/10 text-slate-200">
+                     <Card className="shadow-2xl bg-black/20 backdrop-blur-sm border-white/10 text-slate-200">
                         <CardHeader>
                             <CardTitle className="font-headline text-2xl flex items-center gap-2 text-teal-300">
                                 <Video /> {t.babyLookTitle}
@@ -971,23 +973,26 @@ export default function PregnancyTrackerPage() {
                 </div>
 
             </main>
+            </div>
         </div>
     )
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-slate-100">
-        <header className="container mx-auto px-4 py-6 z-10">
+    <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/736x/4d/f1/6b/4df16bef06d3869b452e939c7ff925ce.jpg')"}}>
+        <div className="absolute inset-0 bg-black/50 z-0"/>
+        <div className="relative z-10 flex flex-col min-h-screen">
+        <header className="container mx-auto px-4 py-6">
             <div className="flex justify-between items-center">
             <GlowHerLogo className="[&>span]:text-white"/>
-            <Button variant="ghost" onClick={() => router.push('/')} className="text-slate-200 hover:text-white hover:bg-white/10">
+            <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:text-white hover:bg-white/10">
                 <ChevronLeft className="mr-2 h-4 w-4" />
                 {t.backToDashboard}
             </Button>
             </div>
       </header>
       <main className="flex-grow flex items-center justify-center container mx-auto px-4 py-8">
-        <Card className="w-full max-w-lg shadow-xl bg-slate-800/50 border-white/10 text-slate-200">
+        <Card className="w-full max-w-lg shadow-xl bg-black/20 backdrop-blur-sm border-white/20 text-slate-200">
             <CardHeader>
                 <CardTitle className="font-headline text-3xl text-center text-teal-300">{t.getStartedTitle}</CardTitle>
                 <CardDescription className="text-center text-slate-400">{t.getStartedDesc}</CardDescription>
@@ -1001,7 +1006,7 @@ export default function PregnancyTrackerPage() {
                             render={({ field }) => (
                                 <FormItem>
                                 <Tabs defaultValue={field.value} onValueChange={(value) => field.onChange(value as 'dueDate' | 'lmp')} className="w-full">
-                                    <TabsList className="grid w-full grid-cols-2 bg-slate-700/50 text-slate-300">
+                                    <TabsList className="grid w-full grid-cols-2 bg-slate-900/50 text-slate-300">
                                         <TabsTrigger value="dueDate" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.useDueDate}</TabsTrigger>
                                         <TabsTrigger value="lmp" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.useLMP}</TabsTrigger>
                                     </TabsList>
@@ -1023,7 +1028,7 @@ export default function PregnancyTrackerPage() {
                                     <FormControl>
                                         <Button
                                         variant={"outline"}
-                                        className={cn("w-[280px] text-left font-normal bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-700 hover:text-white", !field.value && "text-slate-400")}
+                                        className={cn("w-[280px] text-left font-normal bg-slate-900/50 border-slate-600 text-slate-200 hover:bg-slate-700 hover:text-white", !field.value && "text-slate-400")}
                                         >
                                         {field.value ? format(field.value, "PPP") : <span>{t.pickDate}</span>}
                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -1054,7 +1059,7 @@ export default function PregnancyTrackerPage() {
             </CardContent>
         </Card>
       </main>
+      </div>
     </div>
   );
 }
-
