@@ -13,14 +13,7 @@ const breathingCycle = [
     { text: 'Exhale...', duration: 11000 },
 ];
 
-const auraSounds: { [key: string]: string } = {
-    Cloud: 'https://cdn.pixabay.com/audio/2023/02/06/ocean-waves.mp3',
-    Fire: 'https://cdn.pixabay.com/audio/2022/10/12/fire-crackling-loop.mp3',
-    Leaf: 'https://cdn.pixabay.com/audio/2023/03/15/forest-wind-leaves.mp3',
-    Water: 'https://cdn.pixabay.com/audio/2023/03/22/rain-ambience.mp3',
-    Sun: 'https://cdn.pixabay.com/audio/2023/02/06/forest-birds-singing.mp3',
-    Moon: 'https://cdn.pixabay.com/audio/2023/02/06/night-forest-crickets.mp3',
-};
+const newAudioSrc = '/sounds/soulful-river-folk-tune-with-bamboo-flute-339826.mp3';
 
 
 export default function BreathePage() {
@@ -32,15 +25,7 @@ export default function BreathePage() {
 
 
     useEffect(() => {
-        // Get aura from local storage and set audio
-        try {
-            const selectedAura = localStorage.getItem('selectedAura');
-            if (selectedAura && auraSounds[selectedAura]) {
-                setAudioSrc(auraSounds[selectedAura]);
-            }
-        } catch (error) {
-            console.error("Could not read from localStorage", error);
-        }
+        setAudioSrc(newAudioSrc);
     }, []);
 
     useEffect(() => {
