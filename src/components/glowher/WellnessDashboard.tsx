@@ -81,7 +81,7 @@ const wellnessFeatures = [
       icon: ShoppingCart,
       title: 'Grocery List',
       description: 'Add items + expiry date, get alerts',
-      href: '#',
+      href: '/grocery-list',
       color: 'text-orange-500',
       bgColor: 'bg-orange-500/10'
     },
@@ -171,3 +171,5 @@ export function WellnessDashboard() {
     </div>
   );
 }
+
+    
