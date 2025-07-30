@@ -4,7 +4,7 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, Sun, Wind, Ear, Eye, Hand, Rss } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -56,6 +56,7 @@ export default function SunAuraPage() {
             <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
                 <Card className="w-full max-w-4xl mx-auto shadow-lg">
                     <CardHeader>
+                        <CardDescription>Turn on the music below to feel relaxed.</CardDescription>
                         <CardTitle className="font-headline text-3xl flex items-center gap-2"><Wind /> Take a moment to breathe</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col md:flex-row items-center justify-center gap-8 text-center p-6">
@@ -108,8 +109,8 @@ export default function SunAuraPage() {
             </main>
              <style jsx>{`
                 @keyframes breath-aura {
-                    0% { transform: scale(1.1); opacity: 0.9; } /* Inhale Start */
-                    29% { transform: scale(0.9); opacity: 0.7; } /* Inhale End */
+                    0% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
+                    29% { transform: scale(0.9); opacity: 0.7; } /* Inhale Start */
                     57% { transform: scale(0.9); opacity: 0.7; } /* Hold End */
                     100% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
                 }
