@@ -191,7 +191,7 @@ export default function PeriodTrackerPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
        <div className="flex flex-col min-h-screen">
             <header className="container mx-auto px-4 py-6">
                 <div className="flex justify-between items-center">
