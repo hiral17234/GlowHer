@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, addWeeks, subDays, diffe
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video, CheckSquare, Square, ThumbsUp, PartyPopper } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video, CheckSquare, Square, ThumbsUp, PartyPopper, History } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -483,7 +483,7 @@ const weeklyDevelopment = [
         week: 39,
         title: "Week 39: On The Brink",
         size: "Your baby is the size of a watermelon.",
-        development: "🧠 The baby's brain is still developing at an amazing rate and will continue to do so for the first few years of life.\n\nFAT continues to be deposited, which is crucial for temperature regulation after birth.\n\nSKIN is now smooth and pale due to the thick fat layer underneath.\n\nLUNGS are continuing to produce surfactant, ensuring they'll work well.\n\nANTIBODIES are still being passed from you to the baby, providing passive immunity.\n\nThe baby is likely in the head-down position, ready for birth.\n\nThey have little room for big movements, but you should still feel plenty of wiggles and shifts.\n\nThey are fully ready for the outside world.",
+        development: "🧠 The baby's brain is still developing at an amazing rate and will continue to do so for the first few years of life.\n\nFAT continues to be deposited, which is crucial for temperature regulation after birth.\n\nSKIN is now smooth and pale due to the thick fat layer underneath.\n\nLUNGS are continuing to produce surfactant, ensuring they'll work well.\n\nANTIBODIES are still being passed from you to the baby, providing passive immunity.\n\nThe baby is likely in the head-down position, ready for birth.\n\nThey have little room for big movements, but you should still feel regular activity.\n\nThey are fully ready for the outside world.",
         bodyChanges: "👩‍⚕️ Your doctor might discuss the possibility of induction if you go too far past your due date, outlining the risks and benefits.\n\nYour cervix is probably soft and may be slightly dilated.\n\nLosing your mucus plug is a common sign at this stage.\n\nYour body is in the final stages of preparation for the marathon of labor.\n\nWalking is likely slow and deliberate.\n\nYour emotions can be a tangle of excitement, fear, and sheer exhaustion.\n\nEvery day feels like an eternity.\n\nYour body feels heavy and tired.",
         symptoms: "😬 The end is in sight! Labor could start at any moment.\n\n⚡️ Strong and frequent Braxton Hicks contractions are common.\n\nIncreased pelvic pressure and low backache.\n\nTrouble sleeping is a given.\n\nFeeling clumsy and having difficulty with simple movements.\n\nSwelling in your legs, feet, and hands.\n\nDiarrhea or loose stools can be a sign that labor is imminent.\n\nA strange mix of exhaustion and a sudden burst of nesting energy.",
         tips: "🧘‍♀️ Stay calm and trust the process. When labor starts, remember your breathing techniques and coping mechanisms.\n\n💪 You are strong, and you can do this. Remind yourself of your power.\n\nCall your provider if you think you're in labor or if your water breaks.\n\nTry to relax. Stress and anxiety can sometimes stall labor.\n\nStay hydrated and keep eating small snacks.\n\nLet your support person know what you need from them during labor.\n\nGo for a gentle walk to pass the time and let gravity do its work.\n\nDouble-check that your hospital bag has everything you need.",
@@ -663,7 +663,8 @@ export default function PregnancyTrackerPage() {
   function onSymptomFormSubmit(values: SymptomFormData) {
     try {
         const todayKey = format(new Date(), 'yyyy-MM-dd');
-        localStorage.setItem(`${PREGNANCY_SYMPTOM_LOG_PREFIX}${todayKey}`, JSON.stringify(values));
+        const dataToSave = { ...values, logDate: new Date().toISOString() };
+        localStorage.setItem(`${PREGNANCY_SYMPTOM_LOG_PREFIX}${todayKey}`, JSON.stringify(dataToSave));
         toast({
             title: "Symptoms Logged!",
             description: "Today's symptoms have been saved successfully.",
@@ -773,7 +774,13 @@ export default function PregnancyTrackerPage() {
 
                 <Card className="shadow-2xl bg-slate-800/50 border-white/10 text-slate-200">
                     <CardHeader>
-                        <CardTitle className="font-headline text-2xl text-teal-300">How Are You Feeling Today?</CardTitle>
+                        <div className="flex justify-between items-center">
+                            <CardTitle className="font-headline text-2xl text-teal-300">How Are You Feeling Today?</CardTitle>
+                            <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700">
+                                <History className="mr-2 h-4 w-4" />
+                                View History
+                            </Button>
+                        </div>
                         <CardDescription className="text-slate-400">Log your daily symptoms to keep track of your well-being.</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -978,4 +985,5 @@ export default function PregnancyTrackerPage() {
     </div>
   );
 }
+
 
