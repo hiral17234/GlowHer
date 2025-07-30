@@ -36,13 +36,13 @@ body {
   }
 
   .dark {
-    --background: 224 71.4% 4.1%; /* Almost black */
-    --foreground: 210 20% 98%; /* White */
-    --card: 220 20% 9%; /* Slightly lighter than background */
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 220 20% 9%;
     --card-foreground: 210 20% 98%;
     --popover: 224 71.4% 4.1%;
     --popover-foreground: 210 20% 98%;
-    --primary: 173 97% 39%; /* Teal */
+    --primary: 173 97% 39%;
     --primary-foreground: 210 20% 98%;
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
