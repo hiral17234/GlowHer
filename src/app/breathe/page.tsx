@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Brain, ChevronLeft, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const breathingCycle = [
   { text: 'Close your eyes and listen', duration: 5000 },
@@ -17,6 +17,7 @@ const YOUTUBE_VIDEO_ID = '-5qhNRmMilI';
 
 export default function BreathePage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [cycleText, setCycleText] = useState('Get Ready...');
   const [isBreathing, setIsBreathing] = useState(false);
 
@@ -38,7 +39,26 @@ export default function BreathePage() {
   }, [isBreathing]);
 
   const handleGoBack = () => router.back();
-  const handleFinish = () => router.push('/');
+  
+  const handleNext = () => {
+      try {
+        const selectedAura = localStorage.getItem('selectedAura');
+        if (selectedAura) {
+            router.push(`/aura/${selectedAura.toLowerCase()}`);
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'No aura found',
+                description: 'Returning to homepage.',
+            });
+            router.push('/');
+        }
+      } catch (error) {
+        console.error("Could not read from localStorage", error);
+        router.push('/');
+      }
+  };
+
   const startBreathing = () => {
     setIsBreathing(true);
   };
@@ -97,8 +117,8 @@ export default function BreathePage() {
                 </iframe>
             </div>
 
-            <Button onClick={handleFinish} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
-              Finish
+            <Button onClick={handleNext} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-6 text-lg rounded-xl mt-4">
+              Next
             </Button>
           </>
         )}

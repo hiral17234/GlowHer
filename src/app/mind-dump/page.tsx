@@ -37,6 +37,12 @@ export default function MindDumpPage() {
             localStorage.setItem('selectedAura', selectedAura);
         } catch (error) {
             console.error("Could not save to localStorage", error);
+             toast({
+                variant: 'destructive',
+                title: 'Could not save aura',
+                description: 'There was an issue saving your selection. Please try again.',
+            });
+            return;
         }
         
         toast({
