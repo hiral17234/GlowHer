@@ -143,128 +143,131 @@ export default function WaterAuraPage() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-            <header className="container mx-auto px-4 py-6 z-10">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <Droplet className="h-8 w-8 text-cyan-500" />
-                        Water Aura
-                    </h1>
-                    <Button variant="ghost" onClick={() => router.push('/breathe')}>
-                        <ChevronLeft className="mr-2 h-4 w-4" />
-                        Back to Breathing
-                    </Button>
-                </div>
-            </header>
-            <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
-                <div className="w-full max-w-5xl mx-auto text-center p-6 space-y-8">
-                    <h2 className="text-3xl font-headline">Your Water Aura Music</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                         {videos.map(videoId => (
-                            <div key={videoId} className="aspect-video">
-                                <iframe
-                                    className="w-full h-full rounded-lg shadow-xl"
-                                    src={`https://www.youtube.com/embed/${videoId}`}
-                                    title="YouTube video player"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                ></iframe>
-                            </div>
-                        ))}
+        <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/736x/04/cf/75/04cf75523824b52f487fe02bd16445d3.jpg')"}}>
+             <div className="absolute inset-0 bg-black/60 z-0"/>
+             <div className="relative z-10 flex flex-col min-h-screen">
+                <header className="container mx-auto px-4 py-6 z-10">
+                    <div className="flex justify-between items-center">
+                        <h1 className="text-2xl font-bold flex items-center gap-2">
+                            <Droplet className="h-8 w-8 text-cyan-400" />
+                            Water Aura
+                        </h1>
+                        <Button variant="ghost" onClick={() => router.push('/breathe')} className="text-white hover:bg-white/10 hover:text-white">
+                            <ChevronLeft className="mr-2 h-4 w-4" />
+                            Back to Breathing
+                        </Button>
                     </div>
-                </div>
-
-                <Card className="w-full max-w-4xl mx-auto shadow-lg">
-                    <CardHeader>
-                        <CardDescription>Listen to the music to feel relaxed.</CardDescription>
-                        <CardTitle className="font-headline text-3xl flex items-center gap-2"><Wind /> Take a moment to breathe</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col md:flex-row items-center justify-center gap-8 text-center p-6">
-                        <div className="relative h-48 w-48 flex items-center justify-center">
-                             <div className={cn("absolute inset-0 bg-cyan-400 rounded-full opacity-50 blur-xl", isBreathing && 'animate-breath-aura')} />
-                             <div className="z-10 flex flex-col items-center justify-center">
-                                <p className="text-xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready?'}</p>
-                            </div>
+                </header>
+                <main className="flex-grow items-center justify-center p-4 md:p-6 space-y-8">
+                    <div className="w-full max-w-5xl mx-auto text-center p-6 space-y-6 bg-black/20 backdrop-blur-sm rounded-xl">
+                        <h2 className="text-3xl font-headline">Your Water Aura Music</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {videos.map(videoId => (
+                                <div key={videoId} className="aspect-video">
+                                    <iframe
+                                        className="w-full h-full rounded-lg shadow-xl"
+                                        src={`https://www.youtube.com/embed/${videoId}`}
+                                        title="YouTube video player"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            ))}
                         </div>
-                        {!isBreathing ? (
-                            <Button onClick={() => setIsBreathing(true)}>Begin Breathing</Button>
-                        ) : (
-                            <div className="text-left">
-                                <p className="text-green-600 dark:text-green-400 font-semibold">Breathing session started.</p>
-                                <p className="text-muted-foreground">Follow the prompts and sync your breath with the animation.</p>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                    </div>
 
-                 <Card className="w-full max-w-4xl mx-auto shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-2xl">5-4-3-2-1 Grounding</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">5</span><Eye className="inline-block h-5 w-5"/> Acknowledge five things you see around you.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">4</span><Hand className="inline-block h-5 w-5"/> Acknowledge four things you can touch around you.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">3</span><Ear className="inline-block h-5 w-5"/> Acknowledge three things you can hear.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">2</span><Rss className="inline-block h-5 w-5"/> Acknowledge two things you can smell.</p>
-                        <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">1</span><Wind className="inline-block h-5 w-5"/> Acknowledge one thing you can taste.</p>
-                    </CardContent>
-                </Card>
-                
-                 <Card className="w-full max-w-4xl mx-auto shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-2xl flex items-center gap-2"><Sparkles className="text-cyan-400" /> Reflect on Your Emotional Flow</CardTitle>
-                         <CardDescription>Answer these questions to connect with your feelings.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-8">
-                         {!quizStarted ? (
-                            <div className="text-center">
-                                <Button onClick={() => setQuizStarted(true)}>Start Reflection</Button>
+                    <Card className="w-full max-w-4xl mx-auto shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                        <CardHeader>
+                            <CardDescription className="text-slate-300">Listen to the music to feel relaxed.</CardDescription>
+                            <CardTitle className="font-headline text-3xl flex items-center gap-2"><Wind /> Take a moment to breathe</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col md:flex-row items-center justify-center gap-8 text-center p-6">
+                            <div className="relative h-48 w-48 flex items-center justify-center">
+                                <div className={cn("absolute inset-0 bg-cyan-400 rounded-full opacity-50 blur-xl", isBreathing && 'animate-breath-aura')} />
+                                <div className="z-10 flex flex-col items-center justify-center">
+                                    <p className="text-xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready?'}</p>
+                                </div>
                             </div>
-                        ) : (
-                            <div className="space-y-6">
-                                {waterQuizQuestions.map((q, index) => (
-                                    <div key={q.key}>
-                                        <p className="font-semibold mb-2">{index + 1}. {q.question}</p>
-                                        <RadioGroup onValueChange={(value) => handleAnswerChange(q.key, value)} value={answers[q.key]}>
-                                            {q.options.map(opt => (
-                                                 <div key={opt} className="flex items-center space-x-2">
-                                                    <RadioGroupItem value={opt} id={`${q.key}-${opt}`} />
-                                                    <Label htmlFor={`${q.key}-${opt}`}>{opt}</Label>
-                                                </div>
-                                            ))}
-                                        </RadioGroup>
-                                    </div>
-                                ))}
-                                <Button onClick={handleGetAdvice} className="w-full">
-                                    Get My Reflection
-                                </Button>
-                                {advice && (
-                                     <Alert className="mt-4 border-cyan-300 bg-cyan-50 dark:bg-cyan-900/20">
-                                        <Lightbulb className="h-4 w-4 text-cyan-500" />
-                                        <AlertTitle className="text-cyan-700 dark:text-cyan-300">Your Water Reflection</AlertTitle>
-                                        <AlertDescription className="text-cyan-600 dark:text-cyan-200 whitespace-pre-wrap">
-                                            {advice}
-                                        </AlertDescription>
-                                    </Alert>
-                                )}
-                            </div>
-                        )}
-                    </CardContent>
-                 </Card>
+                            {!isBreathing ? (
+                                <Button onClick={() => setIsBreathing(true)} className="bg-cyan-500 hover:bg-cyan-600 text-white">Begin Breathing</Button>
+                            ) : (
+                                <div className="text-left">
+                                    <p className="text-green-300 font-semibold">Breathing session started.</p>
+                                    <p className="text-slate-300">Follow the prompts and sync your breath with the animation.</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
 
-            </main>
-             <style jsx>{`
-                @keyframes breath-aura {
-                    0% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
-                    29% { transform: scale(0.9); opacity: 0.7; } /* Inhale Start */
-                    57% { transform: scale(0.9); opacity: 0.7; } /* Hold End */
-                    100% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
-                }
-                .animate-breath-aura {
-                    animation: breath-aura 14s ease-in-out infinite;
-                }
-            `}</style>
+                    <Card className="w-full max-w-4xl mx-auto shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl">5-4-3-2-1 Grounding</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">5</span><Eye className="inline-block h-5 w-5"/> Acknowledge five things you see around you.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">4</span><Hand className="inline-block h-5 w-5"/> Acknowledge four things you can touch around you.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">3</span><Ear className="inline-block h-5 w-5"/> Acknowledge three things you can hear.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">2</span><Rss className="inline-block h-5 w-5"/> Acknowledge two things you can smell.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-cyan-500">1</span><Wind className="inline-block h-5 w-5"/> Acknowledge one thing you can taste.</p>
+                        </CardContent>
+                    </Card>
+                    
+                    <Card className="w-full max-w-4xl mx-auto shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl flex items-center gap-2"><Sparkles className="text-cyan-400" /> Reflect on Your Emotional Flow</CardTitle>
+                            <CardDescription className="text-slate-300">Answer these questions to connect with your feelings.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-8">
+                            {!quizStarted ? (
+                                <div className="text-center">
+                                    <Button onClick={() => setQuizStarted(true)} className="bg-cyan-500 hover:bg-cyan-600 text-white">Start Reflection</Button>
+                                </div>
+                            ) : (
+                                <div className="space-y-6">
+                                    {waterQuizQuestions.map((q, index) => (
+                                        <div key={q.key}>
+                                            <p className="font-semibold mb-2">{index + 1}. {q.question}</p>
+                                            <RadioGroup onValueChange={(value) => handleAnswerChange(q.key, value)} value={answers[q.key]}>
+                                                {q.options.map(opt => (
+                                                    <div key={opt} className="flex items-center space-x-2">
+                                                        <RadioGroupItem value={opt} id={`${q.key}-${opt}`} className="border-cyan-400 text-cyan-400 focus:ring-cyan-400" />
+                                                        <Label htmlFor={`${q.key}-${opt}`}>{opt}</Label>
+                                                    </div>
+                                                ))}
+                                            </RadioGroup>
+                                        </div>
+                                    ))}
+                                    <Button onClick={handleGetAdvice} className="w-full bg-cyan-500 hover:bg-cyan-600 text-white">
+                                        Get My Reflection
+                                    </Button>
+                                    {advice && (
+                                        <Alert className="mt-4 border-cyan-400/50 bg-cyan-500/10 text-white">
+                                            <Lightbulb className="h-4 w-4 text-cyan-400" />
+                                            <AlertTitle className="text-cyan-300">Your Water Reflection</AlertTitle>
+                                            <AlertDescription className="text-slate-200 whitespace-pre-wrap">
+                                                {advice}
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                </main>
+                <style jsx>{`
+                    @keyframes breath-aura {
+                        0% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
+                        29% { transform: scale(0.9); opacity: 0.7; } /* Inhale Start */
+                        57% { transform: scale(0.9); opacity: 0.7; } /* Hold End */
+                        100% { transform: scale(1.1); opacity: 0.9; } /* Exhale End */
+                    }
+                    .animate-breath-aura {
+                        animation: breath-aura 14s ease-in-out infinite;
+                    }
+                `}</style>
+            </div>
         </div>
     );
 }
