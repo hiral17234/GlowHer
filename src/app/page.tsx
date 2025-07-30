@@ -11,6 +11,7 @@ import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDa
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 type GroceryItem = {
   id: string;
@@ -174,11 +175,11 @@ export default function HomePage() {
         <div className="flex justify-between items-center">
             <GlowHerLogo />
              <div className="flex items-center gap-2">
-                <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">
+                <Link href="/ai-assistant">
                     <Button variant="ghost" size="icon" className="h-14 w-14 rounded-full bg-teal-500/10 hover:bg-teal-500/20 text-teal-500 hover:text-teal-600">
                         <Stethoscope className="h-7 w-7" />
                     </Button>
-                </a>
+                </Link>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-12 w-12 text-yellow-500 hover:text-yellow-600 hover:bg-yellow-500/10 relative">
@@ -232,5 +233,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
