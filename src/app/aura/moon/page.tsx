@@ -149,7 +149,7 @@ export default function MoonAuraPage() {
                 <header className="container mx-auto px-4 py-6 z-10">
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl font-bold flex items-center gap-2">
-                            <Moon className="h-8 w-8 text-purple-400" />
+                            <Moon className="h-8 w-8 text-slate-300" />
                             Moon Aura
                         </h1>
                         <Button variant="ghost" onClick={() => router.push('/breathe')} className="text-white hover:bg-white/10 hover:text-white">
@@ -184,13 +184,13 @@ export default function MoonAuraPage() {
                         </CardHeader>
                         <CardContent className="flex flex-col md:flex-row items-center justify-center gap-8 text-center p-6">
                             <div className="relative h-48 w-48 flex items-center justify-center">
-                                <div className={cn("absolute inset-0 bg-purple-400 rounded-full opacity-50 blur-xl", isBreathing && 'animate-breath-aura')} />
+                                <div className={cn("absolute inset-0 bg-slate-300 rounded-full opacity-50 blur-xl", isBreathing && 'animate-breath-aura')} />
                                 <div className="z-10 flex flex-col items-center justify-center">
                                     <p className="text-xl font-semibold mb-2">{isBreathing ? cycleText : 'Ready?'}</p>
                                 </div>
                             </div>
                             {!isBreathing ? (
-                                <Button onClick={() => setIsBreathing(true)} className="bg-purple-500 hover:bg-purple-600 text-white">Begin Breathing</Button>
+                                <Button onClick={() => setIsBreathing(true)} className="bg-slate-200 hover:bg-slate-300 text-slate-900">Begin Breathing</Button>
                             ) : (
                                 <div className="text-left">
                                     <p className="text-green-300 font-semibold">Breathing session started.</p>
@@ -205,23 +205,23 @@ export default function MoonAuraPage() {
                             <CardTitle className="font-headline text-2xl">5-4-3-2-1 Grounding</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <p className="flex items-center gap-2"><span className="font-bold text-purple-400">5</span><Eye className="inline-block h-5 w-5"/> Acknowledge five things you see around you.</p>
-                            <p className="flex items-center gap-2"><span className="font-bold text-purple-400">4</span><Hand className="inline-block h-5 w-5"/> Acknowledge four things you can touch around you.</p>
-                            <p className="flex items-center gap-2"><span className="font-bold text-purple-400">3</span><Ear className="inline-block h-5 w-5"/> Acknowledge three things you can hear.</p>
-                            <p className="flex items-center gap-2"><span className="font-bold text-purple-400">2</span><Rss className="inline-block h-5 w-5"/> Acknowledge two things you can smell.</p>
-                            <p className="flex items-center gap-2"><span className="font-bold text-purple-400">1</span><Wind className="inline-block h-5 w-5"/> Acknowledge one thing you can taste.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-slate-300">5</span><Eye className="inline-block h-5 w-5"/> Acknowledge five things you see around you.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-slate-300">4</span><Hand className="inline-block h-5 w-5"/> Acknowledge four things you can touch around you.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-slate-300">3</span><Ear className="inline-block h-5 w-5"/> Acknowledge three things you can hear.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-slate-300">2</span><Rss className="inline-block h-5 w-5"/> Acknowledge two things you can smell.</p>
+                            <p className="flex items-center gap-2"><span className="font-bold text-slate-300">1</span><Wind className="inline-block h-5 w-5"/> Acknowledge one thing you can taste.</p>
                         </CardContent>
                     </Card>
 
                     <Card className="w-full max-w-4xl mx-auto shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                         <CardHeader>
-                            <CardTitle className="font-headline text-2xl flex items-center gap-2"><Sparkles className="text-purple-400" /> Reflect on Your Inner Moon</CardTitle>
+                            <CardTitle className="font-headline text-2xl flex items-center gap-2"><Sparkles className="text-slate-300" /> Reflect on Your Inner Moon</CardTitle>
                              <CardDescription className="text-slate-300">Answer these questions to connect with your intuition.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-8">
                             {!quizStarted ? (
                                 <div className="text-center">
-                                    <Button onClick={() => setQuizStarted(true)} className="bg-purple-500 hover:bg-purple-600 text-white">Start Reflection</Button>
+                                    <Button onClick={() => setQuizStarted(true)} className="bg-slate-200 hover:bg-slate-300 text-slate-900">Start Reflection</Button>
                                 </div>
                             ) : (
                                 <div className="space-y-6">
@@ -231,24 +231,24 @@ export default function MoonAuraPage() {
                                             <RadioGroup onValueChange={(value) => handleAnswerChange(q.key, value)} value={answers[q.key]}>
                                                 {q.options.map(opt => (
                                                     <div key={opt} className="flex items-center space-x-2">
-                                                        <RadioGroupItem value={opt} id={`${q.key}-${opt}`} className="border-purple-400 text-purple-400 focus:ring-purple-400" />
+                                                        <RadioGroupItem value={opt} id={`${q.key}-${opt}`} className="border-slate-300 text-slate-300 focus:ring-slate-300" />
                                                         <Label htmlFor={`${q.key}-${opt}`}>{opt}</Label>
                                                     </div>
                                                 ))}
                                             </RadioGroup>
                                         </div>
                                     ))}
-                                    <Button onClick={handleGetAdvice} className="w-full bg-purple-500 hover:bg-purple-600 text-white">
+                                    <Button onClick={handleGetAdvice} className="w-full bg-slate-200 hover:bg-slate-300 text-slate-900">
                                         Get My Reflection
                                     </Button>
                                     {advice && (
-                                        <Alert className="mt-4 border-purple-400/50 bg-purple-500/10 text-white">
-                                            <Lightbulb className="h-4 w-4 text-purple-400" />
-                                            <AlertTitle className="text-purple-300">Your Moon Reflection</AlertTitle>
-                                            <AlertDescription className="text-slate-200 whitespace-pre-wrap">
+                                        <Alert className="mt-4 border-slate-300/50 bg-slate-500/10 text-white">
+                                            <Lightbulb className="h-4 w-4 text-slate-300" />
+                                            <AlertTitle className="text-slate-200">Your Moon Reflection</AlertTitle>
+                                            <AlertDescription className="text-slate-300 whitespace-pre-wrap">
                                                 {advice}
                                             </AlertDescription>
-                                            <Button onClick={() => router.push('/aura/healing-reflection')} className="mt-4 bg-purple-500 hover:bg-purple-600">
+                                            <Button onClick={() => router.push('/aura/healing-reflection')} className="mt-4 bg-slate-200 hover:bg-slate-300 text-slate-900">
                                                 Next <ArrowRight className="ml-2 h-4 w-4" />
                                             </Button>
                                         </Alert>
@@ -273,5 +273,3 @@ export default function MoonAuraPage() {
         </div>
     );
 }
-
-    
