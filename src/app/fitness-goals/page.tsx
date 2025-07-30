@@ -184,24 +184,22 @@ export default function FitnessGoalsPage() {
     const loadWeeklyPregnancyLogs = () => {
         const today = startOfDay(new Date());
         let consecutiveDays = 0;
-        let todayGoalMet = false;
+        
+        // Start checking from yesterday backwards
+        for (let i = 1; i < 365; i++) { // Check up to a year back
+            const date = subDays(today, i);
+            const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+            if (log) {
+                consecutiveDays++;
+            } else {
+                break; // Streak is broken
+            }
+        }
 
+        // Check today separately
         const todayLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
         if(todayLog) {
-            todayGoalMet = true;
-        }
-        
-        if (todayGoalMet) {
-            consecutiveDays = 1;
-            for (let i = 1; i < 7; i++) {
-              const date = subDays(today, i);
-              const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-              if (log) {
-                consecutiveDays++;
-              } else {
-                break;
-              }
-            }
+            consecutiveDays++;
         }
     
         setStreak(consecutiveDays);
@@ -222,7 +220,7 @@ export default function FitnessGoalsPage() {
     function onPregnancyLogSubmit(data: PregnancyLogData) {
          try {
             const totalMinutes = duration.hours * 60 + duration.minutes;
-            const finalData = { ...data, minutes: totalMinutes };
+            const finalData = { ...data, minutes: totalMinutes, activity: data.activity };
             
             const validation = pregnancyLogSchema.safeParse(finalData);
             if(!validation.success) {
@@ -230,8 +228,8 @@ export default function FitnessGoalsPage() {
                     const path = err.path[0] as keyof PregnancyLogData;
                     if(path === 'minutes') {
                          toast({ variant: 'destructive', title: "Invalid Duration", description: err.message });
-                    } else {
-                       pregnancyLogForm.setError(path, { type: 'manual', message: err.message });
+                    } else if (path === 'activity') {
+                         pregnancyLogForm.setError(path, { type: 'manual', message: err.message });
                     }
                 });
                 return;
@@ -298,7 +296,7 @@ export default function FitnessGoalsPage() {
                                 <CardHeader><CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle></CardHeader>
                                 <CardContent>
                                     <Form {...pregnancyLogForm}><form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
-                                        <FormField control={pregnancyLogForm.control} name="activity" render={({ field }) => (<FormItem><FormLabel>Activity</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="What did you do today?" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Stretching">Stretching</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                        <FormField control={pregnancyLogForm.control} name="activity" render={({ field }) => (<FormItem><FormLabel>Activity</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="What did you do today?" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Stretching">Stretching</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
                                         
                                         <div className="grid grid-cols-2 gap-4">
                                             <FormItem>
