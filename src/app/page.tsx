@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { LoaderCircle, AlertTriangle, ShoppingCart } from 'lucide-react';
+import { LoaderCircle, AlertTriangle, ShoppingCart, Bell } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, isBefore, isToday } from 'date-fns';
+import { Button } from '@/components/ui/button';
 
 type GroceryItem = {
   id: string;
@@ -110,6 +111,9 @@ export default function HomePage() {
       <header className="container mx-auto px-4 py-6 z-10">
         <div className="flex justify-between items-center">
             <GlowHerLogo />
+            <Button variant="ghost" size="icon" className="h-12 w-12 text-foreground/70 hover:text-foreground hover:bg-accent/50">
+                <Bell className="h-6 w-6" />
+            </Button>
         </div>
       </header>
       <main className="flex-grow">
