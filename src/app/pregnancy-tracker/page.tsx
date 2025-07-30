@@ -21,6 +21,7 @@ import Image from 'next/image';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/hooks/use-language';
 
 
 const pregnancyFormSchema = z.object({
@@ -439,7 +440,7 @@ const weeklyDevelopment = [
         week: 35,
         title: "Week 35: Rapid Weight Gain",
         size: "Your baby is the size of a honeydew melon.",
-        development: "⚖️ The baby is packing on about half a pound to a pound a week. This fat will help them regulate body temperature and blood sugar after birth.\n\n🫁 The lungs are almost fully mature.\n\nKIDNEYS are fully developed and processing waste.\n\nLIVER can now process some waste products as well.\n\nSpace is very tight, so movements might feel less like acrobatic kicks and more like strong, rolling motions.\n\nSUCKING reflex is well-established.\n\nLISTENING intently to the sounds of your world.\n\nGETTING into the final head-down position if they haven't already.",
+        development: "⚖️ The baby is packing on about half a pound a week. This fat will help them regulate body temperature and blood sugar after birth.\n\n🫁 The lungs are almost fully mature.\n\nKIDNEYS are fully developed and processing waste.\n\nLIVER can now process some waste products as well.\n\nSpace is very tight, so movements might feel less like acrobatic kicks and more like strong, rolling motions.\n\nSUCKING reflex is well-established.\n\nLISTENING intently to the sounds of your world.\n\nGETTING into the final head-down position if they haven't already.",
         bodyChanges: "👩‍⚕️ Your prenatal visits are likely weekly now. Your provider will check your blood pressure, urine, and the baby's position and heart rate.\n\n🦠 Your provider will perform a Group B strep (GBS) test between now and week 37. It's a routine swab to check for bacteria that is harmless to you but could affect the baby during delivery.\n\nYour uterus has grown to about 1,000 times its original size.\n\nThe top of your uterus is right up under your ribs.\n\nYour cervix may be continuing to dilate (open) and efface (thin).\n\nYour body is conserving energy for the big event.\n\nPelvic pressure and discomfort are significant.\n\nYour total weight gain is likely between 24 and 29 pounds.",
         symptoms: "😩 You're likely feeling very uncomfortable, tired, and impatient. The end is in sight!\n\n😴 Waking up frequently at night to shift positions or use the bathroom is standard procedure.\n\n🚽 The need to urinate is constant, as the baby's head is like a bowling ball on your bladder.\n\n⚡️ Braxton Hicks contractions continue, and may be stronger.\n\nHeartburn, constipation, and hemorrhoids are ongoing issues.\n\nSwelling in your hands and feet.\n\nSharp nerve pains in your pelvis or legs.\n\nA general feeling of being 'done' with pregnancy.",
         tips: "🚨 Review the signs of labor with your partner and know when to call your doctor or head to the hospital (e.g., contractions 5 minutes apart, lasting 1 minute, for 1 hour; water breaking).\n\n👜 Have your hospital bags packed and in the car.\n\n👶 Finalize the setup of the nursery and baby gear.\n\n🥣 Stock your pantry and freezer with easy meals and snacks for the postpartum period.\n\n👩‍⚕️ If your GBS test is positive, don't worry. You'll simply receive IV antibiotics during labor to protect the baby.\n\n🧘‍♀️ Continue practicing your breathing and relaxation techniques.\n\n💧 Keep drinking plenty of water.\n\n😴 Prioritize rest above all else. Let the housework go and put your feet up.",
@@ -532,12 +533,83 @@ const supportiveMessages: { [key: number]: string } = {
     38: "The waiting game is tough, but you're so close to meeting your little one. You've got this.",
 };
 
+const translations = {
+    en: {
+        backToDashboard: "Back to Dashboard",
+        pageTitle: "Your Pregnancy Journey",
+        progressText: (weeks: number, days: number) => `You are ${weeks} weeks and ${days} days pregnant.`,
+        dueDate: "Estimated Due Date",
+        daysToGo: "Days to Go",
+        trimester: "Current Trimester",
+        weeklyTitle: (title: string) => title,
+        weeklySize: (size: string) => size,
+        tabBaby: "Baby",
+        tabBody: "Body",
+        tabSymptoms: "Symptoms",
+        tabTips: "Tips",
+        symptomTrackerTitle: "How Are You Feeling Today?",
+        symptomTrackerDesc: "Log your daily symptoms to keep track of your well-being.",
+        viewHistory: "View History",
+        customSymptoms: "Custom Symptoms or Notes",
+        customSymptomsPlaceholder: "Anything else to add?",
+        saveSymptoms: "Save Today's Symptoms",
+        loggedToday: "Logged today:",
+        babyLookTitle: "Here is what your baby might look like now",
+        myJournal: "My Pregnancy Journal",
+        resetDate: "Reset / Enter New Date",
+        getStartedTitle: "Let’s Get Started!",
+        getStartedDesc: "Calculate your due date to begin tracking.",
+        useDueDate: "Use Due Date",
+        useLMP: "Use Last Period",
+        yourDueDate: "Your Estimated Due Date",
+        lmpDate: "First Day of Last Period (LMP)",
+        pickDate: "Pick a date",
+        trackPregnancy: "Track My Pregnancy",
+        calculateAndTrack: "Calculate Due Date & Track"
+    },
+    hi: {
+        backToDashboard: "डैशबोर्ड पर वापस",
+        pageTitle: "आपकी गर्भावस्था यात्रा",
+        progressText: (weeks: number, days: number) => `आप ${weeks} सप्ताह और ${days} दिन की गर्भवती हैं।`,
+        dueDate: "अनुमानित देय तिथि",
+        daysToGo: "शेष दिन",
+        trimester: "वर्तमान तिमाही",
+        weeklyTitle: (title: string) => title, // Assuming titles are kept in English for now
+        weeklySize: (size: string) => size,
+        tabBaby: "बच्चा",
+        tabBody: "शरीर",
+        tabSymptoms: "लक्षण",
+        tabTips: "सुझाव",
+        symptomTrackerTitle: "आज आप कैसा महसूस कर रही हैं?",
+        symptomTrackerDesc: "अपनी सेहत पर नज़र रखने के लिए अपने दैनिक लक्षणों को लॉग करें।",
+        viewHistory: "इतिहास देखें",
+        customSymptoms: "कस्टम लक्षण या नोट्स",
+        customSymptomsPlaceholder: "कुछ और जोड़ना है?",
+        saveSymptoms: "आज के लक्षण सहेजें",
+        loggedToday: "आज लॉग किया गया:",
+        babyLookTitle: "आपका बच्चा अब ऐसा दिख सकता है",
+        myJournal: "मेरी गर्भावस्था जर्नल",
+        resetDate: "रीसेट / नई तारीख दर्ज करें",
+        getStartedTitle: "आइए शुरू करें!",
+        getStartedDesc: "ट्रैकिंग शुरू करने के लिए अपनी देय तिथि की गणना करें।",
+        useDueDate: "देय तिथि का उपयोग करें",
+        useLMP: "अंतिम पीरियड का उपयोग करें",
+        yourDueDate: "आपकी अनुमानित देय तिथि",
+        lmpDate: "अंतिम पीरियड का पहला दिन (LMP)",
+        pickDate: "एक तारीख चुनें",
+        trackPregnancy: "मेरी गर्भावस्था को ट्रैक करें",
+        calculateAndTrack: "देय तिथि की गणना करें और ट्रैक करें"
+    }
+};
 
 export default function PregnancyTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [pregnancyDetails, setPregnancyDetails] = useState<PregnancyDetails | null>(null);
   const displayedToastWeekRef = useRef<number | null>(null);
+
+  const t = translations[language];
 
   const pregnancyForm = useForm<PregnancyFormData>({
     resolver: zodResolver(pregnancyFormSchema),
@@ -692,21 +764,21 @@ export default function PregnancyTrackerPage() {
                 <GlowHerLogo className="[&>span]:text-white" />
                 <Button variant="ghost" onClick={() => router.push('/')} className="text-slate-200 hover:text-white hover:bg-white/10">
                     <ChevronLeft className="mr-2 h-4 w-4" />
-                    Back to Dashboard
+                    {t.backToDashboard}
                 </Button>
                 </div>
             </header>
 
             <main className="flex-grow container mx-auto px-4 py-8 space-y-8">
                 <div className="text-center">
-                    <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Your Pregnancy Journey</h1>
-                    <p className="mt-2 text-lg text-slate-300">You are <span className="text-teal-300 font-semibold">{pregnancyDetails.gestationalAgeWeeks} weeks</span> and <span className="text-teal-300 font-semibold">{pregnancyDetails.gestationalAgeDays} days</span> pregnant.</p>
+                    <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">{t.pageTitle}</h1>
+                    <p className="mt-2 text-lg text-slate-300">{t.progressText(pregnancyDetails.gestationalAgeWeeks, pregnancyDetails.gestationalAgeDays)}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="shadow-lg bg-white/5 border-white/10 text-white">
                         <CardHeader className="flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-300">Estimated Due Date</CardTitle>
+                            <CardTitle className="text-sm font-medium text-slate-300">{t.dueDate}</CardTitle>
                             <CalendarIcon className="h-4 w-4 text-slate-400" />
                         </CardHeader>
                         <CardContent>
@@ -715,7 +787,7 @@ export default function PregnancyTrackerPage() {
                     </Card>
                     <Card className="shadow-lg bg-white/5 border-white/10 text-white">
                         <CardHeader className="flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-300">Days to Go</CardTitle>
+                            <CardTitle className="text-sm font-medium text-slate-300">{t.daysToGo}</CardTitle>
                             <Baby className="h-4 w-4 text-slate-400" />
                         </CardHeader>
                         <CardContent>
@@ -724,7 +796,7 @@ export default function PregnancyTrackerPage() {
                     </Card>
                     <Card className="shadow-lg bg-white/5 border-white/10 text-white">
                         <CardHeader className="flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-300">Current Trimester</CardTitle>
+                            <CardTitle className="text-sm font-medium text-slate-300">{t.trimester}</CardTitle>
                             <BarChart className="h-4 w-4 text-slate-400" />
                         </CardHeader>
                         <CardContent>
@@ -736,8 +808,8 @@ export default function PregnancyTrackerPage() {
                 {currentWeekData && (
                     <Card className="shadow-2xl bg-slate-800/50 border-white/10 text-slate-200">
                         <CardHeader>
-                             <CardTitle className="font-headline text-3xl text-teal-300">{currentWeekData.title}</CardTitle>
-                             <CardDescription className="text-slate-400">{currentWeekData.size}</CardDescription>
+                             <CardTitle className="font-headline text-3xl text-teal-300">{t.weeklyTitle(currentWeekData.title)}</CardTitle>
+                             <CardDescription className="text-slate-400">{t.weeklySize(currentWeekData.size)}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             {currentVideoUrl && (
@@ -757,10 +829,10 @@ export default function PregnancyTrackerPage() {
                                 </div>
                                 <Tabs defaultValue="development" className="w-full">
                                     <TabsList className="grid w-full grid-cols-4 bg-slate-700/50 text-slate-300">
-                                        <TabsTrigger value="development" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">Baby</TabsTrigger>
-                                        <TabsTrigger value="body" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">Body</TabsTrigger>
-                                        <TabsTrigger value="symptoms" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">Symptoms</TabsTrigger>
-                                        <TabsTrigger value="tips" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">Tips</TabsTrigger>
+                                        <TabsTrigger value="development" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
+                                        <TabsTrigger value="body" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
+                                        <TabsTrigger value="symptoms" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
+                                        <TabsTrigger value="tips" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
                                     </TabsList>
                                     <TabsContent value="development" className="mt-4 prose prose-invert max-w-none text-slate-300 text-sm whitespace-pre-wrap"><p>{currentWeekData.development}</p></TabsContent>
                                     <TabsContent value="body" className="mt-4 prose prose-invert max-w-none text-slate-300 text-sm whitespace-pre-wrap"><p>{currentWeekData.bodyChanges}</p></TabsContent>
@@ -775,13 +847,13 @@ export default function PregnancyTrackerPage() {
                 <Card className="shadow-2xl bg-slate-800/50 border-white/10 text-slate-200">
                     <CardHeader>
                         <div className="flex justify-between items-center">
-                            <CardTitle className="font-headline text-2xl text-teal-300">How Are You Feeling Today?</CardTitle>
+                            <CardTitle className="font-headline text-2xl text-teal-300">{t.symptomTrackerTitle}</CardTitle>
                             <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700">
                                 <History className="mr-2 h-4 w-4" />
-                                View History
+                                {t.viewHistory}
                             </Button>
                         </div>
-                        <CardDescription className="text-slate-400">Log your daily symptoms to keep track of your well-being.</CardDescription>
+                        <CardDescription className="text-slate-400">{t.symptomTrackerDesc}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Form {...symptomForm}>
@@ -836,10 +908,10 @@ export default function PregnancyTrackerPage() {
                                     name="notes"
                                     render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-slate-300">Custom Symptoms or Notes</FormLabel>
+                                        <FormLabel className="text-slate-300">{t.customSymptoms}</FormLabel>
                                         <FormControl>
                                         <Textarea
-                                            placeholder="Anything else to add?"
+                                            placeholder={t.customSymptomsPlaceholder}
                                             className="resize-none bg-slate-700/50 border-slate-600 text-slate-200"
                                             {...field}
                                         />
@@ -851,11 +923,11 @@ export default function PregnancyTrackerPage() {
                                 <div className="flex items-center gap-4">
                                      <Button type="submit" className="bg-teal-500 hover:bg-teal-600 text-white">
                                         <ThumbsUp className="mr-2 h-4 w-4" />
-                                        Save Today's Symptoms
+                                        {t.saveSymptoms}
                                     </Button>
                                     {loggedSymptoms.length > 0 && (
                                         <div className="flex flex-wrap gap-2 items-center">
-                                            <span className="text-sm font-semibold text-slate-400">Logged today:</span>
+                                            <span className="text-sm font-semibold text-slate-400">{t.loggedToday}</span>
                                             {loggedSymptoms.map(symptomId => {
                                                 const symptom = pregnancySymptoms.find(s => s.id === symptomId);
                                                 return symptom ? <Badge key={symptomId} variant="secondary" className="bg-teal-400/20 text-teal-200 border-none">{symptom.label}</Badge> : null;
@@ -872,7 +944,7 @@ export default function PregnancyTrackerPage() {
                      <Card className="shadow-2xl bg-slate-800/50 border-white/10 text-slate-200">
                         <CardHeader>
                             <CardTitle className="font-headline text-2xl flex items-center gap-2 text-teal-300">
-                                <Video /> Here is what your baby might look like now
+                                <Video /> {t.babyLookTitle}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -893,9 +965,9 @@ export default function PregnancyTrackerPage() {
                 <div className="mt-8 flex justify-center gap-4">
                     <Button onClick={() => router.push('/pregnancy-journal')} className="bg-teal-500 hover:bg-teal-600 text-white">
                         <ClipboardPlus className="mr-2 h-4 w-4"/>
-                        My Pregnancy Journal
+                        {t.myJournal}
                     </Button>
-                    <Button variant="outline" onClick={() => setPregnancyDetails(null)} className="text-slate-200 border-slate-600 hover:bg-slate-700 hover:text-white">Reset / Enter New Date</Button>
+                    <Button variant="outline" onClick={() => setPregnancyDetails(null)} className="text-slate-200 border-slate-600 hover:bg-slate-700 hover:text-white">{t.resetDate}</Button>
                 </div>
 
             </main>
@@ -910,15 +982,15 @@ export default function PregnancyTrackerPage() {
             <GlowHerLogo className="[&>span]:text-white"/>
             <Button variant="ghost" onClick={() => router.push('/')} className="text-slate-200 hover:text-white hover:bg-white/10">
                 <ChevronLeft className="mr-2 h-4 w-4" />
-                Back to Dashboard
+                {t.backToDashboard}
             </Button>
             </div>
       </header>
       <main className="flex-grow flex items-center justify-center container mx-auto px-4 py-8">
         <Card className="w-full max-w-lg shadow-xl bg-slate-800/50 border-white/10 text-slate-200">
             <CardHeader>
-                <CardTitle className="font-headline text-3xl text-center text-teal-300">Let’s Get Started!</CardTitle>
-                <CardDescription className="text-center text-slate-400">Calculate your due date to begin tracking.</CardDescription>
+                <CardTitle className="font-headline text-3xl text-center text-teal-300">{t.getStartedTitle}</CardTitle>
+                <CardDescription className="text-center text-slate-400">{t.getStartedDesc}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...pregnancyForm}>
@@ -930,8 +1002,8 @@ export default function PregnancyTrackerPage() {
                                 <FormItem>
                                 <Tabs defaultValue={field.value} onValueChange={(value) => field.onChange(value as 'dueDate' | 'lmp')} className="w-full">
                                     <TabsList className="grid w-full grid-cols-2 bg-slate-700/50 text-slate-300">
-                                        <TabsTrigger value="dueDate" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">Use Due Date</TabsTrigger>
-                                        <TabsTrigger value="lmp" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">Use Last Period</TabsTrigger>
+                                        <TabsTrigger value="dueDate" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.useDueDate}</TabsTrigger>
+                                        <TabsTrigger value="lmp" className="data-[state=active]:bg-teal-500/80 data-[state=active]:text-white">{t.useLMP}</TabsTrigger>
                                     </TabsList>
                                 </Tabs>
                                 </FormItem>
@@ -944,7 +1016,7 @@ export default function PregnancyTrackerPage() {
                             render={({ field }) => (
                                 <FormItem className="flex flex-col items-center">
                                 <FormLabel className="text-lg font-semibold text-slate-200">
-                                    {pregnancyForm.watch('calculationMethod') === 'dueDate' ? 'Your Estimated Due Date' : 'First Day of Last Period (LMP)'}
+                                    {pregnancyForm.watch('calculationMethod') === 'dueDate' ? t.yourDueDate : t.lmpDate}
                                 </FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -953,7 +1025,7 @@ export default function PregnancyTrackerPage() {
                                         variant={"outline"}
                                         className={cn("w-[280px] text-left font-normal bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-700 hover:text-white", !field.value && "text-slate-400")}
                                         >
-                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                        {field.value ? format(field.value, "PPP") : <span>{t.pickDate}</span>}
                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                         </Button>
                                     </FormControl>
@@ -974,7 +1046,7 @@ export default function PregnancyTrackerPage() {
                         />
                         <div className="flex flex-col gap-2 pt-4">
                             <Button type="submit" size="lg" className="w-full bg-teal-500 hover:bg-teal-600 text-white">
-                                {pregnancyForm.watch('calculationMethod') === 'lmp' ? 'Calculate Due Date & Track' : 'Track My Pregnancy'}
+                                {pregnancyForm.watch('calculationMethod') === 'lmp' ? t.calculateAndTrack : t.trackPregnancy}
                             </Button>
                         </div>
                     </form>
@@ -985,5 +1057,4 @@ export default function PregnancyTrackerPage() {
     </div>
   );
 }
-
 

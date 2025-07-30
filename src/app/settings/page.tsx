@@ -38,11 +38,78 @@ const formSchema = z.object({
     path: ["lastPeriodDate"],
 });
 
+const translations = {
+    en: {
+        title: "Settings",
+        description: "Manage your profile, preferences, and app data.",
+        personalDetails: "Personal Details",
+        personalDetailsDesc: "This information helps us personalize your experience.",
+        name: "Name",
+        namePlaceholder: "Enter your name",
+        dob: "Date of Birth",
+        pickDate: "Pick a date",
+        gender: "Gender",
+        genderPlaceholder: "Select your gender",
+        female: "Female",
+        male: "Male",
+        other: "Other",
+        lastPeriod: "Last Period Start Date",
+        saveDetails: "Save Details",
+        preferences: "Preferences",
+        preferencesDesc: "Customize the look and language of the app.",
+        theme: "Theme",
+        language: "Language",
+        languagePlaceholder: "Select language",
+        dangerZone: "Danger Zone",
+        clearData: "Clear All Data",
+        clearDataDesc: "This will permanently delete all your data from this browser.",
+        clearDataBtn: "Clear Data",
+        alertTitle: "Are you absolutely sure?",
+        alertDesc: "This action cannot be undone. This will permanently delete all your tracked data, including personal details, logs, and goals from this device.",
+        cancel: "Cancel",
+        delete: "Yes, delete everything",
+        dashboard: "Back to Dashboard",
+    },
+    hi: {
+        title: "सेटिंग्स",
+        description: "अपनी प्रोफ़ाइल, प्राथमिकताएं और ऐप डेटा प्रबंधित करें।",
+        personalDetails: "व्यक्तिगत विवरण",
+        personalDetailsDesc: "यह जानकारी हमें आपके अनुभव को वैयक्तिकृत करने में मदद करती है।",
+        name: "नाम",
+        namePlaceholder: "अपना नाम दर्ज करें",
+        dob: "जन्म तिथि",
+        pickDate: "एक तारीख चुनें",
+        gender: "लिंग",
+        genderPlaceholder: "अपना लिंग चुनें",
+        female: "महिला",
+        male: "पुरुष",
+        other: "अन्य",
+        lastPeriod: "अंतिम पीरियड की प्रारंभ तिथि",
+        saveDetails: "विवरण सहेजें",
+        preferences: "प्राथमिकताएं",
+        preferencesDesc: "ऐप का रंगरूप और भाषा अनुकूलित करें।",
+        theme: "थीम",
+        language: "भाषा",
+        languagePlaceholder: "भाषा चुनें",
+        dangerZone: "खतरनाक क्षेत्र",
+        clearData: "सभी डेटा साफ़ करें",
+        clearDataDesc: "यह इस ब्राउज़र से आपके सभी डेटा को स्थायी रूप से हटा देगा।",
+        clearDataBtn: "डेटा साफ़ करें",
+        alertTitle: "क्या आप पूरी तरह निश्चित हैं?",
+        alertDesc: "यह कार्रवाई पूर्ववत नहीं की जा सकती। यह इस डिवाइस से व्यक्तिगत विवरण, लॉग और लक्ष्यों सहित आपके सभी ट्रैक किए गए डेटा को स्थायी रूप से हटा देगा।",
+        cancel: "रद्द करें",
+        delete: "हाँ, सब कुछ हटा दें",
+        dashboard: "डैशबोर्ड पर वापस",
+    }
+};
+
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { language, setLanguage } = useLanguage();
   const [theme, setTheme] = useState('light');
+  
+  const t = translations[language];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -120,30 +187,30 @@ export default function SettingsPage() {
                 <GlowHerLogo />
                 <Button variant="ghost" onClick={() => router.push('/')}>
                     <ChevronLeft className="mr-2 h-4 w-4" />
-                    Back to Dashboard
+                    {t.dashboard}
                 </Button>
             </div>
         </header>
         <main className="flex-grow container mx-auto px-4 py-8">
             <div className="max-w-2xl mx-auto space-y-8">
                 <div className="text-center">
-                    <h1 className="font-headline text-4xl md:text-5xl font-bold">Settings</h1>
-                    <p className="mt-2 text-lg text-muted-foreground">Manage your profile, preferences, and app data.</p>
+                    <h1 className="font-headline text-4xl md:text-5xl font-bold">{t.title}</h1>
+                    <p className="mt-2 text-lg text-muted-foreground">{t.description}</p>
                 </div>
                 
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle className="font-headline text-2xl">Personal Details</CardTitle>
-                        <CardDescription>This information helps us personalize your experience.</CardDescription>
+                        <CardTitle className="font-headline text-2xl">{t.personalDetails}</CardTitle>
+                        <CardDescription>{t.personalDetailsDesc}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                                <FormField control={form.control} name="name" render={({ field }) => (<FormItem><FormLabel>Name</FormLabel><FormControl><Input placeholder="Enter your name" {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                                <FormField control={form.control} name="dob" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Date of Birth</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : (<span>Pick a date</span>)}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar captionLayout="dropdown-buttons" fromYear={1900} toYear={new Date().getFullYear()} mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date() || date < new Date("1900-01-01")} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
-                                <FormField control={form.control} name="gender" render={({ field }) => (<FormItem><FormLabel>Gender</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select your gender" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Female">Female</SelectItem><SelectItem value="Male">Male</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage /></FormItem>)}/>
-                                {gender === 'Female' && (<FormField control={form.control} name="lastPeriodDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Last Period Start Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(field.value, "PPP") : (<span>Pick a date</span>)}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus/></PopoverContent></Popover><FormMessage /></FormItem>)}/>)}
-                                <Button type="submit" className="w-full">Save Details</Button>
+                                <FormField control={form.control} name="name" render={({ field }) => (<FormItem><FormLabel>{t.name}</FormLabel><FormControl><Input placeholder={t.namePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                                <FormField control={form.control} name="dob" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>{t.dob}</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : (<span>{t.pickDate}</span>)}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar captionLayout="dropdown-buttons" fromYear={1900} toYear={new Date().getFullYear()} mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date() || date < new Date("1900-01-01")} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
+                                <FormField control={form.control} name="gender" render={({ field }) => (<FormItem><FormLabel>{t.gender}</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder={t.genderPlaceholder} /></SelectTrigger></FormControl><SelectContent><SelectItem value="Female">{t.female}</SelectItem><SelectItem value="Male">{t.male}</SelectItem><SelectItem value="Other">{t.other}</SelectItem></SelectContent></Select><FormMessage /></FormItem>)}/>
+                                {gender === 'Female' && (<FormField control={form.control} name="lastPeriodDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>{t.lastPeriod}</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(field.value, "PPP") : (<span>{t.pickDate}</span>)}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus/></PopoverContent></Popover><FormMessage /></FormItem>)}/>)}
+                                <Button type="submit" className="w-full">{t.saveDetails}</Button>
                             </form>
                         </Form>
                     </CardContent>
@@ -151,22 +218,22 @@ export default function SettingsPage() {
 
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle className="font-headline text-2xl">Preferences</CardTitle>
-                        <CardDescription>Customize the look and language of the app.</CardDescription>
+                        <CardTitle className="font-headline text-2xl">{t.preferences}</CardTitle>
+                        <CardDescription>{t.preferencesDesc}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="theme-switcher" className="text-base flex items-center gap-2"><Sun className="inline h-5 w-5" /> / <Moon className="inline h-5 w-5" /> Theme</Label>
+                            <Label htmlFor="theme-switcher" className="text-base flex items-center gap-2"><Sun className="inline h-5 w-5" /> / <Moon className="inline h-5 w-5" /> {t.theme}</Label>
                             <div className="flex items-center gap-2 rounded-full border p-1">
                                 <Button variant={theme === 'light' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleThemeChange('light')}><Sun className="h-5 w-5" /></Button>
                                 <Button variant={theme === 'dark' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleThemeChange('dark')}><Moon className="h-5 w-5" /></Button>
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="language-switcher" className="text-base flex items-center gap-2"><Languages className="h-5 w-5" /> Language</Label>
-                            <Select value={language} onValueChange={setLanguage}>
+                            <Label htmlFor="language-switcher" className="text-base flex items-center gap-2"><Languages className="h-5 w-5" /> {t.language}</Label>
+                            <Select value={language} onValueChange={(val) => setLanguage(val as 'en' | 'hi')}>
                                 <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select language" />
+                                    <SelectValue placeholder={t.languagePlaceholder} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="en">English</SelectItem>
@@ -179,28 +246,28 @@ export default function SettingsPage() {
                 
                 <Card className="shadow-lg border-destructive">
                     <CardHeader>
-                        <CardTitle className="font-headline text-2xl text-destructive">Danger Zone</CardTitle>
+                        <CardTitle className="font-headline text-2xl text-destructive">{t.dangerZone}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center justify-between">
                             <div>
-                                <Label className="font-bold">Clear All Data</Label>
-                                <p className="text-sm text-muted-foreground">This will permanently delete all your data from this browser.</p>
+                                <Label className="font-bold">{t.clearData}</Label>
+                                <p className="text-sm text-muted-foreground">{t.clearDataDesc}</p>
                             </div>
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                    <Button variant="destructive"><Trash2 className="mr-2 h-4 w-4" />Clear Data</Button>
+                                    <Button variant="destructive"><Trash2 className="mr-2 h-4 w-4" />{t.clearDataBtn}</Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogTitle>{t.alertTitle}</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete all your tracked data, including personal details, logs, and goals from this device.
+                                        {t.alertDesc}
                                     </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={handleClearData}>Yes, delete everything</AlertDialogAction>
+                                    <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
+                                    <AlertDialogAction onClick={handleClearData}>{t.delete}</AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>
