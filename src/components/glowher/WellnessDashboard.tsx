@@ -90,8 +90,8 @@ const wellnessFeatures = [
     {
       icon: Brain,
       title: 'Mental Health Check-In',
-      description: 'Answer daily questions, breathing exercises',
-      href: '#',
+      description: 'A space to clear your mind and reflect.',
+      href: '/mental-health-check-in',
       color: 'text-cyan-500',
       bgColor: 'bg-cyan-500/10'
     },
