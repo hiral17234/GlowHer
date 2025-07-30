@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays, isSameDay } from "date-fns";
+import { format, subDays, isSameDay, addDays, startOfDay, isWithinInterval } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -17,7 +17,7 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Image as ImageIcon, X } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Smile, BookText, History, PlusCircle, Brain, Image as ImageIcon, X, Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RichTextEditor } from '@/components/glowher/RichTextEditor';
 import Image from 'next/image';
@@ -70,6 +70,13 @@ type FormData = z.infer<typeof FormSchema>;
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-mood-journal-';
 
+const phaseTips: { [key: string]: { title: string; tip: string } } = {
+    Menstrual: { title: "Menstrual Phase", tip: "Your energy may be lower. Be gentle with yourself. It's a great time for reflection and rest." },
+    Follicular: { title: "Follicular Phase", tip: "Energy is returning! You might feel more creative and outgoing. A great time to start new projects." },
+    Ovulatory: { title: "Ovulatory Phase", tip: "Your mood and energy are likely at their peak. It's an excellent time for social connection." },
+    Luteal: { title: "Luteal Phase", tip: "It's common to feel more inward or irritable. Prioritize self-care and calming activities." }
+};
+
 export default function MoodJournalPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -77,6 +84,7 @@ export default function MoodJournalPage() {
   const [showCustomMoodInput, setShowCustomMoodInput] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [currentPhase, setCurrentPhase] = useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -97,6 +105,28 @@ export default function MoodJournalPage() {
   const selectedTheme = form.watch("themeUrl");
 
   useEffect(() => {
+    // Get Cycle Phase
+    try {
+        const periodData = localStorage.getItem('glowher-period-tracker');
+        if (periodData) {
+            const data = JSON.parse(periodData);
+            const today = startOfDay(new Date());
+            let currentCycleStartDate = startOfDay(new Date(data.lastPeriodDate));
+            while (addDays(currentCycleStartDate, data.cycleLength) <= today) {
+                currentCycleStartDate = addDays(currentCycleStartDate, data.cycleLength);
+            }
+            const nextPeriodStart = addDays(currentCycleStartDate, data.cycleLength);
+            const ovulationDay = addDays(nextPeriodStart, -(data.lutealPhaseLength || 14));
+            const periodEnd = addDays(currentCycleStartDate, 4);
+
+            if (isWithinInterval(today, { start: currentCycleStartDate, end: periodEnd })) setCurrentPhase("Menstrual");
+            else if (isWithinInterval(today, { start: addDays(periodEnd, 1), end: addDays(ovulationDay, -1) })) setCurrentPhase("Follicular");
+            else if (isSameDay(today, ovulationDay)) setCurrentPhase("Ovulatory");
+            else if (isWithinInterval(today, { start: addDays(ovulationDay, 1), end: addDays(nextPeriodStart, -1) })) setCurrentPhase("Luteal");
+        }
+    } catch(e) { console.error(e); }
+
+    // Other Effects
     if(selectedMood === 'Custom') {
         setShowCustomMoodInput(true);
     } else {
@@ -168,6 +198,8 @@ export default function MoodJournalPage() {
         reader.readAsDataURL(file);
     }
   };
+
+  const relevantTip = currentPhase ? phaseTips[currentPhase] : null;
 
   return (
     <div className="flex flex-col min-h-screen text-foreground" style={{ backgroundImage: "url('https://i.pinimg.com/736x/e5/56/3b/e5563b287cdd04ec1dcbb4f03408b145.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
@@ -424,18 +456,21 @@ export default function MoodJournalPage() {
                 <CardDescription>Understanding how your cycle can influence your emotions.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                 <Alert>
-                    <AlertTitle className="font-semibold">Luteal Phase (Pre-Period)</AlertTitle>
-                    <AlertDescription>
-                        It's common to feel more anxious or irritable during this time. Try mindfulness exercises, reduce caffeine, and prioritize sleep.
-                    </AlertDescription>
-                </Alert>
-                 <Alert>
-                    <AlertTitle className="font-semibold">Menstrual Phase (During Period)</AlertTitle>
-                    <AlertDescription>
-                       Energy levels can be low. Be kind to yourself. Gentle activities and nourishing foods can make a big difference.
-                    </AlertDescription>
-                </Alert>
+                 {relevantTip ? (
+                     <Alert>
+                        <AlertTitle className="font-semibold">{relevantTip.title}</AlertTitle>
+                        <AlertDescription>{relevantTip.tip}</AlertDescription>
+                    </Alert>
+                 ) : (
+                    <Alert>
+                        <Info className="h-4 w-4"/>
+                        <AlertTitle>No Cycle Data Found</AlertTitle>
+                        <AlertDescription>
+                            Enter your information in the Period Tracker to get personalized mood insights based on your cycle.
+                        </AlertDescription>
+                        <Button variant="link" className="p-0 h-auto mt-2" onClick={() => router.push('/period-tracker')}>Go to Period Tracker</Button>
+                    </Alert>
+                 )}
             </CardContent>
           </Card>
         </div>
@@ -443,3 +478,5 @@ export default function MoodJournalPage() {
     </div>
   );
 }
+
+    
