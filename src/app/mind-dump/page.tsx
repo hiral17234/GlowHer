@@ -37,14 +37,9 @@ export default function MindDumpPage() {
         }
         
         try {
-            const todayKey = `glowher-mental-health-log-${format(new Date(), 'yyyy-MM-dd')}`;
-            const dataToSave = {
-                note: note,
-                aura: selectedAura,
-                logDate: new Date().toISOString(),
-            };
-            localStorage.setItem(todayKey, JSON.stringify(dataToSave));
-            localStorage.setItem('selectedAura', selectedAura);
+            // Temporarily store data to be saved on the final page
+            localStorage.setItem('tempGlowherNote', note);
+            localStorage.setItem('tempGlowherAura', selectedAura);
         } catch (error) {
             console.error("Could not save to localStorage", error);
              toast({
@@ -56,8 +51,8 @@ export default function MindDumpPage() {
         }
         
         toast({
-            title: "Thoughts Saved!",
-            description: "Your entry has been saved. Now, take a moment to breathe and reset.",
+            title: "Thoughts Captured!",
+            description: "Now, take a moment to breathe and reset.",
         });
         router.push('/breathe');
     };

@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { ChevronLeft, Calendar, BookText, Cloud, Flame, Leaf, Droplet, Sun, Moon } from 'lucide-react';
+import { ChevronLeft, Calendar, BookText, Cloud, Flame, Leaf, Droplet, Sun, Moon, Percent, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-mental-health-log-';
@@ -22,6 +22,8 @@ type LogData = {
   logDate: string;
   note: string;
   aura: string;
+  healingPercentage: number;
+  finalNote: string;
 };
 
 const auraIcons: { [key: string]: React.ElementType } = {
@@ -93,7 +95,7 @@ export default function MentalHealthHistoryPage() {
                       <AccordionTrigger className="text-lg font-semibold hover:no-underline">
                         <div className="flex items-center gap-4">
                             <Calendar className="h-5 w-5 text-primary" />
-                            {format(logDate, 'EEEE, MMMM d, yyyy')}
+                            {format(logDate, 'EEEE, MMMM d, yyyy, p')}
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="pt-4 space-y-4">
@@ -108,8 +110,24 @@ export default function MentalHealthHistoryPage() {
                            <div className="flex items-start gap-2">
                                 <BookText className="h-5 w-5 text-secondary-foreground mt-1" />
                                 <div>
-                                    <h4 className="font-semibold mb-2">Your Thoughts:</h4>
+                                    <h4 className="font-semibold mb-2">Initial Thoughts:</h4>
                                     <p className="text-muted-foreground bg-muted/50 p-3 rounded-md border whitespace-pre-wrap">{log.note}</p>
+                                </div>
+                           </div>
+                        )}
+                        
+                        <div className="flex items-center gap-2">
+                           <Percent className="h-5 w-5 text-secondary-foreground" />
+                            <h4 className="font-semibold">Peace Increase:</h4>
+                           <Badge variant="outline">{log.healingPercentage}%</Badge>
+                        </div>
+
+                         {log.finalNote && (
+                           <div className="flex items-start gap-2">
+                                <Sparkles className="h-5 w-5 text-secondary-foreground mt-1" />
+                                <div>
+                                    <h4 className="font-semibold mb-2">Final Reflection:</h4>
+                                    <p className="text-muted-foreground bg-muted/50 p-3 rounded-md border whitespace-pre-wrap">{log.finalNote}</p>
                                 </div>
                            </div>
                         )}

@@ -11,23 +11,34 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Sparkles, History, Check, Smile } from 'lucide-react';
 
-const LOCAL_STORAGE_KEY_PREFIX = 'glowher-healing-reflection-log-';
+const LOCAL_STORAGE_KEY_PREFIX = 'glowher-mental-health-log-';
 
 export default function HealingReflectionPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [healingValue, setHealingValue] = useState([50]);
-    const [note, setNote] = useState("");
+    const [finalNote, setFinalNote] = useState("");
 
     const handleFinish = () => {
         try {
-            const todayKey = `${LOCAL_STORAGE_KEY_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`;
+            const initialNote = localStorage.getItem('tempGlowherNote') || '';
+            const aura = localStorage.getItem('tempGlowherAura') || 'Unknown';
+
+            const todayKey = `${LOCAL_STORAGE_KEY_PREFIX}${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}`;
             const dataToSave = {
                 logDate: new Date().toISOString(),
+                note: initialNote,
+                aura: aura,
                 healingPercentage: healingValue[0],
-                note: note,
+                finalNote: finalNote,
             };
+
             localStorage.setItem(todayKey, JSON.stringify(dataToSave));
+            
+            // Clean up temporary storage
+            localStorage.removeItem('tempGlowherNote');
+            localStorage.removeItem('tempGlowherAura');
+
             toast({
                 title: "Reflection Saved!",
                 description: "Your healing journey continues. Well done.",
@@ -76,13 +87,13 @@ export default function HealingReflectionPage() {
 
                         <div>
                             <label htmlFor="healing-note" className="block text-lg font-semibold mb-2">
-                                Add a private note (optional)
+                                Add a final private note (optional)
                             </label>
                             <Textarea
                                 id="healing-note"
                                 placeholder="Any final thoughts or feelings to capture?"
-                                value={note}
-                                onChange={(e) => setNote(e.target.value)}
+                                value={finalNote}
+                                onChange={(e) => setFinalNote(e.target.value)}
                                 className="bg-white/10 border-white/20 text-white placeholder:text-slate-400"
                             />
                         </div>
