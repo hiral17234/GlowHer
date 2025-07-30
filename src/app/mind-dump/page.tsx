@@ -33,9 +33,18 @@ export default function MindDumpPage() {
 
     return (
         <div 
-            className="flex flex-col min-h-screen items-center justify-center p-4 bg-cover bg-center"
-            style={{ backgroundImage: "url('https://i.pinimg.com/originals/a3/a4/3a/a3a43a7f85d5a7e3a9a1d4a7a3a43a7f.jpg')" }}
+            className="relative flex flex-col min-h-screen items-center justify-center p-4 overflow-hidden"
         >
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+                src="https://videos.pexels.com/video-files/857251/857251-hd_1620_1080_25fps.mp4"
+            />
+             <div className="absolute top-0 left-0 w-full h-full bg-black/30 -z-10" />
+
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 text-shadow-lg animate-pulse">
                 ✨ Express Yourself Freely ✨
             </h1>
