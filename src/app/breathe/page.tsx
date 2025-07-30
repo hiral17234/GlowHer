@@ -13,58 +13,10 @@ const breathingCycle = [
     { text: 'Exhale...', duration: 11000 },
 ];
 
-const YOUTUBE_VIDEO_ID = '-5qhNRmMilI';
-
 export default function BreathePage() {
     const router = useRouter();
     const [cycleText, setCycleText] = useState('Get Ready...');
     const [isBreathing, setIsBreathing] = useState(false);
-    const playerRef = useRef<any>(null); // Ref to hold the YouTube player instance
-
-    // Load the YouTube Iframe API script
-    useEffect(() => {
-        if (!(window as any).YT) { // Prevent duplicate script injection
-            const tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            const firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode!.insertBefore(tag, firstScriptTag);
-        }
-
-        (window as any).onYouTubeIframeAPIReady = () => {
-             if (!playerRef.current) {
-                playerRef.current = new (window as any).YT.Player('youtube-player', {
-                    height: '192', // 48 * 4
-                    width: '192', // 48 * 4
-                    videoId: YOUTUBE_VIDEO_ID,
-                    playerVars: {
-                        playsinline: 1,
-                        loop: 1,
-                        playlist: YOUTUBE_VIDEO_ID, // Required for loop to work
-                        controls: 0,
-                        autoplay: 0, // Don't autoplay on load
-                    },
-                    events: {
-                        'onReady': onPlayerReady,
-                    }
-                });
-            }
-        };
-        
-        function onPlayerReady(event: any) {
-            // The player is ready, but we wait for user interaction to play.
-        }
-
-        return () => {
-            if (playerRef.current && typeof playerRef.current.destroy === 'function') {
-                 playerRef.current.destroy();
-                 playerRef.current = null;
-            }
-             if ((window as any).onYouTubeIframeAPIReady) {
-                (window as any).onYouTubeIframeAPIReady = null;
-            }
-        }
-
-    }, []);
 
     useEffect(() => {
         if (!isBreathing) return;
@@ -83,30 +35,15 @@ export default function BreathePage() {
         return () => clearInterval(cycleInterval);
     }, [isBreathing]);
     
-    const stopPlaybackAndNavigate = (path: string) => {
-        if (playerRef.current && typeof playerRef.current.stopVideo === 'function') {
-            playerRef.current.stopVideo();
-        }
-        if (path === 'back') {
-            router.back();
-        } else {
-            router.push(path);
-        }
-    };
-
     const handleGoBack = () => {
-        stopPlaybackAndNavigate('back');
+        router.back();
     };
 
     const handleFinish = () => {
-        stopPlaybackAndNavigate('/');
+        router.push('/');
     };
     
     const startBreathing = () => {
-        if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
-            playerRef.current.playVideo();
-            playerRef.current.unMute();
-        }
         setIsBreathing(true);
     }
 
@@ -137,13 +74,6 @@ export default function BreathePage() {
                              isBreathing && "animate-breath"
                         )} 
                     />
-                     <div 
-                        id="youtube-player" 
-                        className={cn(
-                            "absolute inset-0 rounded-full overflow-hidden transition-opacity duration-1000",
-                             isBreathing ? "opacity-30" : "opacity-0"
-                        )}
-                    ></div>
                     <p className="text-2xl font-semibold z-10">{isBreathing ? cycleText : 'Ready to begin?'}</p>
                 </div>
 
