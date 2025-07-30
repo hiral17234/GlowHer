@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Brain } from 'lucide-react';
+import { Brain, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const breathingCycle = [
@@ -56,6 +56,13 @@ export default function BreathePage() {
 
         return () => clearInterval(cycleInterval);
     }, []);
+    
+    const handleGoBack = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
+        router.back();
+    };
 
     const handleFinish = () => {
         if (audioRef.current) {
@@ -70,6 +77,10 @@ export default function BreathePage() {
             style={{ backgroundImage: "url('https://i.pinimg.com/736x/88/90/a8/8890a87eea99b61588a7e5646404dd57.jpg')" }}
             data-ai-hint="calm beach"
         >
+             <Button variant="ghost" onClick={handleGoBack} className="absolute top-6 left-6 text-white hover:text-white hover:bg-white/10 z-20">
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Back
+            </Button>
              {audioSrc && (
                 <audio ref={audioRef} src={audioSrc} autoPlay loop />
             )}
