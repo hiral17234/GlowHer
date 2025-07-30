@@ -8,9 +8,9 @@ import { Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const breathingCycle = [
-    { text: 'Inhale...', duration: 4000 },
-    { text: 'Hold...', duration: 7000 },
-    { text: 'Exhale...', duration: 8000 },
+    { text: 'Close your eyes and listen', duration: 5000 },
+    { text: 'Hold...', duration: 9000 },
+    { text: 'Exhale...', duration: 11000 },
 ];
 
 export default function BreathePage() {
@@ -18,11 +18,13 @@ export default function BreathePage() {
     const [cycleText, setCycleText] = useState('Get Ready...');
 
     useEffect(() => {
+        const totalDuration = breathingCycle.reduce((sum, cycle) => sum + cycle.duration, 0);
+
         const cycleInterval = setInterval(() => {
             setCycleText(breathingCycle[0].text);
             setTimeout(() => setCycleText(breathingCycle[1].text), breathingCycle[0].duration);
             setTimeout(() => setCycleText(breathingCycle[2].text), breathingCycle[0].duration + breathingCycle[1].duration);
-        }, breathingCycle[0].duration + breathingCycle[1].duration + breathingCycle[2].duration);
+        }, totalDuration);
 
         // Set initial text
         setTimeout(() => setCycleText(breathingCycle[0].text), 2000);
@@ -72,7 +74,7 @@ export default function BreathePage() {
                     }
                 }
                 .animate-breath {
-                    animation: breath 19s ease-in-out infinite;
+                    animation: breath 25s ease-in-out infinite;
                 }
             `}</style>
         </div>
