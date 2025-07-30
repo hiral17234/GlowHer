@@ -184,8 +184,8 @@ export default function MoodJournalPage() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="text-center p-4 rounded-lg bg-black/20 backdrop-blur-sm">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">How Are You Feeling Today?</h1>
-            <p className="mt-2 text-lg text-foreground/80">Log your emotions to understand yourself better.</p>
+            <h1 className="font-headline text-4xl md:text-5xl font-bold text-foreground">How Are You Feeling Today?</h1>
+            <p className="mt-2 text-lg text-foreground">Log your emotions to understand yourself better.</p>
           </div>
 
           <Card className="shadow-lg bg-background/80 backdrop-blur-md border-white/20">
