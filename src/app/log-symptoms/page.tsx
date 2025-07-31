@@ -2,11 +2,11 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays, isSameDay } from "date-fns";
+import { format, subDays, isSameDay, startOfDay, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -37,7 +37,9 @@ import {
   Smile,
   BookText,
   History,
+  Info,
 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const symptomsList = [
     { id: 'cramps', label: 'Cramps', icon: Flame },
@@ -86,6 +88,7 @@ const LOCAL_STORAGE_KEY_PREFIX = 'glowher-log-';
 
 export default function LogSymptomsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -105,6 +108,19 @@ export default function LogSymptomsPage() {
   const notesValue = form.watch("notes");
   const logDate = form.watch("logDate");
 
+  // Effect to handle loading data from URL parameter
+  useEffect(() => {
+    const dateParam = searchParams.get('date');
+    if (dateParam) {
+      const dateFromUrl = parseISO(dateParam);
+      // parseISO gives local time, but it's fine as we just care about the date part
+      // Adding a day because of timezone issues
+      const adjustedDate = addDays(dateFromUrl, 1);
+      form.setValue('logDate', adjustedDate);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, form.setValue]);
+  
   useEffect(() => {
     if (isSameDay(logDate, currentDate)) return;
 
@@ -149,6 +165,8 @@ export default function LogSymptomsPage() {
     }
   }
 
+  const isEditingPast = !isSameDay(logDate, startOfDay(new Date()));
+
   return (
     <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/1200x/77/f5/37/77f5373552698548522b033a838a3b35.jpg')"}}>
        <div className="absolute inset-0 bg-black/30 z-0"/>
@@ -169,6 +187,15 @@ export default function LogSymptomsPage() {
                 <h1 className="font-headline text-4xl md:text-5xl font-bold text-shadow-lg">How Are You Feeling Today?</h1>
                 <p className="mt-2 text-lg text-white/90">Track your symptoms and emotions to understand your body better.</p>
             </div>
+            {isEditingPast && (
+                <Alert className="mb-6 bg-yellow-500/10 border-yellow-500/20 text-white [&>svg]:text-yellow-400">
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>Editing Past Entry</AlertTitle>
+                    <AlertDescription>
+                        You are currently editing the log for {format(logDate, 'MMMM d, yyyy')}.
+                    </AlertDescription>
+                </Alert>
+            )}
 
             <Card className="shadow-lg bg-black/20 backdrop-blur-lg border-white/20 text-white">
                 <CardHeader>
@@ -298,7 +325,8 @@ export default function LogSymptomsPage() {
                                     type="button"
                                     variant={field.value === mood.name ? "secondary" : "outline"}
                                     className={cn(
-                                    "h-16 text-lg transition-all duration-200 transform hover:scale-105 bg-white/10 border-white/20 hover:bg-white/20",
+                                    "h-16 text-lg transition-all duration-200 transform hover:scale-105 active:scale-95",
+                                    "bg-white/10 border-white/20 hover:bg-white/20",
                                     field.value === mood.name && "bg-primary text-primary-foreground border-primary"
                                     )}
                                     onClick={() => field.onChange(mood.name)}

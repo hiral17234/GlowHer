@@ -15,6 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { ChevronLeft, Calendar, Tag, Smile, Edit } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-log-';
 
@@ -47,6 +48,11 @@ export default function LogHistoryPage() {
       setLoading(false);
     }
   }, []);
+
+  const handleEdit = (logDate: string) => {
+    const date = format(new Date(logDate), 'yyyy-MM-dd');
+    router.push(`/log-symptoms?date=${date}`);
+  };
 
   return (
     <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/1200x/77/f5/37/77f5373552698548522b033a838a3b35.jpg')"}}>
@@ -89,10 +95,19 @@ export default function LogHistoryPage() {
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="pt-4 space-y-4 bg-black/10 p-4 rounded-b-md">
-                            <div className="flex items-center gap-2">
-                                <Smile className="h-5 w-5" />
-                                <h4 className="font-semibold">Mood:</h4>
-                                <Badge variant="secondary">{log.mood} (Intensity: {log.moodIntensity?.[0] ?? 'N/A'}/10)</Badge>
+                            <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
+                                <div className="flex items-center gap-2">
+                                    <Smile className="h-5 w-5" />
+                                    <h4 className="font-semibold">Mood:</h4>
+                                    <Badge variant="secondary">{log.mood} </Badge>
+                                </div>
+                                {log.moodIntensity && (
+                                     <div className="flex items-center gap-2">
+                                        <h4 className="font-semibold">Intensity:</h4>
+                                        <Progress value={(log.moodIntensity[0] / 10) * 100} className="w-24 h-2 bg-white/20 [&>span]:bg-primary"/>
+                                        <span className="text-sm text-white/80">{log.moodIntensity[0]}/10</span>
+                                     </div>
+                                )}
                             </div>
 
                             <div className="flex items-start gap-2">
@@ -101,9 +116,9 @@ export default function LogHistoryPage() {
                                     <h4 className="font-semibold mb-2">Symptoms Logged:</h4>
                                     <div className="flex flex-wrap gap-2">
                                         {log.symptoms.map(symptom => (
-                                            <Badge key={symptom} variant="outline" className="text-white text-sm">{symptom}</Badge>
+                                            <Badge key={symptom} variant="outline" className="text-white text-base">{symptom}</Badge>
                                         ))}
-                                        {log.otherSymptom && <Badge variant="outline" className="text-white text-sm">{log.otherSymptom}</Badge>}
+                                        {log.otherSymptom && <Badge variant="outline" className="text-white text-base">{log.otherSymptom}</Badge>}
                                     </div>
                                 </div>
                             </div>
@@ -114,9 +129,9 @@ export default function LogHistoryPage() {
                                     <p className="text-white/80 bg-white/10 p-3 rounded-md border border-white/20">{log.notes}</p>
                                 </div>
                             )}
-                             <Button variant="link" className="p-0 h-auto text-primary hover:text-primary/90" onClick={() => router.push('/log-symptoms')}>
+                             <Button variant="link" className="p-0 h-auto text-primary hover:text-primary/90 mt-4" onClick={() => handleEdit(log.logDate)}>
                                 <Edit className="mr-2 h-4 w-4" />
-                                Edit this log (Go to Log Symptoms page and select this date)
+                                Edit this log
                             </Button>
                           </AccordionContent>
                         </AccordionItem>
