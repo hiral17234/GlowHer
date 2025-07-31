@@ -169,7 +169,7 @@ export default function GroceryListPage() {
   };
 
   const expiredItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || !isValid(item.expiryDate)) return false;
+    if (!item.expiryDate || !isValid(item.expiryDate) || item.used || item.archived) return false;
     const today = startOfDay(new Date());
     return isBefore(item.expiryDate, today) || isToday(item.expiryDate);
   }), [inventoryList]);
@@ -265,15 +265,13 @@ export default function GroceryListPage() {
                             <Alert variant="destructive" className="relative bg-red-600 border-red-700 text-white [&>svg]:text-white">
                                  <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle className="font-bold">You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
-                                <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
-                                {visibleExpiredItems.map(item => (
-                                <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-white hover:bg-black/20" onClick={() => handleDismissExpired(item.id)}>
+                                <AlertDescription className="text-white pr-8">Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
+                                <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-white hover:bg-black/20" onClick={() => setDismissedExpiredIds(expiredItems.map(i => i.id))}>
                                     <X className="h-4 w-4" />
                                 </Button>
-                                ))}
                             </Alert>
                         )}
-                        {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="font-bold">Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="font-bold">Expiring Soon!</AlertTitle><AlertDescription className="text-white">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
                             <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-black/20 text-white">
@@ -312,7 +310,7 @@ export default function GroceryListPage() {
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20 border", isExpiring ? "bg-orange-600/50 border-orange-500" : "border-white/20", isExpired && "bg-red-600/50 border-red-500")}>
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all border", isExpiring ? "bg-orange-600/50 border-orange-500" : "border-white/20", isExpired ? "bg-red-600/50 border-red-500" : "bg-black/20 border-white/20")}>
                                                      <AlertDialog>
                                                         <AlertDialogTrigger asChild>
                                                             <Checkbox id={`check-${item.id}`} className="mt-1 border-white/50 data-[state=checked]:bg-primary" disabled={isExpired} />
@@ -468,3 +466,4 @@ export default function GroceryListPage() {
     </div>
   );
 }
+
