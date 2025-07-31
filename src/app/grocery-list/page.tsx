@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -141,7 +142,7 @@ export default function GroceryListPage() {
       shoppingListForm.reset();
   };
   
-  const markAsPurchased = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, purchased: true } : item)); };
+  const markAsUsed = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, purchased: true } : item)); };
   const deleteInventoryItem = (id: string) => { saveInventoryList(inventoryList.filter(item => item.id !== id)); toast({ title: "Item Removed" }); };
   const deleteShoppingListItem = (id: string) => { saveShoppingList(shoppingList.filter(item => item.id !== id)); };
   const handleEditClick = (item: GroceryItem) => { setEditingItem(item); inventoryForm.reset({ ...item, expiryDate: item.expiryDate ? new Date(item.expiryDate) : undefined }); };
@@ -203,7 +204,7 @@ export default function GroceryListPage() {
   };
 
   const activeInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => !item.purchased)), [inventoryList, filter, sort]);
-  const purchasedInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => item.purchased)), [inventoryList, filter, sort]);
+  const usedInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => item.purchased)), [inventoryList, filter, sort]);
 
   const getCategoryIcon = (categoryName?: string) => {
     const category = categories.find(c => c.name === categoryName);
@@ -244,7 +245,7 @@ export default function GroceryListPage() {
                             <TabsList className="grid w-full grid-cols-4 bg-black/60 text-slate-300">
                                 <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">My Groceries</TabsTrigger>
                                 <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Shopping List <Badge variant="secondary" className="ml-2">{shoppingList.length}</Badge></TabsTrigger>
-                                <TabsTrigger value="purchased" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Purchased</TabsTrigger>
+                                <TabsTrigger value="used" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Used</TabsTrigger>
                                 <TabsTrigger value="expired" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Expired <Badge variant="destructive" className="ml-2">{expiredItems.length}</Badge></TabsTrigger>
                             </TabsList>
                             <TabsContent value="inventory">
@@ -286,12 +287,12 @@ export default function GroceryListPage() {
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>Confirm Action</AlertDialogTitle>
                                                                 <AlertDialogDescription>
-                                                                    This will move "{item.name}" to your purchased list. Are you sure?
+                                                                    This will mark "{item.name}" as used and move it to your history. Are you sure?
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
                                                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                                <AlertDialogAction onClick={() => markAsPurchased(item.id)}>Yes, Mark as Purchased</AlertDialogAction>
+                                                                <AlertDialogAction onClick={() => markAsUsed(item.id)}>Yes, Mark as Used</AlertDialogAction>
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     </AlertDialog>
@@ -351,26 +352,26 @@ export default function GroceryListPage() {
                                     </CardContent>
                                 </Card>
                             </TabsContent>
-                             <TabsContent value="purchased">
+                             <TabsContent value="used">
                                 <Card className="shadow-lg bg-black/60 border-white/20 text-white">
                                     <CardHeader>
-                                        <CardTitle>Purchased Items</CardTitle>
-                                        <CardDescription className="text-slate-300">Items you've already bought and used.</CardDescription>
+                                        <CardTitle>Used Items</CardTitle>
+                                        <CardDescription className="text-slate-300">Items you've already used.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        {purchasedInventory.length > 0 ? (
+                                        {usedInventory.length > 0 ? (
                                             <ul className="space-y-4">
-                                                {purchasedInventory.map(item => {
+                                                {usedInventory.map(item => {
                                                     const CategoryIcon = getCategoryIcon(item.category);
-                                                    const isExpiring = item.expiryDate && isWithinInterval(new Date(item.expiryDate), { start: addDays(new Date(), 1), end: addDays(new Date(), 10) });
+                                                    const isExpiring = item.expiryDate && isWithinInterval(item.expiryDate, { start: addDays(new Date(), 1), end: addDays(new Date(), 10) });
                                                     return (
                                                         <li key={item.id} className={cn("flex items-center gap-4 p-4 rounded-lg bg-white/10 opacity-70", isExpiring && "bg-orange-500/30 border border-orange-400 opacity-100")}>
                                                             <Check className="h-5 w-5 text-green-400" />
                                                             <div className="flex-grow">
                                                                 <p className="font-medium text-lg line-through text-slate-400">{item.name}</p>
                                                                 <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                                                                    <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
-                                                                    {item.expiryDate && (<span className={cn("flex items-center gap-1", isExpiring && "text-orange-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !isExpiring && "hidden")} />Expires: {format(new Date(item.expiryDate), 'MMM d')}</span>)}
+                                                                    <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
+                                                                    {item.expiryDate && (<span className={cn("flex items-center gap-1", isExpiring && "text-orange-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !isExpiring && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                                 </div>
                                                             </div>
                                                             <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)} className="hover:bg-white/20"><Trash2 className="h-4 w-4 text-red-400" /></Button>
@@ -378,7 +379,7 @@ export default function GroceryListPage() {
                                                     )
                                                 })}
                                             </ul>
-                                        ) : (<p className="text-center text-slate-400 py-8">No purchased items yet.</p>)}
+                                        ) : (<p className="text-center text-slate-400 py-8">No used items yet.</p>)}
                                     </CardContent>
                                 </Card>
                             </TabsContent>
@@ -421,5 +422,3 @@ export default function GroceryListPage() {
     </div>
   );
 }
-
-    

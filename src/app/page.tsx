@@ -31,6 +31,7 @@ type Notification = {
     message: string;
     color: string;
     href: string;
+    isDismissible: boolean;
 };
 
 
@@ -43,6 +44,7 @@ export default function HomePage() {
 
   const handleDismissNotification = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+    e.preventDefault();
     setNotifications(currentNotifications => currentNotifications.filter(n => n.id !== id));
   };
 
@@ -71,7 +73,7 @@ export default function HomePage() {
             const startDate = subDays(new Date(dueDate), 280);
             const totalDays = differenceInDays(new Date(), startDate);
             const gestationalAgeWeeks = Math.floor(totalDays / 7);
-            currentNotifications.push({ id: 'preg-status', icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-400', href: '/pregnancy-tracker' });
+            currentNotifications.push({ id: 'preg-status', icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-400', href: '/pregnancy-tracker', isDismissible: false });
         }
       } else {
         const periodData = localStorage.getItem('glowher-period-tracker');
@@ -84,7 +86,7 @@ export default function HomePage() {
             const nextPeriodStart = addDays(currentCycleStartDate, data.cycleLength);
             const daysUntil = differenceInDays(nextPeriodStart, new Date());
             if(daysUntil >= 0 && daysUntil <= 7) {
-                currentNotifications.push({ id: 'period-status', icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-400', href: '/period-tracker' });
+                currentNotifications.push({ id: 'period-status', icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-400', href: '/period-tracker', isDismissible: false });
             }
         }
       }
@@ -110,13 +112,13 @@ export default function HomePage() {
         if (expiredItems.length > 0) {
             expiredItems.forEach(item => {
                 const expiredMessage = `Oops! Your item "${item.name}" has expired.`;
-                currentNotifications.push({ id: `expired-item-${item.id}`, icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list' });
+                currentNotifications.push({ id: `expired-item-${item.id}`, icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list', isDismissible: true });
             });
         }
 
         if (expiringItems.length > 0) {
             const expiringMessage = `Expiring soon: ${expiringItems.map(i => i.name).join(', ')}.`;
-            currentNotifications.push({ id: 'expiring-items', icon: AlertTriangle, message: expiringMessage, color: 'text-yellow-500', href: '/grocery-list' });
+            currentNotifications.push({ id: 'expiring-items', icon: AlertTriangle, message: expiringMessage, color: 'text-yellow-500', href: '/grocery-list', isDismissible: false });
         }
       }
 
@@ -126,27 +128,27 @@ export default function HomePage() {
           const shoppingList: ShoppingListItem[] = JSON.parse(savedShoppingList);
           if (shoppingList.length > 0) {
               const shoppingMessage = `You have ${shoppingList.length} item(s) on your shopping list.`;
-              currentNotifications.push({ id: 'shopping-list', icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-400', href: '/grocery-list' });
+              currentNotifications.push({ id: 'shopping-list', icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-400', href: '/grocery-list', isDismissible: false });
           }
       }
       
       // Check sleep log for yesterday
       const sleepLog = localStorage.getItem(`glowher-sleep-log-${yesterdayKey}`);
       if (!sleepLog) {
-          currentNotifications.push({ id: 'sleep-log', icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-400', href: '/sleep-tracker' });
+          currentNotifications.push({ id: 'sleep-log', icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-400', href: '/sleep-tracker', isDismissible: false });
       }
       
       // Check water log for today
       const waterLog = localStorage.getItem(`glowher-water-tracker-${todayKey}`);
       if (!waterLog || JSON.parse(waterLog).entries.length === 0) {
-          currentNotifications.push({ id: 'water-log', icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-400', href: '/water-tracker' });
+          currentNotifications.push({ id: 'water-log', icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-400', href: '/water-tracker', isDismissible: false });
       }
       
       // Check fitness log for today
       const fitnessLogKey = isPregnant ? `glowher-preg-fitness-log-${todayKey}` : `glowher-fitness-log-${todayKey}`;
       const fitnessLog = localStorage.getItem(fitnessLogKey);
       if (!fitnessLog) {
-          currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-400', href: '/fitness-goals' });
+          currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-400', href: '/fitness-goals', isDismissible: false });
       }
 
       setNotifications(currentNotifications);
@@ -193,12 +195,13 @@ export default function HomePage() {
                         <DropdownMenuSeparator />
                         {notifications.length > 0 ? (
                             notifications.map((note) => (
-                                <DropdownMenuItem key={note.id} onSelect={() => router.push(note.href)} className="text-sm text-wrap flex items-start justify-between gap-2 cursor-pointer pr-2">
-                                <div className="flex items-start gap-2">
+                                <DropdownMenuItem key={note.id} onSelect={(e) => { e.preventDefault(); router.push(note.href); }} className="text-sm text-wrap flex items-start justify-between gap-2 cursor-pointer pr-2">
+                                <div className="flex items-start gap-2 flex-grow" onClick={() => router.push(note.href)}>
                                     <note.icon className={`mt-1 h-4 w-4 shrink-0 ${note.color}`} />
                                     <span>{note.message}</span>
                                 </div>
-                                <Button
+                                {note.isDismissible && (
+                                    <Button
                                         variant="ghost"
                                         size="icon"
                                         className="h-6 w-6 shrink-0"
@@ -206,6 +209,7 @@ export default function HomePage() {
                                     >
                                         <X className="h-4 w-4 text-muted-foreground"/>
                                     </Button>
+                                )}
                                 </DropdownMenuItem>
                             ))
                         ) : (
