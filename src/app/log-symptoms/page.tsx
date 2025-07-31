@@ -164,7 +164,7 @@ export default function LogSymptomsPage() {
     }
   }
 
-  const isEditingPast = !isSameDay(logDate, startOfDay(new Date()));
+  const isEditingPast = !isSameDay(startOfDay(logDate), startOfDay(new Date()));
 
   return (
     <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/1200x/77/f5/37/77f5373552698548522b033a838a3b35.jpg')"}}>
@@ -324,9 +324,9 @@ export default function LogSymptomsPage() {
                                     type="button"
                                     variant={field.value === mood.name ? "secondary" : "outline"}
                                     className={cn(
-                                    "h-16 text-lg transition-all duration-200 transform hover:scale-105 active:scale-95",
+                                    "h-16 text-lg transition-all duration-300 transform",
                                     "bg-white/10 border-white/20 hover:bg-white/20",
-                                    field.value === mood.name && "bg-primary text-primary-foreground border-primary"
+                                    field.value === mood.name ? "bg-primary text-primary-foreground border-primary scale-105 shadow-lg" : "hover:scale-105 active:scale-95"
                                     )}
                                     onClick={() => field.onChange(mood.name)}
                                 >
