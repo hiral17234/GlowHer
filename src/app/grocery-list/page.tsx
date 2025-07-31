@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, addDays, isBefore, isToday, parseISO, startOfDay, isWithinInterval } from 'date-fns';
+import { format, addDays, isBefore, isToday, parseISO, startOfDay, isAfter, isSameDay } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -21,8 +21,7 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X, Tag, Package, Edit, SortAsc, History, Check, ShoppingCart, ArrowRight } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
@@ -112,7 +111,7 @@ export default function GroceryListPage() {
   const onInventorySubmit = (data: z.infer<typeof groceryItemSchema>) => {
     if(editingItem) {
         // Update existing item
-        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data } : item);
+        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data, purchased: item.purchased, dateAdded: item.dateAdded } : item);
         saveInventoryList(updatedList);
         toast({ title: "Item Updated", description: `${data.name} has been updated.` });
         setEditingItem(null);
@@ -131,7 +130,7 @@ export default function GroceryListPage() {
       shoppingListForm.reset();
   };
   
-  const togglePurchased = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, purchased: !item.purchased } : item)); };
+  const markAsPurchased = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, purchased: true } : item)); };
   const deleteInventoryItem = (id: string) => { saveInventoryList(inventoryList.filter(item => item.id !== id)); toast({ title: "Item Removed" }); };
   const deleteShoppingListItem = (id: string) => { saveShoppingList(shoppingList.filter(item => item.id !== id)); };
   const handleEditClick = (item: GroceryItem) => { setEditingItem(item); inventoryForm.reset(item); };
@@ -151,43 +150,52 @@ export default function GroceryListPage() {
 
 
   const expiredItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || item.purchased) return false;
-    // An item is expired if its expiry date is today or in the past.
-    return !isBefore(startOfDay(item.expiryDate), startOfDay(new Date()));
+    if (!item.expiryDate) return false;
+    const today = startOfDay(new Date());
+    const expiryDate = startOfDay(parseISO(String(item.expiryDate)));
+    return isBefore(expiryDate, today) || isSameDay(expiryDate, today);
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
-    const today = startOfDay(new Date());
-    const threeDaysFromNow = addDays(today, 3);
-    // An item is expiring soon if it's not expired today, but will expire in the next 3 days.
-    return isWithinInterval(item.expiryDate, { start: addDays(today, 1), end: threeDaysFromNow });
+    if (!item.expiryDate || expiredItems.some(exp => exp.id === item.id)) return false;
+    const tomorrow = addDays(startOfDay(new Date()), 1);
+    const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
+    const expiryDate = startOfDay(parseISO(String(item.expiryDate)));
+    return isAfter(expiryDate, startOfDay(new Date())) && isBefore(expiryDate, addDays(startOfDay(new Date()), 4));
   }), [inventoryList, expiredItems]);
 
 
-  const sortedAndFilteredList = useMemo(() => {
-    let list = [...inventoryList];
+  const sortedAndFilteredList = (list: GroceryItem[]) => {
+    let filteredList = [...list];
     
     if(filter !== 'All') {
-        list = list.filter(item => item.category === filter);
+        filteredList = filteredList.filter(item => item.category === filter);
     }
 
     const [sortKey, sortDir] = sort.split('-');
-    list.sort((a, b) => {
+    filteredList.sort((a, b) => {
         let valA, valB;
         switch (sortKey) {
             case 'name': valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); break;
-            case 'expiryDate': valA = a.expiryDate ? a.expiryDate.getTime() : Infinity; valB = b.expiryDate ? b.expiryDate.getTime() : Infinity; break;
-            case 'dateAdded': default: valA = parseISO(a.dateAdded).getTime(); valB = parseISO(b.dateAdded).getTime(); break;
+            case 'expiryDate': 
+                valA = a.expiryDate ? parseISO(String(a.expiryDate)).getTime() : Infinity; 
+                valB = b.expiryDate ? parseISO(String(b.expiryDate)).getTime() : Infinity; 
+                break;
+            case 'dateAdded': default: 
+                valA = parseISO(a.dateAdded).getTime(); 
+                valB = parseISO(b.dateAdded).getTime(); 
+                break;
         }
         if (valA < valB) return sortDir === 'asc' ? -1 : 1;
         if (valA > valB) return sortDir === 'asc' ? 1 : -1;
         return 0;
     });
 
-    return list;
-  }, [inventoryList, filter, sort]);
+    return filteredList;
+  };
 
+  const activeInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => !item.purchased)), [inventoryList, filter, sort]);
+  const purchasedInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => item.purchased)), [inventoryList, filter, sort]);
 
   const getCategoryIcon = (categoryName?: string) => {
     const category = categories.find(c => c.name === categoryName);
@@ -196,11 +204,11 @@ export default function GroceryListPage() {
 
   return (
     <div className="relative flex flex-col min-h-screen text-foreground">
-        <div className="absolute inset-0 bg-black/50 z-0"/>
         <div 
             className="absolute inset-0 -z-10 bg-cover bg-center"
             style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}
         />
+        <div className="absolute inset-0 bg-black/50 z-0"/>
         <div className="relative z-10 flex flex-col min-h-screen">
             <header className="container mx-auto px-4 py-6"><div className="flex justify-between items-center"><GlowHerLogo /><Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white"><ChevronLeft className="mr-2 h-4 w-4" />Back to Dashboard</Button></div></header>
             <main className="flex-grow container mx-auto px-4 py-8">
@@ -221,12 +229,14 @@ export default function GroceryListPage() {
                         </Card>
                     </div>
                     <div className="lg:col-span-2 space-y-6">
-                        {expiredItems.length > 0 && (<Alert className="bg-red-900 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription className="text-white/90">Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
-                        {expiringItems.length > 0 && (<Alert className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription className="text-white/90">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiredItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription>Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert className="bg-red-600 border-red-700 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        
                         <Tabs defaultValue="inventory" className="w-full">
-                            <TabsList className="grid w-full grid-cols-3 bg-black/60 text-slate-300">
+                            <TabsList className="grid w-full grid-cols-4 bg-black/60 text-slate-300">
                                 <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">My Groceries</TabsTrigger>
                                 <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Shopping List <Badge variant="secondary" className="ml-2">{shoppingList.length}</Badge></TabsTrigger>
+                                <TabsTrigger value="purchased" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Purchased</TabsTrigger>
                                 <TabsTrigger value="expired" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Expired <Badge variant="destructive" className="ml-2">{expiredItems.length}</Badge></TabsTrigger>
                             </TabsList>
                             <TabsContent value="inventory">
@@ -252,22 +262,38 @@ export default function GroceryListPage() {
                                         </div>
                                     </CardHeader>
                                     <CardContent>
-                                        {sortedAndFilteredList.length > 0 ? (
+                                        {activeInventory.length > 0 ? (
                                         <ul className="space-y-4">
-                                            {sortedAndFilteredList.map(item => {
+                                            {activeInventory.map(item => {
                                                 const isExpiring = expiringItems.some(expItem => expItem.id === item.id);
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-white/10" : "bg-black/30", isExpiring && !item.purchased && "bg-red-500/30 border border-red-400", isExpired && !item.purchased && "bg-red-800/40 border border-red-500/50")}>
-                                                    <Checkbox id={item.id} checked={item.purchased} onCheckedChange={() => togglePurchased(item.id)} aria-label={`Mark ${item.name} as purchased`} className="mt-1 border-white data-[state=checked]:bg-primary" />
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/30", isExpiring && "bg-orange-500/30 border border-orange-400", isExpired && "bg-red-800/40 border border-red-500/50")}>
+                                                     <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Checkbox id={`check-${item.id}`} className="mt-1 border-white data-[state=checked]:bg-primary" />
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Confirm Purchase</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    Are you sure you want to move "{item.name}" to your purchased list?
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={() => markAsPurchased(item.id)}>Yes, Mark as Purchased</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
                                                     <div className="flex-grow">
-                                                        <label htmlFor={item.id} className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</label>
+                                                        <label htmlFor={`check-${item.id}`} className="font-medium text-lg">{item.name}</label>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.storageLocation && <Badge variant="outline" className="border-white/30">{item.storageLocation}</Badge>}
-                                                            {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(new Date(item.expiryDate), 'MMM d')}</span>)}
+                                                            {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(parseISO(String(item.expiryDate)), 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
@@ -317,6 +343,35 @@ export default function GroceryListPage() {
                                     </CardContent>
                                 </Card>
                             </TabsContent>
+                             <TabsContent value="purchased">
+                                <Card className="shadow-lg bg-black/60 border-white/20 text-white">
+                                    <CardHeader>
+                                        <CardTitle>Purchased Items</CardTitle>
+                                        <CardDescription className="text-slate-300">Items you've already bought and used.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {purchasedInventory.length > 0 ? (
+                                            <ul className="space-y-4">
+                                                {purchasedInventory.map(item => {
+                                                    const CategoryIcon = getCategoryIcon(item.category);
+                                                    return (
+                                                        <li key={item.id} className="flex items-center gap-4 p-4 rounded-lg bg-white/10 opacity-70">
+                                                            <Check className="h-5 w-5 text-green-400" />
+                                                            <div className="flex-grow">
+                                                                <p className="font-medium text-lg line-through text-slate-400">{item.name}</p>
+                                                                <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                                    <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
+                                                                </div>
+                                                            </div>
+                                                            <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)} className="hover:bg-white/20"><Trash2 className="h-4 w-4 text-red-400" /></Button>
+                                                        </li>
+                                                    )
+                                                })}
+                                            </ul>
+                                        ) : (<p className="text-center text-slate-400 py-8">No purchased items yet.</p>)}
+                                    </CardContent>
+                                </Card>
+                            </TabsContent>
                             <TabsContent value="expired">
                                 <Card className="shadow-lg bg-black/60 border-white/20 text-white">
                                     <CardHeader>
@@ -335,7 +390,7 @@ export default function GroceryListPage() {
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
-                                                            {item.expiryDate && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(new Date(item.expiryDate), 'MMM d')}</span>)}
+                                                            {item.expiryDate && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(parseISO(String(item.expiryDate)), 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
