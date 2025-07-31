@@ -7,7 +7,7 @@ import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby, Check, X, Stethoscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays } from 'date-fns';
+import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays, isWithinInterval } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
@@ -100,24 +100,24 @@ export default function HomePage() {
         const expiringItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased) return false;
             const expiryDate = new Date(item.expiryDate);
-            const threeDaysFromNow = addDays(new Date(), 3);
-            return isBefore(expiryDate, threeDaysFromNow) && !isBefore(expiryDate, new Date()) || isToday(expiryDate);
+            const tomorrow = addDays(startOfDay(new Date()), 1);
+            const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
+            return isWithinInterval(expiryDate, { start: tomorrow, end: threeDaysFromNow });
         });
+
+        const expiredItems = groceryList.filter(item => {
+            if (!item.expiryDate || item.purchased) return false;
+            return isBefore(new Date(item.expiryDate), addDays(startOfDay(new Date()), 1));
+        });
+
+        if (expiredItems.length > 0) {
+            const expiredMessage = `Expired: ${expiredItems.map(i => i.name).join(', ')}.`;
+            currentNotifications.push({ id: 'expired-items', icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list' });
+        }
 
         if (expiringItems.length > 0) {
             const expiringMessage = `Expiring soon: ${expiringItems.map(i => i.name).join(', ')}.`;
-            currentNotifications.push({ id: 'expiring-items', icon: AlertTriangle, message: expiringMessage, color: 'text-destructive', href: '/grocery-list' });
-            toast({
-                variant: "destructive",
-                title: (
-                    <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5" />
-                        <span className="font-bold">Items Expiring Soon!</span>
-                    </div>
-                ),
-                description: `Don't forget to use these items: ${expiringItems.map(i => i.name).join(', ')}.`,
-                duration: 8000,
-            });
+            currentNotifications.push({ id: 'expiring-items', icon: AlertTriangle, message: expiringMessage, color: 'text-yellow-500', href: '/grocery-list' });
         }
       }
 

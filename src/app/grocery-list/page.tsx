@@ -150,16 +150,18 @@ export default function GroceryListPage() {
   };
 
 
-  const expiringItems = inventoryList.filter(item => {
+  const expiringItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || item.purchased) return false;
-    const threeDaysFromNow = addDays(new Date(), 3);
-    return isBefore(item.expiryDate, threeDaysFromNow) && !isBefore(item.expiryDate, startOfDay(new Date()));
-  });
+    const tomorrow = addDays(startOfDay(new Date()), 1);
+    const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
+    return isWithinInterval(item.expiryDate, { start: tomorrow, end: threeDaysFromNow });
+  }), [inventoryList]);
   
-  const expiredItems = inventoryList.filter(item => {
+  const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || item.purchased) return false;
-    return isBefore(item.expiryDate, startOfDay(new Date()));
-  });
+    // An item is expired if its expiry date is today or in the past.
+    return isBefore(item.expiryDate, addDays(startOfDay(new Date()), 1));
+  }), [inventoryList]);
 
   const sortedAndFilteredList = useMemo(() => {
     let list = [...inventoryList];
@@ -197,7 +199,7 @@ export default function GroceryListPage() {
         <div className="absolute inset-0 bg-black/50 z-0"/>
         <div 
             className="absolute inset-0 -z-10 bg-cover bg-center"
-            style={{backgroundImage: "url('https://i.pinimg.com/736x/d5/a3/6d/d5a36de2f6c14f433311edadfb497991.jpg')"}}
+            style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}
         />
         <div className="relative z-10 flex flex-col min-h-screen">
             <header className="container mx-auto px-4 py-6"><div className="flex justify-between items-center"><GlowHerLogo /><Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white"><ChevronLeft className="mr-2 h-4 w-4" />Back to Dashboard</Button></div></header>
@@ -205,14 +207,14 @@ export default function GroceryListPage() {
                 <div className="text-center mb-8"><h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Groceries</h1><p className="mt-2 text-lg text-white/80">Manage your pantry and plan your shopping.</p></div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-1">
-                        <Card className="shadow-lg sticky top-8 bg-black/20 backdrop-blur-md border-white/20 text-white">
+                        <Card className="shadow-lg sticky top-8 bg-black/60 border-white/20 text-white">
                             <CardHeader><CardTitle className="flex items-center gap-2"><Plus/> {editingItem ? 'Edit Item in Inventory' : 'Add to Inventory'}</CardTitle></CardHeader>
                             <CardContent><Form {...inventoryForm}><form onSubmit={inventoryForm.handleSubmit(onInventorySubmit)} className="space-y-4">
                                 <FormField control={inventoryForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>Item Name</FormLabel><FormControl><Input placeholder="e.g., Almond Milk" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-slate-300" /></FormControl><FormMessage /></FormItem>)}/>
                                 <FormField control={inventoryForm.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger className="bg-white/10 border-white/20 text-white"><SelectValue placeholder="Select a category" /></SelectTrigger></FormControl><SelectContent>{categories.map(cat => (<SelectItem key={cat.name} value={cat.name}><div className="flex items-center gap-2"><cat.icon className="h-4 w-4" />{cat.name}</div></SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
                                 <FormField control={inventoryForm.control} name="quantity" render={({ field }) => (<FormItem><FormLabel>Quantity (Optional)</FormLabel><FormControl><Input placeholder="e.g., 1 carton" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-slate-300" /></FormControl><FormMessage /></FormItem>)}/>
                                 <FormField control={inventoryForm.control} name="storageLocation" render={({ field }) => (<FormItem><FormLabel>Storage Location</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger className="bg-white/10 border-white/20 text-white"><SelectValue placeholder="Select a location" /></SelectTrigger></FormControl><SelectContent>{storageLocations.map(loc => (<SelectItem key={loc} value={loc}>{loc}</SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
-                                <FormField control={inventoryForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date (Optional)</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 hover:bg-white/20 text-white", !field.value && "text-slate-300")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date()} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
+                                <FormField control={inventoryForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date (Optional)</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 hover:bg-white/20 text-white", !field.value && "text-slate-300")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date("1900-01-01")} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
                                 <Button type="submit" className="w-full bg-primary hover:bg-primary/90">{editingItem ? 'Update Item' : 'Add to Inventory'}</Button>
                                 {editingItem && <Button type="button" variant="ghost" className="w-full" onClick={() => { setEditingItem(null); inventoryForm.reset({ name: "", category: "Other", quantity: "", storageLocation: "Pantry" }); }}>Cancel Edit</Button>}
                             </form></Form></CardContent>
@@ -220,15 +222,15 @@ export default function GroceryListPage() {
                     </div>
                     <div className="lg:col-span-2 space-y-6">
                         {expiredItems.length > 0 && (<Alert variant="destructive" className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription className="text-white/90">Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
-                        {expiringItems.length > 0 && (<Alert variant="destructive" className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription className="text-white/90">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription className="text-white/90">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         <Tabs defaultValue="inventory" className="w-full">
-                            <TabsList className="grid w-full grid-cols-3 bg-black/20 text-slate-300">
+                            <TabsList className="grid w-full grid-cols-3 bg-black/60 text-slate-300">
                                 <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">My Groceries</TabsTrigger>
                                 <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Shopping List <Badge variant="secondary" className="ml-2">{shoppingList.length}</Badge></TabsTrigger>
                                 <TabsTrigger value="expired" className="data-[state=active]:bg-white/20 data-[state=active]:text-white">Expired <Badge variant="destructive" className="ml-2">{expiredItems.length}</Badge></TabsTrigger>
                             </TabsList>
                             <TabsContent value="inventory">
-                                <Card className="shadow-lg bg-black/20 backdrop-blur-md border-white/20 text-white">
+                                <Card className="shadow-lg bg-black/60 border-white/20 text-white">
                                     <CardHeader>
                                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                             <CardTitle>Your Inventory</CardTitle>
@@ -280,7 +282,7 @@ export default function GroceryListPage() {
                                 </Card>
                             </TabsContent>
                             <TabsContent value="shoppingList">
-                                <Card className="shadow-lg bg-black/20 backdrop-blur-md border-white/20 text-white">
+                                <Card className="shadow-lg bg-black/60 border-white/20 text-white">
                                     <CardHeader>
                                         <CardTitle>Shopping List</CardTitle>
                                         <CardDescription className="text-slate-300">Add items you need to buy on your next trip.</CardDescription>
@@ -316,7 +318,7 @@ export default function GroceryListPage() {
                                 </Card>
                             </TabsContent>
                             <TabsContent value="expired">
-                                <Card className="shadow-lg bg-black/20 backdrop-blur-md border-white/20 text-white">
+                                <Card className="shadow-lg bg-black/60 border-white/20 text-white">
                                     <CardHeader>
                                         <CardTitle>Expired Items</CardTitle>
                                         <CardDescription className="text-slate-300">These items are past their expiry date.</CardDescription>
