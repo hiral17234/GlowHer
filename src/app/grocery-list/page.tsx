@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, addDays, isBefore, isToday, parseISO, startOfDay, isAfter, isSameDay } from 'date-fns';
+import { format, addDays, isBefore, isToday, parseISO, startOfDay, isAfter } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -23,6 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 
 const groceryItemSchema = z.object({
@@ -121,7 +122,7 @@ export default function GroceryListPage() {
         saveInventoryList([...inventoryList, newItem]);
         toast({ title: "Item Added", description: `${newItem.name} has been added to your inventory.` });
     }
-    inventoryForm.reset({ name: "", category: "Other", quantity: "", storageLocation: "Pantry" });
+    inventoryForm.reset({ name: "", category: "Other", quantity: "", storageLocation: "Pantry", expiryDate: undefined });
   };
 
   const onShoppingListSubmit = (data: z.infer<typeof shoppingListItemSchema>) => {
@@ -152,16 +153,16 @@ export default function GroceryListPage() {
   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
     const today = startOfDay(new Date());
-    const expiryDate = startOfDay(parseISO(String(item.expiryDate)));
-    return isBefore(expiryDate, today) || isSameDay(expiryDate, today);
+    const expiryDate = startOfDay(item.expiryDate);
+    return !isAfter(expiryDate, today);
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || expiredItems.some(exp => exp.id === item.id)) return false;
-    const tomorrow = addDays(startOfDay(new Date()), 1);
-    const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
-    const expiryDate = startOfDay(parseISO(String(item.expiryDate)));
-    return isAfter(expiryDate, startOfDay(new Date())) && isBefore(expiryDate, addDays(startOfDay(new Date()), 4));
+    const today = startOfDay(new Date());
+    const threeDaysFromNow = addDays(today, 3);
+    const expiryDate = startOfDay(item.expiryDate);
+    return isAfter(expiryDate, today) && !isAfter(expiryDate, threeDaysFromNow);
   }), [inventoryList, expiredItems]);
 
 
@@ -178,8 +179,8 @@ export default function GroceryListPage() {
         switch (sortKey) {
             case 'name': valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); break;
             case 'expiryDate': 
-                valA = a.expiryDate ? parseISO(String(a.expiryDate)).getTime() : Infinity; 
-                valB = b.expiryDate ? parseISO(String(b.expiryDate)).getTime() : Infinity; 
+                valA = a.expiryDate ? a.expiryDate.getTime() : Infinity; 
+                valB = b.expiryDate ? b.expiryDate.getTime() : Infinity; 
                 break;
             case 'dateAdded': default: 
                 valA = parseISO(a.dateAdded).getTime(); 
@@ -293,7 +294,7 @@ export default function GroceryListPage() {
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.storageLocation && <Badge variant="outline" className="border-white/30">{item.storageLocation}</Badge>}
-                                                            {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(parseISO(String(item.expiryDate)), 'MMM d')}</span>)}
+                                                            {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
@@ -390,7 +391,7 @@ export default function GroceryListPage() {
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
-                                                            {item.expiryDate && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(parseISO(String(item.expiryDate)), 'MMM d')}</span>)}
+                                                            {item.expiryDate && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
@@ -411,3 +412,4 @@ export default function GroceryListPage() {
     </div>
   );
 }
+
