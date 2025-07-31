@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -24,6 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { BottomNavbar } from '@/components/glowher/BottomNavbar';
 
 
 const groceryItemSchema = z.object({
@@ -129,7 +129,7 @@ export default function GroceryListPage() {
   const onInventorySubmit = (data: z.infer<typeof groceryItemSchema>) => {
     if(editingItem) {
         // Update existing item
-        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data, used: item.used, dateAdded: item.dateAdded } : item);
+        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data, used: item.used, dateAdded: item.dateAdded instanceof Date ? item.dateAdded : parseISO(item.dateAdded as any) } : item);
         saveInventoryList(updatedList);
         toast({ title: "Item Updated", description: `${data.name} has been updated.` });
         setEditingItem(null);
@@ -230,7 +230,7 @@ export default function GroceryListPage() {
   }
 
   return (
-    <div className="relative flex flex-col min-h-screen text-foreground">
+    <div className="relative flex flex-col min-h-screen text-foreground pb-20 md:pb-0">
         <div 
             className="absolute inset-0 -z-10 bg-cover bg-center"
             style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}
@@ -448,6 +448,7 @@ export default function GroceryListPage() {
                 </div>
             </main>
         </div>
+        <BottomNavbar />
     </div>
   );
 }
