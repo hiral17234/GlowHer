@@ -228,7 +228,7 @@ export default function GroceryListPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}>
+    <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}>
         <div className="absolute inset-0 bg-black/50 z-0"/>
         <div className="relative z-10 flex flex-col flex-grow">
             <header className="container mx-auto px-4 py-6">
@@ -258,18 +258,18 @@ export default function GroceryListPage() {
                     </div>
                     <div className="lg:col-span-2 space-y-6">
                         {visibleExpiredItems.length > 0 && (
-                            <Alert variant="destructive" className="relative bg-red-500/20 border-red-500/30 text-white [&>svg]:text-white">
+                            <Alert variant="destructive" className="relative bg-red-600 border-red-700 text-white [&>svg]:text-white">
                                 <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle>You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
                                 <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
                                 {visibleExpiredItems.map(item => (
                                 <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => handleDismissExpired(item.id)}>
-                                    <X className="h-4 w-4 text-slate-800" />
+                                    <X className="h-4 w-4 text-white" />
                                 </Button>
                                 ))}
                             </Alert>
                         )}
-                        {expiringItems.length > 0 && (<Alert className="bg-orange-500/20 border-orange-500/30 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
                             <TabsList className="grid w-full grid-cols-4 bg-black/20 text-white">
