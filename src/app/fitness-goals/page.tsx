@@ -260,187 +260,274 @@ export default function FitnessGoalsPage() {
     const progressPercentage = goalDays > 0 ? Math.round((completedDays / goalDays) * 100) : 0;
 
     return (
-        <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/1200x/e2/1f/ef/e21fef81dcf0b7e4acbf5609b11997b7.jpg')"}}>
-            <div className="relative z-10 flex flex-col min-h-screen">
-                <header className="container mx-auto px-4 py-6 z-10">
-                    <div className="flex justify-between items-center"><GlowHerLogo /><Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white"><ChevronLeft className="mr-2 h-4 w-4" />Back to Dashboard</Button></div>
-                </header>
+        <div className="flex flex-col min-h-screen bg-background text-foreground">
+            <header className="container mx-auto px-4 py-6 z-10">
+                <div className="flex justify-between items-center">
+                    <GlowHerLogo />
+                    <Button variant="ghost" onClick={() => router.push('/')}>
+                        <ChevronLeft className="mr-2 h-4 w-4" />
+                        Back to Dashboard
+                    </Button>
+                </div>
+            </header>
 
-                <main className="flex-grow container mx-auto px-4 py-8 space-y-8">
-                    <div className="text-center bg-black/20 backdrop-blur-sm p-4 rounded-lg">
-                        <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Fitness Goal Planner</h1>
-                        <p className="mt-2 text-lg text-white/80">Move mindfully through your health journey.</p>
-                    </div>
+            <main className="flex-grow container mx-auto px-4 py-8 space-y-8">
+                <div className="text-center">
+                    <h1 className="font-headline text-4xl md:text-5xl font-bold">Fitness Goal Planner</h1>
+                    <p className="mt-2 text-lg text-muted-foreground">Move mindfully through your health journey.</p>
+                </div>
 
-                    <Card className="max-w-md mx-auto shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-white"><CardHeader><CardTitle className="text-white">Let's Personalize Your Plan</CardTitle></CardHeader><CardContent><div className="flex items-center justify-between space-x-2"><Label htmlFor="pregnancy-mode" className="text-base text-white">Are you currently pregnant?</Label><Switch id="pregnancy-mode" checked={isPregnant} onCheckedChange={handlePregnancyToggle} /></div></CardContent></Card>
+                <Card className="max-w-md mx-auto shadow-lg">
+                    <CardHeader>
+                        <CardTitle>Let's Personalize Your Plan</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex items-center justify-between space-x-2">
+                            <Label htmlFor="pregnancy-mode" className="text-base">Are you currently pregnant?</Label>
+                            <Switch id="pregnancy-mode" checked={isPregnant} onCheckedChange={handlePregnancyToggle} />
+                        </div>
+                    </CardContent>
+                </Card>
 
-                    {isPregnant ? (
-                        // --- PREGNANCY MODE UI ---
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="space-y-8">
-                                <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader><div className="flex justify-between items-center"><CardTitle className="flex items-center gap-2"><Target /> Your Movement Goals</CardTitle><Button variant="ghost" size="icon" onClick={() => setIsEditingGoals(!isEditingGoals)}><Edit className="h-4 w-4"/></Button></div><CardDescription>Set your gentle movement targets for the week.</CardDescription></CardHeader>
-                                    <CardContent>
-                                        {isEditingGoals ? (
-                                            <Form {...pregnancyGoalForm}><form onSubmit={pregnancyGoalForm.handleSubmit(onPregnancyGoalSubmit)} className="space-y-4">
+                {isPregnant ? (
+                    // --- PREGNANCY MODE UI ---
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="space-y-8">
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <div className="flex justify-between items-center">
+                                        <CardTitle className="flex items-center gap-2"><Target /> Your Movement Goals</CardTitle>
+                                        <Button variant="ghost" size="icon" onClick={() => setIsEditingGoals(!isEditingGoals)}><Edit className="h-4 w-4"/></Button>
+                                    </div>
+                                    <CardDescription>Set your gentle movement targets for the week.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    {isEditingGoals ? (
+                                        <Form {...pregnancyGoalForm}>
+                                            <form onSubmit={pregnancyGoalForm.handleSubmit(onPregnancyGoalSubmit)} className="space-y-4">
                                                 <FormField control={pregnancyGoalForm.control} name="days" render={({ field }) => (<FormItem><FormLabel>Days to Move This Week</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                                 <FormField control={pregnancyGoalForm.control} name="activityType" render={({ field }) => (<FormItem><FormLabel>Preferred Activity</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an activity" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Light Strength">Light Strength</SelectItem><SelectItem value="Stretching">Stretching</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
                                                 <FormField control={pregnancyGoalForm.control} name="trackMood" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><FormLabel>Track Energy/Mood?</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
                                                 <Button type="submit" className="w-full">Save Goals</Button>
-                                            </form></Form>
-                                        ) : (
-                                            <div className="space-y-4">
-                                                <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Weekly Goal</p><p className="font-bold">{goalDays} days</p></div>
-                                                <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Preferred Activity</p><p className="font-bold">{pregnancyGoalForm.getValues('activityType')}</p></div>
-                                            </div>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                                <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader><CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle></CardHeader>
-                                    <CardContent>
-                                        <Form {...pregnancyLogForm}><form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
+                                            </form>
+                                        </Form>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Weekly Goal</p><p className="font-bold">{goalDays} days</p></div>
+                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Preferred Activity</p><p className="font-bold">{pregnancyGoalForm.getValues('activityType')}</p></div>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                            <Card className="shadow-lg">
+                                <CardHeader><CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle></CardHeader>
+                                <CardContent>
+                                    <Form {...pregnancyLogForm}>
+                                        <form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
                                             
                                             <div className="grid grid-cols-2 gap-4">
                                                 <FormItem>
                                                     <FormLabel>Hours</FormLabel>
-                                                    <Select onValueChange={(value) => setDuration(d => ({ ...d, hours: Number(value) }))} value={String(duration.hours)}><FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl><SelectContent>
+                                                    <Select onValueChange={(value) => setDuration(d => ({ ...d, hours: Number(value) }))} value={String(duration.hours)}>
+                                                        <FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl>
+                                                        <SelectContent>
                                                             {[...Array(5).keys()].map(h => <SelectItem key={h} value={String(h)}>{h} hr</SelectItem>)}
-                                                        </SelectContent></Select>
+                                                        </SelectContent>
+                                                    </Select>
                                                 </FormItem>
                                                 <FormItem>
                                                     <FormLabel>Minutes</FormLabel>
-                                                    <Select onValueChange={(value) => setDuration(d => ({ ...d, minutes: Number(value) }))} value={String(duration.minutes)}><FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl><SelectContent>
+                                                    <Select onValueChange={(value) => setDuration(d => ({ ...d, minutes: Number(value) }))} value={String(duration.minutes)}>
+                                                        <FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl>
+                                                        <SelectContent>
                                                             {[...Array(12).keys()].map(m => m * 5).map(m => <SelectItem key={m} value={String(m)}>{m} min</SelectItem>)}
-                                                        </SelectContent></Select>
+                                                        </SelectContent>
+                                                    </Select>
                                                 </FormItem>
                                             </div>
 
                                             {pregnancyGoalForm.getValues('trackMood') && <FormField control={pregnancyLogForm.control} name="feeling" render={({ field }) => (<FormItem><FormLabel>How did you feel after?</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select how you felt" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Energized">Energized</SelectItem><SelectItem value="Tired">Tired</SelectItem><SelectItem value="Sore">Sore</SelectItem><SelectItem value="Relaxed">Relaxed</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>}
                                             <FormField control={pregnancyLogForm.control} name="notes" render={({ field }) => (<FormItem><FormLabel>Notes (optional)</FormLabel><FormControl><Textarea placeholder="Any thoughts on today's movement?" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                             <Button type="submit" className="w-full">Log Movement</Button>
-                                        </form></Form>
-                                    </CardContent>
-                                </Card>
-                                 <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
-                                        <CardDescription>Your logged minutes over the last 7 days.</CardDescription>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <ChartContainer config={weeklyActivityChartConfig} className="min-h-[200px] w-full">
-                                            <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                                                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
-                                                <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
-                                            </RechartsBarChart>
-                                        </ChartContainer>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                            <div className="space-y-8">
-                               <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader><CardTitle className="flex items-center gap-2"><BarChart/> Weekly Goal Progress</CardTitle><CardDescription>You've moved on {completedDays} of your {goalDays} day goal.</CardDescription></CardHeader>
-                                    <CardContent className="flex justify-center items-center h-48">
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <PieChart>
-                                                <Pie data={[{ value: 1 }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--muted))" startAngle={90} endAngle={-270} paddingAngle={0} cornerRadius={50} />
-                                                <Pie data={[{ value: progressPercentage }, { value: 100 - progressPercentage }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--primary))" startAngle={90} endAngle={-270} stroke="hsl(var(--primary))" cornerRadius={50}>
-                                                    <Cell fill="hsl(var(--primary))" />
-                                                    <Cell fill="transparent" />
-                                                </Pie>
-                                                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="text-4xl font-bold fill-foreground">{`${progressPercentage}%`}</text>
-                                                <text x="50%" y="65%" textAnchor="middle" dominantBaseline="middle" className="text-sm fill-muted-foreground">completed</text>
-                                            </PieChart>
-                                        </ResponsiveContainer>
-                                    </CardContent>
-                                </Card>
-                                <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
-                                    <CardContent className="space-y-2">
-                                        <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-100" : "bg-muted")}>
-                                            <Award className={cn("h-6 w-6", streak > 0 ? "text-amber-500 fill-amber-500" : "text-muted-foreground")} />
-                                            <div>
-                                                <p className="font-semibold">Consistency Streak</p>
-                                                <p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log a workout today to start a streak."}</p>
-                                            </div>
-                                        </div>
-                                        <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedDays >= goalDays ? "bg-primary/20" : "bg-muted")}>
-                                            <Award className={cn("h-6 w-6", completedDays >= goalDays ? "text-primary fill-primary" : "text-muted-foreground")} />
-                                            <div>
-                                                <p className="font-semibold">Weekly Goal</p>
-                                                <p className="text-sm text-muted-foreground">{completedDays >= goalDays ? "You hit your goal this week!" : "Keep going to reach your weekly goal."}</p>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
+                                        </form>
+                                    </Form>
+                                </CardContent>
+                            </Card>
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
+                                    <CardDescription>Your logged minutes over the last 7 days.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <ChartContainer config={weeklyActivityChartConfig} className="min-h-[200px] w-full">
+                                        <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                            <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
+                                            <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
+                                        </RechartsBarChart>
+                                    </ChartContainer>
+                                </CardContent>
+                            </Card>
                         </div>
-                    ) : (
-                        // --- DEFAULT MODE UI ---
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="space-y-8">
-                                <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader><div className="flex justify-between items-center"><CardTitle className="flex items-center gap-2"><Target /> Your Fitness Goals</CardTitle><Button variant="ghost" size="icon" onClick={() => setIsEditingGoals(!isEditingGoals)}><Edit className="h-4 w-4"/></Button></div><CardDescription>Set and edit your daily and weekly targets.</CardDescription></CardHeader>
-                                    <CardContent>
-                                        {isEditingGoals ? (
-                                            <Form {...defaultGoalForm}><form onSubmit={defaultGoalForm.handleSubmit(onGoalSubmit)} className="space-y-4">
+                        <div className="space-y-8">
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Goal Progress</CardTitle>
+                                    <CardDescription>You've moved on {completedDays} of your {goalDays} day goal.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="flex justify-center items-center h-48">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie data={[{ value: 1 }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--muted))" startAngle={90} endAngle={-270} paddingAngle={0} cornerRadius={50} />
+                                            <Pie data={[{ value: progressPercentage }, { value: 100 - progressPercentage }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--primary))" startAngle={90} endAngle={-270} stroke="hsl(var(--primary))" cornerRadius={50}>
+                                                <Cell fill="hsl(var(--primary))" />
+                                                <Cell fill="transparent" />
+                                            </Pie>
+                                            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="text-4xl font-bold fill-foreground">{`${progressPercentage}%`}</text>
+                                            <text x="50%" y="65%" textAnchor="middle" dominantBaseline="middle" className="text-sm fill-muted-foreground">completed</text>
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </CardContent>
+                            </Card>
+                            <Card className="shadow-lg">
+                                <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
+                                <CardContent className="space-y-2">
+                                    <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-100" : "bg-muted")}>
+                                        <Award className={cn("h-6 w-6", streak > 0 ? "text-amber-500 fill-amber-500" : "text-muted-foreground")} />
+                                        <div>
+                                            <p className="font-semibold">Consistency Streak</p>
+                                            <p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log a workout today to start a streak."}</p>
+                                        </div>
+                                    </div>
+                                    <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedDays >= goalDays ? "bg-primary/20" : "bg-muted")}>
+                                        <Award className={cn("h-6 w-6", completedDays >= goalDays ? "text-primary fill-primary" : "text-muted-foreground")} />
+                                        <div>
+                                            <p className="font-semibold">Weekly Goal</p>
+                                            <p className="text-sm text-muted-foreground">{completedDays >= goalDays ? "You hit your goal this week!" : "Keep going to reach your weekly goal."}</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                ) : (
+                    // --- DEFAULT MODE UI ---
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="space-y-8">
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <div className="flex justify-between items-center">
+                                        <CardTitle className="flex items-center gap-2"><Target /> Your Fitness Goals</CardTitle>
+                                        <Button variant="ghost" size="icon" onClick={() => setIsEditingGoals(!isEditingGoals)}><Edit className="h-4 w-4"/></Button>
+                                    </div>
+                                    <CardDescription>Set and edit your daily and weekly targets.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    {isEditingGoals ? (
+                                        <Form {...defaultGoalForm}>
+                                            <form onSubmit={defaultGoalForm.handleSubmit(onGoalSubmit)} className="space-y-4">
                                                 <FormField control={defaultGoalForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel>Daily Steps Goal</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                                 <FormField control={defaultGoalForm.control} name="workouts" render={({ field }) => (<FormItem><FormLabel>Weekly Workouts Goal</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                                 <Button type="submit" className="w-full">Save Goals</Button>
-                                            </form></Form>
-                                        ) : (
-                                            <div className="space-y-4"><div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Daily Steps</p><p className="font-bold">{defaultGoalForm.getValues('steps').toLocaleString()}</p></div><div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Workouts Per Week</p><p className="font-bold">{defaultGoalForm.getValues('workouts')}</p></div></div>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                                 <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader><CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle><CardDescription>Record your movement for today.</CardDescription></CardHeader>
-                                    <CardContent>
-                                        <Form {...defaultLogForm}><form onSubmit={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
-                                            <FormField control={defaultLogForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/> Steps Taken</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                                             <FormField control={defaultLogForm.control} name="workout" render={({ field }) => (<FormItem><FormLabel>Type of Workout</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout type (optional)" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Running">Running</SelectItem><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
-                                             <Button type="submit" className="w-full">Log Activity</Button>
-                                        </form></Form>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                            <div className="space-y-8">
-                                 <Card className="shadow-lg bg-white/20 backdrop-blur-sm border-white/30 text-foreground">
-                                    <CardHeader><CardTitle className="flex items-center gap-2"><BarChart/> Weekly Progress</CardTitle><CardDescription>Your step count over the last 7 days.</CardDescription></CardHeader>
-                                    <CardContent>
-                                        <div className="h-[250px] w-full"><ChartContainer config={chartConfig} className="min-h-[200px] w-full"><RechartsBarChart data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} /><ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value).toLocaleString()} steps`}/>}/><RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} /></RechartsBarChart></ChartContainer></div>
-                                        <div className="mt-4"><Progress value={(defaultLogForm.getValues('steps') / defaultGoalForm.getValues('steps')) * 100} className="h-2 bg-muted [&>span]:bg-primary" /><p className="text-sm text-center mt-2 text-muted-foreground">Today's progress: {defaultLogForm.getValues('steps').toLocaleString()} / {defaultGoalForm.getValues('steps').toLocaleString()} steps</p></div>
-                                    </CardContent>
-                                </Card>
-                                {relevantSuggestions && !isPregnant ? (
-                                    <Card className={cn("shadow-lg border", "bg-white/20 backdrop-blur-sm border-white/30 text-foreground")}>
-                                        <CardHeader><CardTitle className="flex items-center gap-2"><relevantSuggestions.icon/> {relevantSuggestions.title}</CardTitle><CardDescription>Exercises aligned with your current menstrual phase.</CardDescription></CardHeader>
-                                        <CardContent><ul className="space-y-2">{relevantSuggestions.suggestions.map(s => (<li key={s} className="flex items-center gap-2"><Check className="h-4 w-4 text-green-500"/><span>{s}</span></li>))}</ul></CardContent>
-                                    </Card>
-                                ) : !isPregnant && (
-                                    <Alert className="bg-white/20 backdrop-blur-sm border-white/30 text-foreground"><Info className="h-4 w-4" /><AlertTitle>Enter Your Cycle Data</AlertTitle><AlertDescription>To get personalized fitness suggestions, please enter your details in the Period Tracker.</AlertDescription></Alert>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {isPregnant && (
-                         <div className="mt-12 space-y-8">
-                            <div className="flex items-center justify-center mb-4 p-4 rounded-md bg-destructive/10 border border-destructive/20 backdrop-blur-sm">
-                               <AlertTriangle className="h-6 w-6 text-destructive mr-3" />
-                               <p className="font-bold text-destructive text-center">Do consult your doctor before doing this and proceed only if comfortable.</p>
-                           </div>
-                            {pregnancyVideoUrl && (<Card className="shadow-xl bg-white/20 backdrop-blur-sm border-white/30"><CardHeader><CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle></CardHeader><CardContent><div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div></CardContent></Card>)}
-                            <Card className="shadow-xl bg-white/20 backdrop-blur-sm border-white/30">
-                                <CardHeader><CardTitle className="flex items-center gap-2"><HeartPulse /> Guided Prenatal Yoga</CardTitle><CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription></CardHeader>
-                                <CardContent><div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={prenatalYogaVideoUrl} title="Guided Prenatal Yoga" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div></CardContent>
+                                            </form>
+                                        </Form>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Daily Steps</p><p className="font-bold">{defaultGoalForm.getValues('steps').toLocaleString()}</p></div>
+                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Workouts Per Week</p><p className="font-bold">{defaultGoalForm.getValues('workouts')}</p></div>
+                                        </div>
+                                    )}
+                                </CardContent>
                             </Card>
-                       </div>
-                    )}
-                </main>
-            </div>
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle>
+                                    <CardDescription>Record your movement for today.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Form {...defaultLogForm}>
+                                        <form onSubmit={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
+                                            <FormField control={defaultLogForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/> Steps Taken</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                            <FormField control={defaultLogForm.control} name="workout" render={({ field }) => (<FormItem><FormLabel>Type of Workout</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout type (optional)" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Running">Running</SelectItem><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                            <Button type="submit" className="w-full">Log Activity</Button>
+                                        </form>
+                                    </Form>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div className="space-y-8">
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Progress</CardTitle>
+                                    <CardDescription>Your step count over the last 7 days.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="h-[250px] w-full">
+                                        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+                                            <RechartsBarChart data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value).toLocaleString()} steps`}/>}/>
+                                                <RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} />
+                                            </RechartsBarChart>
+                                        </ChartContainer>
+                                    </div>
+                                    <div className="mt-4">
+                                        <Progress value={(defaultLogForm.getValues('steps') / defaultGoalForm.getValues('steps')) * 100} className="h-2 bg-muted [&>span]:bg-primary" />
+                                        <p className="text-sm text-center mt-2 text-muted-foreground">Today's progress: {defaultLogForm.getValues('steps').toLocaleString()} / {defaultGoalForm.getValues('steps').toLocaleString()} steps</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            {relevantSuggestions && !isPregnant ? (
+                                <Card className={cn("shadow-lg border", relevantSuggestions.color)}>
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center gap-2"><relevantSuggestions.icon/> {relevantSuggestions.title}</CardTitle>
+                                        <CardDescription>Exercises aligned with your current menstrual phase.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <ul className="space-y-2">
+                                            {relevantSuggestions.suggestions.map(s => (<li key={s} className="flex items-center gap-2"><Check className="h-4 w-4 text-green-500"/><span>{s}</span></li>))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+                            ) : !isPregnant && (
+                                <Alert>
+                                    <Info className="h-4 w-4" />
+                                    <AlertTitle>Enter Your Cycle Data</AlertTitle>
+                                    <AlertDescription>To get personalized fitness suggestions, please enter your details in the Period Tracker.</AlertDescription>
+                                </Alert>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {isPregnant && (
+                    <div className="mt-12 space-y-8">
+                        <div className="flex items-center justify-center mb-4 p-4 rounded-md bg-destructive/10 border border-destructive/20">
+                            <AlertTriangle className="h-6 w-6 text-destructive mr-3" />
+                            <p className="font-bold text-destructive text-center">Do consult your doctor before doing this and proceed only if comfortable.</p>
+                        </div>
+                        {pregnancyVideoUrl && (
+                            <Card className="shadow-xl">
+                                <CardHeader><CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle></CardHeader>
+                                <CardContent>
+                                    <div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>
+                                </CardContent>
+                            </Card>
+                        )}
+                        <Card className="shadow-xl">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2"><HeartPulse /> Guided Prenatal Yoga</CardTitle>
+                                <CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={prenatalYogaVideoUrl} title="Guided Prenatal Yoga" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
+            </main>
         </div>
     );
 }
