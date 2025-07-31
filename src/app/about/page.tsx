@@ -70,7 +70,10 @@ export default function AboutPage() {
     const router = useRouter();
 
     return (
-        <div className="flex flex-col min-h-screen bg-background text-foreground">
+        <div 
+            className="flex flex-col min-h-screen bg-background text-foreground bg-cover bg-center"
+            style={{backgroundImage: "url('https://i.pinimg.com/736x/11/6f/02/116f025002e4bf1874ef5543d8439c3b.jpg')"}}
+        >
             <header className="sticky top-0 left-0 w-full bg-background/80 backdrop-blur-lg container mx-auto px-4 py-6 z-20">
                 <div className="flex justify-between items-center">
                     <GlowHerLogo />
@@ -81,7 +84,7 @@ export default function AboutPage() {
                 </div>
             </header>
             <main className="flex-grow container mx-auto px-4 py-12">
-                <div className="max-w-4xl mx-auto space-y-12">
+                <div className="max-w-4xl mx-auto space-y-12 bg-background/80 backdrop-blur-sm p-4 sm:p-8 rounded-lg">
                     <section className="text-center">
                         <h1 className="text-4xl md:text-5xl font-headline text-primary">About GlowHer Wellness</h1>
                         <p className="mt-4 text-lg text-muted-foreground">
