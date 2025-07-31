@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, addDays, isBefore, isToday, parseISO, startOfDay, isAfter } from 'date-fns';
+import { format, addDays, isBefore, isToday, parseISO, startOfDay, isAfter, isWithinInterval } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -149,20 +149,17 @@ export default function GroceryListPage() {
     toast({ title: "Item Moved", description: `${item.name} moved to your inventory. You can now add more details.` });
   };
 
-
   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
-    const today = startOfDay(new Date());
-    const expiryDate = startOfDay(item.expiryDate);
-    return !isAfter(expiryDate, today);
+    // An item is expired if its expiry date is today or in the past.
+    return !isAfter(startOfDay(item.expiryDate), startOfDay(new Date()));
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || expiredItems.some(exp => exp.id === item.id)) return false;
-    const today = startOfDay(new Date());
-    const threeDaysFromNow = addDays(today, 3);
-    const expiryDate = startOfDay(item.expiryDate);
-    return isAfter(expiryDate, today) && !isAfter(expiryDate, threeDaysFromNow);
+    const tomorrow = addDays(startOfDay(new Date()), 1);
+    const tenDaysFromNow = addDays(startOfDay(new Date()), 10);
+    return isWithinInterval(item.expiryDate, { start: tomorrow, end: tenDaysFromNow });
   }), [inventoryList, expiredItems]);
 
 
@@ -355,13 +352,15 @@ export default function GroceryListPage() {
                                             <ul className="space-y-4">
                                                 {purchasedInventory.map(item => {
                                                     const CategoryIcon = getCategoryIcon(item.category);
+                                                    const isExpiring = expiringItems.some(expItem => expItem.id === item.id);
                                                     return (
-                                                        <li key={item.id} className="flex items-center gap-4 p-4 rounded-lg bg-white/10 opacity-70">
+                                                        <li key={item.id} className={cn("flex items-center gap-4 p-4 rounded-lg bg-white/10 opacity-70", isExpiring && "bg-orange-500/30 border border-orange-400 opacity-100")}>
                                                             <Check className="h-5 w-5 text-green-400" />
                                                             <div className="flex-grow">
                                                                 <p className="font-medium text-lg line-through text-slate-400">{item.name}</p>
                                                                 <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                                     <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
+                                                                    {item.expiryDate && (<span className={cn("flex items-center gap-1", isExpiring && "text-orange-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !isExpiring && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                                 </div>
                                                             </div>
                                                             <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)} className="hover:bg-white/20"><Trash2 className="h-4 w-4 text-red-400" /></Button>
