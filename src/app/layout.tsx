@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { LanguageProvider } from '@/hooks/use-language';
+import { BottomNavbar } from '@/components/glowher/BottomNavbar';
 
 export const metadata: Metadata = {
   title: 'GlowHer Wellness',
@@ -20,9 +21,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
       </head>
-      <body>
+      <body className="pb-20 md:pb-0">
             <LanguageProvider>
-                {children}
+                <main>{children}</main>
+                <BottomNavbar />
                 <Toaster />
             </LanguageProvider>
       </body>
