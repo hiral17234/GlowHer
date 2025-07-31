@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, addDays, isBefore, isToday, parseISO, startOfDay } from 'date-fns';
+import { format, addDays, isBefore, isToday, parseISO, startOfDay, isWithinInterval } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -159,19 +159,16 @@ export default function GroceryListPage() {
   
   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || item.purchased) return false;
-    // An item is expired if its expiry date is today or in the past.
     return isBefore(item.expiryDate, addDays(startOfDay(new Date()), 1));
   }), [inventoryList]);
 
   const sortedAndFilteredList = useMemo(() => {
     let list = [...inventoryList];
     
-    // Filter
     if(filter !== 'All') {
         list = list.filter(item => item.category === filter);
     }
 
-    // Sort
     const [sortKey, sortDir] = sort.split('-');
     list.sort((a, b) => {
         let valA, valB;
@@ -221,7 +218,7 @@ export default function GroceryListPage() {
                         </Card>
                     </div>
                     <div className="lg:col-span-2 space-y-6">
-                        {expiredItems.length > 0 && (<Alert variant="destructive" className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription className="text-white/90">Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiredItems.length > 0 && (<Alert className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription className="text-white/90">Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         {expiringItems.length > 0 && (<Alert className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription className="text-white/90">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         <Tabs defaultValue="inventory" className="w-full">
                             <TabsList className="grid w-full grid-cols-3 bg-black/60 text-slate-300">
