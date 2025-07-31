@@ -171,7 +171,7 @@ export default function GroceryListPage() {
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || !isValid(item.expiryDate) || expiredItems.some(exp => exp.id === item.id)) return false;
+    if (!item.expiryDate || !isValid(item.expiryDate) || item.used || expiredItems.some(exp => exp.id === item.id)) return false;
     const tomorrow = addDays(startOfDay(new Date()), 1);
     const tenDaysFromNow = addDays(startOfDay(new Date()), 10);
     return isWithinInterval(item.expiryDate, { start: tomorrow, end: tenDaysFromNow });
@@ -228,7 +228,7 @@ export default function GroceryListPage() {
   }
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}>
+    <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}>
         <div className="absolute inset-0 bg-black/60 z-0"/>
         <div className="relative z-10 flex flex-col flex-grow">
             <header className="container mx-auto px-4 py-6">
@@ -259,9 +259,9 @@ export default function GroceryListPage() {
                     <div className="lg:col-span-2 space-y-6">
                         {visibleExpiredItems.length > 0 && (
                             <Alert variant="destructive" className="relative bg-red-600 border-red-700 text-white [&>svg]:text-white">
-                                <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle>You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
-                                <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
+                                 <AlertTriangle className="h-4 w-4" />
+                                <AlertTitle className="text-white">You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
+                                <AlertDescription className="text-white">Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
                                 {visibleExpiredItems.map(item => (
                                 <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-white hover:bg-white/20" onClick={() => handleDismissExpired(item.id)}>
                                     <X className="h-4 w-4" />
@@ -269,7 +269,7 @@ export default function GroceryListPage() {
                                 ))}
                             </Alert>
                         )}
-                        {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="text-white">Expiring Soon!</AlertTitle><AlertDescription className="text-white">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
                             <TabsList className="grid w-full grid-cols-4 bg-black/20 text-white">
@@ -308,7 +308,7 @@ export default function GroceryListPage() {
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/10 border", isExpiring ? "bg-orange-500/30 border-orange-500" : "border-white/20", isExpired && "bg-red-600/40 border-red-500")}>
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20 border", isExpiring ? "bg-orange-500/30 border-orange-500" : "border-white/20", isExpired && "bg-red-600/40 border-red-500")}>
                                                      <AlertDialog>
                                                         <AlertDialogTrigger asChild>
                                                             <Checkbox id={`check-${item.id}`} className="mt-1 border-white/50 data-[state=checked]:bg-primary" />
