@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X, Tag, Package, Edit, SortAsc, History, Check, ShoppingCart, ArrowRight, EyeOff } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X, Tag, Package, Edit, SortAsc, History, Check, ShoppingCart, ArrowRight, EyeOff, MoreVertical } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
@@ -276,7 +276,7 @@ export default function GroceryListPage() {
                         {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="font-bold">Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
-                            <TabsList className="grid w-full grid-cols-4 bg-black/20 text-white">
+                            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-black/20 text-white">
                                 <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20">My Groceries</TabsTrigger>
                                 <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20">Shopping List <Badge variant="secondary" className="ml-2 bg-primary text-primary-foreground">{shoppingList.length}</Badge></TabsTrigger>
                                 <TabsTrigger value="used" className="data-[state=active]:bg-white/20">Used</TabsTrigger>
@@ -312,7 +312,7 @@ export default function GroceryListPage() {
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20 border", isExpiring ? "bg-orange-500/30 border-orange-500" : "border-white/20", isExpired && "bg-red-600/40 border-red-500")}>
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20 border", isExpiring ? "bg-orange-600/50 border-orange-500" : "border-white/20", isExpired && "bg-red-600/50 border-red-500")}>
                                                      <AlertDialog>
                                                         <AlertDialogTrigger asChild>
                                                             <Checkbox id={`check-${item.id}`} className="mt-1 border-white/50 data-[state=checked]:bg-primary" disabled={isExpired} />
@@ -339,9 +339,20 @@ export default function GroceryListPage() {
                                                             {item.expiryDate && isValid(item.expiryDate) && (<span className={cn("flex items-center gap-1 text-white", (isExpiring || isExpired) && "font-semibold", isExpired ? "text-red-300" : "text-orange-300")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden", isExpired && "text-red-300")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
-                                                    <div className="flex gap-1">
+                                                    <div className="hidden md:flex gap-1">
                                                         <Button variant="ghost" size="icon" onClick={() => handleEditClick(item)} className="text-white hover:text-white hover:bg-white/10"><Edit className="h-4 w-4" /></Button>
                                                         <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)} className="text-red-400 hover:text-red-400 hover:bg-white/10"><Trash2 className="h-4 w-4" /></Button>
+                                                    </div>
+                                                    <div className="md:hidden">
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button variant="ghost" size="icon" className="text-white hover:text-white hover:bg-white/10"><MoreVertical className="h-4 w-4"/></Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent>
+                                                                <DropdownMenuItem onSelect={() => handleEditClick(item)}>Edit</DropdownMenuItem>
+                                                                <DropdownMenuItem onSelect={() => deleteInventoryItem(item.id)} className="text-red-500">Delete</DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
                                                     </div>
                                                 </li>
                                                 )})}
@@ -371,7 +382,7 @@ export default function GroceryListPage() {
                                                         <span className="font-medium text-white">{item.name}</span>
                                                         <div className="flex gap-1">
                                                             <Button variant="ghost" size="sm" onClick={() => moveShoppingItemToInventory(item)} className="text-sky-400 hover:text-sky-300 hover:bg-black/20">
-                                                                Move to Inventory <ArrowRight className="h-4 w-4 ml-2"/>
+                                                                <span className="hidden md:inline">Move to Inventory</span> <ArrowRight className="h-4 w-4 md:ml-2"/>
                                                             </Button>
                                                             <Button variant="ghost" size="icon" onClick={() => deleteShoppingListItem(item.id)} className="text-red-400 hover:text-red-400 hover:bg-black/20">
                                                                 <Trash2 className="h-4 w-4" />
