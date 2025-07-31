@@ -24,7 +24,6 @@ import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { BottomNavbar } from '@/components/glowher/BottomNavbar';
 
 
 const groceryItemSchema = z.object({
@@ -454,12 +453,7 @@ export default function GroceryListPage() {
                     </div>
                 </div>
             </main>
-            <footer className="bg-background/80 backdrop-blur-sm border-t border-border mt-8">
-                <BottomNavbar />
-            </footer>
         </div>
     </div>
   );
 }
-
-    
