@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X, Tag, Package, Edit, SortAsc, History, Check, ShoppingCart, ArrowRight } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Plus, Trash2, AlertTriangle, Apple, Milk, Carrot, Wheat, Cookie, X, Tag, Package, Edit, SortAsc, History, Check, ShoppingCart, ArrowRight, EyeOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
@@ -46,6 +46,7 @@ type GroceryItem = {
   quantity?: string;
   storageLocation?: string;
   used: boolean; 
+  archived: boolean;
   dateAdded: Date; 
 };
 
@@ -93,6 +94,7 @@ export default function GroceryListPage() {
       if (savedInventory) {
         const parsedList = JSON.parse(savedInventory).map((item: any) => ({
             ...item,
+            archived: item.archived || false, // Ensure archived property exists
             expiryDate: item.expiryDate ? parseISO(item.expiryDate) : undefined,
             dateAdded: item.dateAdded ? parseISO(item.dateAdded) : new Date(),
         }));
@@ -128,12 +130,12 @@ export default function GroceryListPage() {
 
   const onInventorySubmit = (data: z.infer<typeof groceryItemSchema>) => {
     if(editingItem) {
-        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data, used: item.used, dateAdded: item.dateAdded } : item);
+        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data, used: item.used, dateAdded: item.dateAdded, archived: item.archived } : item);
         saveInventoryList(updatedList);
         toast({ title: "Item Updated", description: `${data.name} has been updated.` });
         setEditingItem(null);
     } else {
-        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), used: false, dateAdded: new Date() };
+        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), used: false, archived: false, dateAdded: new Date() };
         saveInventoryList([...inventoryList, newItem]);
         toast({ title: "Item Added", description: `${newItem.name} has been added to your inventory.` });
     }
@@ -147,6 +149,7 @@ export default function GroceryListPage() {
   };
   
   const markAsUsed = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, used: true } : item)); };
+  const archiveItem = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, archived: true } : item)); toast({ title: "Item Hidden", description: "Item removed from inventory view." }); };
   const deleteInventoryItem = (id: string) => { saveInventoryList(inventoryList.filter(item => item.id !== id)); toast({ title: "Item Removed" }); };
   const deleteShoppingListItem = (id: string) => { saveShoppingList(shoppingList.filter(item => item.id !== id)); };
   const handleEditClick = (item: GroceryItem) => { setEditingItem(item); inventoryForm.reset({ ...item, expiryDate: item.expiryDate ? new Date(item.expiryDate) : undefined }); };
@@ -157,6 +160,7 @@ export default function GroceryListPage() {
         name: item.name,
         category: "Other",
         used: false,
+        archived: false,
         dateAdded: new Date(),
     };
     saveInventoryList([...inventoryList, newItemForInventory]);
@@ -171,7 +175,7 @@ export default function GroceryListPage() {
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || !isValid(item.expiryDate) || item.used || expiredItems.some(exp => exp.id === item.id)) return false;
+    if (!item.expiryDate || !isValid(item.expiryDate) || item.used || item.archived || expiredItems.some(exp => exp.id === item.id)) return false;
     const tomorrow = addDays(startOfDay(new Date()), 1);
     const tenDaysFromNow = addDays(startOfDay(new Date()), 10);
     return isWithinInterval(item.expiryDate, { start: tomorrow, end: tenDaysFromNow });
@@ -219,7 +223,7 @@ export default function GroceryListPage() {
     return filteredList;
   };
 
-  const activeInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => !item.used)), [inventoryList, filter, sort]);
+  const activeInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => !item.used && !item.archived)), [inventoryList, filter, sort]);
   const usedInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => item.used)), [inventoryList, filter, sort]);
 
   const getCategoryIcon = (categoryName?: string) => {
@@ -260,16 +264,16 @@ export default function GroceryListPage() {
                         {visibleExpiredItems.length > 0 && (
                             <Alert variant="destructive" className="relative bg-red-600 border-red-700 text-white [&>svg]:text-white">
                                  <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle className="text-white">You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
-                                <AlertDescription className="text-white">Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
+                                <AlertTitle className="font-bold">You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
+                                <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
                                 {visibleExpiredItems.map(item => (
-                                <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-white hover:bg-white/20" onClick={() => handleDismissExpired(item.id)}>
+                                <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-white hover:bg-black/20" onClick={() => handleDismissExpired(item.id)}>
                                     <X className="h-4 w-4" />
                                 </Button>
                                 ))}
                             </Alert>
                         )}
-                        {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="text-white">Expiring Soon!</AlertTitle><AlertDescription className="text-white">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="font-bold">Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
                             <TabsList className="grid w-full grid-cols-4 bg-black/20 text-white">
@@ -308,7 +312,7 @@ export default function GroceryListPage() {
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20", isExpiring ? "bg-orange-500/30 border border-orange-500" : "border border-white/20", isExpired && "bg-red-600/40 border border-red-500")}>
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20 border", isExpiring ? "bg-orange-500/30 border-orange-500" : "border-white/20", isExpired && "bg-red-600/40 border-red-500")}>
                                                      <AlertDialog>
                                                         <AlertDialogTrigger asChild>
                                                             <Checkbox id={`check-${item.id}`} className="mt-1 border-white/50 data-[state=checked]:bg-primary" disabled={isExpired} />
@@ -435,7 +439,8 @@ export default function GroceryListPage() {
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
-                                                        <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)} className="text-red-400 hover:text-red-400 hover:bg-white/10"><Trash2 className="h-4 w-4" /></Button>
+                                                        {!item.archived && <Button variant="ghost" size="icon" title="Hide from inventory" onClick={() => archiveItem(item.id)} className="text-yellow-400 hover:text-yellow-300 hover:bg-white/10"><EyeOff className="h-4 w-4" /></Button>}
+                                                        <Button variant="ghost" size="icon" title="Delete permanently" onClick={() => deleteInventoryItem(item.id)} className="text-red-400 hover:text-red-400 hover:bg-white/10"><Trash2 className="h-4 w-4" /></Button>
                                                     </div>
                                                 </li>
                                                 )})}
