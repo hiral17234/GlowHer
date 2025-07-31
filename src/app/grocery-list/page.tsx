@@ -266,7 +266,7 @@ export default function GroceryListPage() {
                                  <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle className="font-bold">You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
                                 <AlertDescription className="text-white pr-8">Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
-                                <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-white hover:bg-black/20" onClick={() => setDismissedExpiredIds(expiredItems.map(i => i.id))}>
+                                <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-white hover:text-white hover:bg-black/20" onClick={() => setDismissedExpiredIds(expiredItems.map(i => i.id))}>
                                     <X className="h-4 w-4" />
                                 </Button>
                             </Alert>
@@ -274,11 +274,11 @@ export default function GroceryListPage() {
                         {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="font-bold">Expiring Soon!</AlertTitle><AlertDescription className="text-white">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
-                            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-black/20 text-white">
+                            <TabsList className="grid w-full grid-cols-4 bg-black/20 text-white text-xs sm:text-sm">
                                 <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20">My Groceries</TabsTrigger>
-                                <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20">Shopping List <Badge variant="secondary" className="ml-2 bg-primary text-primary-foreground">{shoppingList.length}</Badge></TabsTrigger>
+                                <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20">Shopping List <Badge variant="secondary" className="ml-1 sm:ml-2 bg-primary text-primary-foreground">{shoppingList.length}</Badge></TabsTrigger>
                                 <TabsTrigger value="used" className="data-[state=active]:bg-white/20">Used</TabsTrigger>
-                                <TabsTrigger value="expired" className="data-[state=active]:bg-white/20">Expired <Badge variant="destructive" className="ml-2">{expiredItems.length}</Badge></TabsTrigger>
+                                <TabsTrigger value="expired" className="data-[state=active]:bg-white/20">Expired <Badge variant="destructive" className="ml-1 sm:ml-2">{expiredItems.length}</Badge></TabsTrigger>
                             </TabsList>
                             <TabsContent value="inventory">
                                 <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
