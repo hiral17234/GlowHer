@@ -90,20 +90,20 @@ export default function LogHistoryPage() {
                           </AccordionTrigger>
                           <AccordionContent className="pt-4 space-y-4 bg-black/10 p-4 rounded-b-md">
                             <div className="flex items-center gap-2">
-                                <Smile className="h-5 w-5 text-secondary-foreground" />
+                                <Smile className="h-5 w-5" />
                                 <h4 className="font-semibold">Mood:</h4>
                                 <Badge variant="secondary">{log.mood} (Intensity: {log.moodIntensity?.[0] ?? 'N/A'}/10)</Badge>
                             </div>
 
                             <div className="flex items-start gap-2">
-                               <Tag className="h-5 w-5 text-secondary-foreground mt-1" />
+                               <Tag className="h-5 w-5 mt-1" />
                                 <div>
                                     <h4 className="font-semibold mb-2">Symptoms Logged:</h4>
                                     <div className="flex flex-wrap gap-2">
                                         {log.symptoms.map(symptom => (
-                                            <Badge key={symptom} variant="outline">{symptom}</Badge>
+                                            <Badge key={symptom} variant="outline" className="text-white text-sm">{symptom}</Badge>
                                         ))}
-                                        {log.otherSymptom && <Badge variant="outline">{log.otherSymptom}</Badge>}
+                                        {log.otherSymptom && <Badge variant="outline" className="text-white text-sm">{log.otherSymptom}</Badge>}
                                     </div>
                                 </div>
                             </div>
