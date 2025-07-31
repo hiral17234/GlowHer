@@ -150,7 +150,7 @@ export default function LogSymptomsPage() {
   }
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/736x/a8/c0/22/a8c02279a245ff9f59552f4707748b36.jpg')"}}>
+    <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/1200x/77/f5/37/77f5373552698548522b033a838a3b35.jpg')"}}>
        <div className="absolute inset-0 bg-black/30 z-0"/>
        <div className="relative z-10 flex flex-col min-h-screen text-white">
         <header className="container mx-auto px-4 py-6">
