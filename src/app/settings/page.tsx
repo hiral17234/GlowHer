@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, Trash2, Languages, Moon, Sun } from 'lucide-react';
-import { useTheme } from "next-themes";
 
 
 import { cn } from '@/lib/utils';
@@ -110,7 +109,6 @@ const translations = {
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
   
   const t = translations[language];
@@ -219,18 +217,7 @@ export default function SettingsPage() {
                         <CardDescription>{t.preferencesDesc}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="dark-mode" className="text-base flex items-center gap-2">
-                                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                <span className="ml-2">{t.darkMode}</span>
-                            </Label>
-                             <Switch
-                                id="dark-mode"
-                                checked={theme === 'dark'}
-                                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                            />
-                        </div>
+                        
                         <div className="flex items-center justify-between">
                             <Label htmlFor="language-switcher" className="text-base flex items-center gap-2"><Languages className="h-5 w-5" /> {t.language}</Label>
                             <Select value={language} onValueChange={(val) => setLanguage(val as 'en' | 'hi')}>
