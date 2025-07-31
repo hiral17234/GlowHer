@@ -274,7 +274,7 @@ export default function GroceryListPage() {
                         {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="font-bold">Expiring Soon!</AlertTitle><AlertDescription className="text-white">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
-                            <TabsList className="grid w-full grid-cols-4 bg-black/20 text-white text-xs sm:text-sm">
+                            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-black/20 text-white text-xs sm:text-sm">
                                 <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20">My Groceries</TabsTrigger>
                                 <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20">Shopping List <Badge variant="secondary" className="ml-1 sm:ml-2 bg-primary text-primary-foreground">{shoppingList.length}</Badge></TabsTrigger>
                                 <TabsTrigger value="used" className="data-[state=active]:bg-white/20">Used</TabsTrigger>
@@ -466,4 +466,3 @@ export default function GroceryListPage() {
     </div>
   );
 }
-
