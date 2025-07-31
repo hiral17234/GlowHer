@@ -150,18 +150,18 @@ export default function GroceryListPage() {
   };
 
 
-  const expiringItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || item.purchased) return false;
-    const tomorrow = addDays(startOfDay(new Date()), 1);
-    const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
-    return isWithinInterval(item.expiryDate, { start: tomorrow, end: threeDaysFromNow });
-  }), [inventoryList]);
-  
   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || item.purchased) return false;
-    // An item is expired if its expiry date is before the start of today, or is today.
-    return isBefore(item.expiryDate, startOfDay(new Date()));
+    // An item is expired if its expiry date is today or in the past.
+    return isBefore(new Date(item.expiryDate), addDays(startOfDay(new Date()), 1));
   }), [inventoryList]);
+
+  const expiringItems = useMemo(() => inventoryList.filter(item => {
+    if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
+    const tomorrow = addDays(startOfDay(new Date()), 1);
+    const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
+    return isWithinInterval(new Date(item.expiryDate), { start: tomorrow, end: threeDaysFromNow });
+  }), [inventoryList, expiredItems]);
 
   const sortedAndFilteredList = useMemo(() => {
     let list = [...inventoryList];
@@ -175,7 +175,7 @@ export default function GroceryListPage() {
         let valA, valB;
         switch (sortKey) {
             case 'name': valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); break;
-            case 'expiryDate': valA = a.expiryDate ? a.expiryDate.getTime() : Infinity; valB = b.expiryDate ? b.expiryDate.getTime() : Infinity; break;
+            case 'expiryDate': valA = a.expiryDate ? new Date(a.expiryDate).getTime() : Infinity; valB = b.expiryDate ? new Date(b.expiryDate).getTime() : Infinity; break;
             case 'dateAdded': default: valA = parseISO(a.dateAdded).getTime(); valB = parseISO(b.dateAdded).getTime(); break;
         }
         if (valA < valB) return sortDir === 'asc' ? -1 : 1;
@@ -219,7 +219,7 @@ export default function GroceryListPage() {
                         </Card>
                     </div>
                     <div className="lg:col-span-2 space-y-6">
-                        {expiredItems.length > 0 && (<Alert className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription className="text-white/90">Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiredItems.length > 0 && (<Alert className="bg-red-900 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription className="text-white/90">Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         {expiringItems.length > 0 && (<Alert className="bg-red-600 text-white border-red-700 [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription className="text-white/90">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         <Tabs defaultValue="inventory" className="w-full">
                             <TabsList className="grid w-full grid-cols-3 bg-black/60 text-slate-300">
@@ -257,7 +257,7 @@ export default function GroceryListPage() {
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-black/30" : "bg-white/10", isExpiring && !item.purchased && "bg-red-500/30 border border-red-400", isExpired && !item.purchased && "bg-red-500/30 border border-red-400")}>
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-black/30" : "bg-white/10", isExpiring && !item.purchased && "bg-red-500/30 border border-red-400", isExpired && !item.purchased && "bg-red-800/40 border border-red-500/50")}>
                                                     <Checkbox id={item.id} checked={item.purchased} onCheckedChange={() => togglePurchased(item.id)} aria-label={`Mark ${item.name} as purchased`} className="mt-1 border-white data-[state=checked]:bg-primary" />
                                                     <div className="flex-grow">
                                                         <label htmlFor={item.id} className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</label>
@@ -265,7 +265,7 @@ export default function GroceryListPage() {
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.storageLocation && <Badge variant="outline" className="border-white/30">{item.storageLocation}</Badge>}
-                                                            {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
+                                                            {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(new Date(item.expiryDate), 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
@@ -333,7 +333,7 @@ export default function GroceryListPage() {
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
-                                                            {item.expiryDate && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(item.expiryDate, 'MMM d')}</span>)}
+                                                            {item.expiryDate && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(new Date(item.expiryDate), 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
