@@ -260,7 +260,7 @@ export default function FitnessGoalsPage() {
     const progressPercentage = goalDays > 0 ? Math.round((completedDays / goalDays) * 100) : 0;
 
     return (
-        <div className="flex flex-col min-h-screen bg-background text-foreground">
+        <div className="flex flex-col min-h-screen bg-background text-foreground bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/736x/e9/dd/c3/e9ddc3e14cb57d720ffa52887afe3d7d.jpg')"}}>
             <header className="container mx-auto px-4 py-6 z-10">
                 <div className="flex justify-between items-center">
                     <GlowHerLogo />
