@@ -7,7 +7,7 @@ import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby, Check, X, Stethoscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays, isWithinInterval, parseISO, isAfter } from 'date-fns';
+import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays, isWithinInterval, parseISO } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
@@ -93,22 +93,23 @@ export default function HomePage() {
       const savedInventory = localStorage.getItem('glowher-grocery-list');
       if (savedInventory) {
         const groceryList: GroceryItem[] = JSON.parse(savedInventory);
-        
+        const today = startOfDay(new Date());
+
         const expiredItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased) return false;
-            return !isAfter(startOfDay(parseISO(item.expiryDate)), startOfDay(new Date()));
+            return isBefore(parseISO(item.expiryDate), addDays(today, 1));
         });
 
         const expiringItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
-            const tomorrow = addDays(startOfDay(new Date()), 1);
-            const tenDaysFromNow = addDays(startOfDay(new Date()), 10);
+            const tomorrow = addDays(today, 1);
+            const tenDaysFromNow = addDays(today, 10);
             return isWithinInterval(parseISO(item.expiryDate), { start: tomorrow, end: tenDaysFromNow });
         });
-
+        
         if (expiredItems.length > 0) {
             expiredItems.forEach(item => {
-                const expiredMessage = `Your item ${item.name} has expired.`;
+                const expiredMessage = `Oops! Your item "${item.name}" has expired.`;
                 currentNotifications.push({ id: `expired-item-${item.id}`, icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list' });
             });
         }

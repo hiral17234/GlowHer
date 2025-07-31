@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, addDays, isBefore, isToday, parseISO, startOfDay, isAfter, isWithinInterval } from 'date-fns';
+import { format, addDays, isBefore, isToday, parseISO, startOfDay, isWithinInterval } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -151,9 +151,10 @@ export default function GroceryListPage() {
 
   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
-    return !isAfter(startOfDay(item.expiryDate), startOfDay(new Date()));
+    const today = startOfDay(new Date());
+    return isBefore(item.expiryDate, addDays(today, 1));
   }), [inventoryList]);
-  
+
   const expiringItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || expiredItems.some(exp => exp.id === item.id)) return false;
     const tomorrow = addDays(startOfDay(new Date()), 1);
@@ -227,7 +228,7 @@ export default function GroceryListPage() {
                     </div>
                     <div className="lg:col-span-2 space-y-6">
                         {expiredItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription>Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
-                        {expiringItems.length > 0 && (<Alert className="bg-red-600 border-red-700 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {expiringItems.length > 0 && (<Alert className="bg-orange-600 border-orange-700 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
                             <TabsList className="grid w-full grid-cols-4 bg-black/60 text-slate-300">
@@ -410,4 +411,3 @@ export default function GroceryListPage() {
     </div>
   );
 }
-
