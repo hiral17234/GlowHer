@@ -76,7 +76,7 @@ export default function AboutPage() {
         >
             <header className="sticky top-0 left-0 w-full bg-background/80 backdrop-blur-lg container mx-auto px-4 py-6 z-20">
                 <div className="flex justify-between items-center">
-                    <GlowHerLogo />
+                    <GlowHerLogo className="[&>span]:text-white" />
                     <Button variant="ghost" onClick={() => router.push('/')}>
                         <ChevronLeft className="mr-2 h-4 w-4" />
                         Back to Dashboard
