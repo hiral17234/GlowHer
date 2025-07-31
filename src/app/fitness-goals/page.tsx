@@ -24,6 +24,7 @@ import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis, Respons
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 
 // --- SCHEMAS ---
@@ -32,10 +33,19 @@ const defaultGoalSchema = z.object({
   workouts: z.coerce.number().min(1, "Minimum 1 workout").max(7, "Maximum 7 workouts"),
 });
 
-const defaultLogSchema = z.object({
-    steps: z.coerce.number().min(0).max(100000),
-    workout: z.string().optional(),
-});
+const defaultLogSchema = z.discriminatedUnion("activityType", [
+    z.object({
+      activityType: z.literal("step-based"),
+      steps: z.coerce.number().min(0, "Steps cannot be negative.").max(100000, "That's a lot of steps!"),
+      stepWorkoutType: z.string().min(1, "Please select a workout type."),
+    }),
+    z.object({
+      activityType: z.literal("workout-based"),
+      workoutType: z.string().min(1, "Please select a workout type."),
+      duration: z.coerce.number().min(5, "Minimum 5 minutes.").max(300, "Maximum 300 minutes."),
+      intensity: z.enum(["Low", "Medium", "High"]).optional(),
+    }),
+  ]);
 
 const pregnancyGoalSchema = z.object({
     days: z.coerce.number().min(1).max(7),
@@ -82,10 +92,19 @@ export default function FitnessGoalsPage() {
     const [weeklyPregnancyLogs, setWeeklyPregnancyLogs] = useState<{name: string, minutes: number}[]>([]);
     const [streak, setStreak] = useState(0);
     const [duration, setDuration] = useState({ hours: 0, minutes: 30 });
+    const [selectedActivityType, setSelectedActivityType] = useState<'step-based' | 'workout-based'>('step-based');
+
 
     // --- FORM HOOKS ---
     const defaultGoalForm = useForm<DefaultGoalData>({ resolver: zodResolver(defaultGoalSchema), defaultValues: { steps: 8000, workouts: 3 }});
-    const defaultLogForm = useForm<DefaultLogData>({ resolver: zodResolver(defaultLogSchema), defaultValues: { steps: 0, workout: '' }});
+    const defaultLogForm = useForm<DefaultLogData>({ 
+        resolver: zodResolver(defaultLogSchema), 
+        defaultValues: { 
+            activityType: 'step-based', 
+            steps: 0, 
+            stepWorkoutType: 'Walking',
+        }
+    });
     const pregnancyGoalForm = useForm<PregnancyGoalData>({ resolver: zodResolver(pregnancyGoalSchema), defaultValues: { days: 3, activityType: 'Walking', trackMood: true }});
     const pregnancyLogForm = useForm<PregnancyLogData>({ resolver: zodResolver(pregnancyLogSchema), defaultValues: { minutes: 30, feeling: 'Energized', notes: '' }});
 
@@ -175,7 +194,14 @@ export default function FitnessGoalsPage() {
         const data = Array.from({ length: 7 }, (_, i) => {
             const date = subDays(today, i);
             const savedLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-            return { name: format(date, 'EEE'), steps: savedLog ? JSON.parse(savedLog).steps : 0 };
+            let steps = 0;
+            if (savedLog) {
+                const logData = JSON.parse(savedLog);
+                if (logData.activityType === 'step-based') {
+                    steps = logData.steps;
+                }
+            }
+            return { name: format(date, 'EEE'), steps };
         }).reverse();
         setWeeklyDefaultLogs(data);
     };
@@ -220,7 +246,7 @@ export default function FitnessGoalsPage() {
 
     // --- FORM SUBMISSION HANDLERS ---
     function onGoalSubmit(data: DefaultGoalData) { try { localStorage.setItem(DEFAULT_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!"}); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
-    function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
+    function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { console.error(e); toast({ variant: 'destructive', title: "Error Logging Activity" }); }}
     function onPregnancyGoalSubmit(data: PregnancyGoalData) { try { localStorage.setItem(PREGNANCY_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!" }); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onPregnancyLogSubmit(data: PregnancyLogData) {
          try {
@@ -258,6 +284,8 @@ export default function FitnessGoalsPage() {
     const completedDays = weeklyPregnancyLogs.filter(d => d.minutes > 0).length;
     const goalDays = pregnancyGoalForm.getValues('days');
     const progressPercentage = goalDays > 0 ? Math.round((completedDays / goalDays) * 100) : 0;
+    const todaySteps = defaultLogForm.watch('activityType') === 'step-based' ? defaultLogForm.watch('steps') : 0;
+    const stepGoal = defaultGoalForm.getValues('steps');
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/736x/e9/dd/c3/e9ddc3e14cb57d720ffa52887afe3d7d.jpg')"}}>
@@ -448,8 +476,48 @@ export default function FitnessGoalsPage() {
                                 <CardContent>
                                     <Form {...defaultLogForm}>
                                         <form onSubmit={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
-                                            <FormField control={defaultLogForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/> Steps Taken</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                                            <FormField control={defaultLogForm.control} name="workout" render={({ field }) => (<FormItem><FormLabel>Type of Workout</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout type (optional)" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Running">Running</SelectItem><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                            <FormField
+                                                control={defaultLogForm.control}
+                                                name="activityType"
+                                                render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Activity Type</FormLabel>
+                                                    <Select onValueChange={(value) => { field.onChange(value); setSelectedActivityType(value as any); }} defaultValue={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger><SelectValue placeholder="Select an activity type" /></SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem value="step-based">Step-based (Walking, Running)</SelectItem>
+                                                            <SelectItem value="workout-based">Workout-based (Yoga, Strength)</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                                )}
+                                            />
+                                            {selectedActivityType === 'step-based' && (
+                                                <>
+                                                    <FormField control={defaultLogForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/> Steps Taken</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                    <FormField control={defaultLogForm.control} name="stepWorkoutType" render={({ field }) => (<FormItem><FormLabel>Type of Step-Based Workout</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Running">Running</SelectItem><SelectItem value="Hiking">Hiking</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                                </>
+                                            )}
+                                            {selectedActivityType === 'workout-based' && (
+                                                <>
+                                                    <FormField control={defaultLogForm.control} name="workoutType" render={({ field }) => (<FormItem><FormLabel>Workout Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Pilates">Pilates</SelectItem><SelectItem value="Dance">Dance</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                                    <FormField control={defaultLogForm.control} name="duration" render={({ field }) => (<FormItem><FormLabel>Duration (minutes)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                    <FormField control={defaultLogForm.control} name="intensity" render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Intensity (Optional)</FormLabel>
+                                                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
+                                                                <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Low" /></FormControl><FormLabel className="font-normal">Low</FormLabel></FormItem>
+                                                                <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Medium" /></FormControl><FormLabel className="font-normal">Medium</FormLabel></FormItem>
+                                                                <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="High" /></FormControl><FormLabel className="font-normal">High</FormLabel></FormItem>
+                                                            </RadioGroup>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}/>
+                                                </>
+                                            )}
                                             <Button type="submit" className="w-full">Log Activity</Button>
                                         </form>
                                     </Form>
@@ -474,8 +542,8 @@ export default function FitnessGoalsPage() {
                                         </ChartContainer>
                                     </div>
                                     <div className="mt-4">
-                                        <Progress value={(defaultLogForm.getValues('steps') / defaultGoalForm.getValues('steps')) * 100} className="h-2 bg-muted [&>span]:bg-primary" />
-                                        <p className="text-sm text-center mt-2 text-muted-foreground">Today's progress: {defaultLogForm.getValues('steps').toLocaleString()} / {defaultGoalForm.getValues('steps').toLocaleString()} steps</p>
+                                        <Progress value={(todaySteps / stepGoal) * 100} className="h-2 bg-muted [&>span]:bg-primary" />
+                                        <p className="text-sm text-center mt-2 text-muted-foreground">Today's progress: {todaySteps.toLocaleString()} / {stepGoal.toLocaleString()} steps</p>
                                     </div>
                                 </CardContent>
                             </Card>
