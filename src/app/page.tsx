@@ -7,7 +7,7 @@ import { WellnessDashboard } from "@/components/glowher/WellnessDashboard";
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { LoaderCircle, AlertTriangle, ShoppingCart, Bell, Droplet, Bed, Activity, Heart, Baby, Check, X, Stethoscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays, isWithinInterval } from 'date-fns';
+import { addDays, isBefore, isToday, startOfDay, format, subDays, differenceInDays, isWithinInterval, parseISO } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
@@ -92,22 +92,19 @@ export default function HomePage() {
       // Check for expiring groceries
       const savedInventory = localStorage.getItem('glowher-grocery-list');
       if (savedInventory) {
-        const groceryList: GroceryItem[] = JSON.parse(savedInventory).map((item: any) => ({
-            ...item,
-            expiryDate: item.expiryDate ? new Date(item.expiryDate).toISOString() : undefined,
-        }));
+        const groceryList: GroceryItem[] = JSON.parse(savedInventory);
         
-        const expiringItems = groceryList.filter(item => {
-            if (!item.expiryDate || item.purchased) return false;
-            const expiryDate = new Date(item.expiryDate);
-            const tomorrow = addDays(startOfDay(new Date()), 1);
-            const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
-            return isWithinInterval(expiryDate, { start: tomorrow, end: threeDaysFromNow });
-        });
-
         const expiredItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased) return false;
-            return isBefore(new Date(item.expiryDate), startOfDay(new Date()));
+            // Item is expired if its expiry date is today or in the past
+            return !isBefore(startOfDay(parseISO(item.expiryDate)), startOfDay(new Date()));
+        });
+
+        const expiringItems = groceryList.filter(item => {
+            if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
+            const today = startOfDay(new Date());
+            const threeDaysFromNow = addDays(today, 3);
+            return isWithinInterval(parseISO(item.expiryDate), { start: addDays(today, 1), end: threeDaysFromNow });
         });
 
         if (expiredItems.length > 0) {
