@@ -229,7 +229,7 @@ export default function GroceryListPage() {
 
   return (
     <div className="relative flex flex-col min-h-screen bg-cover bg-center text-white" style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}>
-        <div className="absolute inset-0 bg-black/50 z-0"/>
+        <div className="absolute inset-0 bg-black/60 z-0"/>
         <div className="relative z-10 flex flex-col flex-grow">
             <header className="container mx-auto px-4 py-6">
                 <div className="flex justify-between items-center">
@@ -308,7 +308,7 @@ export default function GroceryListPage() {
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/10", isExpiring && "bg-orange-500/20", isExpired && "bg-red-500/20")}>
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/10 border", isExpiring ? "bg-orange-500/30 border-orange-500" : "border-white/20", isExpired && "bg-red-600/40 border-red-500")}>
                                                      <AlertDialog>
                                                         <AlertDialogTrigger asChild>
                                                             <Checkbox id={`check-${item.id}`} className="mt-1 border-white/50 data-[state=checked]:bg-primary" />
