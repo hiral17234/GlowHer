@@ -308,10 +308,10 @@ export default function GroceryListPage() {
                                                 const isExpired = expiredItems.some(expItem => expItem.id === item.id);
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
-                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20 border", isExpiring ? "bg-orange-500/30 border-orange-500" : "border-white/20", isExpired && "bg-red-600/40 border-red-500")}>
+                                                <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all bg-black/20", isExpiring ? "bg-orange-500/30 border border-orange-500" : "border border-white/20", isExpired && "bg-red-600/40 border border-red-500")}>
                                                      <AlertDialog>
                                                         <AlertDialogTrigger asChild>
-                                                            <Checkbox id={`check-${item.id}`} className="mt-1 border-white/50 data-[state=checked]:bg-primary" />
+                                                            <Checkbox id={`check-${item.id}`} className="mt-1 border-white/50 data-[state=checked]:bg-primary" disabled={isExpired} />
                                                         </AlertDialogTrigger>
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
@@ -327,12 +327,12 @@ export default function GroceryListPage() {
                                                         </AlertDialogContent>
                                                     </AlertDialog>
                                                     <div className="flex-grow">
-                                                        <label htmlFor={`check-${item.id}`} className="font-medium text-lg text-white">{item.name}</label>
+                                                        <label htmlFor={`check-${item.id}`} className={cn("font-medium text-lg text-white", isExpired && "cursor-not-allowed")}>{item.name}</label>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.storageLocation && <Badge variant="outline" className="border-white/30 text-white">{item.storageLocation}</Badge>}
-                                                            {item.expiryDate && isValid(item.expiryDate) && (<span className={cn("flex items-center gap-1 text-white", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
+                                                            {item.expiryDate && isValid(item.expiryDate) && (<span className={cn("flex items-center gap-1 text-white", (isExpiring || isExpired) && "font-semibold", isExpired ? "text-red-300" : "text-orange-300")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden", isExpired && "text-red-300")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
