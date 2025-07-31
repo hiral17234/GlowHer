@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -94,7 +95,7 @@ export default function GroceryListPage() {
         const parsedList = JSON.parse(savedInventory).map((item: any) => ({
             ...item,
             expiryDate: item.expiryDate ? parseISO(item.expiryDate) : undefined,
-            dateAdded: item.dateAdded ? parseISO(item.dateAdded) : new Date(),
+            dateAdded: parseISO(item.dateAdded), // Ensure dateAdded is a Date object
         }));
         setInventoryList(parsedList);
       }
@@ -257,7 +258,7 @@ export default function GroceryListPage() {
                     </div>
                     <div className="lg:col-span-2 space-y-6">
                         {visibleExpiredItems.length > 0 && (
-                            <Alert variant="destructive" className="relative pr-10">
+                             <Alert variant="destructive" className="relative pr-10">
                                 <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle>You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
                                 <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
