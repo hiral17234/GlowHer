@@ -262,11 +262,11 @@ export default function GroceryListPage() {
                     </div>
                     <div className="lg:col-span-2 space-y-6">
                         {visibleExpiredItems.length > 0 && (
-                            <Alert variant="destructive" className="relative bg-red-600 border-red-700 text-white [&>svg]:text-white">
+                             <Alert variant="destructive" className="relative bg-red-600 border-red-700 text-white [&>svg]:text-white">
                                  <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle className="font-bold">You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
                                 <AlertDescription className="text-white pr-8">Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
-                                <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-white hover:text-white hover:bg-black/20" onClick={() => setDismissedExpiredIds(expiredItems.map(i => i.id))}>
+                                 <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-white hover:text-white hover:bg-black/20" onClick={() => setDismissedExpiredIds(expiredItems.map(i => i.id))}>
                                     <X className="h-4 w-4" />
                                 </Button>
                             </Alert>
@@ -274,11 +274,25 @@ export default function GroceryListPage() {
                         {expiringItems.length > 0 && (<Alert className="bg-orange-500 border-orange-600 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle className="font-bold">Expiring Soon!</AlertTitle><AlertDescription className="text-white">Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
-                            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-black/20 text-white text-xs sm:text-sm">
-                                <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20">My Groceries</TabsTrigger>
-                                <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20">Shopping List <Badge variant="secondary" className="ml-1 sm:ml-2 bg-primary text-primary-foreground">{shoppingList.length}</Badge></TabsTrigger>
-                                <TabsTrigger value="used" className="data-[state=active]:bg-white/20">Used</TabsTrigger>
-                                <TabsTrigger value="expired" className="data-[state=active]:bg-white/20">Expired <Badge variant="destructive" className="ml-1 sm:ml-2">{expiredItems.length}</Badge></TabsTrigger>
+                             <TabsList className="grid w-full grid-cols-4 bg-black/20 text-white text-xs sm:text-sm">
+                                <TabsTrigger value="inventory" className="data-[state=active]:bg-white/20">
+                                    <span className="sm:hidden">📦</span>
+                                    <span className="hidden sm:inline">My Groceries</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="shoppingList" className="data-[state=active]:bg-white/20 flex items-center gap-1">
+                                    <span className="sm:hidden">🛒</span>
+                                    <span className="hidden sm:inline">Shopping List</span>
+                                    <Badge variant="secondary" className="bg-primary text-primary-foreground">{shoppingList.length}</Badge>
+                                </TabsTrigger>
+                                <TabsTrigger value="used" className="data-[state=active]:bg-white/20">
+                                    <span className="sm:hidden">✅</span>
+                                    <span className="hidden sm:inline">Used</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="expired" className="data-[state=active]:bg-white/20 flex items-center gap-1">
+                                    <span className="sm:hidden">🗑️</span>
+                                    <span className="hidden sm:inline">Expired</span>
+                                    <Badge variant="destructive">{expiredItems.length}</Badge>
+                                </TabsTrigger>
                             </TabsList>
                             <TabsContent value="inventory">
                                 <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
@@ -330,18 +344,18 @@ export default function GroceryListPage() {
                                                     </AlertDialog>
                                                     <div className="flex-grow">
                                                         <label htmlFor={`check-${item.id}`} className={cn("font-medium text-lg text-white", isExpired && "cursor-not-allowed")}>{item.name}</label>
-                                                        <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                        <div className="text-sm text-white/90 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.storageLocation && <Badge variant="outline" className="border-white/30 text-white">{item.storageLocation}</Badge>}
                                                             {item.expiryDate && isValid(item.expiryDate) && (<span className={cn("flex items-center gap-1 text-white", (isExpiring || isExpired) && "font-semibold", isExpired ? "text-red-300" : "text-orange-300")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden", isExpired && "text-red-300")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
-                                                    <div className="hidden md:flex gap-1">
+                                                    <div className="hidden sm:flex gap-1">
                                                         <Button variant="ghost" size="icon" onClick={() => handleEditClick(item)} className="text-white hover:text-white hover:bg-white/10"><Edit className="h-4 w-4" /></Button>
                                                         <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)} className="text-red-400 hover:text-red-400 hover:bg-white/10"><Trash2 className="h-4 w-4" /></Button>
                                                     </div>
-                                                    <div className="md:hidden">
+                                                    <div className="sm:hidden">
                                                         <DropdownMenu>
                                                             <DropdownMenuTrigger asChild>
                                                                 <Button variant="ghost" size="icon" className="text-white hover:text-white hover:bg-white/10"><MoreVertical className="h-4 w-4"/></Button>
@@ -355,7 +369,7 @@ export default function GroceryListPage() {
                                                 </li>
                                                 )})}
                                         </ul>
-                                        ) : (<p className="text-center text-slate-400 py-8">{inventoryList.length === 0 ? "Your inventory is empty. Add an item to get started!" : `No items in the "${filter}" category.`}</p>)}
+                                        ) : (<p className="text-center text-white/70 py-8">{inventoryList.length === 0 ? "Your inventory is empty. Add an item to get started!" : `No items in the "${filter}" category.`}</p>)}
                                     </CardContent>
                                 </Card>
                             </TabsContent>
@@ -363,7 +377,7 @@ export default function GroceryListPage() {
                                 <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                                     <CardHeader>
                                         <CardTitle className="text-white">Shopping List</CardTitle>
-                                        <CardDescription className="text-slate-300">Add items you need to buy on your next trip.</CardDescription>
+                                        <CardDescription className="text-white/80">Add items you need to buy on your next trip.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
                                         <Form {...shoppingListForm}>
@@ -380,7 +394,7 @@ export default function GroceryListPage() {
                                                         <span className="font-medium text-white">{item.name}</span>
                                                         <div className="flex gap-1">
                                                             <Button variant="ghost" size="sm" onClick={() => moveShoppingItemToInventory(item)} className="text-sky-400 hover:text-sky-300 hover:bg-black/20">
-                                                                <span className="hidden md:inline">Move to Inventory</span> <ArrowRight className="h-4 w-4 md:ml-2"/>
+                                                                <span className="hidden sm:inline">Move to Inventory</span> <ArrowRight className="h-4 w-4 sm:ml-2"/>
                                                             </Button>
                                                             <Button variant="ghost" size="icon" onClick={() => deleteShoppingListItem(item.id)} className="text-red-400 hover:text-red-400 hover:bg-black/20">
                                                                 <Trash2 className="h-4 w-4" />
@@ -390,7 +404,7 @@ export default function GroceryListPage() {
                                                 ))}
                                             </ul>
                                         ) : (
-                                            <p className="text-center text-slate-400 py-8">Your shopping list is empty.</p>
+                                            <p className="text-center text-white/70 py-8">Your shopping list is empty.</p>
                                         )}
                                     </CardContent>
                                 </Card>
@@ -399,7 +413,7 @@ export default function GroceryListPage() {
                                 <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                                     <CardHeader>
                                         <CardTitle className="text-white">Used Items</CardTitle>
-                                        <CardDescription className="text-slate-300">Items you've already used.</CardDescription>
+                                        <CardDescription className="text-white/80">Items you've already used.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
                                         {usedInventory.length > 0 ? (
@@ -411,8 +425,8 @@ export default function GroceryListPage() {
                                                         <li key={item.id} className={cn("flex items-center gap-4 p-4 rounded-lg bg-black/10 opacity-70", isExpiring && "bg-orange-900/50 opacity-100")}>
                                                             <Check className="h-5 w-5 text-green-500" />
                                                             <div className="flex-grow">
-                                                                <p className="font-medium text-lg line-through text-slate-400">{item.name}</p>
-                                                                <div className="text-sm text-slate-400 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                                <p className="font-medium text-lg line-through text-white/70">{item.name}</p>
+                                                                <div className="text-sm text-white/70 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                                     <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                                     {item.expiryDate && isValid(item.expiryDate) && (<span className={cn("flex items-center gap-1", isExpiring && "text-orange-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !isExpiring && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                                 </div>
@@ -422,7 +436,7 @@ export default function GroceryListPage() {
                                                     )
                                                 })}
                                             </ul>
-                                        ) : (<p className="text-center text-slate-400 py-8">No used items yet.</p>)}
+                                        ) : (<p className="text-center text-white/70 py-8">No used items yet.</p>)}
                                     </CardContent>
                                 </Card>
                             </TabsContent>
@@ -430,7 +444,7 @@ export default function GroceryListPage() {
                                 <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                                     <CardHeader>
                                         <CardTitle className="text-white">Expired Items</CardTitle>
-                                        <CardDescription className="text-slate-300">These items are past their expiry date.</CardDescription>
+                                        <CardDescription className="text-white/80">These items are past their expiry date.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
                                         {expiredItems.length > 0 ? (
@@ -440,8 +454,8 @@ export default function GroceryListPage() {
                                                 return (
                                                 <li key={item.id} className="flex items-start gap-4 p-4 rounded-lg bg-red-900/50">
                                                     <div className="flex-grow">
-                                                        <p className={cn("font-medium text-lg text-white", item.used && "line-through text-slate-400")}>{item.name}</p>
-                                                        <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                                        <p className={cn("font-medium text-lg text-white", item.used && "line-through text-white/70")}>{item.name}</p>
+                                                        <div className="text-sm text-white/90 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.expiryDate && isValid(item.expiryDate) && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(item.expiryDate, 'MMM d')}</span>)}
@@ -454,7 +468,7 @@ export default function GroceryListPage() {
                                                 </li>
                                                 )})}
                                         </ul>
-                                        ) : (<p className="text-center text-slate-400 py-8">You have no expired items. Great job!</p>)}
+                                        ) : (<p className="text-center text-white/70 py-8">You have no expired items. Great job!</p>)}
                                     </CardContent>
                                 </Card>
                             </TabsContent>
