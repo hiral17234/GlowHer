@@ -159,7 +159,8 @@ export default function GroceryListPage() {
   
   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || item.purchased) return false;
-    return isBefore(item.expiryDate, addDays(startOfDay(new Date()), 1));
+    // An item is expired if its expiry date is before the start of today, or is today.
+    return isBefore(item.expiryDate, startOfDay(new Date()));
   }), [inventoryList]);
 
   const sortedAndFilteredList = useMemo(() => {

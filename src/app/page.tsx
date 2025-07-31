@@ -107,12 +107,14 @@ export default function HomePage() {
 
         const expiredItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased) return false;
-            return isBefore(new Date(item.expiryDate), addDays(startOfDay(new Date()), 1));
+            return isBefore(new Date(item.expiryDate), startOfDay(new Date()));
         });
 
         if (expiredItems.length > 0) {
-            const expiredMessage = `Expired: ${expiredItems.map(i => i.name).join(', ')}.`;
-            currentNotifications.push({ id: 'expired-items', icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list' });
+            expiredItems.forEach(item => {
+                const expiredMessage = `Your item ${item.name} has expired.`;
+                currentNotifications.push({ id: `expired-item-${item.id}`, icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list' });
+            });
         }
 
         if (expiringItems.length > 0) {
