@@ -151,10 +151,9 @@ export default function GroceryListPage() {
 
   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
-    // An item is expired if its expiry date is today or in the past.
     return !isAfter(startOfDay(item.expiryDate), startOfDay(new Date()));
   }), [inventoryList]);
-
+  
   const expiringItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate || expiredItems.some(exp => exp.id === item.id)) return false;
     const tomorrow = addDays(startOfDay(new Date()), 1);
@@ -274,9 +273,9 @@ export default function GroceryListPage() {
                                                         </AlertDialogTrigger>
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
-                                                                <AlertDialogTitle>Confirm Purchase</AlertDialogTitle>
+                                                                <AlertDialogTitle>Confirm Action</AlertDialogTitle>
                                                                 <AlertDialogDescription>
-                                                                    Are you sure you want to move "{item.name}" to your purchased list?
+                                                                    This will move "{item.name}" to your purchased list. Are you sure?
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
@@ -352,7 +351,7 @@ export default function GroceryListPage() {
                                             <ul className="space-y-4">
                                                 {purchasedInventory.map(item => {
                                                     const CategoryIcon = getCategoryIcon(item.category);
-                                                    const isExpiring = expiringItems.some(expItem => expItem.id === item.id);
+                                                    const isExpiring = item.expiryDate && expiringItems.some(expItem => expItem.id === item.id);
                                                     return (
                                                         <li key={item.id} className={cn("flex items-center gap-4 p-4 rounded-lg bg-white/10 opacity-70", isExpiring && "bg-orange-500/30 border border-orange-400 opacity-100")}>
                                                             <Check className="h-5 w-5 text-green-400" />
