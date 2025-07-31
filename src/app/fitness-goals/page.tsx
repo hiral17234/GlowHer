@@ -74,7 +74,7 @@ const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
 const IS_PREGNANT_KEY = 'glowher-fitness-is-pregnant';
 
 // --- DATA ---
-const cycleExercises = { Menstrual: { title: "Menstrual Phase: Rest & Recover", icon: Heart, color: "text-red-500", suggestions: ["Gentle walking", "Restorative yoga", "Light stretching"] }, Follicular: { title: "Follicular Phase: Energize", icon: Lightbulb, color: "text-blue-400", suggestions: ["Brisk walking or jogging", "Dancing", "Light cardio"] }, Ovulatory: { title: "Ovulatory Phase: Peak Power", icon: Dumbbell, color: "text-green-400", suggestions: ["High-Intensity Interval Training (HIIT)", "Running", "Strength training"] }, Luteal: { title: "Luteal Phase: Wind Down", icon: Wind, color: "text-yellow-400", suggestions: ["Pilates", "Swimming", "Moderate strength training"] }};
+const cycleExercises = { Menstrual: { title: "Menstrual Phase: Rest & Recover", icon: Heart, color: "text-red-600 font-bold", suggestions: ["Gentle walking", "Restorative yoga", "Light stretching"] }, Follicular: { title: "Follicular Phase: Energize", icon: Lightbulb, color: "text-blue-400", suggestions: ["Brisk walking or jogging", "Dancing", "Light cardio"] }, Ovulatory: { title: "Ovulatory Phase: Peak Power", icon: Dumbbell, color: "text-green-400", suggestions: ["High-Intensity Interval Training (HIIT)", "Running", "Strength training"] }, Luteal: { title: "Luteal Phase: Wind Down", icon: Wind, color: "text-yellow-400", suggestions: ["Pilates", "Swimming", "Moderate strength training"] }};
 const pregnancyExercises = { '1st Trimester': { title: "First Trimester: Build a Foundation", icon: Heart, suggestions: ["Walking", "Prenatal yoga", "Swimming"], videoUrl: "https://www.youtube.com/embed/Ia6dNwVs1M8" }, '2nd Trimester': { title: "Second Trimester: Maintain Strength", icon: Dumbbell, suggestions: ["Modified strength training", "Swimming", "Stationary cycling"], videoUrl: "https://www.youtube.com/embed/XhqntqSGKsc" }, '3rd Trimester': { title: "Third Trimester: Prepare for Birth", icon: Brain, suggestions: ["Walking", "Stretching", "Birth ball exercises"], videoUrl: "https://www.youtube.com/embed/qkhLev3bKd0" }};
 const prenatalYogaVideoUrl = "https://www.youtube.com/embed/zmUJWKM98hM";
 
@@ -549,18 +549,18 @@ export default function FitnessGoalsPage() {
                                 </CardContent>
                             </Card>
                             {relevantSuggestions && (
-                                <Card className={cn("shadow-lg bg-white/70 backdrop-blur-sm border-white/30")}>
+                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                     <CardHeader>
-                                        <CardTitle className={cn("flex items-center gap-2", currentPhase !== 'Menstrual' && relevantSuggestions.color)}>
+                                        <CardTitle className={cn("flex items-center gap-2", relevantSuggestions.color)}>
                                             <relevantSuggestions.icon/> {relevantSuggestions.title}
                                         </CardTitle>
-                                        <CardDescription>Exercises aligned with your current menstrual phase.</CardDescription>
+                                        <CardDescription className={cn(currentPhase === 'Menstrual' && "text-slate-800")}>Exercises aligned with your current menstrual phase.</CardDescription>
                                     </CardHeader>
-                                    <CardContent>
+                                    <CardContent className={cn(currentPhase === 'Menstrual' && "text-slate-900")}>
                                         <ul className="space-y-2">
                                             {relevantSuggestions.suggestions.map(s => (
                                                 <li key={s} className="flex items-center gap-2">
-                                                    <Check className="h-4 w-4 text-green-500"/>
+                                                    <Check className={cn("h-4 w-4", currentPhase === 'Menstrual' ? 'text-red-600' : 'text-green-500')}/>
                                                     <span className={cn(currentPhase === 'Menstrual' && "font-bold text-red-600")}>{s}</span>
                                                 </li>
                                             ))}
