@@ -240,17 +240,17 @@ export default function GroceryListPage() {
                 </div>
             </header>
             <main className="flex-grow container mx-auto px-4 py-8">
-                <div className="text-center mb-8"><h1 className="font-headline text-4xl md:text-5xl font-bold">Groceries</h1><p className="mt-2 text-lg text-white/80">Manage your pantry and plan your shopping.</p></div>
+                <div className="text-center mb-8"><h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Groceries</h1><p className="mt-2 text-lg text-white/80">Manage your pantry and plan your shopping.</p></div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-1">
-                        <Card className="shadow-lg sticky top-8 bg-black/20 backdrop-blur-sm border-white/20">
+                        <Card className="shadow-lg sticky top-8 bg-black/20 backdrop-blur-sm border-white/20 text-white">
                             <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Plus/> {editingItem ? 'Edit Item in Inventory' : 'Add to Inventory'}</CardTitle></CardHeader>
                             <CardContent><Form {...inventoryForm}><form onSubmit={inventoryForm.handleSubmit(onInventorySubmit)} className="space-y-4">
                                 <FormField control={inventoryForm.control} name="name" render={({ field }) => (<FormItem><FormLabel className="text-white">Item Name</FormLabel><FormControl><Input placeholder="e.g., Almond Milk" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-slate-400" /></FormControl><FormMessage /></FormItem>)}/>
                                 <FormField control={inventoryForm.control} name="category" render={({ field }) => (<FormItem><FormLabel className="text-white">Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger className="bg-white/10 border-white/20 text-white"><SelectValue placeholder="Select a category" /></SelectTrigger></FormControl><SelectContent>{categories.map(cat => (<SelectItem key={cat.name} value={cat.name}><div className="flex items-center gap-2"><cat.icon className="h-4 w-4" />{cat.name}</div></SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
                                 <FormField control={inventoryForm.control} name="quantity" render={({ field }) => (<FormItem><FormLabel className="text-white">Quantity (Optional)</FormLabel><FormControl><Input placeholder="e.g., 1 carton" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-slate-400" /></FormControl><FormMessage /></FormItem>)}/>
                                 <FormField control={inventoryForm.control} name="storageLocation" render={({ field }) => (<FormItem><FormLabel className="text-white">Storage Location</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger className="bg-white/10 border-white/20 text-white"><SelectValue placeholder="Select a location" /></SelectTrigger></FormControl><SelectContent>{storageLocations.map(loc => (<SelectItem key={loc} value={loc}>{loc}</SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
-                                <FormField control={inventoryForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel className="text-white">Expiry Date (Optional)</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 text-white", !field.value && "text-slate-400")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date("1900-01-01")} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
+                                <FormField control={inventoryForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel className="text-white">Expiry Date (Optional)</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 text-white hover:text-white hover:bg-white/20", !field.value && "text-slate-400")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date("1900-01-01")} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
                                 <Button type="submit" className="w-full bg-primary text-primary-foreground">{editingItem ? 'Update Item' : 'Add to Inventory'}</Button>
                                 {editingItem && <Button type="button" variant="ghost" className="w-full text-white" onClick={() => { setEditingItem(null); inventoryForm.reset({ name: "", category: "Other", quantity: "", storageLocation: "Pantry" }); }}>Cancel Edit</Button>}
                             </form></Form></CardContent>
@@ -263,8 +263,8 @@ export default function GroceryListPage() {
                                 <AlertTitle>You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
                                 <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
                                 {visibleExpiredItems.map(item => (
-                                <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => handleDismissExpired(item.id)}>
-                                    <X className="h-4 w-4 text-white" />
+                                <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-white hover:bg-white/20" onClick={() => handleDismissExpired(item.id)}>
+                                    <X className="h-4 w-4" />
                                 </Button>
                                 ))}
                             </Alert>
@@ -279,10 +279,10 @@ export default function GroceryListPage() {
                                 <TabsTrigger value="expired" className="data-[state=active]:bg-white/20">Expired <Badge variant="destructive" className="ml-2">{expiredItems.length}</Badge></TabsTrigger>
                             </TabsList>
                             <TabsContent value="inventory">
-                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20">
+                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                                     <CardHeader>
                                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                            <CardTitle>Your Inventory</CardTitle>
+                                            <CardTitle className="text-white">Your Inventory</CardTitle>
                                             <div className="flex gap-2">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild><Button variant="outline" className="bg-transparent hover:bg-white/10 border-white/30 text-white"><SortAsc className="mr-2 h-4 w-4" />Sort By</Button></DropdownMenuTrigger>
@@ -327,12 +327,12 @@ export default function GroceryListPage() {
                                                         </AlertDialogContent>
                                                     </AlertDialog>
                                                     <div className="flex-grow">
-                                                        <label htmlFor={`check-${item.id}`} className="font-medium text-lg">{item.name}</label>
+                                                        <label htmlFor={`check-${item.id}`} className="font-medium text-lg text-white">{item.name}</label>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.storageLocation && <Badge variant="outline" className="border-white/30 text-white">{item.storageLocation}</Badge>}
-                                                            {item.expiryDate && isValid(item.expiryDate) && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
+                                                            {item.expiryDate && isValid(item.expiryDate) && (<span className={cn("flex items-center gap-1 text-white", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1">
@@ -347,9 +347,9 @@ export default function GroceryListPage() {
                                 </Card>
                             </TabsContent>
                             <TabsContent value="shoppingList">
-                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20">
+                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                                     <CardHeader>
-                                        <CardTitle>Shopping List</CardTitle>
+                                        <CardTitle className="text-white">Shopping List</CardTitle>
                                         <CardDescription className="text-slate-300">Add items you need to buy on your next trip.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
@@ -364,7 +364,7 @@ export default function GroceryListPage() {
                                             <ul className="space-y-2">
                                                 {shoppingList.map(item => (
                                                     <li key={item.id} className="flex items-center justify-between gap-4 p-3 rounded-lg bg-black/10">
-                                                        <span className="font-medium">{item.name}</span>
+                                                        <span className="font-medium text-white">{item.name}</span>
                                                         <div className="flex gap-1">
                                                             <Button variant="ghost" size="sm" onClick={() => moveShoppingItemToInventory(item)} className="text-sky-400 hover:text-sky-300 hover:bg-black/20">
                                                                 Move to Inventory <ArrowRight className="h-4 w-4 ml-2"/>
@@ -383,9 +383,9 @@ export default function GroceryListPage() {
                                 </Card>
                             </TabsContent>
                              <TabsContent value="used">
-                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20">
+                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                                     <CardHeader>
-                                        <CardTitle>Used Items</CardTitle>
+                                        <CardTitle className="text-white">Used Items</CardTitle>
                                         <CardDescription className="text-slate-300">Items you've already used.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
@@ -414,9 +414,9 @@ export default function GroceryListPage() {
                                 </Card>
                             </TabsContent>
                             <TabsContent value="expired">
-                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20">
+                                <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                                     <CardHeader>
-                                        <CardTitle>Expired Items</CardTitle>
+                                        <CardTitle className="text-white">Expired Items</CardTitle>
                                         <CardDescription className="text-slate-300">These items are past their expiry date.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
@@ -427,7 +427,7 @@ export default function GroceryListPage() {
                                                 return (
                                                 <li key={item.id} className="flex items-start gap-4 p-4 rounded-lg bg-red-900/50">
                                                     <div className="flex-grow">
-                                                        <p className={cn("font-medium text-lg", item.used && "line-through text-slate-400")}>{item.name}</p>
+                                                        <p className={cn("font-medium text-lg text-white", item.used && "line-through text-slate-400")}>{item.name}</p>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
