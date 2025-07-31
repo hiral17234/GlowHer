@@ -46,7 +46,7 @@ type GroceryItem = {
   expiryDate?: Date;
   quantity?: string;
   storageLocation?: string;
-  purchased: boolean; 
+  used: boolean; 
   dateAdded: Date; 
 };
 
@@ -66,6 +66,7 @@ const storageLocations = ['Fridge', 'Freezer', 'Pantry'];
 
 const INVENTORY_KEY = 'glowher-grocery-list';
 const SHOPPING_LIST_KEY = 'glowher-shopping-list';
+const DISMISSED_EXPIRED_KEY = 'glowher-dismissed-expired-items';
 
 export default function GroceryListPage() {
   const router = useRouter();
@@ -75,6 +76,7 @@ export default function GroceryListPage() {
   const [filter, setFilter] = useState<string>('All');
   const [sort, setSort] = useState<string>('dateAdded-desc');
   const [editingItem, setEditingItem] = useState<GroceryItem | null>(null);
+  const [dismissedExpiredIds, setDismissedExpiredIds] = useState<string[]>([]);
 
   const inventoryForm = useForm<z.infer<typeof groceryItemSchema>>({
     resolver: zodResolver(groceryItemSchema),
@@ -103,6 +105,11 @@ export default function GroceryListPage() {
         setShoppingList(JSON.parse(savedShoppingList));
       }
 
+      const savedDismissedIds = localStorage.getItem(DISMISSED_EXPIRED_KEY);
+      if(savedDismissedIds) {
+          setDismissedExpiredIds(JSON.parse(savedDismissedIds));
+      }
+
     } catch (error) { console.error("Failed to load lists from localStorage", error); }
   }, []);
 
@@ -123,13 +130,13 @@ export default function GroceryListPage() {
   const onInventorySubmit = (data: z.infer<typeof groceryItemSchema>) => {
     if(editingItem) {
         // Update existing item
-        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data, purchased: item.purchased, dateAdded: item.dateAdded } : item);
+        const updatedList = inventoryList.map(item => item.id === editingItem.id ? { ...item, ...data, used: item.used, dateAdded: item.dateAdded } : item);
         saveInventoryList(updatedList);
         toast({ title: "Item Updated", description: `${data.name} has been updated.` });
         setEditingItem(null);
     } else {
         // Add new item
-        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), purchased: false, dateAdded: new Date() };
+        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), used: false, dateAdded: new Date() };
         saveInventoryList([...inventoryList, newItem]);
         toast({ title: "Item Added", description: `${newItem.name} has been added to your inventory.` });
     }
@@ -142,7 +149,7 @@ export default function GroceryListPage() {
       shoppingListForm.reset();
   };
   
-  const markAsUsed = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, purchased: true } : item)); };
+  const markAsUsed = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, used: true } : item)); };
   const deleteInventoryItem = (id: string) => { saveInventoryList(inventoryList.filter(item => item.id !== id)); toast({ title: "Item Removed" }); };
   const deleteShoppingListItem = (id: string) => { saveShoppingList(shoppingList.filter(item => item.id !== id)); };
   const handleEditClick = (item: GroceryItem) => { setEditingItem(item); inventoryForm.reset({ ...item, expiryDate: item.expiryDate ? new Date(item.expiryDate) : undefined }); };
@@ -152,7 +159,7 @@ export default function GroceryListPage() {
         id: item.id,
         name: item.name,
         category: "Other",
-        purchased: false,
+        used: false,
         dateAdded: new Date(),
     };
     saveInventoryList([...inventoryList, newItemForInventory]);
@@ -160,7 +167,7 @@ export default function GroceryListPage() {
     toast({ title: "Item Moved", description: `${item.name} moved to your inventory. You can now add more details.` });
   };
 
-   const expiredItems = useMemo(() => inventoryList.filter(item => {
+  const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
     const today = startOfDay(new Date());
     return isBefore(item.expiryDate, today) || isToday(item.expiryDate);
@@ -172,6 +179,18 @@ export default function GroceryListPage() {
     const tenDaysFromNow = addDays(startOfDay(new Date()), 10);
     return isWithinInterval(item.expiryDate, { start: tomorrow, end: tenDaysFromNow });
   }), [inventoryList, expiredItems]);
+  
+  const handleDismissExpired = (itemId: string) => {
+      const newDismissedIds = [...dismissedExpiredIds, itemId];
+      setDismissedExpiredIds(newDismissedIds);
+      try {
+          localStorage.setItem(DISMISSED_EXPIRED_KEY, JSON.stringify(newDismissedIds));
+      } catch (error) {
+          console.error("Could not save dismissed items", error);
+      }
+  };
+
+  const visibleExpiredItems = useMemo(() => expiredItems.filter(item => !dismissedExpiredIds.includes(item.id)), [expiredItems, dismissedExpiredIds]);
 
 
   const sortedAndFilteredList = (list: GroceryItem[]) => {
@@ -203,8 +222,8 @@ export default function GroceryListPage() {
     return filteredList;
   };
 
-  const activeInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => !item.purchased)), [inventoryList, filter, sort]);
-  const usedInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => item.purchased)), [inventoryList, filter, sort]);
+  const activeInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => !item.used)), [inventoryList, filter, sort]);
+  const usedInventory = useMemo(() => sortedAndFilteredList(inventoryList.filter(item => item.used)), [inventoryList, filter, sort]);
 
   const getCategoryIcon = (categoryName?: string) => {
     const category = categories.find(c => c.name === categoryName);
@@ -217,7 +236,7 @@ export default function GroceryListPage() {
             className="absolute inset-0 -z-10 bg-cover bg-center"
             style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}
         />
-        <div className="absolute inset-0 bg-black/50 z-0"/>
+        <div className="absolute inset-0 bg-black/60 z-0"/>
         <div className="relative z-10 flex flex-col min-h-screen">
             <header className="container mx-auto px-4 py-6"><div className="flex justify-between items-center"><GlowHerLogo /><Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white"><ChevronLeft className="mr-2 h-4 w-4" />Back to Dashboard</Button></div></header>
             <main className="flex-grow container mx-auto px-4 py-8">
@@ -238,7 +257,16 @@ export default function GroceryListPage() {
                         </Card>
                     </div>
                     <div className="lg:col-span-2 space-y-6">
-                        {expiredItems.length > 0 && (<Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>You have {expiredItems.length} expired item(s)!</AlertTitle><AlertDescription>Check the expired tab: {expiredItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
+                        {visibleExpiredItems.length > 0 && (
+                            <Alert variant="destructive" className="relative">
+                                <AlertTriangle className="h-4 w-4" />
+                                <AlertTitle>You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
+                                <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
+                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => visibleExpiredItems.forEach(item => handleDismissExpired(item.id))}>
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            </Alert>
+                        )}
                         {expiringItems.length > 0 && (<Alert className="bg-orange-600 border-orange-700 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
                         
                         <Tabs defaultValue="inventory" className="w-full">
@@ -397,7 +425,7 @@ export default function GroceryListPage() {
                                                 return (
                                                 <li key={item.id} className="flex items-start gap-4 p-4 rounded-lg bg-red-800/40 border border-red-500/50">
                                                     <div className="flex-grow">
-                                                        <p className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</p>
+                                                        <p className={cn("font-medium text-lg", item.used && "line-through text-slate-400")}>{item.name}</p>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
@@ -422,3 +450,4 @@ export default function GroceryListPage() {
     </div>
   );
 }
+
