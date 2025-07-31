@@ -277,7 +277,7 @@ export default function FitnessGoalsPage() {
                     <p className="mt-2 text-lg text-muted-foreground">Move mindfully through your health journey.</p>
                 </div>
 
-                <Card className="max-w-md mx-auto shadow-lg">
+                <Card className="max-w-md mx-auto shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                     <CardHeader>
                         <CardTitle>Let's Personalize Your Plan</CardTitle>
                     </CardHeader>
@@ -293,7 +293,7 @@ export default function FitnessGoalsPage() {
                     // --- PREGNANCY MODE UI ---
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="space-y-8">
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader>
                                     <div className="flex justify-between items-center">
                                         <CardTitle className="flex items-center gap-2"><Target /> Your Movement Goals</CardTitle>
@@ -319,7 +319,7 @@ export default function FitnessGoalsPage() {
                                     )}
                                 </CardContent>
                             </Card>
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader><CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle></CardHeader>
                                 <CardContent>
                                     <Form {...pregnancyLogForm}>
@@ -353,7 +353,7 @@ export default function FitnessGoalsPage() {
                                     </Form>
                                 </CardContent>
                             </Card>
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
                                     <CardDescription>Your logged minutes over the last 7 days.</CardDescription>
@@ -371,7 +371,7 @@ export default function FitnessGoalsPage() {
                             </Card>
                         </div>
                         <div className="space-y-8">
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Goal Progress</CardTitle>
                                     <CardDescription>You've moved on {completedDays} of your {goalDays} day goal.</CardDescription>
@@ -390,7 +390,7 @@ export default function FitnessGoalsPage() {
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
                                 <CardContent className="space-y-2">
                                     <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-100" : "bg-muted")}>
@@ -415,7 +415,7 @@ export default function FitnessGoalsPage() {
                     // --- DEFAULT MODE UI ---
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="space-y-8">
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader>
                                     <div className="flex justify-between items-center">
                                         <CardTitle className="flex items-center gap-2"><Target /> Your Fitness Goals</CardTitle>
@@ -440,7 +440,7 @@ export default function FitnessGoalsPage() {
                                     )}
                                 </CardContent>
                             </Card>
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle>
                                     <CardDescription>Record your movement for today.</CardDescription>
@@ -457,7 +457,7 @@ export default function FitnessGoalsPage() {
                             </Card>
                         </div>
                         <div className="space-y-8">
-                            <Card className="shadow-lg">
+                            <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Progress</CardTitle>
                                     <CardDescription>Your step count over the last 7 days.</CardDescription>
@@ -509,14 +509,14 @@ export default function FitnessGoalsPage() {
                             <p className="font-bold text-destructive text-center">Do consult your doctor before doing this and proceed only if comfortable.</p>
                         </div>
                         {pregnancyVideoUrl && (
-                            <Card className="shadow-xl">
+                            <Card className="shadow-xl bg-white/70 backdrop-blur-sm border-white/30">
                                 <CardHeader><CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle></CardHeader>
                                 <CardContent>
                                     <div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>
                                 </CardContent>
                             </Card>
                         )}
-                        <Card className="shadow-xl">
+                        <Card className="shadow-xl bg-white/70 backdrop-blur-sm border-white/30">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2"><HeartPulse /> Guided Prenatal Yoga</CardTitle>
                                 <CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription>
