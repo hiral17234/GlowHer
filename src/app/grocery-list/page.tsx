@@ -81,9 +81,8 @@ export default function GroceryListPage() {
       if (savedInventory) {
         const parsedList = JSON.parse(savedInventory).map((item: any) => ({
             ...item,
-            // THIS IS THE FIX: Ensure expiryDate is always a Date object or undefined
             expiryDate: item.expiryDate ? parseISO(item.expiryDate) : undefined,
-            dateAdded: item.dateAdded || new Date().toISOString(),
+            dateAdded: item.dateAdded ? parseISO(item.dateAdded) : new Date(),
         }));
         setInventoryList(parsedList);
       }
@@ -150,11 +149,10 @@ export default function GroceryListPage() {
     toast({ title: "Item Moved", description: `${item.name} moved to your inventory. You can now add more details.` });
   };
 
- const expiredItems = useMemo(() => inventoryList.filter(item => {
+  const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
     const today = startOfDay(new Date());
-    // Mark as expired if the expiry date is today or in the past.
-    return isBefore(item.expiryDate, addDays(today, 1));
+    return isBefore(item.expiryDate, today) || isToday(item.expiryDate);
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
@@ -354,7 +352,7 @@ export default function GroceryListPage() {
                                             <ul className="space-y-4">
                                                 {purchasedInventory.map(item => {
                                                     const CategoryIcon = getCategoryIcon(item.category);
-                                                    const isExpiring = expiringItems.some(expItem => expItem.id === item.id);
+                                                    const isExpiring = item.expiryDate && isWithinInterval(item.expiryDate, { start: addDays(new Date(), 1), end: addDays(new Date(), 10) });
                                                     return (
                                                         <li key={item.id} className={cn("flex items-center gap-4 p-4 rounded-lg bg-white/10 opacity-70", isExpiring && "bg-orange-500/30 border border-orange-400 opacity-100")}>
                                                             <Check className="h-5 w-5 text-green-400" />
