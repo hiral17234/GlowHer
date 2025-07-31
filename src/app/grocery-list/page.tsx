@@ -38,7 +38,17 @@ const shoppingListItemSchema = z.object({
     name: z.string().min(1, "Item name is required."),
 });
 
-type GroceryItem = z.infer<typeof groceryItemSchema> & { id: string; purchased: boolean; dateAdded: string; };
+type GroceryItem = { 
+  id: string; 
+  name: string;
+  category?: string;
+  expiryDate?: Date;
+  quantity?: string;
+  storageLocation?: string;
+  purchased: boolean; 
+  dateAdded: Date; 
+};
+
 type ShoppingListItem = { id: string; name: string; };
 
 const categories = [
@@ -118,7 +128,7 @@ export default function GroceryListPage() {
         setEditingItem(null);
     } else {
         // Add new item
-        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), purchased: false, dateAdded: new Date().toISOString() };
+        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), purchased: false, dateAdded: new Date() };
         saveInventoryList([...inventoryList, newItem]);
         toast({ title: "Item Added", description: `${newItem.name} has been added to your inventory.` });
     }
@@ -142,17 +152,17 @@ export default function GroceryListPage() {
         name: item.name,
         category: "Other",
         purchased: false,
-        dateAdded: new Date().toISOString(),
+        dateAdded: new Date(),
     };
     saveInventoryList([...inventoryList, newItemForInventory]);
     deleteShoppingListItem(item.id);
     toast({ title: "Item Moved", description: `${item.name} moved to your inventory. You can now add more details.` });
   };
 
-  const expiredItems = useMemo(() => inventoryList.filter(item => {
+   const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
     const today = startOfDay(new Date());
-    return isBefore(item.expiryDate, today) || isToday(item.expiryDate);
+    return isBefore(item.expiryDate, addDays(today,1));
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
@@ -180,8 +190,8 @@ export default function GroceryListPage() {
                 valB = b.expiryDate ? b.expiryDate.getTime() : Infinity; 
                 break;
             case 'dateAdded': default: 
-                valA = parseISO(a.dateAdded).getTime(); 
-                valB = parseISO(b.dateAdded).getTime(); 
+                valA = a.dateAdded.getTime(); 
+                valB = b.dateAdded.getTime(); 
                 break;
         }
         if (valA < valB) return sortDir === 'asc' ? -1 : 1;
@@ -411,5 +421,3 @@ export default function GroceryListPage() {
     </div>
   );
 }
-
-    
