@@ -144,7 +144,7 @@ export default function GroceryListPage() {
   const markAsPurchased = (id: string) => { saveInventoryList(inventoryList.map(item => item.id === id ? { ...item, purchased: true } : item)); };
   const deleteInventoryItem = (id: string) => { saveInventoryList(inventoryList.filter(item => item.id !== id)); toast({ title: "Item Removed" }); };
   const deleteShoppingListItem = (id: string) => { saveShoppingList(shoppingList.filter(item => item.id !== id)); };
-  const handleEditClick = (item: GroceryItem) => { setEditingItem(item); inventoryForm.reset(item); };
+  const handleEditClick = (item: GroceryItem) => { setEditingItem(item); inventoryForm.reset({ ...item, expiryDate: item.expiryDate ? new Date(item.expiryDate) : undefined }); };
   
   const moveShoppingItemToInventory = (item: ShoppingListItem) => {
     const newItemForInventory: GroceryItem = {
@@ -162,7 +162,7 @@ export default function GroceryListPage() {
    const expiredItems = useMemo(() => inventoryList.filter(item => {
     if (!item.expiryDate) return false;
     const today = startOfDay(new Date());
-    return isBefore(item.expiryDate, addDays(today,1));
+    return isBefore(item.expiryDate, today) || isToday(item.expiryDate);
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
@@ -298,9 +298,9 @@ export default function GroceryListPage() {
                                                     <div className="flex-grow">
                                                         <label htmlFor={`check-${item.id}`} className="font-medium text-lg">{item.name}</label>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                                                            <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
-                                                            {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
-                                                            {item.storageLocation && <Badge variant="outline" className="border-white/30">{item.storageLocation}</Badge>}
+                                                            <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
+                                                            {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
+                                                            {item.storageLocation && <Badge variant="outline" className="border-white/30 text-white">{item.storageLocation}</Badge>}
                                                             {item.expiryDate && (<span className={cn("flex items-center gap-1", (isExpiring || isExpired) && "text-red-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !(isExpiring || isExpired) && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
@@ -362,7 +362,7 @@ export default function GroceryListPage() {
                                             <ul className="space-y-4">
                                                 {purchasedInventory.map(item => {
                                                     const CategoryIcon = getCategoryIcon(item.category);
-                                                    const isExpiring = item.expiryDate && isWithinInterval(item.expiryDate, { start: addDays(new Date(), 1), end: addDays(new Date(), 10) });
+                                                    const isExpiring = item.expiryDate && isWithinInterval(new Date(item.expiryDate), { start: addDays(new Date(), 1), end: addDays(new Date(), 10) });
                                                     return (
                                                         <li key={item.id} className={cn("flex items-center gap-4 p-4 rounded-lg bg-white/10 opacity-70", isExpiring && "bg-orange-500/30 border border-orange-400 opacity-100")}>
                                                             <Check className="h-5 w-5 text-green-400" />
@@ -370,7 +370,7 @@ export default function GroceryListPage() {
                                                                 <p className="font-medium text-lg line-through text-slate-400">{item.name}</p>
                                                                 <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                                     <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
-                                                                    {item.expiryDate && (<span className={cn("flex items-center gap-1", isExpiring && "text-orange-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !isExpiring && "hidden")} />Expires: {format(item.expiryDate, 'MMM d')}</span>)}
+                                                                    {item.expiryDate && (<span className={cn("flex items-center gap-1", isExpiring && "text-orange-300 font-semibold")}><AlertTriangle className={cn("h-4 w-4", !isExpiring && "hidden")} />Expires: {format(new Date(item.expiryDate), 'MMM d')}</span>)}
                                                                 </div>
                                                             </div>
                                                             <Button variant="ghost" size="icon" onClick={() => deleteInventoryItem(item.id)} className="hover:bg-white/20"><Trash2 className="h-4 w-4 text-red-400" /></Button>
@@ -398,8 +398,8 @@ export default function GroceryListPage() {
                                                     <div className="flex-grow">
                                                         <p className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</p>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                                                            <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
-                                                            {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
+                                                            <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
+                                                            {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30 text-white"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
                                                             {item.expiryDate && (<span className="flex items-center gap-1 text-red-300 font-semibold"><AlertTriangle className="h-4 w-4" />Expired: {format(item.expiryDate, 'MMM d')}</span>)}
                                                         </div>
                                                     </div>
@@ -421,3 +421,5 @@ export default function GroceryListPage() {
     </div>
   );
 }
+
+    
