@@ -24,7 +24,6 @@ import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { BottomNavbar } from '@/components/glowher/BottomNavbar';
 
 
 const groceryItemSchema = z.object({
@@ -232,7 +231,7 @@ export default function GroceryListPage() {
     <div className="flex flex-col min-h-screen">
         <div 
             className="absolute inset-0 -z-10 bg-cover bg-center"
-            style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a104711adcd8.jpg')"}}
+            style={{backgroundImage: "url('https://i.pinimg.com/1200x/4a/36/3a/4a363a52785a125131f1a4a104711adcd8.jpg')"}}
         />
         <div className="absolute inset-0 bg-black/60 z-0"/>
         
@@ -270,7 +269,7 @@ export default function GroceryListPage() {
                                 <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
                                 {visibleExpiredItems.map(item => (
                                 <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => handleDismissExpired(item.id)}>
-                                    <X className="h-4 w-4 text-slate-700" />
+                                    <X className="h-4 w-4 text-slate-800" />
                                 </Button>
                                 ))}
                             </Alert>
