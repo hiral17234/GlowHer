@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -24,7 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 
 const groceryItemSchema = z.object({
@@ -258,13 +257,15 @@ export default function GroceryListPage() {
                     </div>
                     <div className="lg:col-span-2 space-y-6">
                         {visibleExpiredItems.length > 0 && (
-                            <Alert variant="destructive" className="relative">
+                            <Alert variant="destructive" className="relative pr-10">
                                 <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle>You have {visibleExpiredItems.length} expired item(s)!</AlertTitle>
                                 <AlertDescription>Check the expired tab: {visibleExpiredItems.map(item => item.name).join(', ')}.</AlertDescription>
-                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => visibleExpiredItems.forEach(item => handleDismissExpired(item.id))}>
-                                    <X className="h-4 w-4" />
+                                {visibleExpiredItems.map(item => (
+                                <Button key={`dismiss-${item.id}`} variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => handleDismissExpired(item.id)}>
+                                    <X className="h-4 w-4 text-slate-700" />
                                 </Button>
+                                ))}
                             </Alert>
                         )}
                         {expiringItems.length > 0 && (<Alert className="bg-orange-600 border-orange-700 text-white [&>svg]:text-white"><AlertTriangle className="h-4 w-4" /><AlertTitle>Expiring Soon!</AlertTitle><AlertDescription>Don't forget to use: {expiringItems.map(item => item.name).join(', ')}.</AlertDescription></Alert>)}
@@ -450,4 +451,3 @@ export default function GroceryListPage() {
     </div>
   );
 }
-
