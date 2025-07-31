@@ -81,7 +81,7 @@ export default function GroceryListPage() {
       if (savedInventory) {
         const parsedList = JSON.parse(savedInventory).map((item: any) => ({
             ...item,
-            expiryDate: item.expiryDate ? new Date(item.expiryDate) : undefined,
+            expiryDate: item.expiryDate ? parseISO(item.expiryDate) : undefined,
             dateAdded: item.dateAdded || new Date().toISOString(),
         }));
         setInventoryList(parsedList);
@@ -118,7 +118,7 @@ export default function GroceryListPage() {
         setEditingItem(null);
     } else {
         // Add new item
-        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), purchased: false, dateAdded: new Date().toISOString() };
+        const newItem: GroceryItem = { ...data, id: new Date().toISOString(), purchased: true, dateAdded: new Date().toISOString() };
         saveInventoryList([...inventoryList, newItem]);
         toast({ title: "Item Added", description: `${newItem.name} has been added to your inventory.` });
     }
@@ -151,17 +151,17 @@ export default function GroceryListPage() {
 
 
   const expiredItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || item.purchased) return false;
-    // An item is expired if its expiry date is today or in the past.
-    return isBefore(new Date(item.expiryDate), addDays(startOfDay(new Date()), 1));
+    if (!item.expiryDate || !item.purchased) return false;
+    return isBefore(item.expiryDate, startOfDay(new Date()));
   }), [inventoryList]);
 
   const expiringItems = useMemo(() => inventoryList.filter(item => {
-    if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
-    const tomorrow = addDays(startOfDay(new Date()), 1);
-    const threeDaysFromNow = addDays(startOfDay(new Date()), 3);
-    return isWithinInterval(new Date(item.expiryDate), { start: tomorrow, end: threeDaysFromNow });
+    if (!item.expiryDate || !item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
+    const today = startOfDay(new Date());
+    const threeDaysFromNow = addDays(today, 3);
+    return isWithinInterval(item.expiryDate, { start: today, end: threeDaysFromNow });
   }), [inventoryList, expiredItems]);
+
 
   const sortedAndFilteredList = useMemo(() => {
     let list = [...inventoryList];
@@ -175,7 +175,7 @@ export default function GroceryListPage() {
         let valA, valB;
         switch (sortKey) {
             case 'name': valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); break;
-            case 'expiryDate': valA = a.expiryDate ? new Date(a.expiryDate).getTime() : Infinity; valB = b.expiryDate ? new Date(b.expiryDate).getTime() : Infinity; break;
+            case 'expiryDate': valA = a.expiryDate ? a.expiryDate.getTime() : Infinity; valB = b.expiryDate ? b.expiryDate.getTime() : Infinity; break;
             case 'dateAdded': default: valA = parseISO(a.dateAdded).getTime(); valB = parseISO(b.dateAdded).getTime(); break;
         }
         if (valA < valB) return sortDir === 'asc' ? -1 : 1;
@@ -258,9 +258,9 @@ export default function GroceryListPage() {
                                                 const CategoryIcon = getCategoryIcon(item.category);
                                                 return (
                                                 <li key={item.id} className={cn("flex items-start gap-4 p-4 rounded-lg transition-all", item.purchased ? "bg-black/30" : "bg-white/10", isExpiring && !item.purchased && "bg-red-500/30 border border-red-400", isExpired && !item.purchased && "bg-red-800/40 border border-red-500/50")}>
-                                                    <Checkbox id={item.id} checked={item.purchased} onCheckedChange={() => togglePurchased(item.id)} aria-label={`Mark ${item.name} as purchased`} className="mt-1 border-white data-[state=checked]:bg-primary" />
+                                                    <Checkbox id={item.id} checked={!item.purchased} onCheckedChange={() => togglePurchased(item.id)} aria-label={`Mark ${item.name} as purchased`} className="mt-1 border-white data-[state=checked]:bg-primary" />
                                                     <div className="flex-grow">
-                                                        <label htmlFor={item.id} className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</label>
+                                                        <label htmlFor={item.id} className={cn("font-medium text-lg", !item.purchased && "line-through text-slate-400")}>{item.name}</label>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
@@ -329,7 +329,7 @@ export default function GroceryListPage() {
                                                 return (
                                                 <li key={item.id} className="flex items-start gap-4 p-4 rounded-lg bg-red-800/40 border border-red-500/50">
                                                     <div className="flex-grow">
-                                                        <p className={cn("font-medium text-lg", item.purchased && "line-through text-slate-400")}>{item.name}</p>
+                                                        <p className={cn("font-medium text-lg", !item.purchased && "line-through text-slate-400")}>{item.name}</p>
                                                         <div className="text-sm text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <Badge variant="outline" className="flex items-center gap-1 border-white/30"><CategoryIcon className="h-3 w-3" />{item.category}</Badge>
                                                             {item.quantity && <Badge variant="outline" className="flex items-center gap-1 border-white/30"><Package className="h-3 w-3"/>{item.quantity}</Badge>}
