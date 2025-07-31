@@ -112,11 +112,10 @@ export default function LogSymptomsPage() {
   useEffect(() => {
     const dateParam = searchParams.get('date');
     if (dateParam) {
+      // The date param is in 'yyyy-MM-dd' format which parseISO handles correctly as UTC midnight.
+      // This avoids timezone shifting issues.
       const dateFromUrl = parseISO(dateParam);
-      // parseISO gives local time, but it's fine as we just care about the date part
-      // Adding a day because of timezone issues
-      const adjustedDate = addDays(dateFromUrl, 1);
-      form.setValue('logDate', adjustedDate);
+      form.setValue('logDate', dateFromUrl);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, form.setValue]);
