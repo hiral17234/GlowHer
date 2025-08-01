@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, differenceInDays } from 'date-fns';
-import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, HeartPulse, Award, Flame, Star, Activity, ThumbsUp } from 'lucide-react';
+import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, differenceInDays, parseISO } from 'date-fns';
+import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, HeartPulse, Award, Flame, Star, Activity, ThumbsUp, CalendarIcon } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +25,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 
 
 // --- SCHEMAS ---
@@ -33,19 +35,29 @@ const defaultGoalSchema = z.object({
   workouts: z.coerce.number().min(1, "Minimum 1 workout").max(7, "Maximum 7 workouts"),
 });
 
-const defaultLogSchema = z.discriminatedUnion("activityType", [
-    z.object({
-      activityType: z.literal("step-based"),
-      steps: z.coerce.number().min(0, "Steps cannot be negative.").max(100000, "That's a lot of steps!"),
-      stepWorkoutType: z.string().min(1, "Please select a workout type."),
-    }),
-    z.object({
-      activityType: z.literal("workout-based"),
-      workoutType: z.string().min(1, "Please select a workout type."),
-      duration: z.coerce.number().min(5, "Minimum 5 minutes.").max(300, "Maximum 300 minutes."),
-      intensity: z.enum(["Low", "Medium", "High"]).optional(),
-    }),
-  ]);
+const defaultLogSchema = z.object({
+    logDate: z.date(),
+    activityType: z.enum(["step-based", "workout-based"]),
+    // Step-based fields
+    steps: z.coerce.number().min(0).optional(),
+    stepWorkoutType: z.string().optional(),
+    // Workout-based fields
+    workoutType: z.string().optional(),
+    duration: z.coerce.number().min(5).optional(),
+    intensity: z.enum(["Low", "Medium", "High"]).optional(),
+}).refine(data => {
+    if (data.activityType === 'step-based') {
+        return data.steps !== undefined && data.steps >= 0 && data.stepWorkoutType;
+    }
+    return true;
+}, { message: "Steps and workout type are required for step-based activities.", path: ['steps']})
+.refine(data => {
+    if (data.activityType === 'workout-based') {
+        return data.workoutType && data.duration;
+    }
+    return true;
+}, { message: "Workout type and duration are required for workout-based activities.", path: ['workoutType'] });
+
 
 const pregnancyGoalSchema = z.object({
     days: z.coerce.number().min(1, "Minimum 1 day").max(7, "Maximum 7 days"),
@@ -54,6 +66,7 @@ const pregnancyGoalSchema = z.object({
 });
 
 const pregnancyLogSchema = z.object({
+    logDate: z.date(),
     minutes: z.coerce.number().min(5, "Minimum 5 minutes.").max(240, "Maximum 240 minutes."),
     feeling: z.string().optional(),
     notes: z.string().max(300).optional(),
@@ -93,6 +106,8 @@ export default function FitnessGoalsPage() {
     const [streak, setStreak] = useState(0);
     const [duration, setDuration] = useState({ hours: 0, minutes: 30 });
     const [selectedActivityType, setSelectedActivityType] = useState<'step-based' | 'workout-based'>('step-based');
+    const [currentDefaultLogDate, setCurrentDefaultLogDate] = useState(new Date());
+    const [currentPregnancyLogDate, setCurrentPregnancyLogDate] = useState(new Date());
 
 
     // --- FORM HOOKS ---
@@ -100,13 +115,14 @@ export default function FitnessGoalsPage() {
     const defaultLogForm = useForm<DefaultLogData>({ 
         resolver: zodResolver(defaultLogSchema), 
         defaultValues: { 
+            logDate: new Date(),
             activityType: 'step-based', 
             steps: 0, 
             stepWorkoutType: 'Walking',
         }
     });
     const pregnancyGoalForm = useForm<PregnancyGoalData>({ resolver: zodResolver(pregnancyGoalSchema), defaultValues: { days: 3, activityType: 'Walking', trackMood: true }});
-    const pregnancyLogForm = useForm<PregnancyLogData>({ resolver: zodResolver(pregnancyLogSchema), defaultValues: { minutes: 30, feeling: 'Energized', notes: '' }});
+    const pregnancyLogForm = useForm<PregnancyLogData>({ resolver: zodResolver(pregnancyLogSchema), defaultValues: { logDate: new Date(), minutes: 30, feeling: 'Energized', notes: '' }});
 
     // --- DATA LOADING & INITIALIZATION ---
     useEffect(() => {
@@ -119,35 +135,71 @@ export default function FitnessGoalsPage() {
                 const savedGoals = localStorage.getItem(PREGNANCY_GOALS_KEY);
                 if (savedGoals) pregnancyGoalForm.reset(JSON.parse(savedGoals));
                 else setIsEditingGoals(true);
-
-                const todayKey = format(new Date(), 'yyyy-MM-dd');
-                const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${todayKey}`);
-                if (savedLog) {
-                    const logData = JSON.parse(savedLog);
-                    pregnancyLogForm.reset(logData);
-                    const totalMinutes = logData.minutes || 30;
-                    setDuration({
-                        hours: Math.floor(totalMinutes / 60),
-                        minutes: totalMinutes % 60,
-                    });
-                }
-                
                 loadWeeklyPregnancyLogs();
             } else {
                 // Load default data
                 const savedGoals = localStorage.getItem(DEFAULT_GOALS_KEY);
                 if (savedGoals) defaultGoalForm.reset(JSON.parse(savedGoals));
                 else setIsEditingGoals(true);
-
-                const todayKey = format(new Date(), 'yyyy-MM-dd');
-                const savedLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${todayKey}`);
-                if (savedLog) defaultLogForm.reset(JSON.parse(savedLog));
-                
                 loadWeeklyDefaultLogs();
             }
         } catch (e) { console.error("Error loading data from localStorage", e); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isPregnant]);
+
+
+     // Effect for handling date changes in default log form
+     const watchedDefaultLogDate = defaultLogForm.watch('logDate');
+     useEffect(() => {
+         if (isSameDay(watchedDefaultLogDate, currentDefaultLogDate)) return;
+ 
+         const key = `${DEFAULT_LOG_PREFIX}${format(watchedDefaultLogDate, 'yyyy-MM-dd')}`;
+         try {
+             const savedData = localStorage.getItem(key);
+             if (savedData) {
+                 const parsedData = JSON.parse(savedData);
+                 parsedData.logDate = new Date(parsedData.logDate);
+                 defaultLogForm.reset(parsedData);
+                 setSelectedActivityType(parsedData.activityType);
+             } else {
+                 defaultLogForm.reset({
+                     logDate: watchedDefaultLogDate,
+                     activityType: 'step-based',
+                     steps: 0,
+                     stepWorkoutType: 'Walking',
+                 });
+                 setSelectedActivityType('step-based');
+             }
+             setCurrentDefaultLogDate(watchedDefaultLogDate);
+         } catch (error) { console.error("Failed to read default log from localStorage", error); }
+     }, [watchedDefaultLogDate, defaultLogForm, currentDefaultLogDate]);
+ 
+     // Effect for handling date changes in pregnancy log form
+     const watchedPregnancyLogDate = pregnancyLogForm.watch('logDate');
+     useEffect(() => {
+         if (isSameDay(watchedPregnancyLogDate, currentPregnancyLogDate)) return;
+ 
+         const key = `${PREGNANCY_LOG_PREFIX}${format(watchedPregnancyLogDate, 'yyyy-MM-dd')}`;
+         try {
+             const savedData = localStorage.getItem(key);
+             if (savedData) {
+                 const parsedData = JSON.parse(savedData);
+                 parsedData.logDate = new Date(parsedData.logDate);
+                 pregnancyLogForm.reset(parsedData);
+                 setDuration({ hours: Math.floor(parsedData.minutes / 60), minutes: parsedData.minutes % 60 });
+             } else {
+                 pregnancyLogForm.reset({
+                     logDate: watchedPregnancyLogDate,
+                     minutes: 30,
+                     feeling: 'Energized',
+                     notes: ''
+                 });
+                 setDuration({ hours: 0, minutes: 30 });
+             }
+             setCurrentPregnancyLogDate(watchedPregnancyLogDate);
+         } catch (error) { console.error("Failed to read pregnancy log from localStorage", error); }
+     }, [watchedPregnancyLogDate, pregnancyLogForm, currentPregnancyLogDate]);
+ 
 
     // --- CYCLE/PREGNANCY PHASE DETERMINATION ---
     useEffect(() => {
@@ -247,7 +299,7 @@ export default function FitnessGoalsPage() {
 
     // --- FORM SUBMISSION HANDLERS ---
     function onGoalSubmit(data: DefaultGoalData) { try { localStorage.setItem(DEFAULT_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!"}); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
-    function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { console.error(e); toast({ variant: 'destructive', title: "Error Logging Activity" }); }}
+    function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { console.error(e); toast({ variant: 'destructive', title: "Error Logging Activity" }); }}
     function onPregnancyGoalSubmit(data: PregnancyGoalData) { try { localStorage.setItem(PREGNANCY_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!" }); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onPregnancyLogSubmit(data: PregnancyLogData) {
          try {
@@ -265,7 +317,7 @@ export default function FitnessGoalsPage() {
                 return;
             }
 
-            localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(new Date(), 'yyyy-MM-dd')}`, JSON.stringify(finalData)); 
+            localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(finalData)); 
             toast({ title: "Movement Logged!", description: "Wonderful job staying active!" }); 
             loadWeeklyPregnancyLogs(); 
         } catch(e) { 
@@ -285,7 +337,9 @@ export default function FitnessGoalsPage() {
     const completedDays = weeklyPregnancyLogs.filter(d => d.minutes > 0).length;
     const goalDays = pregnancyGoalForm.getValues('days');
     const progressPercentage = goalDays > 0 ? Math.round((completedDays / goalDays) * 100) : 0;
-    const todaySteps = defaultLogForm.watch('activityType') === 'step-based' ? defaultLogForm.watch('steps') : 0;
+    
+    const todayLog = weeklyDefaultLogs.find(log => log.name === format(new Date(), 'EEE'));
+    const todaySteps = todayLog ? todayLog.steps : 0;
     const stepGoal = defaultGoalForm.getValues('steps');
 
     return (
@@ -354,6 +408,7 @@ export default function FitnessGoalsPage() {
                                     <CardContent>
                                         <Form {...pregnancyLogForm}>
                                             <form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
+                                                <FormField control={pregnancyLogForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
                                                 
                                                 <div>
                                                     <Label>Time Spent</Label>
@@ -470,19 +525,19 @@ export default function FitnessGoalsPage() {
                                 </Card>
                                 <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader>
-                                        <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle>
-                                        <CardDescription>Record your movement for today.</CardDescription>
+                                        <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Activity</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <Form {...defaultLogForm}>
                                             <form onSubmit={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
+                                                <FormField control={defaultLogForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
                                                 <FormField
                                                     control={defaultLogForm.control}
                                                     name="activityType"
                                                     render={({ field }) => (
                                                     <FormItem>
                                                         <FormLabel>Activity Type</FormLabel>
-                                                        <Select onValueChange={(value) => { field.onChange(value); setSelectedActivityType(value as any); }} defaultValue={field.value}>
+                                                        <Select onValueChange={(value) => { field.onChange(value); setSelectedActivityType(value as any); }} value={field.value}>
                                                             <FormControl>
                                                                 <SelectTrigger><SelectValue placeholder="Select an activity type" /></SelectTrigger>
                                                             </FormControl>
