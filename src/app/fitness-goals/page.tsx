@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, startOfWeek } from 'date-fns';
-import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Lightbulb, Wind, Edit, Check, AlertTriangle, Award, Flame, Star, Activity, ThumbsUp, Calendar as CalendarIcon, Baby } from 'lucide-react';
+import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Lightbulb, Wind, Edit, Check, AlertTriangle, Award, Flame, ThumbsUp, Activity, Calendar as CalendarIcon, Baby } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,10 +17,9 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
-import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis } from 'recharts';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from "@/components/ui/calendar";
@@ -68,7 +67,7 @@ const DEFAULT_LOG_PREFIX = 'glowher-fitness-log-';
 // --- DATA ---
 const cycleExercises = { Menstrual: { title: "Menstrual Phase: Rest & Recover", icon: Heart, color: "text-red-600 font-bold", suggestions: ["Gentle walking", "Restorative yoga", "Light stretching"] }, Follicular: { title: "Follicular Phase: Energize", icon: Lightbulb, color: "text-blue-400", suggestions: ["Brisk walking or jogging", "Dancing", "Light cardio"] }, Ovulatory: { title: "Ovulatory Phase: Peak Power", icon: Dumbbell, color: "text-green-400", suggestions: ["High-Intensity Interval Training (HIIT)", "Running", "Strength training"] }, Luteal: { title: "Luteal Phase: Wind Down", icon: Wind, color: "text-yellow-400", suggestions: ["Pilates", "Swimming", "Moderate strength training"] }};
 
-const chartConfig = { steps: { label: "Steps", color: "hsl(var(--primary))" }} satisfies ChartConfig;
+const chartConfig = { steps: { label: "Steps", color: "hsl(var(--primary))" }};
 
 export default function FitnessGoalsPage() {
     const router = useRouter();
@@ -99,10 +98,38 @@ export default function FitnessGoalsPage() {
             const savedGoals = localStorage.getItem(DEFAULT_GOALS_KEY);
             if (savedGoals) defaultGoalForm.reset(JSON.parse(savedGoals));
             else setIsEditingGoals(true);
+            
+            // Set initial date from form to load today's log
+            const initialDate = defaultLogForm.getValues('logDate');
             loadWeeklyDefaultLogs();
+            loadLogForDate(initialDate);
+
         } catch (e) { console.error("Error loading data from localStorage", e); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const loadLogForDate = (date: Date) => {
+        const key = `${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`;
+        try {
+            const savedData = localStorage.getItem(key);
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                parsedData.logDate = new Date(parsedData.logDate);
+                defaultLogForm.reset(parsedData);
+                setSelectedActivityType(parsedData.activityType);
+            } else {
+                defaultLogForm.reset({
+                    logDate: date,
+                    activityType: 'step-based',
+                    steps: 0,
+                    stepWorkoutType: 'Walking',
+                });
+                setSelectedActivityType('step-based');
+            }
+        } catch (error) {
+            console.error("Failed to read default log from localStorage", error);
+        }
+    }
 
 
      // Effect for handling date changes in default log form
@@ -110,26 +137,10 @@ export default function FitnessGoalsPage() {
      useEffect(() => {
          if (isSameDay(watchedDefaultLogDate, currentDefaultLogDate)) return;
  
-         const key = `${DEFAULT_LOG_PREFIX}${format(watchedDefaultLogDate, 'yyyy-MM-dd')}`;
-         try {
-             const savedData = localStorage.getItem(key);
-             if (savedData) {
-                 const parsedData = JSON.parse(savedData);
-                 parsedData.logDate = new Date(parsedData.logDate);
-                 defaultLogForm.reset(parsedData);
-                 setSelectedActivityType(parsedData.activityType);
-             } else {
-                 defaultLogForm.reset({
-                     logDate: watchedDefaultLogDate,
-                     activityType: 'step-based',
-                     steps: 0,
-                     stepWorkoutType: 'Walking',
-                 });
-                 setSelectedActivityType('step-based');
-             }
-             setCurrentDefaultLogDate(watchedDefaultLogDate);
-         } catch (error) { console.error("Failed to read default log from localStorage", error); }
-     }, [watchedDefaultLogDate, defaultLogForm, currentDefaultLogDate]);
+         loadLogForDate(watchedDefaultLogDate);
+         setCurrentDefaultLogDate(watchedDefaultLogDate);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [watchedDefaultLogDate]);
  
 
     // --- CYCLE/PREGNANCY PHASE DETERMINATION ---
@@ -157,32 +168,15 @@ export default function FitnessGoalsPage() {
     
     const calculateStreak = () => {
         let currentStreak = 0;
-        const today = startOfDay(new Date());
         try {
-            // Check if today's log exists and contributes to streak
-            const todayLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
-            if (todayLog) {
-                currentStreak = 1;
-                // Check previous days
-                for (let i = 1; i < 365; i++) {
-                    const date = subDays(today, i);
-                    const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-                    if (log) {
-                        currentStreak++;
-                    } else {
-                        break; // No log for the previous day, so streak ends
-                    }
-                }
-            } else {
-                // If today is not logged, check starting from yesterday
-                 for (let i = 1; i < 365; i++) {
-                    const date = subDays(today, i);
-                    const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-                    if (log) {
-                        currentStreak++;
-                    } else {
-                        break; // Streak ended before yesterday
-                    }
+            // Check for consecutive days backwards from today
+            for (let i = 0; i < 365; i++) {
+                const date = subDays(startOfDay(new Date()), i);
+                const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+                if (log) {
+                    currentStreak++;
+                } else {
+                    break; // No log for the previous day, so streak ends
                 }
             }
         } catch (e) {
@@ -196,7 +190,7 @@ export default function FitnessGoalsPage() {
         const today = startOfDay(new Date());
         const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
         let workoutsThisWeek = 0;
-
+    
         const data = Array.from({ length: 7 }, (_, i) => {
             const date = addDays(weekStart, i);
             const savedLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
@@ -204,8 +198,10 @@ export default function FitnessGoalsPage() {
             if (savedLog) {
                 try {
                     const logData = JSON.parse(savedLog);
-                    if (date <= today) { // only count past/present workouts
-                       workoutsThisWeek++;
+                    if (date <= today) {
+                        if (logData.activityType === 'workout-based') {
+                            workoutsThisWeek++;
+                        }
                     }
                     if (logData.activityType === 'step-based') {
                         steps = logData.steps || 0;
@@ -216,7 +212,7 @@ export default function FitnessGoalsPage() {
         });
         setWeeklyDefaultLogs(data);
         setCompletedWorkouts(workoutsThisWeek);
-
+    
         calculateStreak();
     };
 
@@ -224,7 +220,7 @@ export default function FitnessGoalsPage() {
     function onGoalSubmit(data: DefaultGoalData) { try { localStorage.setItem(DEFAULT_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!"}); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { console.error(e); toast({ variant: 'destructive', title: "Error Logging Activity" }); }}
     
-    const relevantSuggestions = cycleExercises[currentPhase!];
+    const relevantSuggestions = currentPhase ? cycleExercises[currentPhase] : null;
     
     const todayLog = weeklyDefaultLogs.find(log => log.name === format(new Date(), 'EEE'));
     const todaySteps = todayLog ? todayLog.steps : 0;
@@ -290,7 +286,7 @@ export default function FitnessGoalsPage() {
                             </Card>
                             <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Activity</CardTitle>
+                                    <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <Form {...defaultLogForm}>
@@ -351,7 +347,7 @@ export default function FitnessGoalsPage() {
                                     <CardDescription>Your step count over the last 7 days.</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <ChartContainer config={chartConfig}>
+                                    <ChartContainer config={chartConfig} className="w-full">
                                         <RechartsBarChart accessibilityLayer data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
                                             <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                                             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
