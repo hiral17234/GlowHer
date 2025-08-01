@@ -155,6 +155,42 @@ export default function FitnessGoalsPage() {
         } catch(e) { console.error(e); }
     }, []);
     
+    const calculateStreak = () => {
+        let currentStreak = 0;
+        const today = startOfDay(new Date());
+        try {
+            // Check if today's log exists and contributes to streak
+            const todayLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
+            if (todayLog) {
+                currentStreak = 1;
+                // Check previous days
+                for (let i = 1; i < 365; i++) {
+                    const date = subDays(today, i);
+                    const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+                    if (log) {
+                        currentStreak++;
+                    } else {
+                        break; // No log for the previous day, so streak ends
+                    }
+                }
+            } else {
+                // If today is not logged, check starting from yesterday
+                 for (let i = 1; i < 365; i++) {
+                    const date = subDays(today, i);
+                    const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+                    if (log) {
+                        currentStreak++;
+                    } else {
+                        break; // Streak ended before yesterday
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Error calculating streak", e);
+        }
+        setStreak(currentStreak);
+    };
+
     // --- DATA LOADING & CALCULATION HELPERS ---
     const loadWeeklyDefaultLogs = () => {
         const today = startOfDay(new Date());
@@ -181,18 +217,7 @@ export default function FitnessGoalsPage() {
         setWeeklyDefaultLogs(data);
         setCompletedWorkouts(workoutsThisWeek);
 
-        // Calculate streak
-        let consecutiveDays = 0;
-        for (let i = 0; i < 365; i++) {
-            const date = subDays(today, i);
-            const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-            if (log) {
-                consecutiveDays++;
-            } else {
-                break;
-            }
-        }
-        setStreak(consecutiveDays);
+        calculateStreak();
     };
 
     // --- FORM SUBMISSION HANDLERS ---
@@ -326,14 +351,14 @@ export default function FitnessGoalsPage() {
                                     <CardDescription>Your step count over the last 7 days.</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <ResponsiveContainer width="100%" height={250}>
-                                        <RechartsBarChart data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                    <ChartContainer config={chartConfig}>
+                                        <RechartsBarChart accessibilityLayer data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
                                             <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                                             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                                             <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value).toLocaleString()} steps`}/>}/>
                                             <RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} />
                                         </RechartsBarChart>
-                                    </ResponsiveContainer>
+                                    </ChartContainer>
                                     <div className="mt-4">
                                         <Progress value={(todaySteps / stepGoal) * 100} className="h-2 bg-muted [&>span]:bg-primary" />
                                         <p className="text-sm text-center mt-2 text-muted-foreground">Today's progress: {todaySteps.toLocaleString()} / {stepGoal.toLocaleString()} steps</p>
