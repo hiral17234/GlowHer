@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
@@ -163,29 +163,30 @@ export default function FitnessGoalsPage() {
             const savedLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
             let steps = 0;
             if (savedLog) {
-                const logData = JSON.parse(savedLog);
-                if (logData.activityType === 'step-based') {
-                    steps = logData.steps;
-                }
+                try {
+                    const logData = JSON.parse(savedLog);
+                    if (logData.activityType === 'step-based') {
+                        steps = logData.steps || 0;
+                    }
+                } catch(e) { console.error("Error parsing log for chart", e); }
             }
             return { name: format(date, 'EEE'), steps };
         }).reverse();
         setWeeklyDefaultLogs(data);
 
-        // Calculate streak for default mode
+        // Calculate streak
         let consecutiveDays = 0;
-        let streakShouldContinue = true;
-        for (let i = 1; i < 365 && streakShouldContinue; i++) {
+        // Start from today and go backwards
+        for (let i = 0; i < 365; i++) {
             const date = subDays(today, i);
             const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
             if (log) {
                 consecutiveDays++;
             } else {
-                streakShouldContinue = false;
+                // If a day is missed, the streak is broken
+                break;
             }
         }
-        const todayLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
-        if(todayLog) consecutiveDays++;
         setStreak(consecutiveDays);
     };
 
@@ -321,14 +322,12 @@ export default function FitnessGoalsPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <ResponsiveContainer width="100%" height={250}>
-                                        <ChartContainer config={chartConfig}>
-                                            <RechartsBarChart data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                                                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value).toLocaleString()} steps`}/>}/>
-                                                <RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} />
-                                            </RechartsBarChart>
-                                        </ChartContainer>
+                                        <RechartsBarChart data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                            <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value).toLocaleString()} steps`}/>}/>
+                                            <RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} />
+                                        </RechartsBarChart>
                                     </ResponsiveContainer>
                                     <div className="mt-4">
                                         <Progress value={(todaySteps / stepGoal) * 100} className="h-2 bg-muted [&>span]:bg-primary" />

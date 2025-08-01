@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays, startOfDay, addDays, isSameDay, differenceInDays, startOfWeek, isWithinInterval } from 'date-fns';
+import { format, subDays, startOfDay, addDays, isSameDay, differenceInDays, startOfWeek } from 'date-fns';
 import { BarChart, Dumbbell, Target, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, HeartPulse, Award, Flame, ThumbsUp, Activity, Calendar as CalendarIcon, Baby } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
@@ -131,18 +131,15 @@ export default function PregnancyFitnessPage() {
 
         // Streak calculation
         let consecutiveDays = 0;
-        let streakShouldContinue = true;
-        for (let i = 1; i < 365 && streakShouldContinue; i++) {
+        for (let i = 0; i < 365; i++) {
             const date = subDays(today, i);
             const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
             if (log) {
                 consecutiveDays++;
             } else {
-                streakShouldContinue = false;
+                break;
             }
         }
-        const todayLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
-        if(todayLog) consecutiveDays++;
         setStreak(consecutiveDays);
 
         // Weekly chart data (from Monday to Sunday)
@@ -286,14 +283,12 @@ export default function PregnancyFitnessPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <ResponsiveContainer width="100%" height={250}>
-                                        <ChartContainer config={weeklyActivityChartConfig}>
-                                            <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                                                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
-                                                <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
-                                            </RechartsBarChart>
-                                        </ChartContainer>
+                                        <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                            <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
+                                            <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
+                                        </RechartsBarChart>
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
