@@ -18,13 +18,14 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
-import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig, RechartsBarChart } from '@/components/ui/chart';
+import { Bar as RechartsBar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // --- SCHEMAS ---
 const pregnancyGoalSchema = z.object({
@@ -64,6 +65,8 @@ export default function PregnancyFitnessPage() {
     const [streak, setStreak] = useState(0);
     const [duration, setDuration] = useState({ hours: 0, minutes: 30 });
     const [currentPregnancyLogDate, setCurrentPregnancyLogDate] = useState(new Date());
+    const [completedDays, setCompletedDays] = useState(0);
+    const [isChartLoading, setIsChartLoading] = useState(true);
 
 
     // --- FORM HOOKS ---
@@ -72,12 +75,16 @@ export default function PregnancyFitnessPage() {
 
     // --- DATA LOADING & INITIALIZATION ---
     useEffect(() => {
+        setIsChartLoading(true);
         try {
             const savedGoals = localStorage.getItem(PREGNANCY_GOALS_KEY);
             if (savedGoals) pregnancyGoalForm.reset(JSON.parse(savedGoals));
             else setIsEditingGoals(true);
             loadWeeklyPregnancyLogs();
         } catch (e) { console.error("Error loading data from localStorage", e); }
+        finally {
+            setIsChartLoading(false);
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
  
@@ -126,19 +133,20 @@ export default function PregnancyFitnessPage() {
     
     // --- DATA LOADING & CALCULATION HELPERS ---
     const loadWeeklyPregnancyLogs = () => {
+        setIsChartLoading(true);
         const today = startOfDay(new Date());
         const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
+        let daysWithLogs = 0;
 
         // Streak calculation
         let consecutiveDays = 0;
-        // Check for consecutive days backwards from today
         for (let i = 0; i < 365; i++) {
-            const date = subDays(startOfDay(new Date()), i);
+            const date = subDays(today, i);
             const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
             if (log) {
                 consecutiveDays++;
             } else {
-                break; // No log for the previous day, so streak ends
+                break;
             }
         }
         setStreak(consecutiveDays);
@@ -147,19 +155,26 @@ export default function PregnancyFitnessPage() {
         const logs = Array.from({ length: 7 }, (_, i) => {
             const date = addDays(weekStart, i);
             const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+            const minutes = savedLog ? JSON.parse(savedLog).minutes : 0;
+            if(minutes > 0) {
+                daysWithLogs++;
+            }
             return {
                 name: format(date, 'EEE'),
-                minutes: savedLog ? JSON.parse(savedLog).minutes : 0
+                minutes
             };
         });
         
         setWeeklyPregnancyLogs(logs);
+        setCompletedDays(daysWithLogs);
+        setIsChartLoading(false);
     };
 
     // --- FORM SUBMISSION HANDLERS ---
     function onPregnancyGoalSubmit(data: PregnancyGoalData) { try { localStorage.setItem(PREGNANCY_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!" }); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     function onPregnancyLogSubmit(data: PregnancyLogData) {
          try {
+            const prevCompletedDays = completedDays;
             const totalMinutes = duration.hours * 60 + duration.minutes;
             const finalData = { ...data, minutes: totalMinutes };
             
@@ -174,16 +189,24 @@ export default function PregnancyFitnessPage() {
                 return;
             }
 
-            localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(finalData)); 
-            toast({ title: "Movement Logged!", description: "Wonderful job staying active!" }); 
-            loadWeeklyPregnancyLogs(); 
+            localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(finalData));
+            toast({ title: "Movement Logged!", description: `Logged ${totalMinutes} minutes for ${format(data.logDate, 'PPP')}.` }); 
+            loadWeeklyPregnancyLogs();
+
+            const goalDays = pregnancyGoalForm.getValues('days');
+            const newCompletedDays = weeklyPregnancyLogs.filter(d => d.minutes > 0).length + (totalMinutes > 0 ? 1 : 0);
+            if (prevCompletedDays < goalDays && newCompletedDays >= goalDays) {
+                toast({
+                    title: "Weekly Goal Reached!",
+                    description: "Amazing! You've met your movement goal for the week.",
+                });
+            }
         } catch(e) { 
             toast({ variant: 'destructive', title: "Error", description: "Could not save your log." }); 
         }
     }
     
     const pregnancyVideoUrl = pregnancyTrimester ? pregnancyExercises[pregnancyTrimester!]?.videoUrl : null;
-    const completedDays = weeklyPregnancyLogs.filter(d => d.minutes > 0).length;
     const goalDays = pregnancyGoalForm.getValues('days');
     const progressPercentage = goalDays > 0 ? Math.round((completedDays / goalDays) * 100) : 0;
 
@@ -284,14 +307,24 @@ export default function PregnancyFitnessPage() {
                                     <CardDescription>Your logged minutes over the this week (Mon-Sun).</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                     <ChartContainer config={weeklyActivityChartConfig} className="w-full h-[250px]">
-                                        <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                                            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                            <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
-                                            <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
-                                        </RechartsBarChart>
-                                    </ChartContainer>
+                                     {isChartLoading ? (
+                                        <div className="flex justify-center items-center h-[250px]">
+                                            <Skeleton className="h-full w-full" />
+                                        </div>
+                                     ) : weeklyPregnancyLogs.some(log => log.minutes > 0) ? (
+                                        <ChartContainer config={weeklyActivityChartConfig} className="w-full h-[250px]">
+                                            <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
+                                                <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
+                                            </RechartsBarChart>
+                                        </ChartContainer>
+                                    ) : (
+                                        <div className="flex justify-center items-center h-[250px] text-muted-foreground">
+                                            No movement logged this week.
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
                         </div>
@@ -369,3 +402,6 @@ export default function PregnancyFitnessPage() {
         </div>
     );
 }
+
+
+    

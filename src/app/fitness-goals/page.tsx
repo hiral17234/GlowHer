@@ -18,12 +18,13 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, RechartsBarChart } from '@/components/ui/chart';
+import { Bar as RechartsBar, XAxis, YAxis } from 'recharts';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 // --- SCHEMAS ---
@@ -79,6 +80,7 @@ export default function FitnessGoalsPage() {
     const [selectedActivityType, setSelectedActivityType] = useState<'step-based' | 'workout-based'>('step-based');
     const [currentDefaultLogDate, setCurrentDefaultLogDate] = useState(new Date());
     const [completedWorkouts, setCompletedWorkouts] = useState(0);
+    const [isChartLoading, setIsChartLoading] = useState(true);
 
     // --- FORM HOOKS ---
     const defaultGoalForm = useForm<DefaultGoalData>({ resolver: zodResolver(defaultGoalSchema), defaultValues: { steps: 8000, workouts: 3 }});
@@ -94,6 +96,7 @@ export default function FitnessGoalsPage() {
     
     // --- DATA LOADING & INITIALIZATION ---
     useEffect(() => {
+        setIsChartLoading(true);
         try {
             const savedGoals = localStorage.getItem(DEFAULT_GOALS_KEY);
             if (savedGoals) defaultGoalForm.reset(JSON.parse(savedGoals));
@@ -105,6 +108,9 @@ export default function FitnessGoalsPage() {
             loadLogForDate(initialDate);
 
         } catch (e) { console.error("Error loading data from localStorage", e); }
+        finally {
+            setIsChartLoading(false);
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -169,14 +175,14 @@ export default function FitnessGoalsPage() {
     const calculateStreak = () => {
         let currentStreak = 0;
         try {
-            // Check for consecutive days backwards from today
+            const today = startOfDay(new Date());
             for (let i = 0; i < 365; i++) {
-                const date = subDays(startOfDay(new Date()), i);
+                const date = subDays(today, i);
                 const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
                 if (log) {
                     currentStreak++;
                 } else {
-                    break; // No log for the previous day, so streak ends
+                    break;
                 }
             }
         } catch (e) {
@@ -187,6 +193,7 @@ export default function FitnessGoalsPage() {
 
     // --- DATA LOADING & CALCULATION HELPERS ---
     const loadWeeklyDefaultLogs = () => {
+        setIsChartLoading(true);
         const today = startOfDay(new Date());
         const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
         let workoutsThisWeek = 0;
@@ -198,8 +205,8 @@ export default function FitnessGoalsPage() {
             if (savedLog) {
                 try {
                     const logData = JSON.parse(savedLog);
-                    if (date <= today) {
-                        if (logData.activityType === 'workout-based') {
+                    if (isWithinInterval(date, { start: weekStart, end: today })) {
+                         if (logData.activityType === 'workout-based') {
                             workoutsThisWeek++;
                         }
                     }
@@ -212,13 +219,41 @@ export default function FitnessGoalsPage() {
         });
         setWeeklyDefaultLogs(data);
         setCompletedWorkouts(workoutsThisWeek);
-    
         calculateStreak();
+        setIsChartLoading(false);
     };
 
     // --- FORM SUBMISSION HANDLERS ---
     function onGoalSubmit(data: DefaultGoalData) { try { localStorage.setItem(DEFAULT_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!"}); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
-    function onLogSubmit(data: DefaultLogData) { try { localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(data)); toast({ title: "Activity Logged!" }); loadWeeklyDefaultLogs(); } catch(e) { console.error(e); toast({ variant: 'destructive', title: "Error Logging Activity" }); }}
+    
+    function onLogSubmit(data: DefaultLogData) { 
+        try { 
+            const prevCompletedWorkouts = completedWorkouts;
+            localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(data)); 
+            
+            let toastMessage = "";
+            if (data.activityType === 'step-based') {
+                toastMessage = `Logged ${data.steps?.toLocaleString()} steps for ${format(data.logDate, 'PPP')}.`;
+            } else {
+                toastMessage = `Logged ${data.duration} minutes of ${data.workoutType} for ${format(data.logDate, 'PPP')}.`;
+            }
+            toast({ title: "Activity Logged!", description: toastMessage });
+            
+            loadWeeklyDefaultLogs();
+
+            const newCompletedWorkouts = completedWorkouts;
+            const workoutGoal = defaultGoalForm.getValues('workouts');
+            if (data.activityType === 'workout-based' && prevCompletedWorkouts < workoutGoal && newCompletedWorkouts >= workoutGoal) {
+                toast({
+                    title: "Weekly Goal Met!",
+                    description: "Congratulations on hitting your weekly workout goal!",
+                });
+            }
+        } catch(e) { 
+            console.error(e); 
+            toast({ variant: 'destructive', title: "Error Logging Activity" }); 
+        }
+    }
     
     const relevantSuggestions = currentPhase ? cycleExercises[currentPhase] : null;
     
@@ -286,7 +321,7 @@ export default function FitnessGoalsPage() {
                             </Card>
                             <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle>
+                                    <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Activity</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <Form {...defaultLogForm}>
@@ -347,14 +382,24 @@ export default function FitnessGoalsPage() {
                                     <CardDescription>Your step count over the last 7 days.</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <ChartContainer config={chartConfig} className="w-full">
-                                        <RechartsBarChart accessibilityLayer data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                                            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                            <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value).toLocaleString()} steps`}/>}/>
-                                            <RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} />
-                                        </RechartsBarChart>
-                                    </ChartContainer>
+                                    {isChartLoading ? (
+                                        <div className="flex justify-center items-center h-[200px]">
+                                            <Skeleton className="h-full w-full" />
+                                        </div>
+                                    ) : weeklyDefaultLogs.some(log => log.steps > 0) ? (
+                                        <ChartContainer config={chartConfig} className="w-full h-[200px]">
+                                            <RechartsBarChart accessibilityLayer data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value).toLocaleString()} steps`}/>}/>
+                                                <RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} />
+                                            </RechartsBarChart>
+                                        </ChartContainer>
+                                    ) : (
+                                        <div className="flex justify-center items-center h-[200px] text-muted-foreground">
+                                            No step activity logged this week.
+                                        </div>
+                                    )}
                                     <div className="mt-4">
                                         <Progress value={(todaySteps / stepGoal) * 100} className="h-2 bg-muted [&>span]:bg-primary" />
                                         <p className="text-sm text-center mt-2 text-muted-foreground">Today's progress: {todaySteps.toLocaleString()} / {stepGoal.toLocaleString()} steps</p>
@@ -414,3 +459,6 @@ export default function FitnessGoalsPage() {
         </div>
     );
 }
+
+
+    
