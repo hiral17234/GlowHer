@@ -49,6 +49,7 @@ type PregnancyLogData = z.infer<typeof pregnancyLogSchema>;
 // --- LOCAL STORAGE KEYS ---
 const PREGNANCY_GOALS_KEY = 'glowher-preg-fitness-goals';
 const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
+const LAST_DATE_KEY = 'glowher-preg-fitness-last-date';
 
 // --- DATA ---
 const pregnancyExercises = { '1st Trimester': { title: "First Trimester: Build a Foundation", icon: Heart, suggestions: ["Walking", "Prenatal yoga", "Swimming"], videoUrl: "https://www.youtube.com/embed/Ia6dNwVs1M8" }, '2nd Trimester': { title: "Second Trimester: Maintain Strength", icon: Dumbbell, suggestions: ["Modified strength training", "Swimming", "Stationary cycling"], videoUrl: "https://www.youtube.com/embed/XhqntqSGKsc" }, '3rd Trimester': { title: "Third Trimester: Prepare for Birth", icon: Brain, suggestions: ["Walking", "Stretching", "Birth ball exercises"], videoUrl: "https://www.youtube.com/embed/qkhLev3bKd0" }};
@@ -64,7 +65,6 @@ export default function PregnancyFitnessPage() {
     const [weeklyPregnancyLogs, setWeeklyPregnancyLogs] = useState<{name: string, minutes: number}[]>([]);
     const [streak, setStreak] = useState(0);
     const [duration, setDuration] = useState({ hours: 0, minutes: 30 });
-    const [currentPregnancyLogDate, setCurrentPregnancyLogDate] = useState(new Date());
     const [completedDays, setCompletedDays] = useState(0);
     const [isChartLoading, setIsChartLoading] = useState(true);
 
@@ -80,6 +80,13 @@ export default function PregnancyFitnessPage() {
             const savedGoals = localStorage.getItem(PREGNANCY_GOALS_KEY);
             if (savedGoals) pregnancyGoalForm.reset(JSON.parse(savedGoals));
             else setIsEditingGoals(true);
+
+            const lastDateStr = sessionStorage.getItem(LAST_DATE_KEY);
+            const initialDate = lastDateStr ? new Date(lastDateStr) : new Date();
+
+            loadLogForDate(initialDate);
+            pregnancyLogForm.setValue('logDate', initialDate);
+            
             loadWeeklyPregnancyLogs();
         } catch (e) { console.error("Error loading data from localStorage", e); }
         finally {
@@ -88,31 +95,40 @@ export default function PregnancyFitnessPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
  
+    const loadLogForDate = (date: Date) => {
+        const key = `${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`;
+        try {
+            const savedData = localStorage.getItem(key);
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                parsedData.logDate = new Date(parsedData.logDate);
+                pregnancyLogForm.reset(parsedData);
+                setDuration({ hours: Math.floor(parsedData.minutes / 60), minutes: parsedData.minutes % 60 });
+            } else {
+                pregnancyLogForm.reset({
+                    logDate: date,
+                    minutes: 30,
+                    feeling: 'Energized',
+                    notes: ''
+                });
+                setDuration({ hours: 0, minutes: 30 });
+            }
+        } catch (error) { console.error("Failed to read pregnancy log from localStorage", error); }
+    };
      // Effect for handling date changes in pregnancy log form
      const watchedPregnancyLogDate = pregnancyLogForm.watch('logDate');
      useEffect(() => {
-         if (isSameDay(watchedPregnancyLogDate, currentPregnancyLogDate)) return;
- 
-         const key = `${PREGNANCY_LOG_PREFIX}${format(watchedPregnancyLogDate, 'yyyy-MM-dd')}`;
+         if (!watchedPregnancyLogDate) return;
+
          try {
-             const savedData = localStorage.getItem(key);
-             if (savedData) {
-                 const parsedData = JSON.parse(savedData);
-                 parsedData.logDate = new Date(parsedData.logDate);
-                 pregnancyLogForm.reset(parsedData);
-                 setDuration({ hours: Math.floor(parsedData.minutes / 60), minutes: parsedData.minutes % 60 });
-             } else {
-                 pregnancyLogForm.reset({
-                     logDate: watchedPregnancyLogDate,
-                     minutes: 30,
-                     feeling: 'Energized',
-                     notes: ''
-                 });
-                 setDuration({ hours: 0, minutes: 30 });
-             }
-             setCurrentPregnancyLogDate(watchedPregnancyLogDate);
-         } catch (error) { console.error("Failed to read pregnancy log from localStorage", error); }
-     }, [watchedPregnancyLogDate, pregnancyLogForm, currentPregnancyLogDate]);
+            const lastDateStr = sessionStorage.getItem(LAST_DATE_KEY);
+            if (!lastDateStr || !isSameDay(new Date(lastDateStr), watchedPregnancyLogDate)) {
+                loadLogForDate(watchedPregnancyLogDate);
+                sessionStorage.setItem(LAST_DATE_KEY, watchedPregnancyLogDate.toISOString());
+            }
+         } catch(e) { console.error(e) }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [watchedPregnancyLogDate]);
  
 
     // --- PREGNANCY PHASE DETERMINATION ---
@@ -140,13 +156,14 @@ export default function PregnancyFitnessPage() {
 
         // Streak calculation
         let consecutiveDays = 0;
+        let streakBroken = false;
         for (let i = 0; i < 365; i++) {
             const date = subDays(today, i);
             const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
             if (log) {
-                consecutiveDays++;
+                if(!streakBroken) consecutiveDays++;
             } else {
-                break;
+                streakBroken = true;
             }
         }
         setStreak(consecutiveDays);
@@ -191,10 +208,12 @@ export default function PregnancyFitnessPage() {
 
             localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(finalData));
             toast({ title: "Movement Logged!", description: `Logged ${totalMinutes} minutes for ${format(data.logDate, 'PPP')}.` }); 
-            loadWeeklyPregnancyLogs();
-
+            
             const goalDays = pregnancyGoalForm.getValues('days');
             const newCompletedDays = weeklyPregnancyLogs.filter(d => d.minutes > 0).length + (totalMinutes > 0 ? 1 : 0);
+            
+            loadWeeklyPregnancyLogs();
+
             if (prevCompletedDays < goalDays && newCompletedDays >= goalDays) {
                 toast({
                     title: "Weekly Goal Reached!",
@@ -304,7 +323,7 @@ export default function PregnancyFitnessPage() {
                             <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
-                                    <CardDescription>Your logged minutes over the this week (Mon-Sun).</CardDescription>
+                                    <CardDescription>Your logged minutes over this week (Mon-Sun).</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                      {isChartLoading ? (
@@ -322,7 +341,7 @@ export default function PregnancyFitnessPage() {
                                         </ChartContainer>
                                     ) : (
                                         <div className="flex justify-center items-center h-[250px] text-muted-foreground">
-                                            No movement logged this week.
+                                            No movement logged this week. Let's get moving!
                                         </div>
                                     )}
                                 </CardContent>
@@ -402,6 +421,3 @@ export default function PregnancyFitnessPage() {
         </div>
     );
 }
-
-
-    

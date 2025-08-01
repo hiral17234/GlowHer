@@ -20,7 +20,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, RechartsBarChart } from '@/components/ui/chart';
 import { Bar as RechartsBar, XAxis, YAxis } from 'recharts';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
@@ -64,6 +63,8 @@ type DefaultLogData = z.infer<typeof defaultLogSchema>;
 // --- LOCAL STORAGE KEYS ---
 const DEFAULT_GOALS_KEY = 'glowher-fitness-goals';
 const DEFAULT_LOG_PREFIX = 'glowher-fitness-log-';
+const LAST_DATE_KEY = 'glowher-fitness-last-date';
+
 
 // --- DATA ---
 const cycleExercises = { Menstrual: { title: "Menstrual Phase: Rest & Recover", icon: Heart, color: "text-red-600 font-bold", suggestions: ["Gentle walking", "Restorative yoga", "Light stretching"] }, Follicular: { title: "Follicular Phase: Energize", icon: Lightbulb, color: "text-blue-400", suggestions: ["Brisk walking or jogging", "Dancing", "Light cardio"] }, Ovulatory: { title: "Ovulatory Phase: Peak Power", icon: Dumbbell, color: "text-green-400", suggestions: ["High-Intensity Interval Training (HIIT)", "Running", "Strength training"] }, Luteal: { title: "Luteal Phase: Wind Down", icon: Wind, color: "text-yellow-400", suggestions: ["Pilates", "Swimming", "Moderate strength training"] }};
@@ -78,7 +79,6 @@ export default function FitnessGoalsPage() {
     const [weeklyDefaultLogs, setWeeklyDefaultLogs] = useState<any[]>([]);
     const [streak, setStreak] = useState(0);
     const [selectedActivityType, setSelectedActivityType] = useState<'step-based' | 'workout-based'>('step-based');
-    const [currentDefaultLogDate, setCurrentDefaultLogDate] = useState(new Date());
     const [completedWorkouts, setCompletedWorkouts] = useState(0);
     const [isChartLoading, setIsChartLoading] = useState(true);
 
@@ -102,10 +102,13 @@ export default function FitnessGoalsPage() {
             if (savedGoals) defaultGoalForm.reset(JSON.parse(savedGoals));
             else setIsEditingGoals(true);
             
-            // Set initial date from form to load today's log
-            const initialDate = defaultLogForm.getValues('logDate');
-            loadWeeklyDefaultLogs();
+            const lastDateStr = sessionStorage.getItem(LAST_DATE_KEY);
+            const initialDate = lastDateStr ? new Date(lastDateStr) : new Date();
+
             loadLogForDate(initialDate);
+            defaultLogForm.setValue('logDate', initialDate);
+
+            loadWeeklyDefaultLogs();
 
         } catch (e) { console.error("Error loading data from localStorage", e); }
         finally {
@@ -139,12 +142,17 @@ export default function FitnessGoalsPage() {
 
 
      // Effect for handling date changes in default log form
-     const watchedDefaultLogDate = defaultLogForm.watch('logDate');
-     useEffect(() => {
-         if (isSameDay(watchedDefaultLogDate, currentDefaultLogDate)) return;
- 
-         loadLogForDate(watchedDefaultLogDate);
-         setCurrentDefaultLogDate(watchedDefaultLogDate);
+    const watchedDefaultLogDate = defaultLogForm.watch('logDate');
+    useEffect(() => {
+        if (!watchedDefaultLogDate) return;
+        
+        try {
+            const lastDateStr = sessionStorage.getItem(LAST_DATE_KEY);
+            if (!lastDateStr || !isSameDay(new Date(lastDateStr), watchedDefaultLogDate)) {
+                loadLogForDate(watchedDefaultLogDate);
+                sessionStorage.setItem(LAST_DATE_KEY, watchedDefaultLogDate.toISOString());
+            }
+        } catch (e) { console.error(e) }
      // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [watchedDefaultLogDate]);
  
@@ -172,32 +180,28 @@ export default function FitnessGoalsPage() {
         } catch(e) { console.error(e); }
     }, []);
     
-    const calculateStreak = () => {
-        let currentStreak = 0;
-        try {
-            const today = startOfDay(new Date());
-            for (let i = 0; i < 365; i++) {
-                const date = subDays(today, i);
-                const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-                if (log) {
-                    currentStreak++;
-                } else {
-                    break;
-                }
-            }
-        } catch (e) {
-            console.error("Error calculating streak", e);
-        }
-        setStreak(currentStreak);
-    };
-
     // --- DATA LOADING & CALCULATION HELPERS ---
     const loadWeeklyDefaultLogs = () => {
         setIsChartLoading(true);
         const today = startOfDay(new Date());
         const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
         let workoutsThisWeek = 0;
+        let consecutiveDays = 0;
+        let streakBroken = false;
+
+        // Streak calculation
+        for (let i = 0; i < 365; i++) {
+            const date = subDays(today, i);
+            const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+            if (log) {
+                if (!streakBroken) consecutiveDays++;
+            } else {
+                streakBroken = true;
+            }
+        }
+        setStreak(consecutiveDays);
     
+        // Chart and weekly goal data
         const data = Array.from({ length: 7 }, (_, i) => {
             const date = addDays(weekStart, i);
             const savedLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
@@ -205,10 +209,8 @@ export default function FitnessGoalsPage() {
             if (savedLog) {
                 try {
                     const logData = JSON.parse(savedLog);
-                    if (isWithinInterval(date, { start: weekStart, end: today })) {
-                         if (logData.activityType === 'workout-based') {
-                            workoutsThisWeek++;
-                        }
+                    if (logData.activityType === 'workout-based') {
+                        workoutsThisWeek++;
                     }
                     if (logData.activityType === 'step-based') {
                         steps = logData.steps || 0;
@@ -219,7 +221,6 @@ export default function FitnessGoalsPage() {
         });
         setWeeklyDefaultLogs(data);
         setCompletedWorkouts(workoutsThisWeek);
-        calculateStreak();
         setIsChartLoading(false);
     };
 
@@ -233,7 +234,7 @@ export default function FitnessGoalsPage() {
             
             let toastMessage = "";
             if (data.activityType === 'step-based') {
-                toastMessage = `Logged ${data.steps?.toLocaleString()} steps for ${format(data.logDate, 'PPP')}.`;
+                toastMessage = `Logged ${data.steps?.toLocaleString()} steps of ${data.stepWorkoutType} for ${format(data.logDate, 'PPP')}.`;
             } else {
                 toastMessage = `Logged ${data.duration} minutes of ${data.workoutType} for ${format(data.logDate, 'PPP')}.`;
             }
@@ -241,14 +242,16 @@ export default function FitnessGoalsPage() {
             
             loadWeeklyDefaultLogs();
 
-            const newCompletedWorkouts = completedWorkouts;
+            const newCompletedWorkouts = completedWorkouts + (data.activityType === 'workout-based' ? 1 : 0);
             const workoutGoal = defaultGoalForm.getValues('workouts');
-            if (data.activityType === 'workout-based' && prevCompletedWorkouts < workoutGoal && newCompletedWorkouts >= workoutGoal) {
+
+            if (prevCompletedWorkouts < workoutGoal && newCompletedWorkouts >= workoutGoal) {
                 toast({
                     title: "Weekly Goal Met!",
                     description: "Congratulations on hitting your weekly workout goal!",
                 });
             }
+
         } catch(e) { 
             console.error(e); 
             toast({ variant: 'destructive', title: "Error Logging Activity" }); 
@@ -356,17 +359,6 @@ export default function FitnessGoalsPage() {
                                                 <>
                                                     <FormField control={defaultLogForm.control} name="workoutType" render={({ field }) => (<FormItem><FormLabel>Workout Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Pilates">Pilates</SelectItem><SelectItem value="Dance">Dance</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
                                                     <FormField control={defaultLogForm.control} name="duration" render={({ field }) => (<FormItem><FormLabel>Duration (minutes)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                                                    <FormField control={defaultLogForm.control} name="intensity" render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Intensity (Optional)</FormLabel>
-                                                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
-                                                                <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Low" /></FormControl><FormLabel className="font-normal">Low</FormLabel></FormItem>
-                                                                <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Medium" /></FormControl><FormLabel className="font-normal">Medium</FormLabel></FormItem>
-                                                                <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="High" /></FormControl><FormLabel className="font-normal">High</FormLabel></FormItem>
-                                                            </RadioGroup>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}/>
                                                 </>
                                             )}
                                             <Button type="submit" className="w-full">Log Activity</Button>
@@ -379,7 +371,7 @@ export default function FitnessGoalsPage() {
                             <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Progress</CardTitle>
-                                    <CardDescription>Your step count over the last 7 days.</CardDescription>
+                                    <CardDescription>Your step count over this week (Mon-Sun).</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     {isChartLoading ? (
@@ -459,6 +451,3 @@ export default function FitnessGoalsPage() {
         </div>
     );
 }
-
-
-    
