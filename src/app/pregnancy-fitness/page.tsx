@@ -131,19 +131,14 @@ export default function PregnancyFitnessPage() {
 
         // Streak calculation
         let consecutiveDays = 0;
-        // Check today
-        const todayLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
-        if(todayLog){
-            consecutiveDays++;
-            // Check previous days only if today is logged
-            for (let i = 1; i < 365; i++) {
-                const date = subDays(today, i);
-                const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-                if (log) {
-                    consecutiveDays++;
-                } else {
-                    break;
-                }
+        // Check for consecutive days backwards from today
+        for (let i = 0; i < 365; i++) {
+            const date = subDays(startOfDay(new Date()), i);
+            const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+            if (log) {
+                consecutiveDays++;
+            } else {
+                break; // No log for the previous day, so streak ends
             }
         }
         setStreak(consecutiveDays);
@@ -229,7 +224,7 @@ export default function PregnancyFitnessPage() {
                                 <CardHeader>
                                     <div className="flex justify-between items-center">
                                         <CardTitle className="flex items-center gap-2"><Target /> Your Weekly Movement Goals</CardTitle>
-                                        <Button variant="ghost" size="icon" onClick={()={() => setIsEditingGoals(!isEditingGoals)}}><Edit className="h-4 w-4"/></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => setIsEditingGoals(!isEditingGoals)}><Edit className="h-4 w-4"/></Button>
                                     </div>
                                     <CardDescription>Set your gentle movement targets for the week.</CardDescription>
                                 </CardHeader>
@@ -374,6 +369,3 @@ export default function PregnancyFitnessPage() {
         </div>
     );
 }
-
-
-    
