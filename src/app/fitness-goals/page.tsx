@@ -321,7 +321,7 @@ export default function FitnessGoalsPage() {
 
                     {isPregnant ? (
                         // --- PREGNANCY MODE UI ---
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-8">
                                 <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                     <CardHeader>
@@ -443,7 +443,7 @@ export default function FitnessGoalsPage() {
                         </div>
                     ) : (
                         // --- DEFAULT MODE UI ---
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-8">
                                 <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                     <CardHeader>
@@ -552,7 +552,7 @@ export default function FitnessGoalsPage() {
                                 {relevantSuggestions && (
                                     <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
                                         <CardHeader>
-                                            <CardTitle className={cn("flex items-center gap-2", relevantSuggestions.color)}>
+                                            <CardTitle className={cn("flex items-center gap-2", currentPhase !== 'Menstrual' && relevantSuggestions.color)}>
                                                 <relevantSuggestions.icon/> {relevantSuggestions.title}
                                             </CardTitle>
                                             <CardDescription className={cn(currentPhase === 'Menstrual' && "text-slate-800")}>Exercises aligned with your current menstrual phase.</CardDescription>
