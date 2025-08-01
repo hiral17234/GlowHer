@@ -7,7 +7,7 @@ import { addDays, format, differenceInDays, startOfDay, addWeeks, subDays, diffe
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video, CheckSquare, Square, ThumbsUp, PartyPopper, History, Home, Stethoscope, FileText, CalendarCheck, Library } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, Info, Baby, Heart, Milestone, BarChart, BookOpen, Lightbulb, ClipboardPlus, Video, CheckSquare, Square, ThumbsUp, PartyPopper, History, Home, Stethoscope, FileText, CalendarCheck, Library, PanelLeft } from 'lucide-react';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -169,7 +169,7 @@ const weeklyDevelopment = [
         development: "💅 Tiny fingernails and toenails are beginning to form on the tips of the fingers and toes.\n\n🍑 The fetus is covered in a very fine, downy hair called lanugo, which will help regulate temperature.\n\n🧠 The forehead is temporarily bulging with the rapidly developing brain.\n\n🦴 The skeleton is beginning to harden from cartilage to bone (ossification).\n\n🚽 The kidneys are fully formed and are now producing urine.\n\n💪 The fetus can bend its limbs and is constantly, actively moving.\n\nSPINE is clearly visible on an ultrasound and the spinal nerves are stretching out from the spinal cord.\n\n👁️ The eyelids are fused shut and will remain so for several more months to protect the developing eyes.",
         bodyChanges: "✨ The placenta has almost finished developing and is preparing to take over the crucial job of producing pregnancy-sustaining hormones.\n\n🤰 Your uterus is now the size of a large orange and is starting to rise out of your pelvis.\n\n〰️ You might notice a dark vertical line, the linea nigra, appearing on your abdomen. This is temporary.\n\n💥 Round ligament pain—sharp, brief pains in your groin or lower belly—may occur as your uterus grows.\n\n💓 Your heart rate has likely increased to handle the extra blood flow.\n\nYour breasts are continuing to grow and prepare for milk production.\n\nYour immune system is still suppressed, making you more susceptible to colds and flu.\n\n⚖️ You've probably gained a few pounds by now, but it's also normal to have gained none, especially if you had morning sickness.",
         symptoms: "🤢 Good news! For many, morning sickness starts to ease up around this time.\n\n😴 Fatigue might also begin to lessen as the placenta takes over hormone production.\n\n💧 An increase in vaginal discharge (leukorrhea) is normal.\n\n💥 You may still feel those sharp round ligament pains when you change positions quickly.\n\n💨 Bloating and gas are still common companions.\n\nVisible veins on your stomach and breasts are normal.\n\n🤕 Headaches can persist due to hormones and dehydration.\n\nYour gums may be swollen and bleed easily when you brush (pregnancy gingivitis).",
-        tips: "👖 Shop for maternity clothes. Don't wait until you're uncomfortable; having clothes that fit well can be a huge mood booster.\n\n💧 Drink plenty of water. It's crucial for forming amniotic fluid, increasing blood volume, and preventing UTIs.\n\n🍎 Focus on a diet rich in calcium for your baby's developing bones and teeth.\n\n🦷 Be extra gentle when brushing and flossing your teeth.\n\n🏃 Stretch your sides gently to help alleviate round ligament pain.\n\n👩‍⚕️ If you are over 35 or have other risk factors, your doctor may discuss genetic screening options with you, like the NIPT blood test.\n\n SUNSCREEN is a must, as your skin is more sensitive to the sun and prone to discoloration (chloasma).\n\n💕 Start moisturising your belly, hips, and breasts to help with skin elasticity and itchiness.",
+        tips: "👖 Shop for maternity clothes. Don't wait until you're uncomfortable; having clothes that fit well can be a huge mood booster.\n\n💧 Drink plenty of water. It's crucial for forming amniotic fluid, increasing blood volume, and preventing UTIs.\n\n🍎 Focus on a diet rich in calcium for your baby's developing bones and teeth.\n\n🦷 Be extra gentle when brushing and flossing your teeth.\n\n🏃‍♀️ Gentle stretching can help alleviate round ligament pain.\n\n👩‍⚕️ If you are over 35 or have other risk factors, your doctor may discuss genetic screening options with you, like the NIPT blood test.\n\n SUNSCREEN is a must, as your skin is more sensitive to the sun and prone to discoloration (chloasma).\n\n💕 Start moisturising your belly, hips, and breasts to help with skin elasticity and itchiness.",
         imageUrl: "https://i.pinimg.com/1200x/0e/40/40/0e4040ee25da30655d857de0fb12943b.jpg",
         aiHint: "baby hand"
     },
@@ -618,6 +618,7 @@ export default function PregnancyTrackerPage() {
   const [pregnancyDetails, setPregnancyDetails] = useState<PregnancyDetails | null>(null);
   const [userName, setUserName] = useState('');
   const displayedToastWeekRef = useRef<number | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const t = translations[language];
 
@@ -772,248 +773,271 @@ export default function PregnancyTrackerPage() {
 
   if (pregnancyDetails) {
     return (
-        <div className="relative flex flex-col min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
-            <div className="flex">
-                {/* Desktop Sidebar */}
-                <nav className="hidden md:flex flex-col w-64 p-4 space-y-2 bg-white/50 border-r border-white/30 min-h-screen sticky top-0">
-                    <div className="p-2 mb-4">
-                        <GlowHerLogo />
+        <div className="relative flex min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
+            {/* Desktop Sidebar */}
+            <nav className={cn(
+                "hidden md:flex flex-col p-4 space-y-2 bg-white/50 border-r border-white/30 min-h-screen sticky top-0 transition-all duration-300",
+                isSidebarOpen ? "w-64" : "w-20"
+            )}>
+                <div className="p-2 mb-4 flex items-center justify-between">
+                    <GlowHerLogo className={cn(!isSidebarOpen && "hidden")} />
+                    <div className={cn("md:hidden", isSidebarOpen && "hidden")}>
+                        <Baby className="h-6 w-6 text-pink-500"/>
                     </div>
-                    {navItems.map(item => (
-                        <Link key={item.href} href={item.href}>
-                             <Button
-                                variant={router.pathname === item.href ? 'secondary' : 'ghost'}
-                                className="w-full justify-start text-base"
-                            >
-                                <item.icon className="mr-3 h-5 w-5" />
-                                {item.label}
-                            </Button>
-                        </Link>
-                    ))}
-                </nav>
+                </div>
+                {navItems.map(item => (
+                    <Link key={item.href} href={item.href} title={item.label}>
+                         <Button
+                            variant={router.pathname === item.href ? 'secondary' : 'ghost'}
+                            className={cn("w-full justify-start text-base", !isSidebarOpen && "justify-center")}
+                        >
+                            <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
+                            <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
+                        </Button>
+                    </Link>
+                ))}
+            </nav>
 
-                <div className="flex-1">
-                    <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8">
-                        <div className="text-center md:text-left">
-                            <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900">
-                                {userName ? `Hi ${userName} 👋, ` : ''}{t.pageTitle}
-                            </h1>
-                            <p className="mt-2 text-lg text-slate-600">{t.progressText(pregnancyDetails.gestationalAgeWeeks, pregnancyDetails.gestationalAgeDays)}</p>
+            <div className="flex-1 flex flex-col">
+                <header className="container mx-auto px-4 md:px-8 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
+                    <div className="flex items-center justify-between">
+                        <Button variant="ghost" size="icon" className="hidden md:inline-flex" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                            <PanelLeft className="h-6 w-6" />
+                        </Button>
+                        <div className="md:hidden">
+                            <GlowHerLogo />
                         </div>
+                        <h1 className="font-headline text-2xl md:text-3xl font-bold text-slate-900 hidden md:block">
+                            {userName ? `Hi ${userName} 👋` : ''}
+                        </h1>
+                         <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
+                            <Home className="h-6 w-6 text-slate-700"/>
+                        </Button>
+                    </div>
+                </header>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
-                                <CardHeader className="flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-slate-600">{t.dueDate}</CardTitle>
-                                    <CalendarIcon className="h-4 w-4 text-slate-500" />
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-2xl font-bold text-pink-500">{format(pregnancyDetails.dueDate, "MMM d, yyyy")}</p>
-                                </CardContent>
-                            </Card>
-                            <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
-                                <CardHeader className="flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-slate-600">{t.daysToGo}</CardTitle>
-                                    <Baby className="h-4 w-4 text-slate-500" />
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-2xl font-bold text-blue-500">{pregnancyDetails.daysLeft}</p>
-                                </CardContent>
-                            </Card>
-                            <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
-                                <CardHeader className="flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-slate-600">{t.trimester}</CardTitle>
-                                    <BarChart className="h-4 w-4 text-slate-500" />
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-2xl font-bold text-purple-500">{pregnancyDetails.trimester}</p>
-                                </CardContent>
-                            </Card>
-                        </div>
+                <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8">
+                    <div className="text-center md:text-left md:hidden">
+                        <h1 className="font-headline text-4xl font-bold text-slate-900">
+                            {userName ? `Hi ${userName} 👋` : ''}
+                        </h1>
+                        <p className="mt-2 text-lg text-slate-600">{t.pageTitle}</p>
+                    </div>
 
-                        {currentWeekData && (
+                     <p className="mt-2 text-lg text-slate-600 text-center md:text-left">{t.progressText(pregnancyDetails.gestationalAgeWeeks, pregnancyDetails.gestationalAgeDays)}</p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
+                            <CardHeader className="flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-slate-600">{t.dueDate}</CardTitle>
+                                <CalendarIcon className="h-4 w-4 text-slate-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-bold text-pink-500">{format(pregnancyDetails.dueDate, "MMM d, yyyy")}</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
+                            <CardHeader className="flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-slate-600">{t.daysToGo}</CardTitle>
+                                <Baby className="h-4 w-4 text-slate-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-bold text-blue-500">{pregnancyDetails.daysLeft}</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="shadow-lg bg-white/50 backdrop-blur-sm border-white/30">
+                            <CardHeader className="flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-slate-600">{t.trimester}</CardTitle>
+                                <BarChart className="h-4 w-4 text-slate-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-bold text-purple-500">{pregnancyDetails.trimester}</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {currentWeekData && (
+                        <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                            <CardHeader>
+                                 <CardTitle className="font-headline text-3xl text-pink-600">{t.weeklyTitle(currentWeekData.title)}</CardTitle>
+                                 <CardDescription className="text-slate-600">{t.weeklySize(currentWeekData.size)}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {currentVideoUrl && (
+                                    <div className="mb-6 aspect-video">
+                                        <iframe
+                                            className="w-full h-full rounded-lg"
+                                            src={currentVideoUrl}
+                                            title="YouTube video player"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
+                                )}
+                               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                                    <div>
+                                        <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={400} className="rounded-lg object-cover" />
+                                    </div>
+                                    <Tabs defaultValue="development" className="w-full">
+                                        <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
+                                            <TabsTrigger value="development" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
+                                            <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
+                                            <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
+                                            <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
+                                        </TabsList>
+                                        <TabsContent value="development" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.development}</p></TabsContent>
+                                        <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.bodyChanges}</p></TabsContent>
+                                        <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.symptoms}</p></TabsContent>
+                                        <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.tips}</p></TabsContent>
+                                    </Tabs>
+                               </div>
+                            </CardContent>
+                        </Card>
+                    )}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                            <CardHeader>
+                                <div className="flex justify-between items-center">
+                                    <CardTitle className="font-headline text-2xl text-pink-600">{t.symptomTrackerTitle}</CardTitle>
+                                    <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')}>
+                                        <History className="mr-2 h-4 w-4" />
+                                        {t.viewHistory}
+                                    </Button>
+                                </div>
+                                <CardDescription className="text-slate-600">{t.symptomTrackerDesc}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Form {...symptomForm}>
+                                    <form onSubmit={symptomForm.handleSubmit(onSymptomFormSubmit)} className="space-y-6">
+                                        <FormField
+                                            control={symptomForm.control}
+                                            name="symptoms"
+                                            render={() => (
+                                            <FormItem>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {pregnancySymptoms.map((item) => (
+                                                    <FormField
+                                                    key={item.id}
+                                                    control={symptomForm.control}
+                                                    name="symptoms"
+                                                    render={({ field }) => {
+                                                        return (
+                                                        <FormItem
+                                                            key={item.id}
+                                                            className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-slate-300 p-3 hover:bg-pink-100/50 transition-colors"
+                                                        >
+                                                            <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value?.includes(item.id)}
+                                                                onCheckedChange={(checked) => {
+                                                                return checked
+                                                                    ? field.onChange([...(field.value || []), item.id])
+                                                                    : field.onChange(
+                                                                        field.value?.filter(
+                                                                        (value) => value !== item.id
+                                                                        )
+                                                                    );
+                                                                }}
+                                                                className="data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500"
+                                                            />
+                                                            </FormControl>
+                                                            <FormLabel className="font-normal flex items-center gap-2 cursor-pointer text-slate-800">
+                                                             {item.label}
+                                                            </FormLabel>
+                                                        </FormItem>
+                                                        );
+                                                    }}
+                                                    />
+                                                ))}
+                                                </div>
+                                                <FormMessage />
+                                            </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={symptomForm.control}
+                                            name="notes"
+                                            render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-slate-700">{t.customSymptoms}</FormLabel>
+                                                <FormControl>
+                                                <Textarea
+                                                    placeholder={t.customSymptomsPlaceholder}
+                                                    className="resize-none"
+                                                    {...field}
+                                                />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                            )}
+                                        />
+                                        <div className="flex items-center gap-4 flex-wrap">
+                                             <Button type="submit" className="bg-pink-500 hover:bg-pink-600 text-white">
+                                                <ThumbsUp className="mr-2 h-4 w-4" />
+                                                {t.saveSymptoms}
+                                            </Button>
+                                            {loggedSymptoms.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 items-center">
+                                                    <span className="text-sm font-semibold text-slate-500">{t.loggedToday}</span>
+                                                    {loggedSymptoms.map(symptomId => {
+                                                        const symptom = pregnancySymptoms.find(s => s.id === symptomId);
+                                                        return symptom ? <Badge key={symptomId} variant="secondary" className="bg-pink-100 text-pink-800 border-none">{symptom.label}</Badge> : null;
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </form>
+                                </Form>
+                            </CardContent>
+                        </Card>
+
+                         {babyLookVideoUrl && (
                             <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                                 <CardHeader>
-                                     <CardTitle className="font-headline text-3xl text-pink-600">{t.weeklyTitle(currentWeekData.title)}</CardTitle>
-                                     <CardDescription className="text-slate-600">{t.weeklySize(currentWeekData.size)}</CardDescription>
+                                    <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
+                                        <Video /> {t.babyLookTitle}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    {currentVideoUrl && (
-                                        <div className="mb-6 aspect-video">
-                                            <iframe
-                                                className="w-full h-full rounded-lg"
-                                                src={currentVideoUrl}
-                                                title="YouTube video player"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        </div>
-                                    )}
-                                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                                        <div>
-                                            <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={400} className="rounded-lg object-cover" />
-                                        </div>
-                                        <Tabs defaultValue="development" className="w-full">
-                                            <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
-                                                <TabsTrigger value="development" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
-                                                <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
-                                                <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
-                                                <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
-                                            </TabsList>
-                                            <TabsContent value="development" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.development}</p></TabsContent>
-                                            <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.bodyChanges}</p></TabsContent>
-                                            <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.symptoms}</p></TabsContent>
-                                            <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap"><p>{currentWeekData.tips}</p></TabsContent>
-                                        </Tabs>
-                                   </div>
+                                    <div className="aspect-video">
+                                        <iframe
+                                            className="w-full h-full rounded-lg"
+                                            src={babyLookVideoUrl}
+                                            title="Baby Look YouTube video player"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
                                 </CardContent>
                             </Card>
                         )}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                <CardHeader>
-                                    <div className="flex justify-between items-center">
-                                        <CardTitle className="font-headline text-2xl text-pink-600">{t.symptomTrackerTitle}</CardTitle>
-                                        <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')}>
-                                            <History className="mr-2 h-4 w-4" />
-                                            {t.viewHistory}
-                                        </Button>
-                                    </div>
-                                    <CardDescription className="text-slate-600">{t.symptomTrackerDesc}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Form {...symptomForm}>
-                                        <form onSubmit={symptomForm.handleSubmit(onSymptomFormSubmit)} className="space-y-6">
-                                            <FormField
-                                                control={symptomForm.control}
-                                                name="symptoms"
-                                                render={() => (
-                                                <FormItem>
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                    {pregnancySymptoms.map((item) => (
-                                                        <FormField
-                                                        key={item.id}
-                                                        control={symptomForm.control}
-                                                        name="symptoms"
-                                                        render={({ field }) => {
-                                                            return (
-                                                            <FormItem
-                                                                key={item.id}
-                                                                className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-slate-300 p-3 hover:bg-pink-100/50 transition-colors"
-                                                            >
-                                                                <FormControl>
-                                                                <Checkbox
-                                                                    checked={field.value?.includes(item.id)}
-                                                                    onCheckedChange={(checked) => {
-                                                                    return checked
-                                                                        ? field.onChange([...(field.value || []), item.id])
-                                                                        : field.onChange(
-                                                                            field.value?.filter(
-                                                                            (value) => value !== item.id
-                                                                            )
-                                                                        );
-                                                                    }}
-                                                                    className="data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500"
-                                                                />
-                                                                </FormControl>
-                                                                <FormLabel className="font-normal flex items-center gap-2 cursor-pointer text-slate-800">
-                                                                 {item.label}
-                                                                </FormLabel>
-                                                            </FormItem>
-                                                            );
-                                                        }}
-                                                        />
-                                                    ))}
-                                                    </div>
-                                                    <FormMessage />
-                                                </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={symptomForm.control}
-                                                name="notes"
-                                                render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="text-slate-700">{t.customSymptoms}</FormLabel>
-                                                    <FormControl>
-                                                    <Textarea
-                                                        placeholder={t.customSymptomsPlaceholder}
-                                                        className="resize-none"
-                                                        {...field}
-                                                    />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                                )}
-                                            />
-                                            <div className="flex items-center gap-4 flex-wrap">
-                                                 <Button type="submit" className="bg-pink-500 hover:bg-pink-600 text-white">
-                                                    <ThumbsUp className="mr-2 h-4 w-4" />
-                                                    {t.saveSymptoms}
-                                                </Button>
-                                                {loggedSymptoms.length > 0 && (
-                                                    <div className="flex flex-wrap gap-2 items-center">
-                                                        <span className="text-sm font-semibold text-slate-500">{t.loggedToday}</span>
-                                                        {loggedSymptoms.map(symptomId => {
-                                                            const symptom = pregnancySymptoms.find(s => s.id === symptomId);
-                                                            return symptom ? <Badge key={symptomId} variant="secondary" className="bg-pink-100 text-pink-800 border-none">{symptom.label}</Badge> : null;
-                                                        })}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </form>
-                                    </Form>
-                                </CardContent>
-                            </Card>
-
-                             {babyLookVideoUrl && (
-                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                    <CardHeader>
-                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
-                                            <Video /> {t.babyLookTitle}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="aspect-video">
-                                            <iframe
-                                                className="w-full h-full rounded-lg"
-                                                src={babyLookVideoUrl}
-                                                title="Baby Look YouTube video player"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )}
-                        </div>
-
-                        <div className="mt-8 flex justify-center gap-4">
-                            <Button onClick={() => router.push('/pregnancy-journal')} className="bg-pink-500 hover:bg-pink-600 text-white">
-                                <ClipboardPlus className="mr-2 h-4 w-4"/>
-                                {t.myJournal}
-                            </Button>
-                            <Button variant="outline" onClick={() => setPregnancyDetails(null)}>{t.resetDate}</Button>
-                        </div>
-
-                    </main>
-                </div>
-
-                {/* Mobile Bottom Nav */}
-                <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white/80 backdrop-blur-md border-t border-white/30">
-                    <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-                        {navItems.map((item) => (
-                             <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/50 group">
-                                <item.icon className={cn("w-6 h-6 mb-1 text-slate-500 group-hover:text-pink-600", router.pathname === item.href && "text-pink-600")} />
-                                <span className={cn("text-xs text-slate-500 group-hover:text-pink-600", router.pathname === item.href && "text-pink-600")}>
-                                    {item.label}
-                                </span>
-                            </Link>
-                        ))}
                     </div>
-                </div>
-                <div className="pb-16 md:pb-0" /> {/* Spacer for bottom nav */}
+
+                    <div className="mt-8 flex justify-center gap-4">
+                        <Button onClick={() => router.push('/pregnancy-journal')} className="bg-pink-500 hover:bg-pink-600 text-white">
+                            <ClipboardPlus className="mr-2 h-4 w-4"/>
+                            {t.myJournal}
+                        </Button>
+                        <Button variant="outline" onClick={() => setPregnancyDetails(null)}>{t.resetDate}</Button>
+                    </div>
+
+                </main>
             </div>
+
+            {/* Mobile Bottom Nav */}
+            <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white/80 backdrop-blur-md border-t border-white/30">
+                <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
+                    {navItems.map((item) => (
+                         <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/50 group">
+                            <item.icon className={cn("w-6 h-6 mb-1 text-slate-500 group-hover:text-pink-600", router.pathname === item.href && "text-pink-600")} />
+                            <span className={cn("text-xs text-slate-500 group-hover:text-pink-600", router.pathname === item.href && "text-pink-600")}>
+                                {item.label}
+                            </span>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+            <div className="pb-16 md:pb-0" /> {/* Spacer for bottom nav */}
         </div>
     )
   }
