@@ -2,10 +2,13 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { ChevronLeft, CalendarDays, Heart, Droplet, Bed, BookOpen, Baby, Activity, ShoppingCart, Brain, Info, Settings } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 const features = [
     {
@@ -77,10 +80,10 @@ export default function AboutPage() {
             <header className="sticky top-0 left-0 w-full bg-background/80 backdrop-blur-lg container mx-auto px-4 py-6 z-20">
                 <div className="flex justify-between items-center">
                     <GlowHerLogo className="[&>span]:text-white" />
-                    <Button variant="ghost" onClick={() => router.push('/')}>
+                    <Link href="/" className={cn(buttonVariants({ variant: 'ghost' }), "[&>span]:text-white")}>
                         <ChevronLeft className="mr-2 h-4 w-4" />
                         Back to Dashboard
-                    </Button>
+                    </Link>
                 </div>
             </header>
             <main className="flex-grow container mx-auto px-4 py-12">

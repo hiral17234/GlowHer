@@ -139,6 +139,12 @@ export default function SettingsPage() {
 
   const gender = form.watch("gender");
 
+  useEffect(() => {
+    if (gender === 'Female' && !form.getValues('lastPeriodDate')) {
+        form.setValue('lastPeriodDate', new Date());
+    }
+  }, [gender, form]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
         localStorage.setItem('glowher-user', JSON.stringify(values));
