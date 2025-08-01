@@ -26,6 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from "@/components/ui/calendar";
 
 
 // --- SCHEMAS ---
@@ -665,7 +666,9 @@ export default function FitnessGoalsPage() {
                                 <Card className="shadow-xl bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader><CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle></CardHeader>
                                     <CardContent>
-                                        <div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>
+                                        <ResponsiveContainer width="100%" height={315}>
+                                            <iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                        </ResponsiveContainer>
                                     </CardContent>
                                 </Card>
                             )}
@@ -675,7 +678,9 @@ export default function FitnessGoalsPage() {
                                     <CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={prenatalYogaVideoUrl} title="Guided Prenatal Yoga" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>
+                                    <ResponsiveContainer width="100%" height={315}>
+                                        <iframe className="w-full h-full rounded-lg" src={prenatalYogaVideoUrl} title="Guided Prenatal Yoga" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                    </ResponsiveContainer>
                                 </CardContent>
                             </Card>
                         </div>
