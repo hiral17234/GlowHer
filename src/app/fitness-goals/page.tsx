@@ -48,7 +48,7 @@ const defaultLogSchema = z.discriminatedUnion("activityType", [
   ]);
 
 const pregnancyGoalSchema = z.object({
-    days: z.coerce.number().min(1).max(7),
+    days: z.coerce.number().min(1, "Minimum 1 day").max(7, "Maximum 7 days"),
     activityType: z.string().optional(),
     trackMood: z.boolean().default(false),
 });
@@ -307,7 +307,7 @@ export default function FitnessGoalsPage() {
                         <p className="mt-2 text-lg text-muted-foreground">Move mindfully through your health journey.</p>
                     </div>
 
-                    <Card className="max-w-md mx-auto shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                    <Card className="max-w-md mx-auto shadow-lg bg-background/80 backdrop-blur-sm border-border">
                         <CardHeader>
                             <CardTitle>Let's Personalize Your Plan</CardTitle>
                         </CardHeader>
@@ -323,10 +323,10 @@ export default function FitnessGoalsPage() {
                         // --- PREGNANCY MODE UI ---
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-8">
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader>
                                         <div className="flex justify-between items-center">
-                                            <CardTitle className="flex items-center gap-2"><Target /> Your Movement Goals</CardTitle>
+                                            <CardTitle className="flex items-center gap-2"><Target /> Your Weekly Movement Goals</CardTitle>
                                             <Button variant="ghost" size="icon" onClick={() => setIsEditingGoals(!isEditingGoals)}><Edit className="h-4 w-4"/></Button>
                                         </div>
                                         <CardDescription>Set your gentle movement targets for the week.</CardDescription>
@@ -335,9 +335,9 @@ export default function FitnessGoalsPage() {
                                         {isEditingGoals ? (
                                             <Form {...pregnancyGoalForm}>
                                                 <form onSubmit={pregnancyGoalForm.handleSubmit(onPregnancyGoalSubmit)} className="space-y-4">
-                                                    <FormField control={pregnancyGoalForm.control} name="days" render={({ field }) => (<FormItem><FormLabel>Days to Move This Week</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                                                    <FormField control={pregnancyGoalForm.control} name="activityType" render={({ field }) => (<FormItem><FormLabel>Preferred Activity</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an activity" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Light Strength">Light Strength</SelectItem><SelectItem value="Stretching">Stretching</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
-                                                    <FormField control={pregnancyGoalForm.control} name="trackMood" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><FormLabel>Track Energy/Mood?</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
+                                                    <FormField control={pregnancyGoalForm.control} name="days" render={({ field }) => (<FormItem><FormLabel>Target Active Days This Week</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                    <FormField control={pregnancyGoalForm.control} name="activityType" render={({ field }) => (<FormItem><FormLabel>Preferred Activity Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an activity" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Light Strength">Light Strength</SelectItem><SelectItem value="Stretching">Stretching</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                                    <FormField control={pregnancyGoalForm.control} name="trackMood" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5"><FormLabel>Enable Mood/Energy Tracking?</FormLabel></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
                                                     <Button type="submit" className="w-full">Save Goals</Button>
                                                 </form>
                                             </Form>
@@ -349,31 +349,28 @@ export default function FitnessGoalsPage() {
                                         )}
                                     </CardContent>
                                 </Card>
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader><CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle></CardHeader>
                                     <CardContent>
                                         <Form {...pregnancyLogForm}>
                                             <form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
                                                 
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <FormItem>
-                                                        <FormLabel>Hours</FormLabel>
+                                                <div>
+                                                    <Label>Time Spent</Label>
+                                                    <div className="grid grid-cols-2 gap-4 mt-2">
                                                         <Select onValueChange={(value) => setDuration(d => ({ ...d, hours: Number(value) }))} value={String(duration.hours)}>
-                                                            <FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl>
+                                                            <SelectTrigger><SelectValue placeholder="Hours"/></SelectTrigger>
                                                             <SelectContent>
                                                                 {[...Array(5).keys()].map(h => <SelectItem key={h} value={String(h)}>{h} hr</SelectItem>)}
                                                             </SelectContent>
                                                         </Select>
-                                                    </FormItem>
-                                                    <FormItem>
-                                                        <FormLabel>Minutes</FormLabel>
-                                                        <Select onValueChange={(value) => setDuration(d => ({ ...d, minutes: Number(value) }))} value={String(duration.minutes)}>
-                                                            <FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl>
+                                                         <Select onValueChange={(value) => setDuration(d => ({ ...d, minutes: Number(value) }))} value={String(duration.minutes)}>
+                                                            <SelectTrigger><SelectValue placeholder="Minutes"/></SelectTrigger>
                                                             <SelectContent>
-                                                                {[...Array(12).keys()].map(m => m * 5).map(m => <SelectItem key={m} value={String(m)}>{m} min</SelectItem>)}
+                                                                {Array.from({length: 60}, (_, i) => i).map(m => <SelectItem key={m} value={String(m)}>{m} min</SelectItem>)}
                                                             </SelectContent>
                                                         </Select>
-                                                    </FormItem>
+                                                    </div>
                                                 </div>
 
                                                 {pregnancyGoalForm.getValues('trackMood') && <FormField control={pregnancyLogForm.control} name="feeling" render={({ field }) => (<FormItem><FormLabel>How did you feel after?</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select how you felt" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Energized">Energized</SelectItem><SelectItem value="Tired">Tired</SelectItem><SelectItem value="Sore">Sore</SelectItem><SelectItem value="Relaxed">Relaxed</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>}
@@ -383,7 +380,7 @@ export default function FitnessGoalsPage() {
                                         </Form>
                                     </CardContent>
                                 </Card>
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader><CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
                                         <CardDescription>Your logged minutes over the last 7 days.</CardDescription>
                                     </CardHeader>
@@ -402,13 +399,13 @@ export default function FitnessGoalsPage() {
                                 </Card>
                             </div>
                             <div className="space-y-8">
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Goal Progress</CardTitle>
                                         <CardDescription>You've moved on {completedDays} of your {goalDays} day goal.</CardDescription>
                                     </CardHeader>
-                                    <CardContent className="flex justify-center items-center h-48">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                    <CardContent className="flex justify-center items-center">
+                                        <ResponsiveContainer width="100%" height={192}>
                                             <PieChart>
                                                 <Pie data={[{ value: 1 }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--muted))" startAngle={90} endAngle={-270} paddingAngle={0} cornerRadius={50} />
                                                 <Pie data={[{ value: progressPercentage }, { value: 100 - progressPercentage }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--primary))" startAngle={90} endAngle={-270} stroke="hsl(var(--primary))" cornerRadius={50}>
@@ -421,7 +418,7 @@ export default function FitnessGoalsPage() {
                                         </ResponsiveContainer>
                                     </CardContent>
                                 </Card>
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
                                     <CardContent className="space-y-2">
                                         <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-100" : "bg-muted")}>
@@ -446,7 +443,7 @@ export default function FitnessGoalsPage() {
                         // --- DEFAULT MODE UI ---
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-8">
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader>
                                         <div className="flex justify-between items-center">
                                             <CardTitle className="flex items-center gap-2"><Target /> Your Fitness Goals</CardTitle>
@@ -471,7 +468,7 @@ export default function FitnessGoalsPage() {
                                         )}
                                     </CardContent>
                                 </Card>
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Today's Activity</CardTitle>
                                         <CardDescription>Record your movement for today.</CardDescription>
@@ -490,8 +487,8 @@ export default function FitnessGoalsPage() {
                                                                 <SelectTrigger><SelectValue placeholder="Select an activity type" /></SelectTrigger>
                                                             </FormControl>
                                                             <SelectContent>
-                                                                <SelectItem value="step-based">Step-based (Walking, Running)</SelectItem>
-                                                                <SelectItem value="workout-based">Workout-based (Yoga, Strength)</SelectItem>
+                                                                <SelectItem value="step-based">Step-based (e.g., Walking, Running)</SelectItem>
+                                                                <SelectItem value="workout-based">Non-step workout (e.g., Yoga, Strength Training, Dance)</SelectItem>
                                                             </SelectContent>
                                                         </Select>
                                                         <FormMessage />
@@ -528,7 +525,7 @@ export default function FitnessGoalsPage() {
                                 </Card>
                             </div>
                             <div className="space-y-8">
-                                <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Progress</CardTitle>
                                         <CardDescription>Your step count over the last 7 days.</CardDescription>
@@ -551,12 +548,12 @@ export default function FitnessGoalsPage() {
                                     </CardContent>
                                 </Card>
                                 {relevantSuggestions && (
-                                    <Card className={cn("shadow-lg bg-white/70 backdrop-blur-sm border-white/30", currentPhase === 'Menstrual' && 'bg-red-500/10')}>
+                                    <Card className={cn("shadow-lg bg-background/80 backdrop-blur-sm border-border")}>
                                         <CardHeader>
                                             <CardTitle className={cn("flex items-center gap-2", relevantSuggestions.color)}>
                                                 <relevantSuggestions.icon/> {relevantSuggestions.title}
                                             </CardTitle>
-                                            <CardDescription className={cn(currentPhase === 'Menstrual' && "text-slate-800")}>Exercises aligned with your current menstrual phase.</CardDescription>
+                                            <CardDescription>Exercises aligned with your current menstrual phase.</CardDescription>
                                         </CardHeader>
                                         <CardContent className={cn(currentPhase === 'Menstrual' && "text-slate-900")}>
                                             <ul className="space-y-2">
@@ -571,7 +568,7 @@ export default function FitnessGoalsPage() {
                                     </Card>
                                 )}
                                 {!isPregnant && !relevantSuggestions && (
-                                    <Alert className="bg-white/70 backdrop-blur-sm border-white/30">
+                                    <Alert>
                                         <Info className="h-4 w-4" />
                                         <AlertTitle>Enter Your Cycle Data</AlertTitle>
                                         <AlertDescription>To get personalized fitness suggestions, please enter your details in the Period Tracker.</AlertDescription>
@@ -588,14 +585,14 @@ export default function FitnessGoalsPage() {
                                 <p className="font-bold text-destructive text-center">Do consult your doctor before doing this and proceed only if comfortable.</p>
                             </div>
                             {pregnancyVideoUrl && (
-                                <Card className="shadow-xl bg-white/70 backdrop-blur-sm border-white/30">
+                                <Card className="shadow-xl bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader><CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle></CardHeader>
                                     <CardContent>
                                         <div className="aspect-video"><iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>
                                     </CardContent>
                                 </Card>
                             )}
-                            <Card className="shadow-xl bg-white/70 backdrop-blur-sm border-white/30">
+                            <Card className="shadow-xl bg-background/80 backdrop-blur-sm border-border">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2"><HeartPulse /> Guided Prenatal Yoga</CardTitle>
                                     <CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription>
