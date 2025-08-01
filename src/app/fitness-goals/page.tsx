@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay } from 'date-fns';
+import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, startOfWeek } from 'date-fns';
 import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Lightbulb, Wind, Edit, Check, AlertTriangle, Award, Flame, Star, Activity, ThumbsUp, Calendar as CalendarIcon, Baby } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
@@ -79,7 +79,7 @@ export default function FitnessGoalsPage() {
     const [streak, setStreak] = useState(0);
     const [selectedActivityType, setSelectedActivityType] = useState<'step-based' | 'workout-based'>('step-based');
     const [currentDefaultLogDate, setCurrentDefaultLogDate] = useState(new Date());
-
+    const [completedWorkouts, setCompletedWorkouts] = useState(0);
 
     // --- FORM HOOKS ---
     const defaultGoalForm = useForm<DefaultGoalData>({ resolver: zodResolver(defaultGoalSchema), defaultValues: { steps: 8000, workouts: 3 }});
@@ -158,32 +158,37 @@ export default function FitnessGoalsPage() {
     // --- DATA LOADING & CALCULATION HELPERS ---
     const loadWeeklyDefaultLogs = () => {
         const today = startOfDay(new Date());
+        const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
+        let workoutsThisWeek = 0;
+
         const data = Array.from({ length: 7 }, (_, i) => {
-            const date = subDays(today, i);
+            const date = addDays(weekStart, i);
             const savedLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
             let steps = 0;
             if (savedLog) {
                 try {
                     const logData = JSON.parse(savedLog);
+                    if (date <= today) { // only count past/present workouts
+                       workoutsThisWeek++;
+                    }
                     if (logData.activityType === 'step-based') {
                         steps = logData.steps || 0;
                     }
                 } catch(e) { console.error("Error parsing log for chart", e); }
             }
             return { name: format(date, 'EEE'), steps };
-        }).reverse();
+        });
         setWeeklyDefaultLogs(data);
+        setCompletedWorkouts(workoutsThisWeek);
 
         // Calculate streak
         let consecutiveDays = 0;
-        // Start from today and go backwards
         for (let i = 0; i < 365; i++) {
             const date = subDays(today, i);
             const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
             if (log) {
                 consecutiveDays++;
             } else {
-                // If a day is missed, the streak is broken
                 break;
             }
         }
@@ -198,7 +203,7 @@ export default function FitnessGoalsPage() {
     
     const todayLog = weeklyDefaultLogs.find(log => log.name === format(new Date(), 'EEE'));
     const todaySteps = todayLog ? todayLog.steps : 0;
-    const stepGoal = defaultGoalForm.getValues('steps');
+    const { steps: stepGoal, workouts: workoutGoal } = defaultGoalForm.getValues();
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/736x/e9/dd/c3/e9ddc3e14cb57d720ffa52887afe3d7d.jpg')"}}>
@@ -252,8 +257,8 @@ export default function FitnessGoalsPage() {
                                         </Form>
                                     ) : (
                                         <div className="space-y-4">
-                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Daily Steps</p><p className="font-bold">{defaultGoalForm.getValues('steps').toLocaleString()}</p></div>
-                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Workouts Per Week</p><p className="font-bold">{defaultGoalForm.getValues('workouts')}</p></div>
+                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Daily Steps</p><p className="font-bold">{stepGoal.toLocaleString()}</p></div>
+                                            <div className="flex justify-between p-4 rounded-lg bg-muted"><p className="font-medium">Workouts Per Week</p><p className="font-bold">{workoutGoal}</p></div>
                                         </div>
                                     )}
                                 </CardContent>
@@ -343,6 +348,13 @@ export default function FitnessGoalsPage() {
                                         <div>
                                             <p className="font-semibold">Consistency Streak</p>
                                             <p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log an activity today to start a streak."}</p>
+                                        </div>
+                                    </div>
+                                     <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedWorkouts >= workoutGoal ? "bg-primary/20" : "bg-muted")}>
+                                        <ThumbsUp className={cn("h-6 w-6", completedWorkouts >= workoutGoal ? "text-primary" : "text-muted-foreground")} />
+                                        <div>
+                                            <p className="font-semibold">Weekly Goal</p>
+                                            <p className="text-sm text-muted-foreground">{completedWorkouts >= workoutGoal ? "You hit your weekly workout goal!" : `Logged ${completedWorkouts} of ${workoutGoal} workouts this week.`}</p>
                                         </div>
                                     </div>
                                 </CardContent>
