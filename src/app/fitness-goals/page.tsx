@@ -78,8 +78,8 @@ const cycleExercises = { Menstrual: { title: "Menstrual Phase: Rest & Recover", 
 const pregnancyExercises = { '1st Trimester': { title: "First Trimester: Build a Foundation", icon: Heart, suggestions: ["Walking", "Prenatal yoga", "Swimming"], videoUrl: "https://www.youtube.com/embed/Ia6dNwVs1M8" }, '2nd Trimester': { title: "Second Trimester: Maintain Strength", icon: Dumbbell, suggestions: ["Modified strength training", "Swimming", "Stationary cycling"], videoUrl: "https://www.youtube.com/embed/XhqntqSGKsc" }, '3rd Trimester': { title: "Third Trimester: Prepare for Birth", icon: Brain, suggestions: ["Walking", "Stretching", "Birth ball exercises"], videoUrl: "https://www.youtube.com/embed/qkhLev3bKd0" }};
 const prenatalYogaVideoUrl = "https://www.youtube.com/embed/zmUJWKM98hM";
 
-const chartConfig = { steps: { label: "Steps", color: "hsl(var(--foreground))" }} satisfies ChartConfig;
-const weeklyActivityChartConfig = { minutes: { label: "Minutes", color: "hsl(var(--foreground))" }} satisfies ChartConfig;
+const chartConfig = { steps: { label: "Steps", color: "hsl(var(--primary))" }} satisfies ChartConfig;
+const weeklyActivityChartConfig = { minutes: { label: "Minutes", color: "hsl(var(--primary))" }} satisfies ChartConfig;
 
 export default function FitnessGoalsPage() {
     const router = useRouter();
@@ -384,19 +384,20 @@ export default function FitnessGoalsPage() {
                                     </CardContent>
                                 </Card>
                                 <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
+                                    <CardHeader><CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
                                         <CardDescription>Your logged minutes over the last 7 days.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        <ChartContainer config={weeklyActivityChartConfig} className="min-h-[200px] w-full">
-                                            <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                                                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                                                <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
-                                                <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
-                                            </RechartsBarChart>
-                                        </ChartContainer>
+                                        <ResponsiveContainer width="100%" height={250}>
+                                            <ChartContainer config={weeklyActivityChartConfig}>
+                                                <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                                                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                                                    <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
+                                                    <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
+                                                </RechartsBarChart>
+                                            </ChartContainer>
+                                        </ResponsiveContainer>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -533,8 +534,8 @@ export default function FitnessGoalsPage() {
                                         <CardDescription>Your step count over the last 7 days.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="h-[250px] w-full">
-                                            <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+                                        <ResponsiveContainer width="100%" height={250}>
+                                            <ChartContainer config={chartConfig}>
                                                 <RechartsBarChart data={weeklyDefaultLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
                                                     <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                                                     <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
@@ -542,7 +543,7 @@ export default function FitnessGoalsPage() {
                                                     <RechartsBar dataKey="steps" fill="hsl(var(--primary))" radius={4} />
                                                 </RechartsBarChart>
                                             </ChartContainer>
-                                        </div>
+                                        </ResponsiveContainer>
                                         <div className="mt-4">
                                             <Progress value={(todaySteps / stepGoal) * 100} className="h-2 bg-muted [&>span]:bg-primary" />
                                             <p className="text-sm text-center mt-2 text-muted-foreground">Today's progress: {todaySteps.toLocaleString()} / {stepGoal.toLocaleString()} steps</p>
@@ -550,9 +551,9 @@ export default function FitnessGoalsPage() {
                                     </CardContent>
                                 </Card>
                                 {relevantSuggestions && (
-                                    <Card className="shadow-lg bg-white/70 backdrop-blur-sm border-white/30">
+                                    <Card className={cn("shadow-lg bg-white/70 backdrop-blur-sm border-white/30", currentPhase === 'Menstrual' && 'bg-red-500/10')}>
                                         <CardHeader>
-                                            <CardTitle className={cn("flex items-center gap-2", currentPhase !== 'Menstrual' && relevantSuggestions.color)}>
+                                            <CardTitle className={cn("flex items-center gap-2", relevantSuggestions.color)}>
                                                 <relevantSuggestions.icon/> {relevantSuggestions.title}
                                             </CardTitle>
                                             <CardDescription className={cn(currentPhase === 'Menstrual' && "text-slate-800")}>Exercises aligned with your current menstrual phase.</CardDescription>
