@@ -17,7 +17,7 @@ import { Switch } from '@/components/ui/switch';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { Bar as RechartsBar, BarChart as RechartsBarChart, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Label } from '@/components/ui/label';
@@ -131,13 +131,19 @@ export default function PregnancyFitnessPage() {
 
         // Streak calculation
         let consecutiveDays = 0;
-        for (let i = 0; i < 365; i++) {
-            const date = subDays(today, i);
-            const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-            if (log) {
-                consecutiveDays++;
-            } else {
-                break;
+        // Check today
+        const todayLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
+        if(todayLog){
+            consecutiveDays++;
+            // Check previous days only if today is logged
+            for (let i = 1; i < 365; i++) {
+                const date = subDays(today, i);
+                const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+                if (log) {
+                    consecutiveDays++;
+                } else {
+                    break;
+                }
             }
         }
         setStreak(consecutiveDays);
@@ -223,7 +229,7 @@ export default function PregnancyFitnessPage() {
                                 <CardHeader>
                                     <div className="flex justify-between items-center">
                                         <CardTitle className="flex items-center gap-2"><Target /> Your Weekly Movement Goals</CardTitle>
-                                        <Button variant="ghost" size="icon" onClick={() => setIsEditingGoals(!isEditingGoals)}><Edit className="h-4 w-4"/></Button>
+                                        <Button variant="ghost" size="icon" onClick={()={() => setIsEditingGoals(!isEditingGoals)}}><Edit className="h-4 w-4"/></Button>
                                     </div>
                                     <CardDescription>Set your gentle movement targets for the week.</CardDescription>
                                 </CardHeader>
@@ -278,18 +284,19 @@ export default function PregnancyFitnessPage() {
                                 </CardContent>
                             </Card>
                             <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
-                                <CardHeader><CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
                                     <CardDescription>Your logged minutes over the this week (Mon-Sun).</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <ResponsiveContainer width="100%" height={250}>
+                                     <ChartContainer config={weeklyActivityChartConfig} className="w-full h-[250px]">
                                         <RechartsBarChart data={weeklyPregnancyLogs} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
                                             <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                                             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                                             <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value) => `${Number(value)} mins`}/>}/>
                                             <RechartsBar dataKey="minutes" fill="hsl(var(--primary))" radius={4} />
                                         </RechartsBarChart>
-                                    </ResponsiveContainer>
+                                    </ChartContainer>
                                 </CardContent>
                             </Card>
                         </div>
@@ -344,9 +351,9 @@ export default function PregnancyFitnessPage() {
                             <Card className="shadow-xl bg-background/80 backdrop-blur-sm border-border">
                                 <CardHeader><CardTitle>Guided Workout for your {pregnancyTrimester}</CardTitle></CardHeader>
                                 <CardContent>
-                                    <ResponsiveContainer width="100%" height={315}>
+                                    <div className="aspect-video">
                                         <iframe className="w-full h-full rounded-lg" src={pregnancyVideoUrl} title={`Pregnancy Workout for ${pregnancyTrimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                    </ResponsiveContainer>
+                                    </div>
                                 </CardContent>
                             </Card>
                         )}
@@ -356,9 +363,9 @@ export default function PregnancyFitnessPage() {
                                 <CardDescription>A gentle yoga session suitable for all trimesters.</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <ResponsiveContainer width="100%" height={315}>
+                                <div className="aspect-video">
                                     <iframe className="w-full h-full rounded-lg" src={prenatalYogaVideoUrl} title="Guided Prenatal Yoga" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                </ResponsiveContainer>
+                                </div>
                             </CardContent>
                         </Card>
                     </div>
@@ -367,3 +374,6 @@ export default function PregnancyFitnessPage() {
         </div>
     );
 }
+
+
+    
