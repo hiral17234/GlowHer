@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, differenceInDays, parseISO } from 'date-fns';
+import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, differenceInDays, parseISO, startOfWeek, endOfWeek } from 'date-fns';
 import { BarChart, Dumbbell, Target, Footprints, Info, ChevronLeft, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, HeartPulse, Award, Flame, Star, Activity, ThumbsUp, CalendarIcon } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
@@ -261,10 +261,11 @@ export default function FitnessGoalsPage() {
 
     const loadWeeklyPregnancyLogs = () => {
         const today = startOfDay(new Date());
+        const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
+
+        // Streak calculation
         let consecutiveDays = 0;
-        
         let streakShouldContinue = true;
-        // Check from yesterday backwards
         for (let i = 1; i < 365 && streakShouldContinue; i++) {
             const date = subDays(today, i);
             const log = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
@@ -274,25 +275,19 @@ export default function FitnessGoalsPage() {
                 streakShouldContinue = false;
             }
         }
-        
-        // Check today separately
         const todayLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
-        if(todayLog) {
-            consecutiveDays++;
-        } else if (consecutiveDays > 0) {
-            // if today is not logged, the streak from past days doesn't count for today's view
-            // but if we are in the middle of a streak, we don't want to reset it until today is over
-        } else {
-             consecutiveDays = 0;
-        }
-    
+        if(todayLog) consecutiveDays++;
         setStreak(consecutiveDays);
 
+        // Weekly chart data (from Monday to Sunday)
         const logs = Array.from({ length: 7 }, (_, i) => {
-            const date = subDays(today, i);
+            const date = addDays(weekStart, i);
             const savedLog = localStorage.getItem(`${PREGNANCY_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
-            return { name: format(date, 'EEE'), minutes: savedLog ? JSON.parse(savedLog).minutes : 0 };
-        }).reverse();
+            return {
+                name: format(date, 'EEE'),
+                minutes: savedLog ? JSON.parse(savedLog).minutes : 0
+            };
+        });
         
         setWeeklyPregnancyLogs(logs);
     };
@@ -437,7 +432,7 @@ export default function FitnessGoalsPage() {
                                 </Card>
                                 <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                     <CardHeader><CardTitle className="flex items-center gap-2"><BarChart/> Weekly Activity</CardTitle>
-                                        <CardDescription>Your logged minutes over the last 7 days.</CardDescription>
+                                        <CardDescription>Your logged minutes over the this week (Mon-Sun).</CardDescription>
                                     </CardHeader>
                                     <CardContent>
                                         <ResponsiveContainer width="100%" height={250}>
@@ -610,12 +605,12 @@ export default function FitnessGoalsPage() {
                                             </CardTitle>
                                             <CardDescription>Exercises aligned with your current menstrual phase.</CardDescription>
                                         </CardHeader>
-                                        <CardContent className={cn(currentPhase === 'Menstrual' && "text-slate-900")}>
+                                        <CardContent>
                                             <ul className="space-y-2">
                                                 {relevantSuggestions.suggestions.map(s => (
                                                     <li key={s} className="flex items-center gap-2">
-                                                        <Check className={cn("h-4 w-4", currentPhase === 'Menstrual' ? 'text-red-600' : 'text-green-500')}/>
-                                                        <span className={cn(currentPhase === 'Menstrual' && "font-bold text-red-600")}>{s}</span>
+                                                        <Check className={cn("h-4 w-4 text-green-500", currentPhase === 'Menstrual' && "text-red-500")} />
+                                                        <span className={cn(currentPhase === 'Menstrual' && "font-bold text-slate-800")}>{s}</span>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -663,3 +658,5 @@ export default function FitnessGoalsPage() {
         </div>
     );
 }
+
+    
