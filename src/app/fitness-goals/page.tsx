@@ -26,7 +26,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
 
 
 // --- SCHEMAS ---
@@ -257,6 +256,22 @@ export default function FitnessGoalsPage() {
             return { name: format(date, 'EEE'), steps };
         }).reverse();
         setWeeklyDefaultLogs(data);
+
+        // Calculate streak for default mode
+        let consecutiveDays = 0;
+        let streakShouldContinue = true;
+        for (let i = 1; i < 365 && streakShouldContinue; i++) {
+            const date = subDays(today, i);
+            const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+            if (log) {
+                consecutiveDays++;
+            } else {
+                streakShouldContinue = false;
+            }
+        }
+        const todayLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(today, 'yyyy-MM-dd')}`);
+        if(todayLog) consecutiveDays++;
+        setStreak(consecutiveDays);
     };
 
     const loadWeeklyPregnancyLogs = () => {
@@ -384,9 +399,9 @@ export default function FitnessGoalsPage() {
                                         {isEditingGoals ? (
                                             <Form {...pregnancyGoalForm}>
                                                 <form onSubmit={pregnancyGoalForm.handleSubmit(onPregnancyGoalSubmit)} className="space-y-4">
-                                                    <FormField control={pregnancyGoalForm.control} name="days" render={({ field }) => (<FormItem><FormLabel>Target Active Days This Week</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                                                    <FormField control={pregnancyGoalForm.control} name="activityType" render={({ field }) => (<FormItem><FormLabel>Preferred Activity Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an activity" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Light Strength">Light Strength</SelectItem><SelectItem value="Stretching">Stretching</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
-                                                    <FormField control={pregnancyGoalForm.control} name="trackMood" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5"><FormLabel>Enable Mood/Energy Tracking?</FormLabel></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
+                                                    <FormField control={pregnancyGoalForm.control} name="days" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Target/>Target Active Days This Week</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                    <FormField control={pregnancyGoalForm.control} name="activityType" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Activity/>Preferred Activity Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an activity" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Prenatal Yoga">Prenatal Yoga</SelectItem><SelectItem value="Light Strength">Light Strength</SelectItem><SelectItem value="Stretching">Stretching</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                                    <FormField control={pregnancyGoalForm.control} name="trackMood" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5"><FormLabel className="flex items-center gap-2"><Heart/>Enable Mood/Energy Tracking?</FormLabel></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
                                                     <Button type="submit" className="w-full">Save Goals</Button>
                                                 </form>
                                             </Form>
@@ -403,10 +418,10 @@ export default function FitnessGoalsPage() {
                                     <CardContent>
                                         <Form {...pregnancyLogForm}>
                                             <form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
-                                                <FormField control={pregnancyLogForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
+                                                <FormField control={pregnancyLogForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel className="flex items-center gap-2"><CalendarIcon className="h-4 w-4"/>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
                                                 
                                                 <div>
-                                                    <Label>Time Spent</Label>
+                                                    <Label className="flex items-center gap-2"><Dumbbell/>Time Spent</Label>
                                                     <div className="grid grid-cols-2 gap-4 mt-2">
                                                         <Select onValueChange={(value) => setDuration(d => ({ ...d, hours: Number(value) }))} value={String(duration.hours)}>
                                                             <SelectTrigger><SelectValue placeholder="Hours"/></SelectTrigger>
@@ -423,8 +438,8 @@ export default function FitnessGoalsPage() {
                                                     </div>
                                                 </div>
 
-                                                {pregnancyGoalForm.getValues('trackMood') && <FormField control={pregnancyLogForm.control} name="feeling" render={({ field }) => (<FormItem><FormLabel>How did you feel after?</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select how you felt" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Energized">Energized</SelectItem><SelectItem value="Tired">Tired</SelectItem><SelectItem value="Sore">Sore</SelectItem><SelectItem value="Relaxed">Relaxed</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>}
-                                                <FormField control={pregnancyLogForm.control} name="notes" render={({ field }) => (<FormItem><FormLabel>Notes (optional)</FormLabel><FormControl><Textarea placeholder="Any thoughts on today's movement?" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                {pregnancyGoalForm.getValues('trackMood') && <FormField control={pregnancyLogForm.control} name="feeling" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Heart/>How did you feel after?</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select how you felt" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Energized">Energized</SelectItem><SelectItem value="Tired">Tired</SelectItem><SelectItem value="Sore">Sore</SelectItem><SelectItem value="Relaxed">Relaxed</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>}
+                                                <FormField control={pregnancyLogForm.control} name="notes" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Lightbulb/>Notes (optional)</FormLabel><FormControl><Textarea placeholder="Any thoughts on today's movement?" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                                 <Button type="submit" className="w-full">Log Movement</Button>
                                             </form>
                                         </Form>
@@ -454,8 +469,8 @@ export default function FitnessGoalsPage() {
                                         <CardTitle className="flex items-center gap-2"><BarChart/> Weekly Goal Progress</CardTitle>
                                         <CardDescription>You've moved on {completedDays} of your {goalDays} day goal.</CardDescription>
                                     </CardHeader>
-                                    <CardContent className="flex justify-center items-center">
-                                        <ResponsiveContainer width="100%" height={192}>
+                                    <CardContent className="flex justify-center items-center h-48">
+                                        <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
                                                 <Pie data={[{ value: 1 }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--muted))" startAngle={90} endAngle={-270} paddingAngle={0} cornerRadius={50} />
                                                 <Pie data={[{ value: progressPercentage }, { value: 100 - progressPercentage }]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius="70%" outerRadius="90%" fill="hsl(var(--primary))" startAngle={90} endAngle={-270} stroke="hsl(var(--primary))" cornerRadius={50}>
@@ -472,14 +487,14 @@ export default function FitnessGoalsPage() {
                                     <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
                                     <CardContent className="space-y-2">
                                         <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-100" : "bg-muted")}>
-                                            <Award className={cn("h-6 w-6", streak > 0 ? "text-amber-500 fill-amber-500" : "text-muted-foreground")} />
+                                            <Flame className={cn("h-6 w-6", streak > 0 ? "text-amber-500" : "text-muted-foreground")} />
                                             <div>
                                                 <p className="font-semibold">Consistency Streak</p>
                                                 <p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log a workout today to start a streak."}</p>
                                             </div>
                                         </div>
                                         <div className={cn("flex items-center gap-4 p-3 rounded-lg", completedDays >= goalDays ? "bg-primary/20" : "bg-muted")}>
-                                            <Award className={cn("h-6 w-6", completedDays >= goalDays ? "text-primary fill-primary" : "text-muted-foreground")} />
+                                            <ThumbsUp className={cn("h-6 w-6", completedDays >= goalDays ? "text-primary" : "text-muted-foreground")} />
                                             <div>
                                                 <p className="font-semibold">Weekly Goal</p>
                                                 <p className="text-sm text-muted-foreground">{completedDays >= goalDays ? "You hit your goal this week!" : "Keep going to reach your weekly goal."}</p>
@@ -505,8 +520,8 @@ export default function FitnessGoalsPage() {
                                         {isEditingGoals ? (
                                             <Form {...defaultGoalForm}>
                                                 <form onSubmit={defaultGoalForm.handleSubmit(onGoalSubmit)} className="space-y-4">
-                                                    <FormField control={defaultGoalForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel>Daily Steps Goal</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                                                    <FormField control={defaultGoalForm.control} name="workouts" render={({ field }) => (<FormItem><FormLabel>Weekly Workouts Goal</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                    <FormField control={defaultGoalForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/>Daily Steps Goal</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                    <FormField control={defaultGoalForm.control} name="workouts" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Dumbbell/>Weekly Workouts Goal</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                                     <Button type="submit" className="w-full">Save Goals</Button>
                                                 </form>
                                             </Form>
@@ -525,13 +540,13 @@ export default function FitnessGoalsPage() {
                                     <CardContent>
                                         <Form {...defaultLogForm}>
                                             <form onSubmit={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
-                                                <FormField control={defaultLogForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
+                                                <FormField control={defaultLogForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel className="flex items-center gap-2"><CalendarIcon className="h-4 w-4"/>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
                                                 <FormField
                                                     control={defaultLogForm.control}
                                                     name="activityType"
                                                     render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Activity Type</FormLabel>
+                                                        <FormLabel className="flex items-center gap-2"><Activity/>Activity Type</FormLabel>
                                                         <Select onValueChange={(value) => { field.onChange(value); setSelectedActivityType(value as any); }} value={field.value}>
                                                             <FormControl>
                                                                 <SelectTrigger><SelectValue placeholder="Select an activity type" /></SelectTrigger>
@@ -597,6 +612,18 @@ export default function FitnessGoalsPage() {
                                         </div>
                                     </CardContent>
                                 </Card>
+                                <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
+                                    <CardHeader><CardTitle className="flex items-center gap-2"><Award/> Achievements</CardTitle></CardHeader>
+                                    <CardContent className="space-y-2">
+                                        <div className={cn("flex items-center gap-4 p-3 rounded-lg", streak > 0 ? "bg-amber-100" : "bg-muted")}>
+                                            <Flame className={cn("h-6 w-6", streak > 0 ? "text-amber-500" : "text-muted-foreground")} />
+                                            <div>
+                                                <p className="font-semibold">Consistency Streak</p>
+                                                <p className="text-sm text-muted-foreground">{streak > 0 ? `You're on a ${streak}-day streak!` : "Log an activity today to start a streak."}</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
                                 {relevantSuggestions && (
                                     <Card className={cn("shadow-lg bg-background/80 backdrop-blur-sm border-border")}>
                                         <CardHeader>
@@ -658,5 +685,3 @@ export default function FitnessGoalsPage() {
         </div>
     );
 }
-
-    
