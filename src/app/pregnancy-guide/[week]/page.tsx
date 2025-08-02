@@ -27,7 +27,7 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
     }
     
     const goToWeek = (week: number) => {
-        if(week > 0 && week <= 40) {
+        if(week > 0 && week <= 41) {
             router.push(`/pregnancy-guide/${week}`);
         }
     }
@@ -45,13 +45,13 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                         <Button variant="ghost" size="icon" onClick={() => goToWeek(weekNumber - 1)} disabled={weekNumber <= 1}>
                             <ChevronLeft className="h-4 w-4" />
                         </Button>
-                         <Button variant="ghost" size="icon" onClick={() => goToWeek(weekNumber + 1)} disabled={weekNumber >= 40}>
+                         <Button variant="ghost" size="icon" onClick={() => goToWeek(weekNumber + 1)} disabled={weekNumber >= 41}>
                             <ChevronRight className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>
             </header>
-            <main className="flex-grow container mx-auto px-4 py-8">
+            <main className="flex-grow container mx-auto px-4 py-8 space-y-8">
                  <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
                     <CardContent className="p-0">
                         <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -105,8 +105,18 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                        </div>
                     </CardContent>
                 </Card>
+                
+                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
+                    <CardHeader>
+                        <CardTitle className="text-pink-800">Your Body's Journey: Week {weekData.week}</CardTitle>
+                        <CardDescription>A visual look at how your body might be changing this week.</CardDescription>
+                    </CardHeader>
+                     <CardContent className="p-0 flex items-center justify-center">
+                        <Image src={weekData.motherImageUrl} alt={`Illustration of mother's body at week ${weekData.week}`} width={600} height={600} className="object-contain w-full h-auto" />
+                    </CardContent>
+                </Card>
+
             </main>
         </div>
     );
 }
-
