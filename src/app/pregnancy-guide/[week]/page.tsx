@@ -1,0 +1,112 @@
+
+"use client";
+
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
+import { ChevronLeft, ChevronRight, ChevronsRight, Home } from 'lucide-react';
+import { weeklyDevelopment } from '@/lib/pregnancy-data';
+import Image from 'next/image';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+export default function WeekDetailPage({ params }: { params: { week: string } }) {
+    const router = useRouter();
+    const weekNumber = parseInt(params.week, 10);
+    const weekData = weeklyDevelopment.find(w => w.week === weekNumber);
+
+    if (!weekData) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <h1 className="text-2xl font-bold">Week not found</h1>
+                <Button onClick={() => router.push('/pregnancy-guide')} className="mt-4">
+                    Back to Guide
+                </Button>
+            </div>
+        );
+    }
+    
+    const goToWeek = (week: number) => {
+        if(week > 0 && week <= 40) {
+            router.push(`/pregnancy-guide/${week}`);
+        }
+    }
+
+    return (
+        <div className="relative flex flex-col min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
+            <header className="container mx-auto px-4 py-6 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
+                <div className="flex justify-between items-center">
+                    <GlowHerLogo />
+                    <div className="flex items-center gap-2">
+                        <Button variant="ghost" onClick={() => router.push('/pregnancy-guide')}>
+                            <Home className="mr-2 h-4 w-4" />
+                            Guide
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => goToWeek(weekNumber - 1)} disabled={weekNumber <= 1}>
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                         <Button variant="ghost" size="icon" onClick={() => goToWeek(weekNumber + 1)} disabled={weekNumber >= 40}>
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+            </header>
+            <main className="flex-grow container mx-auto px-4 py-8">
+                 <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
+                    <CardContent className="p-0">
+                        <div className="grid grid-cols-1 lg:grid-cols-2">
+                            <div className="relative">
+                                <Image src={weekData.imageUrl} data-ai-hint={weekData.aiHint} alt={`Week ${weekData.week} development`} width={600} height={600} className="object-cover w-full h-full" />
+                                <div className="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
+                                    <h1 className="font-headline text-4xl text-white">{weekData.title}</h1>
+                                    <p className="text-white/90 mt-1">{weekData.size}</p>
+                                </div>
+                            </div>
+                            <div className="p-6 space-y-4">
+                                <Card className="bg-pink-100/30">
+                                    <CardHeader>
+                                        <CardTitle className="text-pink-800">Weekly Summary</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-slate-700">{weekData.summary}</p>
+                                    </CardContent>
+                                </Card>
+                                
+                                <Tabs defaultValue="development" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
+                                        <TabsTrigger value="development" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">Baby</TabsTrigger>
+                                        <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">Body</TabsTrigger>
+                                        <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">Symptoms</TabsTrigger>
+                                        <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">Tips</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="development" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-96 overflow-y-auto">
+                                        <ul className="space-y-3">
+                                            {weekData.development.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
+                                        </ul>
+                                    </TabsContent>
+                                    <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-96 overflow-y-auto">
+                                        <ul className="space-y-3">
+                                            {weekData.bodyChanges.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
+                                        </ul>
+                                    </TabsContent>
+                                    <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-96 overflow-y-auto">
+                                        <ul className="space-y-3">
+                                            {weekData.symptoms.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
+                                        </ul>
+                                    </TabsContent>
+                                    <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-96 overflow-y-auto">
+                                        <ul className="space-y-3">
+                                            {weekData.tips.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
+                                        </ul>
+                                    </TabsContent>
+                                </Tabs>
+
+                            </div>
+                       </div>
+                    </CardContent>
+                </Card>
+            </main>
+        </div>
+    );
+}
+

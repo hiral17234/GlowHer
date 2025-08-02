@@ -23,6 +23,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/use-language';
 import Link from 'next/link';
+import { weeklyDevelopment } from '@/lib/pregnancy-data';
 
 
 const pregnancyFormSchema = z.object({
@@ -59,245 +60,6 @@ const pregnancySymptoms = [
 const PREGNANCY_TRACKER_KEY = 'glowher-pregnancy-tracker';
 const PREGNANCY_SYMPTOM_LOG_PREFIX = 'glowher-pregnancy-symptom-';
 
-type WeeklyInfo = {
-    emoji: string;
-    text: string;
-}
-
-const weeklyDevelopment: Array<{
-    week: number;
-    title: string;
-    size: string;
-    summary: string;
-    development: WeeklyInfo[];
-    bodyChanges: WeeklyInfo[];
-    symptoms: WeeklyInfo[];
-    tips: WeeklyInfo[];
-    imageUrl: string;
-    aiHint: string;
-}> = [
-    { 
-        week: 0, 
-        title: "Getting Started", 
-        size: "Your journey is about to begin.", 
-        summary: "Set your due date or last menstrual period to start tracking your pregnancy week by week.",
-        development: [],
-        bodyChanges: [],
-        symptoms: [],
-        tips: [],
-        imageUrl: "https://placehold.co/600x400.png", 
-        aiHint: "pregnancy test" 
-    },
-    { 
-        week: 1, 
-        title: "Week 1: The Journey Begins", 
-        size: "You're on your period, so not yet pregnant.", 
-        summary: "Pregnancy is counted from the first day of your last menstrual period. This week, your body is preparing for potential conception.",
-        development: [
-            { emoji: '🩸', text: 'The first day of your period marks the beginning of your menstrual cycle and week 1 of pregnancy.' },
-            { emoji: '🧬', text: 'Hormones like FSH (follicle-stimulating hormone) begin to rise, preparing your ovaries.' },
-            { emoji: '🥚', text: 'Multiple follicles, each containing an egg, start to mature in your ovaries.' },
-            { emoji: '🧱', text: 'Your body sheds last month\'s uterine lining to prepare a fresh, new one.' },
-            { emoji: '🌱', text: 'Estrogen levels are low at the start of the week but will begin to rise.' },
-            { emoji: '⏲️', text: 'This phase typically lasts between 3 to 7 days for most women.' },
-            { emoji: '✨', text: 'Your body is resetting itself for a potential pregnancy this cycle.' },
-            { emoji: '💪', text: 'It\'s a period of renewal and preparation on a microscopic level.' }
-        ],
-        bodyChanges: [
-            { emoji: '🩸', text: 'The most obvious change is your menstrual period.' },
-            { emoji: '🌡️', text: 'Your basal body temperature is at its lowest point during your period.' },
-            { emoji: ' cervix', text: 'The cervix is low, firm, and slightly open to allow blood to pass.' },
-            { emoji: '⚖️', text: 'Hormone levels (estrogen and progesterone) are at their lowest.' },
-            { emoji: '😩', text: 'You might feel tired or have less energy due to hormonal changes and blood loss.' },
-            { emoji: '💧', text: 'Water retention from the previous cycle starts to decrease.' },
-            { emoji: '🧖‍♀️', text: 'Some women find their skin is more prone to breakouts during this time.' },
-            { emoji: '😌', text: 'For many, the start of their period brings relief from PMS symptoms.' }
-        ],
-        symptoms: [
-            { emoji: '🩸', text: 'Vaginal bleeding is the primary symptom of this week.' },
-            { emoji: '😖', text: 'Uterine cramping is common as your uterus contracts to shed its lining.' },
-            { emoji: '🎈', text: 'Bloating and water retention can carry over from the days before your period.' },
-            { emoji: '🤕', text: 'Hormonal headaches or migraines can occur due to the drop in estrogen.' },
-            { emoji: '😴', text: 'Fatigue and low energy are very common.' },
-            { emoji: '🎢', text: 'Mood swings, irritability, or feeling more emotional are possible.' },
-            { emoji: '😫', text: 'Lower back pain often accompanies menstrual cramps.' },
-            { emoji: '🍫', text: 'You might still experience food cravings from the premenstrual phase.' }
-        ],
-        tips: [
-            { emoji: '💊', text: 'Start taking a prenatal vitamin with at least 400 mcg of folic acid now.' },
-            { emoji: '🗓️', text: 'Track your cycle using a calendar or app to predict your fertile window.' },
-            { emoji: '🧘‍♀️', text: 'Prioritize rest and gentle movement like walking or stretching.' },
-            { emoji: '👩‍⚕️', text: 'Schedule a preconception check-up with your doctor to discuss your health.' },
-            { emoji: '🚭', text: 'Reduce or eliminate alcohol and smoking to create a healthy environment for conception.' },
-            { emoji: '☕', text: 'Limit caffeine intake to one or two cups of coffee per day.' },
-            { emoji: '🥗', text: 'Focus on a balanced diet rich in iron and vitamin C to replenish your body.' },
-            { emoji: '💕', text: 'Communicate with your partner about your plans and feelings on this journey.' }
-        ],
-        imageUrl: "https://assets.babycenter.com/ims/2025/03/02-fetaldev-all-skintones_4x3.jpg?width=396", 
-        aiHint: "calendar vitamins" 
-    },
-    { 
-        week: 2, 
-        title: "Week 2: Preparing for Ovulation", 
-        size: "An egg is maturing in your ovary.", 
-        summary: "Your uterine lining is thickening, and your body is getting ready to release an egg. This is your fertile window.",
-        development: [
-            { emoji: '🥚', text: 'A single dominant follicle outgrows the others and prepares for ovulation.' },
-            { emoji: '📈', text: 'Rising estrogen levels cause the uterine lining (endometrium) to thicken.' },
-            { emoji: '🧠', text: 'The pituitary gland releases a surge of Luteinizing Hormone (LH) to trigger ovulation.' },
-            { emoji: '💧', text: 'Cervical mucus becomes clearer, thinner, and more slippery to help sperm.' },
-            { emoji: '✨', text: 'The egg inside the follicle completes its first meiotic division.' },
-            { emoji: '🚪', text: 'The cervix softens and opens slightly in preparation.' },
-            { emoji: '⏰', text: 'Ovulation typically occurs around the end of this week.' },
-            { emoji: '🕊️', text: 'The stage is set for the egg to be released and potentially fertilized.' }
-        ],
-        bodyChanges: [
-            { emoji: '⚡', text: 'You may notice a significant increase in your energy levels.' },
-            { emoji: '💕', text: 'Libido often peaks during this phase due to high estrogen.' },
-            { emoji: '🌡️', text: 'Your basal body temperature will have a slight dip just before ovulation.' },
-            { emoji: '💧', text: 'You\'ll notice clear, stretchy, "egg-white" cervical mucus.' },
-            { emoji: '👃', text: 'Some women experience a heightened sense of smell.' },
-            { emoji: '😊', text: 'Your mood may be more positive, outgoing, and sociable.' },
-            { emoji: '✨', text: 'Skin often appears clearer and more radiant—the "ovulation glow."' },
-            { emoji: '🤏', text: 'Some women feel a slight twinge of pain on one side as the ovary releases the egg.' }
-        ],
-        symptoms: [
-            { emoji: '💧', text: 'Increased, watery, or egg-white-like vaginal discharge is a key sign.' },
-            { emoji: '😊', text: 'A general feeling of well-being and increased energy.' },
-            { emoji: '❤️', text: 'Heightened sex drive is very common.' },
-            { emoji: '🤕', text: 'Mild one-sided pelvic pain (mittelschmerz) can occur during ovulation.' },
-            { emoji: '🎈', text: 'Light bloating is possible for some women.' },
-            { emoji: '✨', text: 'A small amount of light spotting can occur during ovulation.' },
-            { emoji: '🍈', text: 'Breasts may feel slightly tender or sensitive.' },
-            { emoji: '✨', text: 'Most symptoms this week are positive signs of peak fertility.' }
-        ],
-        tips: [
-            { emoji: '❤️', text: 'This is the most fertile time in your cycle to try to conceive.' },
-            { emoji: '🧪', text: 'Use ovulation predictor kits (OPKs) to pinpoint the LH surge.' },
-            { emoji: '🌡️', text: 'Track your basal body temperature to confirm ovulation after it happens.' },
-            { emoji: '🥗', text: 'Eat nutrient-dense foods to support hormonal health.' },
-            { emoji: '💧', text: 'Stay well-hydrated, as it can improve cervical mucus quality.' },
-            { emoji: '🚭', text: 'Continue avoiding alcohol, smoking, and excessive caffeine.' },
-            { emoji: '🧘‍♀️', text: 'Manage stress with activities like yoga or meditation.' },
-            { emoji: '💬', text: 'Keep communication open and enjoyable with your partner.' }
-        ],
-        imageUrl: "https://placehold.co/600x400.png", 
-        aiHint: "flower blooming" 
-    },
-    { 
-        week: 3, 
-        title: "Week 3: Fertilization & Implantation", 
-        size: "The fertilized egg, or blastocyst, is a microscopic ball of cells.", 
-        summary: "Success! A sperm has fertilized the egg, and this new ball of cells is making its way to your uterus for implantation.",
-        development: [
-            { emoji: '🎉', text: 'Fertilization! A single sperm penetrates the egg, creating a zygote.' },
-            { emoji: '🧬', text: 'The baby\'s genetic makeup, including sex, is determined at this moment.' },
-            { emoji: '➗', text: 'The zygote begins rapidly dividing into a ball of cells called a blastocyst.' },
-            { emoji: '🚗', text: 'The blastocyst travels down the fallopian tube toward the uterus.' },
-            { emoji: '🏠', text: 'The blastocyst begins to burrow into the plush uterine lining—this is implantation.' },
-            { emoji: '🤝', text: 'The outer cells of the blastocyst will form the placenta.' },
-            { emoji: '👶', text: 'The inner cells of the blastocyst will become the embryo.' },
-            { emoji: '📈', text: 'The hormone hCG (human chorionic gonadotropin) begins to be produced.' }
-        ],
-        bodyChanges: [
-            { emoji: '🤫', text: 'Externally, you won\'t notice any changes, as all the action is happening on a microscopic level.' },
-            { emoji: '📈', text: 'Internally, the hormone progesterone begins to rise, signaled by the newly forming placenta.' },
-            { emoji: '🌸', text: 'Some women (about 25%) experience light implantation spotting or cramping as the blastocyst embeds in the uterus.' },
-            { emoji: '🌡️', text: 'Your basal body temperature will remain elevated after ovulation.' },
-            { emoji: '🍈', text: 'You might experience very early breast tenderness due to rising hormones.' },
-            { emoji: '😴', text: 'A wave of fatigue might hit as your body dedicates enormous energy to the implantation process.' },
-            { emoji: '🚽', text: 'Increased progesterone can sometimes lead to early bloating or constipation.' },
-            { emoji: '✨', text: 'Your immune system lowers slightly to prevent rejecting the new embryo.' }
-        ],
-        symptoms: [
-            { emoji: '🩸', text: 'Light spotting (pink or brown) around 6-12 days past ovulation, known as implantation bleeding.' },
-            { emoji: '😖', text: 'Mild cramping, similar to period cramps but usually lighter.' },
-            { emoji: '😴', text: 'Early and unexplained fatigue is a very common first sign.' },
-            { emoji: '🍈', text: 'Sore, tender, or swollen breasts.' },
-            { emoji: '🎈', text: 'Bloating that feels similar to pre-menstrual bloating.' },
-            { emoji: '👃', text: 'A heightened sense of smell can start this early for some.' },
-            { emoji: '🤢', text: 'Some women may experience very mild, early nausea.' },
-            { emoji: '✨', text: 'Many women experience no symptoms at all this week.' }
-        ],
-        tips: [
-            { emoji: '🧘‍♀️', text: '"Act as if you are pregnant." Continue healthy habits just in case.' },
-            { emoji: '⏳', text: 'Resist the urge to take a pregnancy test yet; hCG levels are likely still too low.' },
-            { emoji: '💧', text: 'Stay hydrated and eat nutritious, whole foods.' },
-            { emoji: '💊', text: 'Don\'t forget your daily prenatal vitamin with folic acid.' },
-            { emoji: '😌', text: 'This can be an anxious time. Practice mindfulness and relaxation techniques.' },
-            { emoji: '🏃‍♀️', text: 'Continue with gentle to moderate exercise, avoiding any new, strenuous activities.' },
-            { emoji: '🚫', text: 'Steer clear of alcohol, smoking, and unsafe foods like unpasteurized cheese.' },
-            { emoji: '❤️', text: 'Lean on your partner or a friend for support during the "two-week wait."' }
-        ],
-        imageUrl: "https://placehold.co/600x400.png", 
-        aiHint: "cells microscope" 
-    },
-    // Weeks 4-40 would follow a similar, expanded structure.
-    { 
-        week: 4, 
-        title: "Week 4: A Positive Test!", 
-        size: "Your baby is the size of a poppy seed.", 
-        summary: "The blastocyst has successfully implanted in your uterine wall. This is the week you'll likely miss your period and get a positive pregnancy test!", 
-        development: [
-            { emoji: '🏠', text: 'The embryo is securely implanted in the uterine lining.' },
-            { emoji: '🧱', text: 'It has differentiated into three distinct layers: ectoderm, mesoderm, and endoderm.' },
-            { emoji: '🧠', text: 'The ectoderm will form the nervous system, skin, and hair.' },
-            { emoji: '❤️', text: 'The mesoderm will develop into the skeleton, muscles, heart, and blood vessels.' },
-            { emoji: '🫁', text: 'The endoderm will become the digestive system, liver, and lungs.' },
-            { emoji: '탯', text: 'The placenta begins to form and produce the pregnancy hormone hCG.' },
-            { emoji: '💧', text: 'The amniotic sac, which will cushion the baby, is also forming.' },
-            { emoji: '📈', text: 'Growth is happening at an exponential rate.' }
-        ],
-        bodyChanges: [
-            { emoji: '🩸', text: 'A missed period is the most common and clear sign of pregnancy.' },
-            { emoji: '➕', text: 'Hormone hCG is now high enough to be detected by a home pregnancy test.' },
-            { emoji: '🍈', text: 'Breasts may feel even more swollen, tender, and tingly.' },
-            { emoji: '🎈', text: 'Progesterone-induced bloating can be significant.' },
-            { emoji: '🌡️', text: 'Your basal body temperature remains elevated.' },
-            { emoji: '🚽', text: 'You may notice an increased need to urinate as your uterus grows.' },
-            { emoji: '😩', text: 'Fatigue can feel profound as your body works overtime.' },
-            { emoji: '🤫', text: 'From the outside, there are no visible changes yet.' }
-        ],
-        symptoms: [
-            { emoji: '🗓️', text: 'A missed menstrual period.' },
-            { emoji: '🍈', text: 'Extremely sore and sensitive breasts.' },
-            { emoji: '😴', text: 'Overwhelming fatigue that feels like you\'ve run a marathon.' },
-            { emoji: '😖', text: 'Mild, period-like cramping (without bleeding) is normal.' },
-            { emoji: '🤢', text: 'Morning sickness (which can happen any time of day) may begin.' },
-            { emoji: '❤️', text: 'Food cravings or aversions may start to appear.' },
-            { emoji: '🎢', text: 'Mood swings due to the rapid increase in hormones.' },
-            { emoji: '👃', text: 'A heightened sense of smell can make certain scents unbearable.' }
-        ],
-        tips: [
-            { emoji: '🧪', text: 'Take a home pregnancy test first thing in the morning for the most accurate result.' },
-            { emoji: '🎉', text: 'Celebrate! This is a huge moment. Let yourself feel all the emotions.' },
-            { emoji: '👩‍⚕️', text: 'Call your doctor to schedule your first prenatal appointment, usually around week 8.' },
-            { emoji: '💊', text: 'If you haven\'t already, start taking your prenatal vitamins immediately.' },
-            { emoji: '🚭', text: 'Double-down on healthy habits: no alcohol, no smoking.' },
-            { emoji: '💧', text: 'Stay hydrated, even if you feel bloated.' },
-            { emoji: '😴', text: 'Listen to your body and rest whenever you can. Naps are your friend.' },
-            { emoji: '❤️', text: 'Share the news with your partner and decide together when to tell others.' }
-        ],
-        imageUrl: "https://placehold.co/600x400.png", 
-        aiHint: "pregnancy test positive" 
-    }
-];
-
-// Populate remaining weeks with placeholder data to avoid errors
-for (let i = 5; i <= 40; i++) {
-    weeklyDevelopment.push({
-        week: i,
-        title: `Week ${i}: Placeholder Title`,
-        size: `Placeholder size for week ${i}`,
-        summary: `Placeholder summary for week ${i}.`,
-        development: [{ emoji: '🚧', text: `Detailed content for week ${i} development is being generated.` }],
-        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week ${i} body changes is being generated.` }],
-        symptoms: [{ emoji: '🚧', text: `Detailed content for week ${i} symptoms is being generated.` }],
-        tips: [{ emoji: '🚧', text: `Detailed content for week ${i} tips is being generated.` }],
-        imageUrl: "https://placehold.co/600x400.png",
-        aiHint: "baby illustration"
-    });
-}
 
 const animatedTrimesterVideos: { [key: number]: string } = {
     1: 'D_jxGJsEY2A',
@@ -333,8 +95,10 @@ const translations = {
         customSymptomsPlaceholder: "Anything else to add?",
         saveSymptoms: "Save Today's Symptoms",
         loggedToday: "Logged today:",
-        babyLookTitle: "Here is what your baby might look like now",
-        guidedWorkoutTitle: (trimester: number) => `Guided Workout for your Trimester ${trimester}`,
+        animatedJourneyTitle: (trimester: number) => `Animated Journey: Trimester ${trimester}`,
+        expertInsightsTitle: (trimester: number) => `Expert Insights: Trimester ${trimester}`,
+        animatedJourneyDesc: "See a visual representation of your baby's development.",
+        expertInsightsDesc: "Learn more about what to expect this trimester.",
         myJournal: "My Pregnancy Journal",
         resetDate: "Reset / Enter New Date",
         getStartedTitle: "Let’s Get Started!",
@@ -367,8 +131,10 @@ const translations = {
         customSymptomsPlaceholder: "कुछ और जोड़ना है?",
         saveSymptoms: "आज के लक्षण सहेजें",
         loggedToday: "आज लॉग किया गया:",
-        babyLookTitle: "आपका बच्चा अब ऐसा दिख सकता है",
-        guidedWorkoutTitle: (trimester: number) => `आपकी ${trimester}. तिमाही के लिए निर्देशित कसरत`,
+        animatedJourneyTitle: (trimester: number) => `एनिमेटेड यात्रा: तिमाही ${trimester}`,
+        expertInsightsTitle: (trimester: number) => `विशेषज्ञ अंतर्दृष्टि: तिमाही ${trimester}`,
+        animatedJourneyDesc: "अपने बच्चे के विकास का एक दृश्य प्रतिनिधित्व देखें।",
+        expertInsightsDesc: "इस तिमाही में क्या अपेक्षा करें, इसके बारे में और जानें।",
         myJournal: "मेरी गर्भावस्था जर्नल",
         resetDate: "रीसेट / नई तारीख दर्ज करें",
         getStartedTitle: "आइए शुरू करें!",
@@ -388,7 +154,7 @@ const navItems = [
     { href: '/pregnancy-tracker', icon: Baby, label: 'Weekly Guide' },
     { href: '/pregnancy-symptom-history', icon: FileText, label: 'Health Log' },
     { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
-    { href: '/resources', icon: Library, label: 'Resources' },
+    { href: '/pregnancy-guide', icon: BookOpen, label: 'Guide' },
 ];
 
 export default function PregnancyTrackerPage() {
@@ -812,8 +578,8 @@ export default function PregnancyTrackerPage() {
                              {animatedVideoId && (
                                 <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                                     <CardHeader>
-                                        <CardTitle className="font-headline text-2xl text-pink-600">Animated Journey: Trimester {pregnancyDetails.trimester}</CardTitle>
-                                        <CardDescription>See a visual representation of your baby's development.</CardDescription>
+                                        <CardTitle className="font-headline text-2xl text-pink-600">{t.animatedJourneyTitle(pregnancyDetails.trimester)}</CardTitle>
+                                        <CardDescription>{t.animatedJourneyDesc}</CardDescription>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="aspect-video">
@@ -825,8 +591,8 @@ export default function PregnancyTrackerPage() {
                             {knowledgeVideoId && (
                                 <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                                     <CardHeader>
-                                        <CardTitle className="font-headline text-2xl text-pink-600">Expert Insights: Trimester {pregnancyDetails.trimester}</CardTitle>
-                                        <CardDescription>Learn more about what to expect this trimester.</CardDescription>
+                                        <CardTitle className="font-headline text-2xl text-pink-600">{t.expertInsightsTitle(pregnancyDetails.trimester)}</CardTitle>
+                                        <CardDescription>{t.expertInsightsDesc}</CardDescription>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="aspect-video">
