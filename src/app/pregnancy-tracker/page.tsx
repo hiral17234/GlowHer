@@ -357,7 +357,7 @@ const weeklyDevelopment = [
         size: "Your baby is the size of a head of cauliflower.",
         summary: "That little head of hair is growing in and now has color and texture! Baby is also practicing breathing by inhaling and exhaling amniotic fluid.",
         development: "💇‍♀️ The baby's hair is continuing to grow and now has both color and texture.\n\n💨 They are practicing breathing by inhaling and exhaling amniotic fluid, which is vital for lung development.\n\n👃 Nostrils are beginning to open.\n\n🤲 The hands are now fully developed and can be opened and closed into fists.\n\nSPINAL CORD structure is maturing, with vertebrae, ligaments, and nerves all in place.\n\nBLOOD VESSELS are expanding and the capillaries are giving the skin a pinkish hue.\n\n⚖️ The baby is steadily gaining fat, which is smoothing out their wrinkled skin.\n\nREFLEXES are becoming more fine-tuned.",
-        bodyChanges: "💥 Your growing uterus can put pressure on your sciatic nerve, causing sciatica—a sharp pain that radiates from your lower back or buttock down one leg.\n\n✋ Carpal tunnel syndrome (numbness, tingling, or pain in your hands and wrists) can appear due to pregnancy-related swelling pressing on nerves.\n\nYour belly is growing steadily, and you're looking more pregnant each day.\n\nYour balance is increasingly challenged.\n\nIt might be getting harder to take a deep breath.\n\nYour digestive system is very sluggish, leading to constipation.\n\nYour ligaments are very relaxed, which can cause pelvic or hip pain.\n\nYour body is storing fat in preparation for breastfeeding.",
+        bodyChanges: "💥 Your growing uterus can put pressure on your sciatic nerve, causing sciatica—a sharp pain that radiates from your lower back or buttock down one leg.\n\n✋ Carpal tunnel syndrome (numbness, tingling, or pain in your hands and wrists) can appear due to pregnancy-related swelling pressing on nerves.\n\nYour belly is growing steadily, and you're looking more pregnant each day.\n\nYour balance is increasingly challenged.\n\nIt might be getting harder to take a deep breath.\n\nYour digestive system is very sluggish, leading to constipation.\n\nYour ligaments are very relaxed, which can lead to pelvic or hip pain.\n\nYour body is storing fat in preparation for breastfeeding.",
         symptoms: "💥 Sciatic nerve pain can be a sharp, shooting, or burning pain down the back of your leg.\n\n✋ Numbness or tingling in your hands, especially at night, could be carpal tunnel syndrome.\n\n🦵 Restless leg syndrome (an uncontrollable urge to move your legs) can make it hard to sleep.\n\n😴 Insomnia and frequent waking are very common.\n\nHemorrhoids can be a painful result of constipation and pressure.\n\nYour 'outie' belly button may be more pronounced.\n\nFeeling hot and sweating more is normal.\n\nFeeling your baby move is a constant and reassuring presence.",
         tips: "🧘‍♀️ Gentle stretching (like pigeon pose) can help with sciatica. Avoid sitting or standing in one position for too long.\n\n👐 For carpal tunnel, try to avoid repetitive hand movements and consider wearing a wrist splint at night.\n\n🍌 For restless legs, try stretching before bed and ensure you're getting enough iron and magnesium.\n\n🌾 Combat constipation with a high-fiber diet, lots of water, and physical activity.\n\nSitz baths or witch hazel pads can soothe hemorrhoids.\n\n👶 Start thinking about your baby's name if you haven't already.\n\n📝 Begin to formulate your birth plan, thinking about your preferences for labor and delivery.\n\n🤝 Talk to other new moms about their experiences and advice.",
         imageUrl: "https://placehold.co/600x400.png",
@@ -596,6 +596,7 @@ const translations = {
         saveSymptoms: "Save Today's Symptoms",
         loggedToday: "Logged today:",
         babyLookTitle: "Here is what your baby might look like now",
+        guidedWorkoutTitle: (trimester: number) => `Guided Workout for your Trimester ${trimester}`,
         myJournal: "My Pregnancy Journal",
         resetDate: "Reset / Enter New Date",
         getStartedTitle: "Let’s Get Started!",
@@ -629,6 +630,7 @@ const translations = {
         saveSymptoms: "आज के लक्षण सहेजें",
         loggedToday: "आज लॉग किया गया:",
         babyLookTitle: "आपका बच्चा अब ऐसा दिख सकता है",
+        guidedWorkoutTitle: (trimester: number) => `आपकी ${trimester}. तिमाही के लिए निर्देशित कसरत`,
         myJournal: "मेरी गर्भावस्था जर्नल",
         resetDate: "रीसेट / नई तारीख दर्ज करें",
         getStartedTitle: "आइए शुरू करें!",
@@ -809,6 +811,7 @@ export default function PregnancyTrackerPage() {
 
 
   const currentWeekData = pregnancyDetails ? weeklyDevelopment[pregnancyDetails.gestationalAgeWeeks] : null;
+  const trimesterVideoUrl = pregnancyDetails ? trimesterVideos[pregnancyDetails.trimester] : null;
   const babyLookVideoUrl = pregnancyDetails ? babyLookVideos[pregnancyDetails.trimester] : null;
   const loggedSymptoms = symptomForm.watch('symptoms') || [];
 
@@ -926,7 +929,7 @@ export default function PregnancyTrackerPage() {
                                         </div>
 
                                         <Tabs defaultValue="body" className="w-full">
-                                            <TabsList className="grid w-full grid-cols-3 bg-pink-100/50 text-pink-800">
+                                            <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
                                                 <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
                                                 <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
                                                 <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
@@ -1036,27 +1039,51 @@ export default function PregnancyTrackerPage() {
                                 </Form>
                             </CardContent>
                         </Card>
+                        
+                        <div className="space-y-8">
+                            {babyLookVideoUrl && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader>
+                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
+                                            <Video /> {t.babyLookTitle}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-video">
+                                            <iframe
+                                                className="w-full h-full rounded-lg"
+                                                src={babyLookVideoUrl}
+                                                title="Baby Look YouTube video player"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                         {babyLookVideoUrl && (
-                            <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                <CardHeader>
-                                    <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
-                                        <Video /> {t.babyLookTitle}
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="aspect-video">
-                                        <iframe
-                                            className="w-full h-full rounded-lg"
-                                            src={babyLookVideoUrl}
-                                            title="Baby Look YouTube video player"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowFullScreen
-                                        ></iframe>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
+                             {trimesterVideoUrl && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader>
+                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
+                                            <Video /> {t.guidedWorkoutTitle(pregnancyDetails.trimester)}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-video">
+                                            <iframe
+                                                className="w-full h-full rounded-lg"
+                                                src={trimesterVideoUrl}
+                                                title="Guided Workout YouTube video player"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
+
                     </div>
 
                     <div className="mt-8 flex justify-center gap-4">
