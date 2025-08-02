@@ -330,7 +330,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🦴', text: "The skeleton is beginning to form, though it's made of cartilage, not bone." },
             { emoji: '👁️', text: "The lenses of the eyes are forming." },
             { emoji: '👅', text: "The tongue and mouth cavity are developing." },
-            { emoji: ' kidneys', text: "The kidneys are in place and will soon begin to produce urine." }
+            { emoji: '🫘', text: "The kidneys are in place and will soon begin to produce urine." }
         ],
         bodyChanges: [
             { emoji: '👕', text: "Your clothes might be feeling a bit snug around the waist, even without a real bump." },
@@ -426,7 +426,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '👶', text: "Facial features are becoming more refined and recognizable." },
             { emoji: '🦴', text: "Bones are starting to harden (ossify) throughout the body." },
             { emoji: '👂', text: "The external ears are well-formed." },
-            { emoji: ' órgão', text: "All essential organs are in place and will now focus on maturing." }
+            { emoji: '🫀', text: "All essential organs are in place and will now focus on maturing." }
         ],
         bodyChanges: [
             { emoji: '🤰', text: "Your uterus is continuing to grow, now about the size of a small melon." },
@@ -569,7 +569,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🦴', text: "The skeleton continues to harden." },
             { emoji: '👶', text: "The intestines, which were growing in the umbilical cord, are moving into the abdomen." },
             { emoji: '🩸', text: "The bone marrow is beginning to produce white blood cells." },
-            { emoji: ' pituitary', text: "The pituitary gland at the base of the brain starts producing hormones." },
+            { emoji: '🕳️', text: "The pituitary gland at the base of the brain starts producing hormones." },
             { emoji: '✨', text: "All major body parts and organs are in place." }
         ],
         bodyChanges: [
@@ -685,7 +685,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '👃', text: "A stuffy nose or occasional nosebleeds." },
             { emoji: '✨', text: "Thicker, more lustrous hair." },
             { emoji: '🔥', text: "Heartburn and indigestion may continue." },
-            { emoji: ' varicose', text: "Varicose veins may start to appear on your legs." },
+            { emoji: '🩸', text: "Varicose veins may start to appear on your legs." },
             { emoji: '💧', text: "Increased vaginal discharge." }
         ],
         tips: [
@@ -780,7 +780,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🧠', text: "Forgetfulness or 'pregnancy brain' might be noticeable." },
             { emoji: '🎈', text: "Constipation can be an ongoing issue." },
             { emoji: '👁️', text: "Your eyes may feel dry or sensitive to light." },
-            { emoji: ' varicose', text: "Varicose veins and hemorrhoids can appear." },
+            { emoji: '🩸', text: "Varicose veins and hemorrhoids can appear." },
             { emoji: '🍈', text: "Breasts may occasionally leak a small amount of colostrum." },
             { emoji: '❤️', text: "Increased appetite." }
         ],
@@ -828,8 +828,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '🎈', text: "Gas, bloating, and constipation." },
             { emoji: '🔥', text: "Heartburn after meals." },
             { emoji: '💧', text: "Slight swelling in your extremities." },
-            { emoji: ' itchy', text: "Itchy skin, especially on your belly." },
-            { emoji: '😴', text: "Leg cramps, particularly at night." },
+            { emoji: '✨', text: "Itchy skin, especially on your belly." },
+            { emoji: '😴', text: "Leg cramps, often at night." },
             { emoji: '🧠', text: "Continued forgetfulness or 'pregnancy brain'." }
         ],
         tips: [
@@ -873,11 +873,11 @@ export const weeklyDevelopment: Array<{
         symptoms: [
             { emoji: '✨', text: "More distinct baby movements." },
             { emoji: '😫', text: "Persistent backaches." },
-            { emoji: '😴', text: "Difficulty sleeping comfortably." },
+            { emoji: '😴', text: "Difficulty sleeping." },
             { emoji: '😵', text: "Dizziness or lightheadedness." },
             { emoji: '💧', text: "Swollen feet and ankles." },
             { emoji: '🎈', text: "Indigestion and constipation." },
-            { emoji: ' varicose', text: "Hemorrhoids or varicose veins." },
+            { emoji: '🩸', text: "Hemorrhoids or varicose veins." },
             { emoji: '❤️', text: "A strong appetite." }
         ],
         tips: [
@@ -887,8 +887,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '🧘‍♀️', text: "Stretching can help alleviate aches and pains." },
             { emoji: '🥗', text: "Eat smaller, more frequent meals to help with indigestion." },
             { emoji: '💧', text: "Continue to drink plenty of water." },
-            { emoji: '🗣️', text: "Talk to your baby—it’s great for bonding and their hearing development." },
-            { emoji: '❤️', text: "Enjoy the anatomy scan; it’s an amazing opportunity to see your baby." }
+            { emoji: '🗣️', text: "Your partner might be able to hear the baby’s heartbeat by placing an ear on your belly soon." },
+            { emoji: '👶', text: "Start thinking about whether you want to find out the baby’s sex at the anatomy scan." }
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/18-fetaldev-E-deeptan-4x3.png",
         aiHint: "sweet potato"
@@ -1018,11 +1018,11 @@ export const weeklyDevelopment: Array<{
             { emoji: '✨', text: "Stronger and more regular fetal movements." },
             { emoji: '🔥', text: "Heartburn and indigestion." },
             { emoji: '✨', text: "Appearance of stretch marks." },
-            { emoji: ' varicose', text: "Varicose veins." },
+            { emoji: '🩸', text: "Varicose veins." },
             { emoji: '😫', text: "Backaches." },
             { emoji: '💧', text: "Swollen feet and ankles." },
             { emoji: '🎈', text: "Constipation." },
-            { emoji: ' Braxton Hicks', text: "You might feel your first Braxton Hicks contractions (practice contractions)." }
+            { emoji: '😖', text: "You might feel your first Braxton Hicks contractions (practice contractions)." }
         ],
         tips: [
             { emoji: '🥗', text: "Eat a variety of healthy foods to introduce your baby to different flavors." },
@@ -1070,7 +1070,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🔥', text: "Heartburn." },
             { emoji: '😮‍💨', text: "Shortness of breath." },
             { emoji: '🎈', text: "Constipation." },
-            { emoji: ' Braxton Hicks', text: "Occasional Braxton Hicks contractions." }
+            { emoji: '😖', text: "Occasional Braxton Hicks contractions." }
         ],
         tips: [
             { emoji: '👨‍🏫', text: "Sign up for childbirth education classes if you haven’t already." },
@@ -1114,7 +1114,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '✨', text: "Strong and frequent baby kicks." },
             { emoji: '😫', text: "Backaches." },
             { emoji: '💧', text: "Swollen ankles and feet." },
-            { emoji: ' Braxton Hicks', text: "Practice contractions (Braxton Hicks)." },
+            { emoji: '😖', text: "Practice contractions (Braxton Hicks)." },
             { emoji: '🎈', text: "Bloating and constipation." },
              { emoji: '🤧', text: "Snoring due to nasal congestion." },
             { emoji: '🧠', text: "Forgetfulness." },
@@ -1162,7 +1162,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😫', text: "Back pain." },
             { emoji: '💧', text: "Swelling." },
             { emoji: '✨', text: "Itchy abdomen." },
-            { emoji: ' Braxton Hicks', text: "Practice contractions." },
+            { emoji: '😖', text: "Practice contractions." },
             { emoji: '🎈', text: "Constipation." },
             { emoji: '😵', text: "Dizziness." },
             { emoji: '🦵', text: "Leg cramps." },
@@ -1213,8 +1213,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '🎈', text: "Hemorrhoids." },
             { emoji: '💧', text: "Swelling." },
             { emoji: '😮‍💨', text: "Shortness of breath." },
-            { emoji: ' Braxton Hicks', text: "Practice contractions." },
-            { emoji: ' itchy', text: "Itchy skin." }
+            { emoji: '😖', text: "Practice contractions." },
+            { emoji: '✨', text: "Itchy skin." }
         ],
         tips: [
             { emoji: '🧘‍♀️', text: "Do pelvic tilts and gentle stretches to help with sciatica and back pain." },
@@ -1259,7 +1259,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😴', text: "Insomnia or difficulty sleeping." },
             { emoji: '💧', text: "Swelling." },
             { emoji: '🤕', text: "Headaches." },
-            { emoji: ' Braxton Hicks', text: "Practice contractions." },
+            { emoji: '😖', text: "Practice contractions." },
             { emoji: '🧠', text: "Forgetfulness." },
             { emoji: '🎈', text: "Bloating and gas." },
             { emoji: '🔥', text: "Heartburn." }
@@ -1308,7 +1308,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🎈', text: "Constipation and hemorrhoids." },
             { emoji: '🔥', text: "Heartburn." },
             { emoji: '💧', text: "Swelling." },
-            { emoji: ' Braxton Hicks', text: "More frequent Braxton Hicks contractions." },
+            { emoji: '😖', text: "More frequent Braxton Hicks contractions." },
             { emoji: '😴', text: "Fatigue may return." },
             { emoji: '✨', text: "Feeling the baby hiccup." }
         ],
@@ -1357,8 +1357,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '🔥', text: "Heartburn." },
             { emoji: '🎈', text: "Constipation." },
             { emoji: '💧', text: "Swelling." },
-            { emoji: ' Braxton Hicks', text: "Practice contractions." },
-            { emoji: ' itchy', text: "Itchy skin on your abdomen." }
+            { emoji: '😖', text: "Practice contractions." },
+            { emoji: '✨', text: "Itchy skin on your abdomen." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Ask your doctor about getting the Tdap vaccine to protect your baby from whooping cough." },
@@ -1395,7 +1395,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😮‍💨', text: "You may feel out of breath just from walking across a room." },
             { emoji: '💧', text: "Swelling is common." },
             { emoji: '😴', text: "Good sleep is hard to come by." },
-            { emoji: '🍈', text: "Your breasts are likely heavy and may be leaky." },
+            { emoji: '🍈', text: "Your breasts might be leaky." },
             { emoji: '😊', text: "You are in the final countdown, which is exciting and a bit scary." }
         ],
         symptoms: [
@@ -1406,7 +1406,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😴', text: "Insomnia." },
             { emoji: '💧', text: "Swelling." },
             { emoji: '🧠', text: "Brain fog." },
-            { emoji: ' Braxton Hicks', text: "Practice contractions." }
+            { emoji: '😖', text: "Practice contractions." }
         ],
         tips: [
             { emoji: '🥛', text: "Load up on calcium-rich foods like dairy, leafy greens, and almonds." },
@@ -1452,8 +1452,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '😮‍💨', text: "Shortness of breath." },
             { emoji: '🔥', text: "Intense heartburn." },
             { emoji: '💧', text: "Swelling." },
-            { emoji: ' Braxton Hicks', text: "More frequent practice contractions." },
-            { emoji: ' itchy', text: "Itchy skin." },
+            { emoji: '😖', text: "More frequent practice contractions." },
+            { emoji: '✨', text: "Itchy skin." },
             { emoji: '🎢', text: "Moodiness and impatience." }
         ],
         tips: [
@@ -1488,7 +1488,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🤰', text: "Your belly is large, and you are feeling very pregnant." },
             { emoji: '😮‍💨', text: "Shortness of breath and heartburn are likely your constant companions." },
             { emoji: '🍈', text: "Your breasts might be leaking colostrum." },
-            { emoji: ' Braxton Hicks', text: "You are likely feeling more Braxton Hicks contractions." },
+            { emoji: '😖', text: "You are likely feeling more Braxton Hicks contractions." },
             { emoji: '😫', text: "Back pain can be significant." },
             { emoji: '😴', text: "Sleep is elusive for many at this stage." },
             { emoji: '💧', text: "Swelling is a daily occurrence." },
@@ -1498,16 +1498,16 @@ export const weeklyDevelopment: Array<{
             { emoji: '😮‍💨', text: "Shortness of breath." },
             { emoji: '😫', text: "Backaches." },
             { emoji: '😴', text: "Difficulty sleeping." },
-            { emoji: ' Braxton Hicks', text: "Frequent practice contractions." },
+            { emoji: '😖', text: "Frequent practice contractions." },
             { emoji: '🍈', text: "Leaky breasts." },
             { emoji: '🎈', text: "Hemorrhoids." },
-            { emoji: ' clumsy', text: "Clumsiness due to your shifting center of gravity." },
+            { emoji: '🤸‍♀️', text: "Clumsiness due to your shifting center of gravity." },
             { emoji: '🔥', text: "Heartburn." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Create a list of people to call when you go into labor." },
             { emoji: '🧘‍♀️', text: "Try a warm bath to soothe your aching body." },
-            { emoji: '😴', text: "Rest as much as you can. Put your feet up whenever possible." },
+            { emoji: '😴', text: "Rest and nap whenever you can. Put your feet up whenever possible." },
             { emoji: '🗣️', text: "Review your birth plan with your partner and doctor." },
             { emoji: '👶', text: "Install the car seat and have it inspected." },
             { emoji: '🥗', text: "Continue to eat a healthy diet." },
@@ -1538,7 +1538,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😮‍💨', text: "You feel breathless from the slightest exertion." },
             { emoji: '🔥', text: "Heartburn can be severe." },
             { emoji: '😴', text: "Sleep is very difficult to come by." },
-            { emoji: ' Braxton Hicks', text: "Braxton Hicks contractions are more frequent." },
+            { emoji: '😖', text: "Braxton Hicks contractions are more frequent." },
             { emoji: '💧', text: "Swelling is likely a constant." },
             { emoji: '❤️', text: "The anticipation is building!" }
         ],
@@ -1546,7 +1546,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😫', text: "Back pain, hip pain, pelvic pressure." },
             { emoji: '🔥', text: "Heartburn." },
             { emoji: '😮‍💨', text: "Shortness of breath." },
-            { emoji: ' Braxton Hicks', text: "More noticeable practice contractions." },
+            { emoji: '😖', text: "More noticeable practice contractions." },
             { emoji: '😴', text: "Insomnia." },
             { emoji: '💧', text: "Swelling." },
             { emoji: '🍈', text: "Leaky breasts." },
@@ -1587,7 +1587,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😴', text: "Getting enough rest is a top priority." },
             { emoji: '💧', text: "Swelling in your hands and feet is normal." },
             { emoji: '🔥', text: "Heartburn is common." },
-            { emoji: ' clumsy', text: "You might feel more clumsy than usual." },
+            { emoji: '🤸‍♀️', text: "You might feel more clumsy than usual." },
             { emoji: '❤️', text: "The reality of labor and delivery is setting in." }
         ],
         symptoms: [
@@ -1596,15 +1596,15 @@ export const weeklyDevelopment: Array<{
             { emoji: '🔥', text: "Heartburn." },
             { emoji: '💧', text: "Swelling." },
             { emoji: '😴', text: "Insomnia." },
-            { emoji: ' carpal tunnel', text: "Numbness or tingling in your hands (carpal tunnel)." },
-            { emoji: ' itchy', text: "Itchy skin." },
-            { emoji: ' Braxton Hicks', text: "Practice contractions." }
+            { emoji: '🖐️', text: "Numbness or tingling in your hands (carpal tunnel)." },
+            { emoji: '✨', text: "Itchy skin." },
+            { emoji: '😖', text: "Practice contractions." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Learn the signs of labor and when to call your doctor or go to the hospital." },
             { emoji: '😴', text: "Rest and nap whenever you can." },
             { emoji: '🗣️', text: "Pack your hospital bag if you haven’t already." },
-            { emoji: '🧘‍♀️', text: "Continue with gentle stretching and walking." },
+            { emoji: '🧘‍♀️', text: "Continue with gentle stretching." },
             { emoji: '💧', text: "Keep drinking water." },
             { emoji: '🥗', text: "Eat small, frequent meals to keep your energy up." },
             { emoji: '👶', text: "Finish any last-minute nursery preparations." },
@@ -1633,8 +1633,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '😮‍💨', text: "You might feel like you can’t eat a full meal because there’s no room." },
             { emoji: '😫', text: "Fatigue is likely back in full force." },
             { emoji: '🚽', text: "Frequent urination is a given." },
-            { emoji: ' Braxton Hicks', text: "Braxton Hicks contractions might be more frequent and stronger." },
-            { emoji: '✨', text: "Your vision might be a bit blurry." },
+            { emoji: '😖', text: "Braxton Hicks contractions might be more frequent and stronger." },
+            { emoji: '👁️', text: "Your vision might be a bit blurry." },
             { emoji: '💧', text: "Swelling is common." },
             { emoji: '❤️', text: "You are so close to meeting your baby!" }
         ],
@@ -1644,9 +1644,9 @@ export const weeklyDevelopment: Array<{
             { emoji: '🔥', text: "Heartburn." },
             { emoji: '💧', text: "Swelling." },
             { emoji: '😫', text: "Pelvic pressure and backaches." },
-            { emoji: ' Braxton Hicks', text: "Stronger practice contractions." },
+            { emoji: '😖', text: "Stronger practice contractions." },
             { emoji: '😴', text: "Difficulty sleeping." },
-            { emoji: ' blurry vision', text: "Blurry vision." }
+            { emoji: '😵', text: "Blurry vision." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Your doctor might check your cervix for dilation at your upcoming appointments." },
@@ -1670,8 +1670,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '⚖️', text: "The baby is gaining about half a pound a week." },
             { emoji: '🌡️', text: "The layers of fat are helping with temperature regulation." },
             { emoji: '🫁', text: "The lungs are almost fully mature." },
-            { emoji: ' kidneys', text: "The baby's kidneys are fully developed." },
-            { emoji: ' liver', text: "The liver can now process some waste products." },
+            { emoji: '🫘', text: "The baby's kidneys are fully developed." },
+            { emoji: '🧪', text: "The liver can now process some waste products." },
             { emoji: '🤸', text: "Movements are more rolling and squirming than kicking." },
             { emoji: '🧠', text: "The brain continues its incredible development." },
             { emoji: '💪', text: "The baby has a firm grasp." }
@@ -1682,7 +1682,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🚽', text: "However, a dropped baby means even more pressure on your bladder." },
             { emoji: '😫', text: "You are likely feeling very tired and ready to be done." },
             { emoji: '😴', text: "Sleep is very difficult." },
-            { emoji: ' Braxton Hicks', text: "Braxton Hicks are probably frequent." },
+            { emoji: '😖', text: "Braxton Hicks are probably frequent." },
             { emoji: '💧', text: "Swelling is normal." },
             { emoji: '❤️', text: "The countdown is on!" }
         ],
@@ -1693,8 +1693,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '🔥', text: "Heartburn." },
             { emoji: '😴', text: "Insomnia." },
             { emoji: '💧', text: "Swelling." },
-            { emoji: ' Braxton Hicks', text: "Frequent practice contractions." },
-            { emoji: ' clumsy', text: "General clumsiness." }
+            { emoji: '😖', text: "Frequent practice contractions." },
+            { emoji: '🤸‍♀️', text: "General clumsiness." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Your doctor will test for Group B strep around this time." },
@@ -1730,19 +1730,19 @@ export const weeklyDevelopment: Array<{
             { emoji: '🚽', text: "You are probably living in the bathroom." },
             { emoji: '😴', text: "Sleep is a distant dream." },
             { emoji: '😫', text: "You are feeling very uncomfortable and impatient." },
-            { emoji: ' Braxton Hicks', text: "Braxton Hicks might be fooling you into thinking it’s the real deal." },
+            { emoji: '😖', text: "Braxton Hicks might be fooling you into thinking it’s the real deal." },
             { emoji: '✨', text: "You might lose your mucus plug." },
             { emoji: '❤️', text: "The end is in sight!" }
         ],
         symptoms: [
-            { emoji: ' pelvic pressure', text: "Increased pelvic pressure." },
+            { emoji: '😫', text: "Increased pelvic pressure." },
             { emoji: '🚽', text: "Constant need to urinate." },
             { emoji: '😴', text: "Difficulty sleeping." },
             { emoji: '😫', text: "Back pain." },
-            { emoji: ' Braxton Hicks', text: "Stronger and more frequent practice contractions." },
+            { emoji: '😖', text: "Stronger and more frequent practice contractions." },
             { emoji: '💧', text: "Swelling." },
-            { emoji: ' discharge', text: "Changes in vaginal discharge or loss of mucus plug." },
-            { emoji: ' nesting', text: "A strong nesting instinct." }
+            { emoji: '✨', text: "Changes in vaginal discharge or loss of mucus plug." },
+            { emoji: '🏠', text: "A strong nesting instinct." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Your prenatal appointments are likely weekly now." },
@@ -1769,8 +1769,8 @@ export const weeklyDevelopment: Array<{
             { emoji: '⚖️', text: "The baby weighs about 6.5 pounds." },
             { emoji: '⬇️', text: "Most babies are in the head-down position." },
             { emoji: '✨', text: "The baby has a firm grasp." },
-            { emoji: ' fat', text: "The baby continues to add fat." },
-            { emoji: ' hair', text: "The baby might have a full head of hair." }
+            { emoji: '🌡️', text: "The baby continues to add fat." },
+            { emoji: '💇‍♀️', text: "The baby might have a full head of hair." }
         ],
         bodyChanges: [
             { emoji: '🤰', text: "You are likely feeling very large and ready for the baby to arrive." },
@@ -1778,18 +1778,18 @@ export const weeklyDevelopment: Array<{
             { emoji: '😫', text: "The discomforts of late pregnancy are at their peak." },
             { emoji: '😴', text: "Sleeping is a challenge." },
             { emoji: '🚽', text: "You are making endless trips to the bathroom." },
-            { emoji: ' Braxton Hicks', text: "Braxton Hicks can be strong and misleading." },
+            { emoji: '😖', text: "Braxton Hicks can be strong and misleading." },
             { emoji: '❤️', text: "You are on high alert for any signs of labor." },
             { emoji: '😊', text: "Excitement and anxiety are at an all-time high." }
         ],
         symptoms: [
-            { emoji: ' pelvic pressure', text: "Strong pelvic pressure." },
-            { emoji: ' backache', text: "Lower backache." },
-            { emoji: ' cramping', text: "Period-like cramping." },
-            { emoji: ' Braxton Hicks', text: "Frequent and strong practice contractions." },
-            { emoji: ' mucus plug', text: "Loss of your mucus plug." },
-            { emoji: ' nesting', text: "A surge of energy or nesting instinct." },
-            { emoji: ' diarrhea', text: "Diarrhea, as your body cleanses itself out." },
+            { emoji: '😫', text: "Strong pelvic pressure." },
+            { emoji: '😫', text: "Lower backache." },
+            { emoji: '😖', text: "Period-like cramping." },
+            { emoji: '😖', text: "Frequent and strong practice contractions." },
+            { emoji: '✨', text: "Loss of your mucus plug." },
+            { emoji: '🏠', text: "A surge of energy or nesting instinct." },
+            { emoji: '🚽', text: "Diarrhea, as your body cleanses itself out." },
             { emoji: '😴', text: "Extreme fatigue or restlessness." }
         ],
         tips: [
@@ -1813,10 +1813,10 @@ export const weeklyDevelopment: Array<{
         development: [
             { emoji: '🧠', text: "The baby’s brain is still developing and will continue to do so after birth." },
             { emoji: '🫁', text: "The lungs are mature and ready for the first breath." },
-            { emoji: '⚖️', text: "The baby weighs nearly 7 pounds." },
+            { emoji: '⚖️', text: "The average baby weighs between 7 and 8 pounds at birth." },
             { emoji: '💪', text: "The vocal cords are ready for that first cry." },
             { emoji: '✨', text: "Most of the lanugo has disappeared." },
-            { emoji: ' fat', text: "The baby is plump with fat." },
+            { emoji: '🌡️', text: "The baby is plump with fat." },
             { emoji: '👁️', text: "The irises are still developing pigment; many babies are born with blue eyes that change later." },
             { emoji: '💪', text: "The baby is strong and ready for the outside world." }
         ],
@@ -1824,21 +1824,21 @@ export const weeklyDevelopment: Array<{
             { emoji: '🤰', text: "You are in a holding pattern, waiting for labor to begin." },
             { emoji: '😫', text: "You are likely very uncomfortable." },
             { emoji: '😴', text: "Sleep is a thing of the past." },
-            { emoji: ' Braxton Hicks', text: "Braxton Hicks contractions keep you guessing." },
+            { emoji: '😖', text: "Braxton Hicks contractions keep you guessing." },
             { emoji: '💧', text: "Swelling can be significant." },
             { emoji: '✨', text: "Your cervix is likely making changes in preparation for labor." },
             { emoji: '❤️', text: "You are feeling a whole range of emotions." },
-            { emoji: ' impatient', text: "Patience is wearing thin!" }
+            { emoji: '⏳', text: "Patience is wearing thin!" }
         ],
         symptoms: [
             { emoji: '😴', text: "Insomnia." },
             { emoji: '😫', text: "Intense back and pelvic pressure." },
-            { emoji: ' Braxton Hicks', text: "Strong and frequent practice contractions." },
+            { emoji: '😖', text: "Strong and frequent practice contractions." },
             { emoji: '💧', text: "Swollen feet and ankles." },
-            { emoji: ' itchy', text: "Itchy, stretched skin on your belly." },
-            { emoji: ' discharge', text: "Changes in vaginal discharge." },
-            { emoji: ' anxious', text: "Anxiety and impatience." },
-            { emoji: ' energetic', text: "Sudden bursts of energy." }
+            { emoji: '✨', text: "Itchy, stretched skin on your belly." },
+            { emoji: '💧', text: "Changes in vaginal discharge." },
+            { emoji: '😰', text: "Anxiety and impatience." },
+            { emoji: '⚡', text: "Sudden bursts of energy." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Keep your regular prenatal appointments." },
@@ -1861,32 +1861,32 @@ export const weeklyDevelopment: Array<{
         development: [
             { emoji: '🎉', text: "The baby is fully developed and ready for birth." },
             { emoji: '🧠', text: "The brain is still forming crucial connections." },
-            { emoji: '🫁', text: "The lungs are mature and will be ready for the first breath." },
+            { emoji: '🫁', text: "The lungs are fully mature and will be ready for the first breath." },
             { emoji: '⚖️', text: "The average baby weighs between 7 and 8 pounds at birth." },
             { emoji: '✨', text: "The vernix coating is mostly gone." },
             { emoji: '💪', text: "The baby is strong and has good muscle tone." },
-            { emoji: ' fat', text: "Fat continues to accumulate." },
+            { emoji: '🌡️', text: "Fat continues to accumulate." },
             { emoji: '👶', text: "The baby is just waiting for the right time to make their grand entrance." }
         ],
         bodyChanges: [
             { emoji: '🤰', text: "You feel like you have been pregnant forever." },
             { emoji: '😫', text: "Discomfort is at an all-time high." },
             { emoji: '😴', text: "You are likely exhausted." },
-            { emoji: ' Braxton Hicks', text: "You are an expert at distinguishing Braxton Hicks from the real thing (maybe)." },
+            { emoji: '😖', text: "You are an expert at distinguishing Braxton Hicks from the real thing (maybe)." },
             { emoji: '✨', text: "Your body is making final preparations for labor." },
             { emoji: '❤️', text: "The emotional rollercoaster continues." },
-            { emoji: ' impatient', text: "You are so ready to meet your baby." },
-            { emoji: ' waiting', text: "The waiting game is the hardest part." }
+            { emoji: '⏳', text: "You are so ready to meet your baby." },
+            { emoji: '🕰️', text: "The waiting game is the hardest part." }
         ],
         symptoms: [
             { emoji: '😫', text: "Severe back and pelvic pain." },
-            { emoji: ' Braxton Hicks', text: "Very strong practice contractions." },
-            { emoji: ' lightning crotch', text: "Sharp, shooting pains in your pelvis." },
+            { emoji: '😖', text: "Very strong practice contractions." },
+            { emoji: '⚡', text: "Sharp, shooting pains in your pelvis ('lightning crotch')." },
             { emoji: '😴', text: "Inability to sleep." },
-            { emoji: ' nesting', text: "A frantic urge to clean and organize." },
-            { emoji: ' discharge', text: "Loss of mucus plug or 'bloody show'." },
-            { emoji: ' impatient', text: "Extreme impatience." },
-            { emoji: ' emotional', text: "Feeling very emotional." }
+            { emoji: '🏠', text: "A frantic urge to clean and organize." },
+            { emoji: '🩸', text: "Loss of mucus plug or 'bloody show'." },
+            { emoji: '⏳', text: "Extreme impatience." },
+            { emoji: '😭', text: "Feeling very emotional." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Keep in close contact with your doctor or midwife." },
@@ -1913,28 +1913,28 @@ export const weeklyDevelopment: Array<{
             { emoji: '⚖️', text: "The average newborn is about 7.5 pounds and 20 inches long." },
             { emoji: '💪', text: "The baby has strong muscles." },
             { emoji: '✨', text: "The baby is ready for the world." },
-            { emoji: ' sleepy', text: "Newborns sleep a lot, but in short bursts." },
-            { emoji: ' hungry', text: "They will be ready to eat shortly after birth." }
+            { emoji: '😴', text: "Newborns sleep a lot, but in short bursts." },
+            { emoji: '🍼', text: "They will be ready to eat shortly after birth." }
         ],
         bodyChanges: [
             { emoji: '🤰', text: "You are at the finish line." },
             { emoji: '😫', text: "You are probably feeling very uncomfortable and emotional." },
-            { emoji: ' waiting', text: "If your baby hasn’t arrived, the waiting is tough." },
+            { emoji: '🕰️', text: "If your baby hasn’t arrived, the waiting is tough." },
             { emoji: '✨', text: "Your body is ready for labor." },
             { emoji: '❤️', text: "You are about to embark on the amazing journey of parenthood." },
-            { emoji: ' contractions', text: "You are on high alert for contractions." },
-            { emoji: ' excited', text: "You are so excited to meet your little one." },
-            { emoji: ' nervous', text: "It’s normal to be nervous about labor." }
+            { emoji: '😖', text: "You are on high alert for contractions." },
+            { emoji: '😊', text: "You are so excited to meet your little one." },
+            { emoji: '😰', text: "It’s normal to be nervous about labor." }
         ],
         symptoms: [
-            { emoji: ' contractions', text: "The start of real, regular contractions." },
-            { emoji: ' water breaking', text: "Your water breaking (a gush or a trickle)." },
-            { emoji: ' bloody show', text: "A bloody show." },
-            { emoji: ' back pain', text: "Intense lower back pain." },
-            { emoji: ' cramping', text: "Strong, period-like cramps." },
-            { emoji: ' pressure', text: "Intense pelvic pressure." },
-            { emoji: ' restless', text: "Feeling restless and unable to get comfortable." },
-            { emoji: ' emotional', text: "A wave of emotions." }
+            { emoji: '😖', text: "The start of real, regular contractions." },
+            { emoji: '💧', text: "Your water breaking (a gush or a trickle)." },
+            { emoji: '🩸', text: "A bloody show." },
+            { emoji: '😫', text: "Intense lower back pain." },
+            { emoji: '😖', text: "Strong, period-like cramps." },
+            { emoji: '😫', text: "Intense pelvic pressure." },
+            { emoji: '🏃‍♀️', text: "Feeling restless and unable to get comfortable." },
+            { emoji: '😭', text: "A wave of emotions." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Call your doctor or midwife when your contractions become regular and strong." },
@@ -1960,29 +1960,29 @@ export const weeklyDevelopment: Array<{
             { emoji: '✨', text: "The skin might be a bit dry or peeling since the vernix is gone." },
             { emoji: '⚖️', text: "The baby is likely over 8 pounds now." },
             { emoji: '🧠', text: "Brain development continues." },
-            { emoji: ' alert', text: "Your baby may be more alert at birth than a baby born earlier." },
-            { emoji: ' sleepy', text: "They are still sleeping most of the day." },
-            { emoji: ' cozy', text: "The baby is very snug in the uterus." }
+            { emoji: '👀', text: "Your baby may be more alert at birth than a baby born earlier." },
+            { emoji: '😴', text: "They are still sleeping most of the day." },
+            { emoji: '🏠', text: "The baby is very snug in the uterus." }
         ],
         bodyChanges: [
             { emoji: '🤰', text: "You are feeling very, very pregnant." },
             { emoji: '😫', text: "Discomfort is at its peak." },
-            { emoji: ' impatient', text: "You are more than ready to not be pregnant anymore." },
-            { emoji: ' monitoring', text: "Your doctor will be monitoring you closely with non-stress tests or ultrasounds." },
-            { emoji: ' induction', text: "Talks of induction may begin if labor doesn’t start on its own." },
-            { emoji: ' emotional', text: "It’s okay to feel frustrated and emotional." },
+            { emoji: '⏳', text: "You are more than ready to not be pregnant anymore." },
+            { emoji: '🩺', text: "Your doctor will be monitoring you closely with non-stress tests or ultrasounds." },
+            { emoji: '💉', text: "Talks of induction may begin if labor doesn’t start on its own." },
+            { emoji: '😭', text: "It’s okay to feel frustrated and emotional." },
             { emoji: '❤️', text: "The end is truly near." },
-            { emoji: ' waiting', text: "The final waiting game." }
+            { emoji: '🕰️', text: "The final waiting game." }
         ],
         symptoms: [
             { emoji: '😫', text: "All the late-pregnancy symptoms, but amplified." },
-            { emoji: ' impatient', text: "Extreme impatience." },
-            { emoji: ' frustrated', text: "Frustration and disappointment." },
-            { emoji: ' tired', text: "Complete exhaustion." },
-            { emoji: ' Braxton Hicks', text: "Endless Braxton Hicks contractions." },
-            { emoji: ' pelvic pain', text: "Intense pelvic pressure." },
-            { emoji: ' backache', text: "A very sore back." },
-            { emoji: ' ready', text: "A deep sense of being 'over it'." }
+            { emoji: '⏳', text: "Extreme impatience." },
+            { emoji: '😭', text: "Frustration and disappointment." },
+            { emoji: '😴', text: "Complete exhaustion." },
+            { emoji: '😖', text: "Endless Braxton Hicks contractions." },
+            { emoji: '😫', text: "Intense pelvic pressure." },
+            { emoji: '😫', text: "A very sore back." },
+            { emoji: '😩', text: "A deep sense of being 'over it'." }
         ],
         tips: [
             { emoji: '👩‍⚕️', text: "Keep all your appointments for monitoring." },
