@@ -65,15 +65,57 @@ const weeklyDevelopment = [
     { week: 0, title: "Getting Started", size: "Your journey is about to begin.", summary: "Set your due date or last menstrual period to start tracking your pregnancy week by week.", development: "", bodyChanges: "", symptoms: "", tips: "", imageUrl: "https://placehold.co/600x400.png", aiHint: "pregnancy test" },
     {
         week: 1,
-        title: "Week 1: The First Step",
-        size: "Pregnancy is calculated from your LMP, so you're not technically pregnant yet.",
-        summary: "This week is your menstrual period. Your body is preparing for a new cycle and potential pregnancy by shedding the uterine lining.",
-        development: "🗓️ This week is technically your menstrual period, the first day of which marks the start of your pregnancy cycle.\n\n🥚 Your body sheds last month's uterine lining, making way for a new cycle.\n\n🌿 A new follicle, containing an egg, begins to mature in one of your ovaries.\n\n hormonal baseline is established, with low levels of estrogen and progesterone.\n\n🌸 The pituitary gland starts to release Follicle-Stimulating Hormone (FSH) to encourage follicular growth.\n\n⏳ Your body is preparing for ovulation, which will occur in about two weeks.\n\n🧱 The foundation for a potential pregnancy is being laid, even before conception occurs.\n\n🔄 This is the very beginning of a 280-day journey, starting from a biological reset.",
-        bodyChanges: "🩸 You're experiencing normal menstrual bleeding as the uterine lining is shed.\n\n📉 Hormone levels are at their lowest point, which can affect energy and mood.\n\n cramps or pelvic discomfort are common as the uterus contracts.\n\n💧 You might experience water retention and bloating.\n\n🌡️ Your basal body temperature is at its lowest point in the cycle.\n\n tired or having lower energy is a common experience during this phase.\n\n🧠 Hormonal shifts can sometimes lead to mood changes or irritability.\n\nCLEANSE Your body is essentially 'cleaning house' to prepare for a fresh start.",
-        symptoms: " Cramping in the lower abdomen or back is very common.\n\n🌬️ Bloating and a feeling of heaviness are frequently reported.\n\n🍈 Breast tenderness or soreness can occur due to hormonal fluctuations.\n\n😴 Fatigue and lower energy levels are typical during menstruation.\n\n🤕 Headaches, particularly hormonal migraines, can be triggered.\n\n🍔 You might experience cravings for specific foods, like salty snacks or chocolate.\n\n🎭 Mood swings, from sadness to irritability, are possible.\n\n💩 Changes in bowel habits, such as diarrhea or constipation, can happen.",
-        tips: "💊 Begin taking a prenatal vitamin containing at least 400 mcg of folic acid now.\n\n🥗 Focus on a nutrient-dense diet rich in iron (leafy greens, red meat) to replenish what's lost during your period.\n\n💧 Stay well-hydrated with water and herbal teas to help with cramps and bloating.\n\n🏃‍♀️ Continue with gentle exercise like walking or stretching, which can help alleviate cramps.\n\n🚭 Eliminate alcohol, smoking, and recreational drugs, as these can harm a developing embryo.\n\n☕ Reduce caffeine intake to improve your chances of conception and for a healthier pregnancy.\n\n👩‍⚕️ Schedule a preconception check-up with your doctor to discuss your health and any concerns.\n\n🧘‍♀️ Pay attention to your body and rest when you feel tired; this is a time for self-care.",
-        imageUrl: "https://placehold.co/600x400.png",
-        aiHint: "vitamins supplements"
+        title: "Week 1: The Journey Begins",
+        size: "You're on your period, so not yet pregnant. Your body is preparing for what's next.",
+        summary: "Pregnancy is counted from the first day of your last period. This week, your body is preparing for potential conception. Now is the perfect time to focus on your health and well-being to get ready for the journey ahead.",
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/02-fetaldev-all-skintones_4x3.jpg?width=396",
+        imageDescription: "At 1 week, you're not actually pregnant yet. Pregnancy counting starts from the first day of your last menstrual period.",
+        imageCredit: {
+          text: "Image source: BabyCenter",
+          url: "https://www.babycenter.com/pregnancy/week-by-week/1-week-pregnant",
+        },
+        keyTakeaways: [
+            "Pregnancy is calculated from your last menstrual period (LMP), so you are not pregnant during week 1.",
+            "Any symptoms you feel are related to your period, not pregnancy.",
+            "This is the ideal time to prepare your body for conception by taking prenatal vitamins and adopting a healthy lifestyle.",
+            "If you just received a positive test, you are likely around 4 weeks pregnant, not 1."
+        ],
+        preparingForPregnancy: [
+            {
+                title: "Preconception Appointment",
+                content: "Scheduling a visit with your provider before conceiving is a great step. You can discuss your medical history, current health, medications, and any genetic concerns. It's also a perfect time to ask questions about your cycle and optimizing your health for pregnancy."
+            },
+            {
+                title: "Understanding Your Cycle",
+                content: "A typical menstrual cycle lasts about 28 days. Day 1 is the start of your period. Around day 14, ovulation occurs when an egg is released. If this egg is fertilized by a sperm, a pregnancy begins. If not, the cycle repeats."
+            },
+            {
+                title: "Your Chances of Conceiving",
+                content: "For healthy couples in their 20s and early 30s, the chance of getting pregnant in any single cycle is about 25%. This chance decreases with age, being about 10% per cycle for women at age 40."
+            }
+        ],
+        commonSymptoms: [
+            "Vaginal bleeding as your body sheds the uterine lining.",
+            "Lower back pain and abdominal cramps due to uterine contractions.",
+            "Bloating from hormonal fluctuations.",
+            "Mood swings and irritability caused by hormones.",
+            "Headaches, sometimes referred to as menstrual migraines."
+        ],
+        yourBody: "During week 1, your body is in the menstrual phase of your cycle. The uterine lining (endometrium) is shedding, which causes your period. Hormonally, your body is resetting. The pituitary gland begins releasing Follicle-Stimulating Hormone (FSH), which tells your ovaries to start maturing a new egg for the upcoming ovulation.",
+        conceivingTips: [
+            "Start taking a prenatal vitamin with at least 400mcg of folic acid daily.",
+            "Focus on a balanced diet rich in nutrients to build up your body's reserves.",
+            "Reduce or eliminate alcohol, smoking, and excessive caffeine.",
+            "Begin tracking your menstrual cycle to better predict your fertile window.",
+            "Maintain a healthy exercise routine, prioritizing consistency over intensity.",
+        ],
+        checklist: [
+            "Begin taking prenatal vitamins.",
+            "Track the first day of your period.",
+            "Schedule a preconception check-up with your doctor.",
+            "Reduce unhealthy habits like smoking or excessive drinking.",
+            "Focus on getting adequate sleep and managing stress."
+        ]
     },
     {
         week: 2,
@@ -202,7 +244,7 @@ const weeklyDevelopment = [
         summary: "You've made it! At the end of the first trimester, your baby's reflexes are sharpening, and their unique fingerprints are forming.",
         development: "💪 The fetus's reflexes are becoming more refined; they will squint, frown, and grimace.\n\n🏠 The intestines, which were partially growing inside the umbilical cord, are now moving into their permanent home in the baby's abdomen.\n\n🧠 The pituitary gland at the base of the brain is beginning to produce hormones.\n\nVOCAL CORDS are now complete, a crucial step for their first cry.\n\n🦴 The skeleton is continuing to harden from cartilage into bone.\n\nNAILS are continuing to grow on the tiny fingers and toes.\n\nFINGERPRINTS, unique to your baby, are beginning to form on their fingertips.\n\n🤸 The fetus is very active, kicking and stretching, but is still too small for you to feel.",
         bodyChanges: "🎉 Congratulations, you've reached the end of the first trimester!\n\n✨ The risk of miscarriage drops significantly after this week, providing peace of mind for many.\n\n🤰 Your uterus has grown enough that your provider can now feel the top of it (the fundus) in your lower abdomen.\n\nYour baby bump is likely starting to show, especially if this isn't your first pregnancy.\n\n The placenta is now fully in charge of producing progesterone and estrogen.\n\nYour energy levels are likely increasing, and nausea is hopefully a thing of the past.\n\nYour skin's pigmentation changes, like the linea nigra, may become more pronounced.\n\nYour digestion is still sluggish, so bloating and constipation can continue.",
-        symptoms: "☀️ The 'honeymoon period' of pregnancy often begins now, with less nausea and more energy.\n\n😵 Dizziness can still be an issue due to hormonal changes and your expanding circulatory system.\n\n🤕 Headaches are still a common complaint for some.\n\n💧 Increased vaginal discharge (leukorrhea) is normal.\n\n🔥 Heartburn might still be present.\n\nYour breasts are probably less tender than they were a few weeks ago, but are still growing.\n\nYou might feel some abdominal aches as your uterus expands.\n\nAppetite may increase, so focus on healthy choices.",
+        symptoms: "☀️ The 'honeymoon period' of pregnancy often begins now, with less nausea and more energy.\n\n😵 Dizziness can still be an issue due to hormonal shifts and your expanding circulatory system.\n\n🤕 Headaches are still a common complaint for some.\n\n💧 Increased vaginal discharge (leukorrhea) is normal.\n\n🔥 Heartburn might still be present.\n\nYour breasts are probably less tender than they were a few weeks ago, but are still growing.\n\nYou might feel some abdominal aches as your uterus expands.\n\nAppetite may increase, so focus on healthy choices.",
         tips: "🗣️ This is a very popular time to share your exciting news with friends, family, and coworkers.\n\n🧘‍♀️ Consider starting prenatal yoga or other pregnancy-safe exercise classes.\n\nListen to your baby's heartbeat with a Doppler at your next prenatal appointment—it's a thrilling sound!\n\n🏢 Start planning for maternity leave. Look into your company's policies and your country's laws.\n\n🥗 Focus on a balanced diet with plenty of lean protein, fruits, vegetables, and whole grains.\n\n👖 Embrace maternity clothes! Comfort is key.\n\n🤝 Talk to your partner about expectations for the second trimester.\n\n📝 Start a baby name list with your partner for fun.",
         imageUrl: "https://placehold.co/600x400.png",
         aiHint: "celebration confetti"
@@ -479,7 +521,7 @@ const weeklyDevelopment = [
         development: "⚖️ The baby is packing on about half a pound a week. This fat will help them regulate body temperature and blood sugar after birth.\n\n🫁 The lungs are almost fully mature.\n\nKIDNEYS are fully developed and processing waste.\n\nLIVER can now process some waste products as well.\n\nSpace is very tight, so movements might feel less like acrobatic kicks and more like strong, rolling motions.\n\nSUCKING reflex is well-established.\n\nLISTENING intently to the sounds of your world.\n\nGETTING into the final head-down position if they haven't already.",
         bodyChanges: "👩‍⚕️ Your prenatal visits are likely weekly now. Your provider will check your blood pressure, urine, and the baby's position and heart rate.\n\n🦠 Your provider will perform a Group B strep (GBS) test between now and week 37. It's a routine swab to check for bacteria that is harmless to you but could affect the baby during delivery.\n\nYour uterus has grown to about 1,000 times its original size.\n\nThe top of your uterus is right up under your ribs.\n\nYour cervix may be continuing to dilate (open) and efface (thin).\n\nYour body is conserving energy for the big event.\n\nPelvic pressure and discomfort are significant.\n\nYour total weight gain is likely between 24 and 29 pounds.",
         symptoms: "😩 You're likely feeling very uncomfortable, tired, and impatient. The end is in sight!\n\n😴 Waking up frequently at night to shift positions or use the bathroom is standard procedure.\n\n🚽 The need to urinate is constant, as the baby's head is like a bowling ball on your bladder.\n\n⚡️ Braxton Hicks contractions continue, and may be stronger.\n\nHeartburn, constipation, and hemorrhoids are ongoing issues.\n\nSwelling in your hands and feet.\n\nSharp nerve pains in your pelvis or legs.\n\nA general feeling of being 'done' with pregnancy.",
-        tips: "🚨 Review the signs of labor with your partner and know when to call your doctor or head to the hospital (e.g., contractions 5 minutes apart, lasting 1 minute, for 1 hour; water breaking).\n\n👜 Have your hospital bags packed and in the car.\n\n👶 Finalize the setup of the nursery and baby gear.\n\n🥣 Stock your pantry and freezer with easy meals and snacks for the postpartum period.\n\n👩‍⚕️ If your GBS test is positive, don't worry. You'll simply receive IV antibiotics during labor to protect the baby.\n\n🧘‍♀️ Continue practicing your breathing and relaxation techniques.\n\n💧 Keep drinking plenty of water.\n\n😴 Prioritize rest above all else. Let the housework go and put your feet up.",
+        tips: "🚨 Review the signs of labor with your partner and know when to call your doctor or head to the hospital (e.g., contractions 5 minutes apart, lasting 1 minute, for at least 1 hour; water breaking).\n\n👜 Have your hospital bags packed and in the car.\n\n👶 Finalize the setup of the nursery and baby gear.\n\n🥣 Stock your pantry and freezer with easy meals and snacks for the postpartum period. You'll be so glad you did.\n\n👩‍⚕️ If your GBS test is positive, don't worry. You'll simply receive IV antibiotics during labor to protect the baby.\n\n🧘‍♀️ Continue practicing your breathing and relaxation techniques.\n\n💧 Keep drinking plenty of water.\n\n😴 Prioritize rest above all else. Let the housework go and put your feet up.",
         imageUrl: "https://placehold.co/600x400.png",
         aiHint: "weight scale"
     },
@@ -815,7 +857,7 @@ export default function PregnancyTrackerPage() {
   const babyLookVideoUrl = pregnancyDetails ? babyLookVideos[pregnancyDetails.trimester] : null;
   const loggedSymptoms = symptomForm.watch('symptoms') || [];
 
-  if (pregnancyDetails) {
+  if (pregnancyDetails && currentWeekData) {
     return (
         <div className="relative flex min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
             {/* Desktop Sidebar */}
@@ -899,50 +941,95 @@ export default function PregnancyTrackerPage() {
                             </CardContent>
                         </Card>
                     </div>
-
-                    {currentWeekData && (
-                        <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
-                            <CardContent className="p-0">
-                                <div className="grid grid-cols-1 lg:grid-cols-2">
-                                    <div className="relative">
-                                        <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={600} className="object-cover w-full h-full" />
-                                        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
-                                            <h2 className="font-headline text-3xl text-white">{t.weeklyTitle(currentWeekData.title)}</h2>
-                                            <p className="text-white/90 mt-1">{t.weeklySize(currentWeekData.size)}</p>
-                                        </div>
+                    
+                    <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
+                        <CardContent className="p-0">
+                            <div className="grid grid-cols-1 lg:grid-cols-2">
+                                <div className="relative">
+                                    <Image src={currentWeekData.imageUrl} data-ai-hint={currentWeekData.aiHint} alt={`Week ${currentWeekData.week} development`} width={600} height={600} className="object-cover w-full h-full" />
+                                    <div className="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
+                                        <h2 className="font-headline text-4xl text-white">{t.weeklyTitle(currentWeekData.title)}</h2>
+                                        <p className="text-white/90 mt-1">{t.weeklySize(currentWeekData.size)}</p>
                                     </div>
-                                    <div className="p-6 space-y-4">
-                                        <div 
-                                            className="bg-pink-100/30 p-4 rounded-lg cursor-pointer"
-                                            onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                                        >
-                                            <div className="flex justify-between items-center">
-                                                <h3 className="font-semibold text-pink-800">Weekly Summary</h3>
-                                                <ChevronDown className={cn("h-5 w-5 text-pink-800 transition-transform", isSummaryExpanded && "rotate-180")} />
-                                            </div>
-                                            <p className={cn("mt-2 text-sm text-slate-700", !isSummaryExpanded && "truncate")}>
-                                                {currentWeekData.summary}
-                                            </p>
-                                            {isSummaryExpanded && (
-                                                <p className="mt-2 text-sm text-slate-700 whitespace-pre-wrap">{currentWeekData.development}</p>
-                                            )}
+                                </div>
+                                <div className="p-6 space-y-4">
+                                     <div 
+                                        className="bg-pink-100/30 p-4 rounded-lg cursor-pointer transition-all"
+                                        onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+                                    >
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-semibold text-pink-800">Weekly Summary</h3>
+                                            <ChevronDown className={cn("h-5 w-5 text-pink-800 transition-transform", isSummaryExpanded && "rotate-180")} />
                                         </div>
+                                         <p className={cn("mt-2 text-sm text-slate-700", !isSummaryExpanded && "truncate")}>
+                                            {currentWeekData.summary}
+                                        </p>
+                                        {isSummaryExpanded && 'development' in currentWeekData && (
+                                            <div className="mt-2 text-sm text-slate-700 whitespace-pre-wrap">{currentWeekData.development}</div>
+                                        )}
+                                        {isSummaryExpanded && currentWeekData.imageDescription && (
+                                            <>
+                                                <p className="mt-2 text-sm text-slate-700">{currentWeekData.imageDescription}</p>
+                                                {currentWeekData.imageCredit && (
+                                                    <a href={currentWeekData.imageCredit.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">
+                                                        {currentWeekData.imageCredit.text}
+                                                    </a>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                    
+                                    {'keyTakeaways' in currentWeekData ? (
+                                        <div className="space-y-4">
+                                            <h4 className="font-bold text-lg text-slate-800">Key Takeaways</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
+                                                {currentWeekData.keyTakeaways.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                            </ul>
 
+                                            <h4 className="font-bold text-lg text-slate-800">Preparing for Pregnancy</h4>
+                                            {currentWeekData.preparingForPregnancy.map((item: {title: string, content: string}, index: number) => (
+                                                <div key={index}>
+                                                    <h5 className="font-semibold">{item.title}</h5>
+                                                    <p className="text-sm text-slate-700">{item.content}</p>
+                                                </div>
+                                            ))}
+                                            
+                                            <h4 className="font-bold text-lg text-slate-800">Common Symptoms</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
+                                                {currentWeekData.commonSymptoms.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                            </ul>
+
+                                            <h4 className="font-bold text-lg text-slate-800">Your Body This Week</h4>
+                                            <p className="text-sm text-slate-700">{currentWeekData.yourBody}</p>
+
+                                            <h4 className="font-bold text-lg text-slate-800">Tips for Conceiving</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
+                                                {currentWeekData.conceivingTips.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                            </ul>
+
+                                            <h4 className="font-bold text-lg text-slate-800">Checklist for This Week</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
+                                                {currentWeekData.checklist.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                            </ul>
+                                        </div>
+                                    ) : (
                                         <Tabs defaultValue="body" className="w-full">
                                             <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
                                                 <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
                                                 <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
                                                 <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
                                             </TabsList>
-                                            <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{currentWeekData.bodyChanges}</p></TabsContent>
-                                            <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{currentWeekData.symptoms}</p></TabsContent>
-                                            <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{currentWeekData.tips}</p></TabsContent>
+                                            <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{'bodyChanges' in currentWeekData ? currentWeekData.bodyChanges : ''}</p></TabsContent>
+                                            <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{'symptoms' in currentWeekData ? currentWeekData.symptoms : ''}</p></TabsContent>
+                                            <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{'tips' in currentWeekData ? currentWeekData.tips : ''}</p></TabsContent>
                                         </Tabs>
-                                    </div>
-                               </div>
-                            </CardContent>
-                        </Card>
-                    )}
+                                    )}
+
+                                </div>
+                           </div>
+                        </CardContent>
+                    </Card>
+                    
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                             <CardHeader>
