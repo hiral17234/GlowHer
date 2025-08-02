@@ -477,6 +477,16 @@ export default function PregnancyTrackerPage() {
                            </div>
                         </CardContent>
                     </Card>
+
+                    <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
+                        <CardHeader>
+                            <CardTitle className="text-pink-800">Your Body's Journey: Week {currentWeekData.week}</CardTitle>
+                            <CardDescription>A visual look at how your body might be changing this week.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-0 flex items-center justify-center">
+                            <Image src={currentWeekData.motherImageUrl} alt={`Illustration of mother's body at week ${currentWeekData.week}`} width={600} height={600} className="object-contain w-full h-auto max-w-sm" />
+                        </CardContent>
+                    </Card>
                     
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
