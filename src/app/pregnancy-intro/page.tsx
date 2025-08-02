@@ -43,7 +43,7 @@ export default function PregnancyIntroPage() {
                             <blockquote className="space-y-4">
                                 <p className="font-headline text-3xl md:text-4xl leading-tight">
                                     "A baby is something you carry inside you for nine months, in your arms for three years, and in your heart until the day you die."
-                                </p>
+                                </blockquote>
                                 <footer className="text-lg text-white/80">
                                     – Mary Mason
                                 </footer>
@@ -58,7 +58,7 @@ export default function PregnancyIntroPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/20 pt-8">
+                    <div className="grid grid-cols-1 gap-8 border-t border-white/20 pt-8">
                         <div className="aspect-video">
                              <iframe 
                                 title="Fetus week eight" 
