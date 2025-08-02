@@ -299,6 +299,18 @@ for (let i = 5; i <= 40; i++) {
     });
 }
 
+const animatedTrimesterVideos: { [key: number]: string } = {
+    1: 'D_jxGJsEY2A',
+    2: 'H6mZRds0dHo',
+    3: '1UW09FP7PfI',
+};
+
+const knowledgeTrimesterVideos: { [key: number]: string } = {
+    1: 'cfn04QUO4B8',
+    2: 'IPj4dJnP85o',
+    3: 'lpDW00nQhUo',
+};
+
 
 const translations = {
     en: {
@@ -553,6 +565,8 @@ export default function PregnancyTrackerPage() {
 
 
   const currentWeekData = pregnancyDetails ? weeklyDevelopment.find(w => w.week === pregnancyDetails.gestationalAgeWeeks) || weeklyDevelopment[0] : weeklyDevelopment[0];
+  const animatedVideoId = pregnancyDetails ? animatedTrimesterVideos[pregnancyDetails.trimester] : null;
+  const knowledgeVideoId = pregnancyDetails ? knowledgeTrimesterVideos[pregnancyDetails.trimester] : null;
   const loggedSymptoms = symptomForm.watch('symptoms') || [];
 
   if (pregnancyDetails && currentWeekData) {
@@ -794,6 +808,28 @@ export default function PregnancyTrackerPage() {
                                 </Form>
                             </CardContent>
                         </Card>
+                         <div className="space-y-8">
+                            {animatedVideoId && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader><CardTitle>Animated Journey: Trimester {pregnancyDetails.trimester}</CardTitle></CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-video">
+                                            <iframe className="w-full h-full rounded-lg" src={`https://www.youtube.com/embed/${animatedVideoId}`} title={`Animated video for Trimester ${pregnancyDetails.trimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                            {knowledgeVideoId && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader><CardTitle>Expert Insights: Trimester {pregnancyDetails.trimester}</CardTitle></CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-video">
+                                            <iframe className="w-full h-full rounded-lg" src={`https://www.youtube.com/embed/${knowledgeVideoId}`} title={`Knowledge video for Trimester ${pregnancyDetails.trimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
                     </div>
 
                     <div className="mt-8 flex justify-center gap-4">
