@@ -58,16 +58,29 @@ export default function PregnancyIntroPage() {
                         </div>
                     </div>
 
-                    <div className="aspect-video border-t border-white/20 pt-8">
-                        <iframe 
-                            title="Human embryonic - fetal development stages" 
-                            frameBorder="0" 
-                            allowFullScreen
-                            allow="autoplay; fullscreen; xr-spatial-tracking" 
-                            src="https://sketchfab.com/models/9fb225b983c14b20b67b639e17126f5b/embed"
-                            className="w-full h-full rounded-lg"
-                        >
-                        </iframe>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/20 pt-8">
+                        <div className="aspect-video">
+                             <iframe 
+                                title="Fetus week eight" 
+                                frameBorder="0" 
+                                allowFullScreen
+                                allow="autoplay; fullscreen; xr-spatial-tracking" 
+                                src="https://sketchfab.com/models/8bf872eed84e47dba4555f4675077453/embed"
+                                className="w-full h-full rounded-lg"
+                            >
+                            </iframe>
+                        </div>
+                         <div className="aspect-video">
+                            <iframe 
+                                title="Human embryonic - fetal development stages" 
+                                frameBorder="0" 
+                                allowFullScreen
+                                allow="autoplay; fullscreen; xr-spatial-tracking" 
+                                src="https://sketchfab.com/models/9fb225b983c14b20b67b639e17126f5b/embed"
+                                className="w-full h-full rounded-lg"
+                            >
+                            </iframe>
+                        </div>
                     </div>
                 </div>
             </main>
