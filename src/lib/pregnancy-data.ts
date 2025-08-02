@@ -1703,7 +1703,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🗣️', text: "Review the signs of labor with your partner." },
             { emoji: '🏥', text: "Finalize what you need in your hospital bag." },
             { emoji: '❤️', text: "Lean on your support system." },
-            { emoji: '👩‍⚕️', text: 'Ask your doctor about perineal massage to prepare for delivery.' }
+            { emoji: '👩‍⚕️', text: "Ask your doctor about perineal massage to prepare for delivery." }
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/35-fetaldev-E-deeptan-4x3.png",
         aiHint: "honeydew melon"
@@ -1820,17 +1820,17 @@ export const weeklyDevelopment: Array<{
             { emoji: '😴', text: "The baby is resting up for the journey of birth." }
         ],
         bodyChanges: [
-            { emoji: '🤰', text: "Your body is ready for labor." },
-            { emoji: '💧', text: "You might lose your mucus plug if you haven't already." },
-            { emoji: '😖', text: "Contractions, real or practice, are common." },
-            { emoji: '😫', text: "You are likely feeling very ready to meet your baby." },
+            { emoji: '🤰', text: "You are at the finish line." },
+            { emoji: '😖', text: "You might be experiencing early labor signs." },
+            { emoji: '💧', text: "Your water might break at any time." },
+            { emoji: '😫', text: "You are likely very ready to meet your baby." },
             { emoji: '😴', text: "Sleep is hard to come by." },
             { emoji: '🍈', text: "Your breasts are full and may be leaking." },
             { emoji: '❤️', text: "Your emotions are a mix of excitement, fear, and impatience." },
             { emoji: '✨', text: "Any day now!" }
         ],
         symptoms: [
-            { emoji: '💧', text: "Leaky breasts (colostrum)." },
+            { emoji: '💧', text: "Leaking amniotic fluid." },
             { emoji: '😖', text: "Contractions." },
             { emoji: '😫', text: "Pelvic and rectal pressure." },
             { emoji: '😴', text: "Insomnia." },
@@ -1888,10 +1888,10 @@ export const weeklyDevelopment: Array<{
             { emoji: '🚽', text: "Diarrhea or loose stools." }
         ],
         tips: [
-            { emoji: '🧘‍♀️', text: "Try to relax and stay calm." },
+            { emoji: '🧘‍♀️', text: "Try to stay as relaxed as possible." },
             { emoji: '💧', text: "Stay hydrated." },
             { emoji: '🚶‍♀️', text: "Gentle walking can help encourage labor to start." },
-            { emoji: '🗣️', text: "Keep your labor support partner nearby." },
+            { emoji: '🗣️', text: "Lean on your support person." },
             { emoji: '🏥', text: "Head to the hospital when your contractions are consistent and strong." },
             { emoji: '❤️', text: "You've got this!" },
             { emoji: '👩‍⚕️', text: "Call your doctor if your water breaks or if you have any concerns." },
@@ -1938,7 +1938,7 @@ export const weeklyDevelopment: Array<{
         tips: [
             { emoji: '🧘‍♀️', text: "Try to stay as relaxed as possible." },
             { emoji: '💧', text: "Keep sipping water." },
-            { emoji: '🚶‍♀️', text: "Walking can help labor progress." },
+            { emoji: '🚶‍♀️', text: "Gentle walking can help labor progress." },
             { emoji: '🗣️', text: "Lean on your support person." },
             { emoji: '🏥', text: "Time your contractions and know when to go to the hospital." },
             { emoji: '❤️', text: "You are about to embark on the most amazing journey. You can do this." },
