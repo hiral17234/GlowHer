@@ -75,7 +75,7 @@ const wellnessFeatures = [
       icon: Baby,
       title: { en: 'Pregnancy Tracker', hi: 'गर्भावस्था ट्रैकर' },
       description: { en: 'Enter due date, view week-by-week updates', hi: 'देय तिथि दर्ज करें, सप्ताह-दर-सप्ताह अपडेट देखें' },
-      href: '/pregnancy-tracker',
+      href: '/pregnancy-intro',
       color: 'text-green-400',
       bgColor: 'bg-green-500/10'
     },
