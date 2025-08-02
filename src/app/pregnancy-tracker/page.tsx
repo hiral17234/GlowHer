@@ -385,6 +385,12 @@ const trimesterVideos: { [key: number]: string } = {
     3: "https://www.youtube.com/embed/qkhLev3bKd0"
 };
 
+const babyLookVideos: { [key: number]: string } = {
+    1: "https://www.youtube.com/embed/g-GqA8sI4oQ",
+    2: "https://www.youtube.com/embed/5A4R52Fv4kI",
+    3: "https://www.youtube.com/embed/D0f3u0dF5Yc"
+};
+
 export default function PregnancyTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -560,6 +566,7 @@ export default function PregnancyTrackerPage() {
 
   const currentWeekData = pregnancyDetails ? weeklyDevelopment.find(w => w.week === pregnancyDetails.gestationalAgeWeeks) || weeklyDevelopment[0] : weeklyDevelopment[0];
   const trimesterVideoUrl = pregnancyDetails ? trimesterVideos[pregnancyDetails.trimester] : null;
+  const babyLookVideoUrl = pregnancyDetails ? babyLookVideos[pregnancyDetails.trimester] : null;
   const loggedSymptoms = symptomForm.watch('symptoms') || [];
 
   if (pregnancyDetails && currentWeekData) {
@@ -803,6 +810,26 @@ export default function PregnancyTrackerPage() {
                         </Card>
                         
                         <div className="space-y-8">
+                            {babyLookVideoUrl && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader>
+                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
+                                            <Video /> {t.babyLookTitle}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-video">
+                                            <iframe
+                                                className="w-full h-full rounded-lg"
+                                                src={babyLookVideoUrl}
+                                                title="Baby development video"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
                              {trimesterVideoUrl && (
                                 <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                                     <CardHeader>
