@@ -809,24 +809,32 @@ export default function PregnancyTrackerPage() {
                             </CardContent>
                         </Card>
                         <div className="space-y-8">
-                             <div className="space-y-4">
-                                <h3 className="font-headline text-2xl text-pink-600 flex items-center gap-2">
-                                    <Video className="h-6 w-6"/>
-                                    Here is what your baby might look like now
-                                </h3>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    {animatedVideoId && (
+                             {animatedVideoId && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader>
+                                        <CardTitle className="font-headline text-2xl text-pink-600">Animated Journey: Trimester {pregnancyDetails.trimester}</CardTitle>
+                                        <CardDescription>See a visual representation of your baby's development.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
                                         <div className="aspect-video">
                                             <iframe className="w-full h-full rounded-lg" src={`https://www.youtube.com/embed/${animatedVideoId}`} title={`Animated video for Trimester ${pregnancyDetails.trimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                                         </div>
-                                    )}
-                                    {knowledgeVideoId && (
+                                    </CardContent>
+                                </Card>
+                            )}
+                            {knowledgeVideoId && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader>
+                                        <CardTitle className="font-headline text-2xl text-pink-600">Expert Insights: Trimester {pregnancyDetails.trimester}</CardTitle>
+                                        <CardDescription>Learn more about what to expect this trimester.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
                                         <div className="aspect-video">
                                             <iframe className="w-full h-full rounded-lg" src={`https://www.youtube.com/embed/${knowledgeVideoId}`} title={`Knowledge video for Trimester ${pregnancyDetails.trimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                                         </div>
-                                    )}
-                                </div>
-                            </div>
+                                    </CardContent>
+                                </Card>
+                            )}
                         </div>
                     </div>
 
@@ -943,3 +951,4 @@ export default function PregnancyTrackerPage() {
     </div>
   );
 }
+
