@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
         hostname: 'i.pinimg.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.babycenter.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
