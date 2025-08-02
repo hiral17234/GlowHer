@@ -27,7 +27,7 @@ export default function PregnancyIntroPage() {
             </header>
 
             <main className="relative z-10 w-full max-w-5xl">
-                 <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
+                 <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl space-y-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                         <div className="aspect-video">
                             <iframe
@@ -56,6 +56,18 @@ export default function PregnancyIntroPage() {
                                 Continue to My Journey <ChevronRight className="ml-2 h-5 w-5" />
                             </Button>
                         </div>
+                    </div>
+
+                    <div className="aspect-video border-t border-white/20 pt-8">
+                        <iframe 
+                            title="Human embryonic - fetal development stages" 
+                            frameBorder="0" 
+                            allowFullScreen
+                            allow="autoplay; fullscreen; xr-spatial-tracking" 
+                            src="https://sketchfab.com/models/9fb225b983c14b20b67b639e17126f5b/embed"
+                            className="w-full h-full rounded-lg"
+                        >
+                        </iframe>
                     </div>
                 </div>
             </main>
