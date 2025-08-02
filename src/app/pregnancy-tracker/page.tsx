@@ -379,6 +379,18 @@ const navItems = [
     { href: '/resources', icon: Library, label: 'Resources' },
 ];
 
+const trimesterVideos: { [key: number]: string } = {
+    1: "https://www.youtube.com/embed/Ia6dNwVs1M8",
+    2: "https://www.youtube.com/embed/XhqntqSGKsc",
+    3: "https://www.youtube.com/embed/qkhLev3bKd0"
+};
+
+const babyLookVideos: { [key: number]: string } = {
+    1: "https://www.youtube.com/embed/rK2nDo_f5sM", 
+    2: "https://www.youtube.com/embed/K8s_t5E3eYI", 
+    3: "https://www.youtube.com/embed/qg_y93bC5dM"
+};
+
 export default function PregnancyTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
