@@ -216,7 +216,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🧪', text: "Take a home pregnancy test first thing in the morning for the most accurate result." },
             { emoji: '🎉', text: "Celebrate! This is a huge moment. Let yourself feel all the emotions." },
             { emoji: '👩‍⚕️', text: "Call your doctor to schedule your first prenatal appointment, usually around week 8." },
-            { emoji: '💊', text: "If you haven't already, start taking your prenatal vitamins immediately." },
+            { emoji: '💊', text: "If you have not already, start taking your prenatal vitamins immediately." },
             { emoji: '🚭', text: "Double-down on healthy habits: no alcohol, no smoking." },
             { emoji: '💧', text: "Stay hydrated, even if you feel bloated." },
             { emoji: '😴', text: "Listen to your body and rest whenever you can. Naps are your friend." },
@@ -262,7 +262,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🎢', text: "Heightened emotions and mood swings continue." }
         ],
         tips: [
-            { emoji: '👩‍⚕️', text: "If you haven't yet, schedule your first prenatal visit." },
+            { emoji: '👩‍⚕️', text: "If you have not yet, schedule your first prenatal visit." },
             { emoji: '🤢', text: "Combat nausea by eating small, frequent meals. Ginger and vitamin B6 can help." },
             { emoji: '💧', text: "Stay hydrated, especially if you're experiencing vomiting. Sip water or electrolyte drinks." },
             { emoji: '😴', text: "Listen to your body's need for rest. Naps are essential." },
@@ -394,7 +394,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😴', text: "Fatigue is still a major factor as the placenta takes over hormone production." },
             { emoji: '🎈', text: "Bloating and gas can be uncomfortable." },
             { emoji: '💧', text: "Increased vaginal discharge (leukorrhea) is normal and healthy." },
-            { emoji: '👃', text: "Your sense of smell might be incredibly sensitive, a 'superpower' you didn't ask for." },
+            { emoji: '👃', text: "Your sense of smell might be incredibly sensitive, a 'superpower' you did not ask for." },
             { emoji: '❤️', text: "Your blood volume has increased by about 40-50%." },
             { emoji: '⚖️', text: "Weight gain is still minimal, typically around 1-5 pounds total so far." }
         ],
@@ -414,7 +414,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '💧', text: "Drink plenty of water to help with bloating and constipation." },
             { emoji: '🧘‍♀️', text: "Gentle exercise can boost your mood and energy. Try prenatal yoga or swimming." },
             { emoji: '🥗', text: "Focus on folic acid, calcium, and iron in your diet." },
-            { emoji: '🗣️', text: "Start thinking about how you want to announce your pregnancy, if you haven’t already." },
+            { emoji: '🗣️', text: "Start thinking about how you want to announce your pregnancy, if you have not already." },
             { emoji: '❤️', text: "Share your feelings and anxieties with your partner or a trusted friend." },
             { emoji: '📚', text: "It's a good time to start reading up on pregnancy and childbirth." }
         ],
@@ -487,7 +487,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🤸', text: "The fetus is very active, kicking and stretching in the womb." }
         ],
         bodyChanges: [
-            { emoji: '🤰', text: "You might start to see the very beginning of a baby bump, especially if this isn’t your first pregnancy." },
+            { emoji: '🤰', text: "You might start to see the very beginning of a baby bump, especially if this is not your first pregnancy." },
             { emoji: '🍈', text: "Your breasts are likely larger and more sensitive." },
             { emoji: '❤️', text: "You can see more prominent veins on your skin due to increased blood flow." },
             { emoji: '📈', text: "Hormone levels are peaking, which can intensify symptoms." },
@@ -507,7 +507,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🎢', text: "Emotional ups and downs are part of the journey." }
         ],
         tips: [
-            { emoji: '🗣️', text: "If you haven’t told your employer yet, now might be a good time to start planning the conversation." },
+            { emoji: '🗣️', text: "If you have not told your employer yet, now might be a good time to start planning the conversation." },
             { emoji: '👩‍⚕️', text: "Ask your doctor about any upcoming tests or ultrasounds for the second trimester." },
             { emoji: '👖', text: "Start shopping for maternity clothes or comfortable alternatives." },
             { emoji: '🥗', text: "Ensure you’re getting enough Vitamin D, which is crucial for bone development." },
@@ -606,7 +606,7 @@ export const weeklyDevelopment: Array<{
         ],
         tips: [
             { emoji: '🏃‍♀️', text: "Now is a great time to establish a regular, safe exercise routine." },
-            { emoji: '🗣️', text: "Share the exciting news with friends and family if you haven’t already!" },
+            { emoji: '🗣️', text: "Share the exciting news with friends and family if you have not already!" },
             { emoji: '🥗', text: "Focus on a nutrient-rich diet to support the baby's rapid growth." },
             { emoji: '🧘‍♀️', text: "Continue with Kegel exercises to support your pelvic floor muscles." },
             { emoji: '🤰', text: "Look into prenatal classes in your area." },
@@ -640,7 +640,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '❤️', text: "Your libido may increase as you feel more energetic and less nauseous." },
             { emoji: '🍈', text: "Your breasts are less tender but continue to prepare for breastfeeding." },
             { emoji: '💧', text: "Vaginal discharge may increase." },
-            { emoji: '👖', text: "You will likely need maternity clothes now if you haven’t already switched." },
+            { emoji: '👖', text: "You will likely need maternity clothes now if you have not already switched." },
             { emoji: '😊', text: "This is often a period of emotional well-being and excitement." }
         ],
         symptoms: [
@@ -714,7 +714,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/14-fetaldev-E-deeptan-4x3.png",
         aiHint: "lemon fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/14-body-E-deeptan_4x3.jpg?width=300"
     },
     { 
         week: 15, 
@@ -763,7 +763,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/15-fetaldev-E-deeptan-4x3.png",
         aiHint: "apple fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/15-body-E-deeptan_4x3.jpg?width=300"
     },
     { 
         week: 16, 
@@ -812,7 +812,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/16-fetaldev-E-deeptan-4x3.png",
         aiHint: "avocado fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/16-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 17,
@@ -861,7 +861,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/17-fetaldev-E-deeptan-4x3.png",
         aiHint: "turnip vegetable",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/17-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 18,
@@ -910,7 +910,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/18-fetaldev-E-deeptan-4x3.png",
         aiHint: "sweet potato",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/18-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 19,
@@ -959,7 +959,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/19-fetaldev-E-deeptan-4x3.png",
         aiHint: "mango fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/19-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 20,
@@ -999,7 +999,7 @@ export const weeklyDevelopment: Array<{
         tips: [
             { emoji: '👩‍⚕️', text: "The anatomy scan is a big milestone. Enjoy seeing your baby in detail!" },
             { emoji: '🗣️', text: "Start talking to your baby regularly." },
-            { emoji: '😴', text: "Invest in a good pregnancy pillow if you haven’t already." },
+            { emoji: '😴', text: "Invest in a good pregnancy pillow if you have not already." },
             { emoji: '🧘‍♀️', text: "Practice good posture to help with back pain." },
             { emoji: '👶', text: "Start creating your baby registry." },
             { emoji: '🏥', text: "Sign up for a hospital tour and childbirth education classes." },
@@ -1008,7 +1008,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/20-fetaldev-E-deeptan-4x3.png",
         aiHint: "banana fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/20-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 21,
@@ -1057,7 +1057,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/21-fetaldev-E-deeptan-4x3.png",
         aiHint: "carrot vegetable",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/21-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 22,
@@ -1095,7 +1095,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😖', text: "Occasional Braxton Hicks contractions." }
         ],
         tips: [
-            { emoji: '👨‍🏫', text: "Sign up for childbirth education classes if you haven’t already." },
+            { emoji: '👨‍🏫', text: "Sign up for childbirth education classes if you have not already." },
             { emoji: '🧘‍♀️', text: "A support belt can help alleviate back and pelvic pain." },
             { emoji: '😴', text: "Take rests during the day if you can." },
             { emoji: '💧', text: "Stay hydrated to help with swelling." },
@@ -1106,7 +1106,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/22-fetaldev-E-deeptan-4x3.png",
         aiHint: "spaghetti squash",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/22-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 23,
@@ -1155,7 +1155,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/23-fetaldev-E-deeptan-4x3.png",
         aiHint: "large mango",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/23-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 24,
@@ -1204,7 +1204,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/24-fetaldev-E-deeptan-4x3.png",
         aiHint: "cantaloupe melon",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/24-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 25,
@@ -1249,11 +1249,11 @@ export const weeklyDevelopment: Array<{
             { emoji: '🗣️', text: "Start writing down your birth plan." },
             { emoji: '👶', text: "Think about who you want in the delivery room with you." },
             { emoji: '❤️', text: "Let your partner and family help you more around the house." },
-            { emoji: '👩‍⚕️', text: "Don’t hesitate to call your doctor with any concerns." }
+            { emoji: '👩‍⚕️', text: "Do not hesitate to call your doctor with any concerns." }
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/25-fetaldev-E-deeptan-4x3.png",
         aiHint: "cauliflower vegetable",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/25-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 26,
@@ -1302,7 +1302,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/26-fetaldev-E-deeptan-4x3.png",
         aiHint: "head lettuce",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/26-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 27,
@@ -1346,12 +1346,12 @@ export const weeklyDevelopment: Array<{
             { emoji: '👶', text: "Start packing your hospital bag." },
             { emoji: '😴', text: "Sleep on your side with pillows for support." },
             { emoji: '💧', text: "Stay hydrated to help with swelling and contractions." },
-            { emoji: '🏥', text: "If you haven't, take a tour of the labor and delivery unit at your hospital." },
+            { emoji: '🏥', text: "If you have not, take a tour of the labor and delivery unit at your hospital." },
             { emoji: '❤️', text: "Take time to relax and connect with your partner before the baby arrives." }
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/27-fetaldev-E-deeptan-4x3.png",
         aiHint: "rutabaga vegetable",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/27-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 28,
@@ -1400,7 +1400,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/28-fetaldev-E-deeptan-4x3.png",
         aiHint: "eggplant vegetable",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/28-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 29,
@@ -1449,7 +1449,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/29-fetaldev-E-deeptan-4x3.png",
         aiHint: "butternut squash",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/29-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 30,
@@ -1498,7 +1498,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/30-fetaldev-E-deeptan-4x3.png",
         aiHint: "large cabbage",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/30-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 31,
@@ -1547,7 +1547,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/31-fetaldev-E-deeptan-4x3.png",
         aiHint: "coconut fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/31-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 32,
@@ -1596,7 +1596,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/32-fetaldev-E-deeptan-4x3.png",
         aiHint: "jicama vegetable",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/32-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 33,
@@ -1645,7 +1645,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/33-fetaldev-E-deeptan-4x3.png",
         aiHint: "pineapple fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/33-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 34,
@@ -1694,7 +1694,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/34-fetaldev-E-deeptan-4x3.png",
         aiHint: "butternut squash",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/34-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 35,
@@ -1743,7 +1743,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/35-fetaldev-E-deeptan-4x3.png",
         aiHint: "honeydew melon",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/35-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 36,
@@ -1792,7 +1792,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/36-fetaldev-E-deeptan-4x3.png",
         aiHint: "romaine lettuce",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/36-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 37,
@@ -1841,7 +1841,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/37-fetaldev-E-deeptan-4x3.png",
         aiHint: "swiss chard",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/37-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 38,
@@ -1890,7 +1890,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/38-fetaldev-E-deeptan-4x3.png",
         aiHint: "pumpkin vegetable",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/38-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 39,
@@ -1930,7 +1930,7 @@ export const weeklyDevelopment: Array<{
         tips: [
             { emoji: '🧘‍♀️', text: "Try to stay as relaxed as possible." },
             { emoji: '💧', text: "Stay hydrated." },
-            { emoji: '🚶‍♀️', text: "Gentle walking can help encourage labor to start." },
+            { emoji: '🚶‍♀️', text: "Gentle walking can help labor progress." },
             { emoji: '🗣️', text: "Lean on your support person." },
             { emoji: '🏥', text: "Head to the hospital when your contractions are consistent and strong." },
             { emoji: '❤️', text: "You've got this!" },
@@ -1939,7 +1939,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/39-fetaldev-E-deeptan-4x3.png",
         aiHint: "watermelon fruit",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/39-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 40,
@@ -1988,7 +1988,7 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/40-fetaldev-E-deeptan-4x3.png",
         aiHint: "small pumpkin",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/40-body-E-deeptan_4x3.jpg?width=300"
     },
     {
         week: 41,
@@ -2037,6 +2037,6 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/41-fetaldev-E-deeptan-4x3.png",
         aiHint: "waiting baby",
-        motherImageUrl: "https://placehold.co/600x400.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2025/03/41-body-E-deeptan_4x3.jpg?width=300"
     }
 ];
