@@ -95,16 +95,16 @@ const weeklyDevelopment: Array<{
         summary: "Pregnancy is counted from the first day of your last period. This week, your body is preparing for potential conception.",
         development: [
             { emoji: '🩸', text: 'The first day of your period marks the beginning of your menstrual cycle and week 1 of pregnancy.' },
-            { emoji: ' hormonal', text: 'Hormones like FSH (follicle-stimulating hormone) begin to rise, preparing your ovaries.' },
+            { emoji: '🧬', text: 'Hormones like FSH (follicle-stimulating hormone) begin to rise, preparing your ovaries.' },
             { emoji: '🥚', text: 'Multiple follicles, each containing an egg, start to mature in your ovaries.' },
-            { emoji: ' uterine', text: 'Your body sheds last month\'s uterine lining to prepare a fresh, new one.' },
+            { emoji: '🧱', text: 'Your body sheds last month\'s uterine lining to prepare a fresh, new one.' },
             { emoji: '🌱', text: 'Estrogen levels are low at the start of the week but will begin to rise.' },
             { emoji: '⏲️', text: 'This phase typically lasts between 3 to 7 days for most women.' },
             { emoji: '✨', text: 'Your body is resetting itself for a potential pregnancy this cycle.' },
             { emoji: '💪', text: 'It\'s a period of renewal and preparation on a microscopic level.' }
         ],
         bodyChanges: [
-            { emoji: ' menstruating', text: 'The most obvious change is your menstrual period.' },
+            { emoji: '🩸', text: 'The most obvious change is your menstrual period.' },
             { emoji: '🌡️', text: 'Your basal body temperature is at its lowest point during your period.' },
             { emoji: ' cervix', text: 'The cervix is low, firm, and slightly open to allow blood to pass.' },
             { emoji: '⚖️', text: 'Hormone levels (estrogen and progesterone) are at their lowest.' },
@@ -145,7 +145,7 @@ const weeklyDevelopment: Array<{
             { emoji: '🥚', text: 'A single dominant follicle outgrows the others and prepares for ovulation.' },
             { emoji: '📈', text: 'Rising estrogen levels cause the uterine lining (endometrium) to thicken.' },
             { emoji: '🧠', text: 'The pituitary gland releases a surge of Luteinizing Hormone (LH) to trigger ovulation.' },
-            { emoji: ' mucus', text: 'Cervical mucus becomes clearer, thinner, and more slippery to help sperm.' },
+            { emoji: '💧', text: 'Cervical mucus becomes clearer, thinner, and more slippery to help sperm.' },
             { emoji: '✨', text: 'The egg inside the follicle completes its first meiotic division.' },
             { emoji: '🚪', text: 'The cervix softens and opens slightly in preparation.' },
             { emoji: '⏰', text: 'Ovulation typically occurs around the end of this week.' },
@@ -167,8 +167,8 @@ const weeklyDevelopment: Array<{
             { emoji: '❤️', text: 'Heightened sex drive is very common.' },
             { emoji: '🤕', text: 'Mild one-sided pelvic pain (mittelschmerz) can occur during ovulation.' },
             { emoji: '🎈', text: 'Light bloating is possible for some women.' },
-            { emoji: ' spotting', text: 'A small amount of light spotting can occur during ovulation.' },
-            { emoji: ' breasts', text: 'Breasts may feel slightly tender or sensitive.' },
+            { emoji: '✨', text: 'A small amount of light spotting can occur during ovulation.' },
+            { emoji: '🍈', text: 'Breasts may feel slightly tender or sensitive.' },
             { emoji: '✨', text: 'Most symptoms this week are positive signs of peak fertility.' }
         ],
         tips: [
@@ -192,7 +192,7 @@ const weeklyDevelopment: Array<{
         development: [
             { emoji: '🎉', text: 'Fertilization! A single sperm penetrates the egg, creating a zygote.' },
             { emoji: '🧬', text: 'The baby\'s genetic makeup, including sex, is determined at this moment.' },
-            { emoji: 'divide;', text: 'The zygote begins rapidly dividing into a ball of cells called a blastocyst.' },
+            { emoji: '➗', text: 'The zygote begins rapidly dividing into a ball of cells called a blastocyst.' },
             { emoji: '🚗', text: 'The blastocyst travels down the fallopian tube toward the uterus.' },
             { emoji: '🏠', text: 'The blastocyst begins to burrow into the plush uterine lining—this is implantation.' },
             { emoji: '🤝', text: 'The outer cells of the blastocyst will form the placenta.' },
@@ -240,10 +240,10 @@ const weeklyDevelopment: Array<{
         summary: "The blastocyst has successfully implanted in your uterine wall. This is the week you'll likely miss your period and get a positive pregnancy test!", 
         development: [
             { emoji: '🏠', text: 'The embryo is securely implanted in the uterine lining.' },
-            { emoji: ' layered', text: 'It has differentiated into three distinct layers: ectoderm, mesoderm, and endoderm.' },
+            { emoji: '🧱', text: 'It has differentiated into three distinct layers: ectoderm, mesoderm, and endoderm.' },
             { emoji: '🧠', text: 'The ectoderm will form the nervous system, skin, and hair.' },
             { emoji: '❤️', text: 'The mesoderm will develop into the skeleton, muscles, heart, and blood vessels.' },
-            { emoji: ' lungs', text: 'The endoderm will become the digestive system, liver, and lungs.' },
+            { emoji: '🫁', text: 'The endoderm will become the digestive system, liver, and lungs.' },
             { emoji: '탯', text: 'The placenta begins to form and produce the pregnancy hormone hCG.' },
             { emoji: '💧', text: 'The amniotic sac, which will cushion the baby, is also forming.' },
             { emoji: '📈', text: 'Growth is happening at an exponential rate.' }
@@ -259,7 +259,7 @@ const weeklyDevelopment: Array<{
             { emoji: '🤫', text: 'From the outside, there are no visible changes yet.' }
         ],
         symptoms: [
-            { emoji: ' period', text: 'A missed menstrual period.' },
+            { emoji: '🗓️', text: 'A missed menstrual period.' },
             { emoji: '🍈', text: 'Extremely sore and sensitive breasts.' },
             { emoji: '😴', text: 'Overwhelming fatigue that feels like you\'ve run a marathon.' },
             { emoji: '😖', text: 'Mild, period-like cramping (without bleeding) is normal.' },
@@ -810,26 +810,6 @@ export default function PregnancyTrackerPage() {
                         </Card>
                         
                         <div className="space-y-8">
-                            {babyLookVideoUrl && (
-                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                    <CardHeader>
-                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
-                                            <Video /> {t.babyLookTitle}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="aspect-video">
-                                            <iframe
-                                                className="w-full h-full rounded-lg"
-                                                src={babyLookVideoUrl}
-                                                title="Baby development video"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )}
                              {trimesterVideoUrl && (
                                 <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
                                     <CardHeader>
@@ -843,6 +823,26 @@ export default function PregnancyTrackerPage() {
                                                 className="w-full h-full rounded-lg"
                                                 src={trimesterVideoUrl}
                                                 title="Guided Workout YouTube video player"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                             {babyLookVideoUrl && (
+                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
+                                    <CardHeader>
+                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
+                                            <Video /> {t.babyLookTitle}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-video">
+                                            <iframe
+                                                className="w-full h-full rounded-lg"
+                                                src={babyLookVideoUrl}
+                                                title="Baby development video"
                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                 allowFullScreen
                                             ></iframe>
