@@ -133,7 +133,7 @@ const weeklyDevelopment: Array<{
             { emoji: '🥗', text: 'Focus on a balanced diet rich in iron and vitamin C to replenish your body.' },
             { emoji: '💕', text: 'Communicate with your partner about your plans and feelings on this journey.' }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/02-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "calendar vitamins" 
     },
     { 
@@ -808,27 +808,25 @@ export default function PregnancyTrackerPage() {
                                 </Form>
                             </CardContent>
                         </Card>
-                         <div className="space-y-8">
-                            {animatedVideoId && (
-                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                    <CardHeader><CardTitle>Animated Journey: Trimester {pregnancyDetails.trimester}</CardTitle></CardHeader>
-                                    <CardContent>
+                        <div className="space-y-8">
+                             <div className="space-y-4">
+                                <h3 className="font-headline text-2xl text-pink-600 flex items-center gap-2">
+                                    <Video className="h-6 w-6"/>
+                                    Here is what your baby might look like now
+                                </h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {animatedVideoId && (
                                         <div className="aspect-video">
                                             <iframe className="w-full h-full rounded-lg" src={`https://www.youtube.com/embed/${animatedVideoId}`} title={`Animated video for Trimester ${pregnancyDetails.trimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                                         </div>
-                                    </CardContent>
-                                </Card>
-                            )}
-                            {knowledgeVideoId && (
-                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                    <CardHeader><CardTitle>Expert Insights: Trimester {pregnancyDetails.trimester}</CardTitle></CardHeader>
-                                    <CardContent>
+                                    )}
+                                    {knowledgeVideoId && (
                                         <div className="aspect-video">
                                             <iframe className="w-full h-full rounded-lg" src={`https://www.youtube.com/embed/${knowledgeVideoId}`} title={`Knowledge video for Trimester ${pregnancyDetails.trimester}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                                         </div>
-                                    </CardContent>
-                                </Card>
-                            )}
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
