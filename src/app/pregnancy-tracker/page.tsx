@@ -92,7 +92,7 @@ const weeklyDevelopment: Array<{
         week: 1, 
         title: "Week 1: The Journey Begins", 
         size: "You're on your period, so not yet pregnant.", 
-        summary: "Pregnancy is counted from the first day of your last period. This week, your body is preparing for potential conception.",
+        summary: "Pregnancy is counted from the first day of your last menstrual period. This week, your body is preparing for potential conception.",
         development: [
             { emoji: '🩸', text: 'The first day of your period marks the beginning of your menstrual cycle and week 1 of pregnancy.' },
             { emoji: '🧬', text: 'Hormones like FSH (follicle-stimulating hormone) begin to rise, preparing your ovaries.' },
@@ -379,18 +379,6 @@ const navItems = [
     { href: '/resources', icon: Library, label: 'Resources' },
 ];
 
-const trimesterVideos: { [key: number]: string } = {
-    1: "https://www.youtube.com/embed/Ia6dNwVs1M8",
-    2: "https://www.youtube.com/embed/XhqntqSGKsc",
-    3: "https://www.youtube.com/embed/qkhLev3bKd0"
-};
-
-const babyLookVideos: { [key: number]: string } = {
-    1: "https://www.youtube.com/embed/g-GqA8sI4oQ",
-    2: "https://www.youtube.com/embed/5A4R52Fv4kI",
-    3: "https://www.youtube.com/embed/D0f3u0dF5Yc"
-};
-
 export default function PregnancyTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -565,8 +553,6 @@ export default function PregnancyTrackerPage() {
 
 
   const currentWeekData = pregnancyDetails ? weeklyDevelopment.find(w => w.week === pregnancyDetails.gestationalAgeWeeks) || weeklyDevelopment[0] : weeklyDevelopment[0];
-  const trimesterVideoUrl = pregnancyDetails ? trimesterVideos[pregnancyDetails.trimester] : null;
-  const babyLookVideoUrl = pregnancyDetails ? babyLookVideos[pregnancyDetails.trimester] : null;
   const loggedSymptoms = symptomForm.watch('symptoms') || [];
 
   if (pregnancyDetails && currentWeekData) {
@@ -808,50 +794,6 @@ export default function PregnancyTrackerPage() {
                                 </Form>
                             </CardContent>
                         </Card>
-                        
-                        <div className="space-y-8">
-                             {trimesterVideoUrl && (
-                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                    <CardHeader>
-                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
-                                            <Video /> {t.guidedWorkoutTitle(pregnancyDetails.trimester)}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="aspect-video">
-                                            <iframe
-                                                className="w-full h-full rounded-lg"
-                                                src={trimesterVideoUrl}
-                                                title="Guided Workout YouTube video player"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )}
-                             {babyLookVideoUrl && (
-                                <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
-                                    <CardHeader>
-                                        <CardTitle className="font-headline text-2xl flex items-center gap-2 text-pink-600">
-                                            <Video /> {t.babyLookTitle}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="aspect-video">
-                                            <iframe
-                                                className="w-full h-full rounded-lg"
-                                                src={babyLookVideoUrl}
-                                                title="Baby development video"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )}
-                        </div>
-
                     </div>
 
                     <div className="mt-8 flex justify-center gap-4">
