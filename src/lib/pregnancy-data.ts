@@ -121,7 +121,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🧘‍♀️', text: 'Manage stress with activities like yoga or meditation.' },
             { emoji: '💬', text: 'Keep communication open and enjoyable with your partner.' }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/02-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "flower blooming" 
     },
     { 
@@ -169,7 +169,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🚫', text: 'Steer clear of alcohol, smoking, and unsafe foods like unpasteurized cheese.' },
             { emoji: '❤️', text: 'Lean on your partner or a friend for support during the "two-week wait."' }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/03-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "cells microscope" 
     },
     { 
@@ -217,7 +217,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '😴', text: 'Listen to your body and rest whenever you can. Naps are your friend.' },
             { emoji: '❤️', text: 'Share the news with your partner and decide together when to tell others.' }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/04-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "pregnancy test positive" 
     },
     { 
@@ -266,7 +266,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🥗', text: "Focus on nutrient-dense foods, even if you can only eat small amounts." },
             { emoji: '❤️', text: "Lean on your support system. Talk about how you're feeling, both physically and emotionally." }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/05-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "apple seed nature"
     },
     { 
@@ -315,7 +315,7 @@ export const weeklyDevelopment: Array<{
 
             { emoji: '🚫', text: "Be aware of workplace hazards and environmental exposures that could be harmful." }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/06-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "sweet pea vegetable"
     },
     { 
@@ -363,10 +363,9 @@ export const weeklyDevelopment: Array<{
             { emoji: '🦷', text: "Schedule a dental check-up. Pregnancy hormones can affect your gums." },
             { emoji: '❤️', text: "Connect with other expecting parents online or in your community for support." }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/07-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "blueberry fruit"
     },
-    // Weeks 8-40 would follow a similar, expanded structure.
     { 
         week: 8, 
         title: "Week 8: Baby is Moving!", 
@@ -412,13 +411,253 @@ export const weeklyDevelopment: Array<{
             { emoji: '❤️', text: "Share your feelings and anxieties with your partner or a trusted friend." },
             { emoji: '📚', text: "It's a good time to start reading up on pregnancy and childbirth." }
         ],
-        imageUrl: "https://placehold.co/600x400.png", 
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/08-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "raspberry fruit" 
+    },
+    { 
+        week: 9, 
+        title: "Week 9: Officially a Fetus", 
+        size: "Your baby is the size of a cherry.", 
+        summary: "The embryonic period ends, and the fetal period begins. All essential organs have started to form.",
+        development: [
+            { emoji: '🎉', text: 'Big news! The embryo is now officially called a fetus.' },
+            { emoji: '💪', text: 'Muscles are developing, and the fetus is making stronger movements.' },
+            { emoji: '❤️', text: 'The heart valves (aortic and pulmonary) are now formed.' },
+            { emoji: '🖐️', text: 'Fingers and toes are more distinct, though still webbed.' },
+            { emoji: '👶', text: 'Facial features are becoming more refined and recognizable.' },
+            { emoji: '🦴', text: 'Bones are starting to harden (ossify) throughout the body.' },
+            { emoji: '👂', text: 'The external ears are well-formed.' },
+            { emoji: ' órgão', text: 'All essential organs are in place and will now focus on maturing.' }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: 'Your uterus is continuing to grow, now about the size of a small melon.' },
+            { emoji: '😴', text: 'Morning sickness and fatigue may still be at their peak.' },
+            { emoji: '🍈', text: 'Your breasts might feel lumpy as milk ducts develop.' },
+            { emoji: '⚖️', text: 'You may not have gained much weight yet, which is perfectly normal.' },
+            { emoji: '❤️', text: 'Your heart is pumping more blood to supply the placenta.' },
+            { emoji: '🩸', text: 'Increased blood volume can lead to visible veins on your chest and abdomen.' },
+            { emoji: '😊', text: 'Emotionally, the reality of pregnancy might be setting in more deeply.' },
+            { emoji: '🤫', text: 'You are likely still not showing to the outside world.' }
+        ],
+        symptoms: [
+            { emoji: '🤢', text: 'Nausea and vomiting can still be significant.' },
+            { emoji: '😴', text: 'Feeling tired is one of the most common complaints.' },
+            { emoji: '🎢', text: 'Mood swings are common due to hormonal fluctuations.' },
+            { emoji: '🔥', text: 'Heartburn and indigestion continue for many.' },
+            { emoji: '🎈', text: 'Bloating and constipation are frequent companions.' },
+            { emoji: '🤕', text: 'Headaches can occur due to hormonal changes and increased blood volume.' },
+            { emoji: '😵', text: 'Dizziness or feeling faint is possible.' },
+            { emoji: '🤧', text: 'You might feel congested due to pregnancy rhinitis.' }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: 'Consider genetic screening options, like NIPT, which can be done starting this week.' },
+            { emoji: '💧', text: 'Drink at least 8-10 glasses of water per day.' },
+            { emoji: '🥗', text: 'Focus on calcium-rich foods like yogurt, leafy greens, and almonds.' },
+            { emoji: '🦷', text: 'Be gentle when brushing your teeth, as your gums may be sensitive.' },
+            { emoji: '🗣️', text: 'If you’re feeling anxious, talk about your fears. It’s normal to be worried.' },
+            { emoji: '🧘‍♀️', text: 'Continue with safe, moderate exercise to help manage symptoms.' },
+            { emoji: '👖', text: 'Maternity pants might become your new best friend for comfort.' },
+            { emoji: '❤️', text: 'Plan a simple date night with your partner to connect.' }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/09-fetaldev-all-skintones_4x3.jpg?width=396",
+        aiHint: "cherry fruit"
+    },
+    { 
+        week: 10, 
+        title: "Week 10: Fingernails & Hair", 
+        size: "Your baby is the size of a prune.", 
+        summary: "Tiny details are emerging, like fingernails and fine hair. Your baby is now practicing swallowing.",
+        development: [
+            { emoji: '💅', text: 'Tiny fingernails and toenails are beginning to form.' },
+            { emoji: '🍑', text: 'A fine, downy hair called lanugo is appearing on the skin.' },
+            { emoji: '🧠', text: 'The brain is developing rapidly, and the forehead is temporarily bulging.' },
+            { emoji: '👶', text: 'The fetus can now bend its limbs at the elbows and knees.' },
+            { emoji: '💧', text: 'The fetus is swallowing amniotic fluid and the kidneys are producing urine.' },
+            { emoji: '🦷', text: 'Tooth buds for baby teeth are forming within the gums.' },
+            { emoji: '🦴', text: 'The skeleton is transitioning from cartilage to bone.' },
+            { emoji: '🤸', text: 'The fetus is very active, kicking and stretching in the womb.' }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: 'You might start to see the very beginning of a baby bump, especially if this isn’t your first pregnancy.' },
+            { emoji: '🍈', text: 'Your breasts are likely larger and more sensitive.' },
+            { emoji: '❤️', text: 'You can see more prominent veins on your skin due to increased blood flow.' },
+            { emoji: '📈', text: 'Hormone levels are peaking, which can intensify symptoms.' },
+            { emoji: '😩', text: 'Round ligament pain, sharp pains in the lower abdomen, might occur as the uterus grows.' },
+            { emoji: '😊', text: 'Some women start to feel a bit better as the first trimester nears its end.' },
+            { emoji: '⚖️', text: 'A weight gain of 1-5 pounds is typical by this point.' },
+            { emoji: '✨', text: 'Your body is now fully in pregnancy mode, supporting your growing baby.' }
+        ],
+        symptoms: [
+            { emoji: '🤢', text: 'Nausea and fatigue may still be strong, but relief is often on the horizon.' },
+            { emoji: '🎈', text: 'Bloating and gas continue to be common.' },
+            { emoji: '💧', text: 'Increased vaginal discharge is normal.' },
+            { emoji: '🔥', text: 'Heartburn can be an issue.' },
+            { emoji: '🤕', text: 'Occasional headaches are still possible.' },
+            { emoji: '😵', text: 'Dizziness can occur, so move slowly when changing positions.' },
+            { emoji: '😖', text: 'Abdominal aches and pains from your stretching uterus.' },
+            { emoji: '🎢', text: 'Emotional ups and downs are part of the journey.' }
+        ],
+        tips: [
+            { emoji: '🗣️', text: 'If you haven’t told your employer yet, now might be a good time to start planning the conversation.' },
+            { emoji: '👩‍⚕️', text: 'Ask your doctor about the results of any early screenings you’ve had.' },
+            { emoji: '👖', text: 'Start shopping for maternity clothes or comfortable alternatives.' },
+            { emoji: '🥗', text: 'Ensure you’re getting enough Vitamin D, which is crucial for bone development.' },
+            { emoji: '🧘‍♀️', text: 'Kegel exercises are great to start now to strengthen your pelvic floor.' },
+            { emoji: '☀️', text: 'Your skin is more sensitive to the sun, so wear sunscreen daily.' },
+            { emoji: '💧', text: 'Keep up with your water intake to support all the amazing changes happening.' },
+            { emoji: '❤️', text: 'Start a pregnancy journal to document your thoughts and feelings.' }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/10-fetaldev-all-skintones_4x3.jpg?width=396",
+        aiHint: "prune fruit"
+    },
+    { 
+        week: 11, 
+        title: "Week 11: Uncurling & Stretching", 
+        size: "Your baby is the size of a lime.", 
+        summary: "The baby's body is starting to straighten out. They can now open and close their hands into fists.",
+        development: [
+            { emoji: '🤸', text: 'The fetus is stretching, kicking, and even hiccuping, though you can\'t feel it.' },
+            { emoji: '🖐️', text: 'Fingers and toes are now fully separated; the webbing is gone.' },
+            { emoji: '👂', text: 'The ears are moving to their final position on the sides of the head.' },
+            { emoji: '👶', text: 'The head is still large, making up about half of the total body length.' },
+            { emoji: '🦴', text: 'Bone hardening continues.' },
+            { emoji: '🌸', text: 'Reproductive organs are forming—it’s a boy or a girl!' },
+            { emoji: '👃', text: 'Nostrils are open, and the nasal passages are formed.' },
+            { emoji: '🩸', text: 'The placenta is developing rapidly and increasing hormone production.' }
+        ],
+        bodyChanges: [
+            { emoji: '🤢', text: 'Good news! Morning sickness and fatigue may start to subside for many.' },
+            { emoji: '⚡', text: 'You might start to feel a return of your energy levels.' },
+            { emoji: '🤰', text: 'A small baby bump may be starting to show, especially in the evenings.' },
+            { emoji: '🍈', text: 'Your breasts are still growing and preparing for milk production.' },
+            { emoji: '📈', text: 'The risk of miscarriage drops significantly after this week.' },
+            { emoji: '✨', text: 'You might notice a dark line appearing on your abdomen, called the linea nigra.' },
+            { emoji: '🔥', text: 'Heartburn might persist as your digestive system slows down.' },
+            { emoji: '😊', text: 'Many women start to feel more of the "glow" and less of the "green" around this time.' }
+        ],
+        symptoms: [
+            { emoji: '🤢', text: 'Nausea may begin to decrease.' },
+            { emoji: '😴', text: 'Fatigue might lessen, giving you a welcome energy boost.' },
+            { emoji: '🎈', text: 'Gas and bloating are still common.' },
+            { emoji: '💧', text: 'Vaginal discharge may increase.' },
+            { emoji: '😖', text: 'Leg cramps can start to appear, especially at night.' },
+            { emoji: '🤕', text: 'Headaches are still a possibility.' },
+            { emoji: '🍫', text: 'Food cravings and aversions can still be strong.' },
+            { emoji: '✨', text: 'A feeling of relief as you approach the end of the first trimester.' }
+        ],
+        tips: [
+            { emoji: '🎉', text: 'Celebrate making it through the toughest part of the first trimester!' },
+            { emoji: '🗣️', text: 'You might feel more comfortable sharing your pregnancy news with a wider circle now.' },
+            { emoji: '🥗', text: 'Continue to eat a balanced diet with plenty of fruits, vegetables, and protein.' },
+            { emoji: '💧', text: 'Staying hydrated helps prevent headaches and constipation.' },
+            { emoji: '🏃‍♀️', text: 'Enjoy your returning energy by going for walks or doing other safe exercises.' },
+            { emoji: '👩‍⚕️', text: 'Ask your doctor about any upcoming tests or ultrasounds for the second trimester.' },
+            { emoji: '📚', text: 'Start thinking about baby names—it’s a fun way to connect with your little one.' },
+            { emoji: '💰', text: 'Begin to research the costs of baby gear and childcare to start budgeting.' }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/11-fetaldev-all-skintones_4x3.jpg?width=396",
+        aiHint: "lime fruit"
+    },
+    { 
+        week: 12, 
+        title: "Week 12: Reflexes Develop", 
+        size: "Your baby is the size of a plum.", 
+        summary: "The first trimester is almost over! Your baby's reflexes are developing; they will curl their toes and squint their eyes.",
+        development: [
+            { emoji: '🧠', text: 'The brain is fully formed and the fetus can feel pain.' },
+            { emoji: '👣', text: 'The fetus is developing reflexes, like curling its toes and making sucking motions.' },
+            { emoji: '🎵', text: 'The vocal cords are forming, preparing for that first cry.' },
+            { emoji: '🦴', text: 'The skeleton continues to harden.' },
+            { emoji: '👶', text: 'The intestines, which were growing in the umbilical cord, are moving into the abdomen.' },
+            { emoji: '🩸', text: 'The bone marrow is beginning to produce white blood cells.' },
+            { emoji: ' pituitary', text: 'The pituitary gland at the base of the brain starts producing hormones.' },
+            { emoji: '✨', text: 'All major body parts and organs are in place.' }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: 'Your uterus moves up and out of the pelvis, which may relieve pressure on your bladder.' },
+            { emoji: '✨', text: 'Your baby bump might be more noticeable now.' },
+            { emoji: '❤️', text: 'Your doctor can likely hear the baby\'s heartbeat with a fetal Doppler.' },
+            { emoji: '⚡', text: 'Energy levels are often much better than in previous weeks.' },
+            { emoji: '🤢', text: 'Morning sickness has likely subsided for most women.' },
+            { emoji: '😵', text: 'Dizziness can still occur, so be careful.' },
+            { emoji: '🍈', text: 'Your breasts might be less tender but continue to grow.' },
+            { emoji: '😊', text: 'You may be feeling more excited and less anxious as the risk of miscarriage has dropped.' }
+        ],
+        symptoms: [
+            { emoji: '🤕', text: 'Headaches may still be an issue for some.' },
+            { emoji: '💧', text: 'An increase in vaginal discharge is normal.' },
+            { emoji: '🎈', text: 'You might still experience some bloating.' },
+            { emoji: '✨', text: 'A noticeable decrease in nausea and fatigue.' },
+            { emoji: '🔥', text: 'Heartburn might continue or start now.' },
+            { emoji: '🤧', text: 'Nasal congestion (pregnancy rhinitis) can be bothersome.' },
+            { emoji: '😴', text: 'You might find it easier to get a good night\'s sleep.' },
+            { emoji: '💖', text: 'A growing sense of connection to the baby.' }
+        ],
+        tips: [
+            { emoji: '🏃‍♀️', text: 'Now is a great time to establish a regular, safe exercise routine.' },
+            { emoji: '🗣️', text: 'Share the exciting news with friends and family if you haven\'t already!' },
+            { emoji: '🥗', text: 'Focus on a nutrient-rich diet to support the baby\'s rapid growth.' },
+            { emoji: '🧘‍♀️', text: 'Continue with Kegel exercises to support your pelvic floor muscles.' },
+            { emoji: '🤰', text: 'Look into prenatal classes in your area.' },
+            { emoji: '💬', text: 'Start discussing your birth plan and preferences with your partner and doctor.' },
+            { emoji: '❤️', text: 'Hearing the heartbeat for the first time is a magical moment—enjoy it!' },
+            { emoji: '👶', text: 'Start dreaming and planning for your new arrival. This is a joyful time!' }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/12-fetaldev-H-beige_4x3.jpg?width=396",
+        aiHint: "plum fruit"
+    },
+    { 
+        week: 13, 
+        title: "Week 13: Welcome to the 2nd Trimester!", 
+        size: "Your baby is the size of a peach.", 
+        summary: "You've made it! The second trimester is often called the 'honeymoon' phase of pregnancy. Your baby has unique fingerprints now.",
+        development: [
+            { emoji: '🎉', text: 'Welcome to the second trimester!' },
+            { emoji: '👍', text: 'Unique fingerprints have formed on the baby\'s tiny fingertips.' },
+            { emoji: '🍑', text: 'The baby\'s body is starting to catch up to its large head in size.' },
+            { emoji: '👶', text: 'The intestines have moved completely into the baby\'s abdomen.' },
+            { emoji: '🦴', text: 'Bones are hardening, and the skeleton is becoming more defined.' },
+            { emoji: '💧', text: 'The baby is practicing breathing by moving amniotic fluid in and out of the lungs.' },
+            { emoji: '👂', text: 'The ears are now in their correct position, and the baby may be able to hear sounds.' },
+            { emoji: '🌸', text: 'If you\'re having a girl, her ovaries now contain millions of eggs.' }
+        ],
+        bodyChanges: [
+            { emoji: '✨', text: 'You may truly feel the "pregnancy glow" as early symptoms fade.' },
+            { emoji: '⚡', text: 'Energy levels are typically at their best during the second trimester.' },
+            { emoji: '🤰', text: 'Your baby bump is likely becoming more apparent.' },
+            { emoji: '❤️', text: 'Your libido may increase as you feel more energetic and less nauseous.' },
+            { emoji: '🍈', text: 'Your breasts are less tender but continue to prepare for breastfeeding.' },
+            { emoji: '💧', text: 'Vaginal discharge may increase.' },
+            { emoji: '👖', text: 'You will likely need maternity clothes now if you haven’t already switched.' },
+            { emoji: '😊', text: 'This is often a period of emotional well-being and excitement.' }
+        ],
+        symptoms: [
+            { emoji: '✨', text: 'A significant decrease in nausea and fatigue for most.' },
+            { emoji: '⚡', text: 'Increased energy and a general sense of well-being.' },
+            { emoji: '😖', text: 'Round ligament pain may continue as your uterus expands.' },
+            { emoji: '🔥', text: 'Heartburn can still be an issue.' },
+            { emoji: '😵', text: 'Some dizziness may persist.' },
+            { emoji: '🤕', text: 'Headaches are still possible.' },
+            { emoji: '🎈', text: 'Constipation can be a problem due to hormones slowing digestion.' },
+            { emoji: '👃', text: 'You may still have a stuffy nose.' }
+        ],
+        tips: [
+            { emoji: '🎉', text: 'Enjoy this "honeymoon" phase of pregnancy!' },
+            { emoji: '🏃‍♀️', text: 'Take advantage of your increased energy to stay active.' },
+            { emoji: '🥗', text: 'Focus on a diet rich in protein, calcium, and iron for baby\'s growth.' },
+            { emoji: '🗣️', text: 'This is a good time to start telling colleagues about your pregnancy.' },
+            { emoji: '🤰', text: 'Start moisturizing your belly, hips, and thighs to help with stretching skin.' },
+            { emoji: '👶', text: 'Start planning the nursery and thinking about what you\'ll need.' },
+            { emoji: '✈️', text: 'The second trimester is often the best time for a "babymoon" trip.' },
+            { emoji: '❤️', text: 'Connect with your baby by talking or singing to your bump.' }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2025/03/13-fetaldev-G-warmbeige_4x3.jpg?width=396",
+        aiHint: "peach fruit"
     }
 ];
 
 // Populate remaining weeks with placeholder data to avoid errors
-for (let i = 9; i <= 40; i++) {
+for (let i = 14; i <= 40; i++) {
     weeklyDevelopment.push({
         week: i,
         title: `Week ${i}: Placeholder Title`,
