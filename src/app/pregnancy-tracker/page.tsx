@@ -59,80 +59,246 @@ const pregnancySymptoms = [
 const PREGNANCY_TRACKER_KEY = 'glowher-pregnancy-tracker';
 const PREGNANCY_SYMPTOM_LOG_PREFIX = 'glowher-pregnancy-symptom-';
 
+type WeeklyInfo = {
+    emoji: string;
+    text: string;
+}
 
-// Expanded fetal development data
-const weeklyDevelopment = [
-    { week: 0, title: "Getting Started", size: "Your journey is about to begin.", summary: "Set your due date or last menstrual period to start tracking your pregnancy week by week.", development: "", bodyChanges: "", symptoms: "", tips: "", imageUrl: "https://placehold.co/600x400.png", aiHint: "pregnancy test" },
-    { week: 1, title: "Week 1: The Journey Begins", size: "You're on your period, so not yet pregnant.", summary: "Pregnancy is counted from the first day of your last period. This week, your body is preparing for potential conception.", development: "Your body is shedding the uterine lining and preparing for a new cycle. Hormones are gearing up to mature and release a new egg.", bodyChanges: "Typical period symptoms like cramping and bloating are common. Estrogen and progesterone levels are low.", symptoms: "Bleeding, lower back pain, cramps, bloating, and mood swings are all related to your period, not pregnancy.", tips: "Focus on your health. Start taking prenatal vitamins with folic acid. Reduce alcohol and caffeine intake.", imageUrl: "https://placehold.co/600x400.png", aiHint: "calendar vitamins" },
-    { week: 2, title: "Week 2: Preparing for Ovulation", size: "An egg is maturing in your ovary.", summary: "Your uterine lining is thickening, and your body is getting ready to release an egg. This is your fertile window.", development: "A dominant follicle containing an egg is growing. Your uterine lining is thickening to create a welcoming home for a fertilized egg.", bodyChanges: "You might feel a boost in energy and libido as estrogen levels rise. Cervical mucus becomes clear and stretchy.", symptoms: "Increased energy, heightened sense of smell, and changes in cervical mucus are key signs. Some feel a slight twinge of pain during ovulation (mittelschmerz).", tips: "This is the optimal time to try to conceive. Pay attention to signs of ovulation. Maintain a healthy lifestyle.", imageUrl: "https://placehold.co/600x400.png", aiHint: "flower blooming" },
-    { week: 3, title: "Week 3: Fertilization & Implantation", size: "The fertilized egg, or blastocyst, is a microscopic ball of cells.", summary: "Success! A sperm has fertilized the egg, and this new ball of cells is making its way to your uterus for implantation.", development: "The fertilized egg (zygote) rapidly divides as it travels down the fallopian tube. It becomes a blastocyst and begins to implant into the uterine wall.", bodyChanges: "All the action is microscopic. Progesterone levels start to rise. Some women experience light implantation spotting or cramping.", symptoms: "Implantation spotting or cramping. Early fatigue and breast tenderness can begin. Many women feel no symptoms at all.", tips: "Continue 'acting pregnant'—avoid alcohol and keep taking prenatals. It's still too early for a pregnancy test.", imageUrl: "https://placehold.co/600x400.png", aiHint: "cells microscope" },
-    { week: 4, title: "Week 4: A Positive Test!", size: "Your baby is the size of a poppy seed.", summary: "The blastocyst has successfully implanted in your uterine wall. This is the week you'll likely miss your period and get a positive pregnancy test!", development: "The blastocyst is now an embryo. The foundational layers for all organs are forming. The placenta and amniotic sac are developing.", bodyChanges: "A missed period is the biggest sign. hCG hormone levels are rising rapidly, causing fatigue, bloating, and sore breasts.", symptoms: "Profound fatigue, sore breasts, bloating, and possibly mild, period-like cramping are very common. A home pregnancy test should now be positive.", tips: "Take a home pregnancy test! Call your doctor to schedule your first prenatal appointment (usually around week 8).", imageUrl: "https://placehold.co/600x400.png", aiHint: "pregnancy test positive" },
-    { week: 5, title: "Week 5: The Heart Begins to Beat", size: "Your baby is the size of an apple seed.", summary: "An incredible milestone: your baby's heart begins to beat! The neural tube, which becomes the brain and spinal cord, is also forming now.", development: "The heart, a simple tube, begins to beat and circulate blood. The neural tube is closing. The groundwork for the brain, eyes, and ears is being laid.", bodyChanges: "Hormones are surging, amplifying symptoms. Your uterus is growing, increasing pressure on your bladder.", symptoms: "Morning sickness, fatigue, and sore breasts may intensify. Frequent urination and food aversions are very common.", tips: "Eat small, frequent meals to combat nausea. Rest whenever you can. Stay hydrated, even if you don't feel like it.", imageUrl: "https://placehold.co/600x400.png", aiHint: "heartbeat wave" },
-    { week: 6, title: "Week 6: Facial Features Form", size: "Your baby is the size of a lentil.", summary: "Basic facial features are taking shape. Dark spots mark where the eyes and nostrils will be, and tiny buds that will become arms and legs are sprouting.", development: "The eyes, nostrils, and jaw are beginning to form. Arm and leg buds are sprouting. The heart is beating in a more regular rhythm.", bodyChanges: "Bloating might make your pants feel tight. Your breasts continue to grow and may feel sore. The placenta is still developing, which causes fatigue.", symptoms: "Morning sickness is often at its peak. Fatigue can be overwhelming. Mood swings are common due to the hormonal rollercoaster.", tips: "Keep bland snacks on hand. A supportive, wireless bra can be a lifesaver. Share how you're feeling with your partner.", imageUrl: "https://placehold.co/600x400.png", aiHint: "embryo illustration" },
-    { week: 7, title: "Week 7: Baby's Brain Development", size: "Your baby is the size of a blueberry.", summary: "Your baby's brain is developing at an astonishing rate, forming about 100 new cells every minute. Their arms and legs are getting longer.", development: "About 100 new brain cells are forming every minute. Arm and leg buds have grown into paddle-like limbs. Kidneys are now in place.", bodyChanges: "Your uterus has doubled in size. Your blood volume is increasing, which can cause headaches and dizziness. Progesterone may cause constipation.", symptoms: "Nausea and fatigue are still major players. Frequent urination continues. Some women notice more saliva or a metallic taste.", tips: "Drink plenty of fluids. Increase your fiber intake. Start writing down questions for your first prenatal visit.", imageUrl: "https://placehold.co/600x400.png", aiHint: "brain neurons" },
-    { week: 8, title: "Week 8: Your First Glimpse", size: "Your baby is the size of a raspberry.", summary: "This is a common week for your first prenatal appointment and ultrasound, where you may see your baby and their flickering heartbeat for the first time.", development: "Fingers and toes are forming, though still webbed. The embryonic 'tail' is disappearing. The baby is constantly making small, spontaneous movements.", bodyChanges: "This is a big week for your first prenatal visit and ultrasound! Your waistline is thickening. The 'pregnancy glow' might appear.", symptoms: "Morning sickness and fatigue may be at their most intense. 'Pregnancy brain' or forgetfulness can start. Vivid dreams are common.", tips: "Prepare for your first appointment with questions. It might be time for maternity pants. Make a dental appointment, as gums can be sensitive.", imageUrl: "https://placehold.co/600x400.png", aiHint: "ultrasound scan" },
-    { week: 9, title: "Week 9: Baby is Now a Fetus", size: "Your baby is the size of a cherry.", summary: "Big news! Your baby officially graduates from an embryo to a fetus. All their essential organs are formed and will now focus on growing and maturing.", development: "The embryo is now a fetus. All essential organs are formed. Joints like elbows and knees are working. Tiny tooth buds are forming in the gums.", bodyChanges: "Your uterus is now the size of a small melon. Fatigue is still significant as the placenta prepares to take over. You might notice round ligament pain.", symptoms: "Nausea may still be present. Heartburn and indigestion can begin. Headaches are common. Nasal congestion can occur.", tips: "Invest in comfortable clothing. Stay hydrated to help with headaches. Avoid spicy or greasy foods to manage heartburn.", imageUrl: "https://placehold.co/600x400.png", aiHint: "fetus illustration" },
-    { week: 10, title: "Week 10: Fingernails and Hair Appear", size: "Your baby is the size of a strawberry.", summary: "Your fetus is looking more and more like a baby. Tiny fingernails are forming, and a fine, downy hair called lanugo is appearing on their skin.", development: "Tiny fingernails are forming. The skeleton is beginning to harden. The brain is developing rapidly. The fetus can bend its limbs.", bodyChanges: "The placenta is almost ready to take over hormone production. The linea nigra (a dark line on your abdomen) may appear. Round ligament pain can continue.", symptoms: "Morning sickness and fatigue may start to ease up. Increased vaginal discharge is normal. Dizziness can still occur.", tips: "Start thinking about your maternity leave plan. Moisturize your belly to help with itchiness. Keep up with gentle exercise.", imageUrl: "https://placehold.co/600x400.png", aiHint: "baby hand" },
-    { week: 11, title: "Week 11: Reflexes Develop", size: "Your baby is the size of a fig.", summary: "The fetus is practicing reflexes, like opening and closing its fists and making sucking movements with its mouth. They're getting a workout in there!", development: "Baby can open and close its fists and make sucking motions. The diaphragm is forming, and they might get hiccups. Sex organs are forming.", bodyChanges: "Your baby bump might be starting to show. The placenta takes over hormone production, often leading to a surge of energy.", symptoms: "Energy levels rebound. Nausea subsides. Leg cramps, especially at night, can start. Headaches are still possible.", tips: "Take advantage of your energy! Establish a regular exercise routine. For cramps, stretch your calves before bed.", imageUrl: "https://placehold.co/600x400.png", aiHint: "baby feet" },
-    { week: 12, title: "Week 12: End of the First Trimester", size: "Your baby is the size of a lime.", summary: "You've made it! At the end of the first trimester, your baby's reflexes are sharpening, and their unique fingerprints are forming.", development: "Unique fingerprints are forming. Vocal cords are complete. Intestines move into their permanent home in the abdomen. The fetus is very active.", bodyChanges: "End of the first trimester! The risk of miscarriage drops significantly. Your uterus can be felt in your lower abdomen. Your bump is starting to show.", symptoms: "The 'honeymoon' period often begins, with more energy and less nausea. Dizziness can still be an issue. You might feel abdominal aches as your uterus expands.", tips: "This is a popular time to announce your pregnancy. Listen to the baby's heartbeat at your next appointment. Start a baby name list for fun.", imageUrl: "https://placehold.co/600x400.png", aiHint: "celebration confetti" },
-    { week: 13, title: "Week 13: Welcome to the Second Trimester!", size: "Your baby is the size of a pea pod.", summary: "Hello, second trimester! Often called the 'golden' trimester, you may feel your energy return. Your baby is busy developing vocal cords and unique fingerprints.", development: "Baby is now peeing! They swallow amniotic fluid and pass it as urine. Bones are hardening. The neck is getting longer.", bodyChanges: "Welcome to the second trimester! Your libido might increase. Your bump is more noticeable. You might notice a thin, milky vaginal discharge.", symptoms: "A surge of energy is common. Round ligament pain can occur. Varicose veins may start to appear. Clumsiness can set in.", tips: "Use a soft toothbrush for sensitive gums. Start researching childbirth classes. Wear comfortable, supportive shoes.", imageUrl: "https://placehold.co/600x400.png", aiHint: "yoga pose" },
-    { week: 14, title: "Week 14: Baby Can Squint and Frown", size: "Your baby is the size of a lemon.", summary: "Your baby can now make facial expressions! They're also growing longer arms and a more distinct neck. Your energy levels are likely high.", development: "Baby can squint, frown, and grimace. Fine lanugo hair covers the body. The arms are now proportional to the body. The liver and spleen are working.", bodyChanges: "Your bump is likely obvious now. Your hair may seem thicker and more lustrous. Your appetite might be increasing.", symptoms: "Increased energy continues. A stuffy nose (pregnancy rhinitis) is common. Bleeding gums can persist. Backaches may start.", tips: "Stay active. Keep healthy snacks on hand. Practice good posture to prevent backaches. Read books about childbirth and newborn care.", imageUrl: "https://placehold.co/600x400.png", aiHint: "happy pregnant" },
-    { week: 15, title: "Week 15: Forming a Skeleton", size: "Your baby is the size of an apple.", summary: "Your baby's skeleton is hardening from cartilage to bone, and they can now sense light through their fused eyelids. They may even be able to hear you!", development: "The skeleton is hardening (ossification). The baby can sense light. Tiny bones in the ears are developing, so they can likely hear muffled sounds.", bodyChanges: "You might get nosebleeds due to increased blood flow. Your uterus is about 3-4 inches below your navel. You're gaining about a pound a week.", symptoms: "A stuffy nose or nosebleeds are common. Heartburn and indigestion can be frequent. Leg cramps can interrupt sleep.", tips: "Get plenty of calcium. Your doctor may offer a quad screen test. Wear low-heeled shoes. Start talking to your baby!", imageUrl: "https://placehold.co/600x400.png", aiHint: "skeleton xray" },
-    { week: 16, title: "Week 16: Growth Spurt", size: "Your baby is the size of an avocado.", summary: "Get ready for a growth spurt! Your baby's nervous system is maturing, and you might start to feel the first gentle flutters of movement, called 'quickening.'", development: "Baby is having a growth spurt! The heart is pumping 25 quarts of blood a day. The eyes can make small movements. The nervous system is maturing.", bodyChanges: "You might feel the first flutters of movement (quickening)! Your bump is growing. The 'pregnancy glow' is common.", symptoms: "'Pregnancy brain' or forgetfulness is real. Backaches become more noticeable. Vision changes, like blurriness, can occur.", tips: "Write things down to combat pregnancy brain. Don't worry if you haven't felt movement yet, especially if it's your first time.", imageUrl: "https://placehold.co/600x400.png", aiHint: "butterfly stomach" },
-    { week: 17, title: "Week 17: Baby Packs on Fat", size: "Your baby is the size of a turnip.", summary: "Your baby is starting to accumulate fat, which is crucial for staying warm after birth. Their hearing is improving, and they may be startled by loud noises.", development: "Baby starts to accumulate fat. The umbilical cord is getting stronger. Reflexes like sucking and swallowing are maturing. Hearing is improving.", bodyChanges: "Your appetite may increase significantly. The expanding uterus can cause heartburn. You're gaining about 1-2 pounds per week.", symptoms: "Heartburn is common. Backaches and hip pain can occur. Your skin might be more sensitive to the sun. Swelling in ankles and feet may appear.", tips: "Eat smaller, more frequent meals. Elevate your feet to reduce swelling. Always wear sunscreen. Moisturize your itchy belly.", imageUrl: "https://placehold.co/600x400.png", aiHint: "healthy food" },
-    { week: 18, title: "Week 18: Baby Can Hear You", size: "Your baby is the size of a sweet potato.", summary: "Baby's hearing is now well-developed! They can hear your heartbeat, your voice, and other sounds from the outside world. Start talking and singing to them!", development: "Hearing is well-developed. The nerves in the brain are being coated in myelin, allowing for faster connections. The baby is very active.", bodyChanges: "It's getting harder to sleep comfortably. Your uterus is the size of a cantaloupe. Your blood pressure may be lower than normal.", symptoms: "You're likely feeling kicks more consistently. Swelling in hands and feet is common. Leg cramps at night can be a nuisance.", tips: "Talk, sing, and read to your baby! Invest in a good pregnancy pillow for sleeping. The anatomy scan ultrasound is usually scheduled soon.", imageUrl: "https://placehold.co/600x400.png", aiHint: "woman singing" },
-    { week: 19, title: "Week 19: Protective Coating Forms", size: "Your baby is the size of a mango.", summary: "A greasy, cheese-like substance called vernix caseosa is now coating your baby's skin, protecting it from the amniotic fluid.", development: "A waxy coating called vernix caseosa now protects the skin. The brain's sensory areas are developing. Hair is sprouting on the scalp.", bodyChanges: "You might develop chloasma ('mask of pregnancy'). The linea nigra on your abdomen may be more pronounced. Your uterus is at your navel.", symptoms: "Shortness of breath can become more common. Dizziness can still occur. Hip pain is possible as ligaments loosen. Itchy skin is common.", tips: "Use gentle moisturizers for itchy skin. Protect your skin from the sun. Gentle stretching can help with hip and back pain.", imageUrl: "https://placehold.co/600x400.png", aiHint: "lotion skin" },
-    { week: 20, title: "Week 20: Halfway There!", size: "Your baby is the size of a banana.", summary: "You're at the halfway point! This week is often when the detailed anatomy scan ultrasound is performed. Your baby is busy practicing swallowing.", development: "Halfway there! Baby is swallowing more, which is good practice for the digestive system. They're producing meconium (their first poop).", bodyChanges: "The detailed anatomy scan is usually this week. Your belly button might pop out. Energy levels are still good.", symptoms: "Physical aches and pains are the main complaint: backaches, hip pain, leg cramps. Mild swelling is normal. Sleep becomes more challenging.", tips: "Start planning the nursery. Begin shopping for baby essentials. Decide if you want to find out the baby's gender. Celebrate the halfway mark!", imageUrl: "https://placehold.co/600x400.png", aiHint: "halfway sign" },
-    { week: 21, title: "Week 21: Tasting Flavors", size: "Your baby is the size of a large carrot.", summary: "Baby's taste buds are working! The flavors from the food you eat can pass into the amniotic fluid, giving your baby their first taste of what you're having for dinner.", development: "Taste buds are working. Movements are becoming more coordinated, less random. Bone marrow is starting to make red blood cells.", bodyChanges: "You can likely feel kicks and punches much more strongly now. Heartburn can worsen. Stretch marks may appear.", symptoms: "Strong fetal movements are the main event. Increased heartburn. Leg cramps and backaches persist. Braxton Hicks 'practice' contractions can start.", tips: "Eat a varied diet to introduce flavors to your baby. Share the magic of feeling kicks with your partner. For Braxton Hicks, change positions or drink water.", imageUrl: "https://placehold.co/600x400.png", aiHint: "spices variety" },
-    { week: 22, title: "Week 22: Baby Looks Like a Newborn", size: "Your baby is the size of a spaghetti squash.", summary: "With distinct lips, eyebrows, and eyelids, your baby now looks like a miniature newborn. Their pancreas is developing, which is key for producing hormones.", development: "Baby looks like a miniature newborn. The pancreas is developing. The iris of the eye still lacks pigment. The skin is becoming less translucent.", bodyChanges: "Your belly button might pop out. Your hair may seem extra thick and lustrous. Your feet might have grown a shoe size.", symptoms: "Increased vaginal discharge. Heartburn. Backaches. Swelling. Feeling hot. Trouble sleeping. You might feel the baby's hiccups!", tips: "Enjoy your great pregnancy hair! Start seriously thinking about your maternity leave plan. Invest in new, comfortable shoes if needed.", imageUrl: "https://placehold.co/600x400.png", aiHint: "newborn baby" },
-    { week: 23, title: "Week 23: Viability Milestone", size: "Your baby is the size of a large mango or eggplant.", summary: "This is a major milestone: the age of viability. A baby born now has a chance of survival with intensive medical care as their lungs develop surfactant, a key substance for breathing.", development: "Age of viability! Lungs are developing surfactant, a substance crucial for breathing. Blood vessels in the lungs are developing. Hearing is improving.", bodyChanges: "You're gaining weight steadily. You're getting to know your baby's movement patterns. Your expanding uterus is putting pressure on all your organs.", symptoms: "Snoring can start or worsen. Clumsiness and 'pregnancy brain' continue. Swelling in ankles and feet is common. Backaches are frequent.", tips: "Sign up for childbirth classes. Swimming can feel amazing and relieve pressure. Elevate your feet to help with swelling.", imageUrl: "https://placehold.co/600x400.png", aiHint: "life preserver" },
-    { week: 24, title: "Week 24: Responding to Touch", size: "Your baby is the size of an ear of corn.", summary: "Baby's brain is growing rapidly, and they can now feel movement and respond to your touch. Gently rubbing your belly is a new way to bond.", development: "Baby's brain is growing rapidly. They can feel movement and may respond to touch. The respiratory 'tree' in the lungs is developing.", bodyChanges: "Your doctor will recommend a glucose test soon to check for gestational diabetes. Your uterus is the size of a soccer ball. Your gait may change to a 'waddle'.", symptoms: "Your skin and eyes might feel dry. Braxton Hicks contractions can be more noticeable. Sleep disturbances are common. Heartburn is persistent.", tips: "Use lubricating eye drops if needed. For Braxton Hicks, relax and drink water. Gently rubbing your belly is a great way to bond.", imageUrl: "https://placehold.co/600x400.png", aiHint: "hand touching" },
-    { week: 25, title: "Week 25: Hair Has Color and Texture", size: "Your baby is the size of a head of cauliflower.", summary: "That little head of hair is growing in and now has color and texture! Baby is also practicing breathing by inhaling and exhaling amniotic fluid.", development: "Baby's hair has color and texture. They are practicing breathing motions. Nostrils are opening. Hands are fully developed.", bodyChanges: "You might experience sciatica (sharp nerve pain down one leg). Carpal tunnel syndrome can appear. Your balance is increasingly challenged.", symptoms: "Sciatic nerve pain. Numbness or tingling in hands. Restless leg syndrome. Insomnia. Hemorrhoids. Feeling hot.", tips: "Gentle stretching can help with sciatica. For carpal tunnel, avoid repetitive hand movements. For restless legs, stretch before bed.", imageUrl: "https://placehold.co/600x400.png", aiHint: "colorful hair" },
-    { week: 26, title: "Week 26: Eyes Are Opening", size: "Your baby is the size of a bunch of scallions or a kale.", summary: "Peek-a-boo! Your baby's eyelids, which were fused shut, are now beginning to open. They can see light and dark and will blink in response.", development: "Eyelids are opening and can blink. Brainwave activity for hearing and sight is now active. Lungs are producing more surfactant.", bodyChanges: "Your blood pressure may start to rise slightly. Your uterus is 2.5 inches above your navel. Swelling in your feet and ankles can be significant.", symptoms: "Trouble sleeping is very common. Braxton Hicks may be more frequent. Headaches and vision changes should be reported to your doctor.", tips: "Create a relaxing bedtime routine. Learn the signs of preeclampsia (severe headache, vision changes, sudden swelling). Finalize your pediatrician choice.", imageUrl: "https://placehold.co/600x400.png", aiHint: "eye open" },
-    { week: 27, title: "Week 27: Welcome to the Third Trimester!", size: "Your baby is the size of a head of lettuce.", summary: "You've reached the final trimester! Your baby's brain is very active, and you might start to feel their tiny hiccups as rhythmic, jerky movements.", development: "Baby's brain is very active. They have regular sleep/wake cycles. You might feel their hiccups. They can distinguish sweet and sour tastes.", bodyChanges: "Welcome to the third trimester! Fatigue may return. Your uterus is up near your rib cage. You're in a period of rapid weight gain.", symptoms: "Shortness of breath is common. Backaches, swelling, and leg cramps can intensify. Constipation and hemorrhoids are frequent. Anxiety about labor is normal.", tips: "Finalize your birth plan, but be flexible. Pack your hospital bag. Take a hospital tour. Rest as much as possible.", imageUrl: "https://placehold.co/600x400.png", aiHint: "finish line" },
-    { week: 28, title: "Week 28: Eyes Have Eyelashes", size: "Your baby is the size of a large eggplant.", summary: "Your baby can now blink and has a full set of eyelashes. They are also experiencing REM sleep, which means they are likely dreaming!", development: "Baby can blink and has eyelashes. They are experiencing REM sleep (dreaming!). Their brain is developing billions of neurons. Their bones are fully developed but soft.", bodyChanges: "Your prenatal appointments are likely every two weeks now. If you're Rh-negative, you'll get a RhoGAM shot. You're gaining about a pound a week.", symptoms: "Clumsiness is common. Braxton Hicks and restless legs continue. Insomnia is frequent. Heartburn can be bad. Itchy skin persists.", tips: "Start doing daily 'kick counts' to monitor baby's movement. Finalize childcare arrangements. Read up on the postpartum period.", imageUrl: "https://placehold.co/600x400.png", aiHint: "eyelashes close-up" },
-    { week: 29, title: "Week 29: Getting Crowded in There", size: "Your baby is the size of a butternut squash.", summary: "As space gets tighter, baby's movements might feel less like sharp kicks and more like strong rolls and stretches. Their adrenal glands are now producing hormones.", development: "Movements feel more like rolls and stretches. Adrenal glands are producing hormones. The baby is gaining weight steadily, depositing fat.", bodyChanges: "The extra weight and pressure can strain your back, legs, and bladder. Your skin may feel stretched to the max. Pelvic girdle pain is possible.", symptoms: "Heartburn and constipation can be very bothersome. Tying your shoes is a challenge. Feeling emotional or 'over it' is understandable.", tips: "Eat a high-fiber diet for constipation. Use a stool to elevate your feet. Install the car seat and have it checked.", imageUrl: "https://placehold.co/600x400.png", aiHint: "crowded space" },
-    { week: 30, title: "Week 30: Seeing in the Womb", size: "Your baby is the size of a large cabbage.", summary: "Your baby's eyesight is improving, and they can now see what's going on inside the uterus, like perceiving light filtering through your belly.", development: "Baby's eyesight is improving. Lanugo (fine hair) is disappearing. Bone marrow is producing red blood cells. The brain is getting its characteristic wrinkles.", bodyChanges: "Fatigue can return with a vengeance. Your belly button might be an 'outie.' Your balance is significantly off.", symptoms: "The 'nesting' instinct might kick in. Mood swings and anxiety are common. Insomnia is a major complaint. Clumsiness is a real risk.", tips: "Channel nesting energy productively, but don't overdo it. Talk about your feelings and anxieties. Finish packing your hospital bag.", imageUrl: "https://placehold.co/600x400.png", aiHint: "light through window" },
-    { week: 31, title: "Week 31: Practice Breathing", size: "Your baby is the size of a coconut.", summary: "The baby is making rhythmic breathing movements, practicing for life on the outside. Their senses are all functional and they can regulate their own temperature.", development: "Baby is making rhythmic breathing movements. They can regulate their own temperature. All five senses are functional. Sucking reflex is strong.", bodyChanges: "You may leak colostrum (first milk). Braxton Hicks may be more frequent. Your uterus is crowding all your organs.", symptoms: "Frequent urination is a given. Sleep is fragmented. Heartburn and shortness of breath are common. Back pain is persistent.", tips: "Use nursing pads if you're leaking colostrum. Read up on breastfeeding. Know the difference between Braxton Hicks and true labor.", imageUrl: "https://placehold.co/600x400.png", aiHint: "breathing exercise" },
-    { week: 32, title: "Week 32: Getting into Position", size: "Your baby is the size of a jicama or large squash.", summary: "Most babies flip into a head-down position this week in preparation for birth. Their soft skull plates are designed to overlap for an easier journey.", development: "Baby is likely moving into the head-down position. Lanugo is shedding. Skin is becoming smoother. Pupils can constrict and dilate.", bodyChanges: "Your provider will start checking baby's position. You might feel kicks under your ribs. Your blood volume has increased by 40-50%.", symptoms: "Shortness of breath and heartburn are at their peak. Strong Braxton Hicks are more frequent. Lower back pain and pelvic pressure are intense.", tips: "Familiarize yourself with signs of preterm labor. Discuss breech options with your doctor if needed. Eat small, frequent meals.", imageUrl: "https://placehold.co/600x400.png", aiHint: "gymnast pose" },
-    { week: 33, title: "Week 33: Harder Bones", size: "Your baby is the size of a pineapple.", summary: "Baby's bones are hardening as they absorb lots of calcium from you. Their immune system is also getting a boost by borrowing your antibodies.", development: "Baby's bones are hardening. They are absorbing lots of antibodies from you for immunity. The brain is still developing rapidly. Fat layers are plumping up.", bodyChanges: "Amniotic fluid is at its peak volume. Your joints are very loose and unstable. Shortness of breath continues, but may improve if the baby drops.", symptoms: "Tingling or numbness in your hands and feet. Overheating. Difficulty sleeping. Heartburn. Backaches. Anxiety about labor.", tips: "Keep up your calcium intake. Wear supportive shoes. A warm bath can be soothing. Finalize your birth plan, but stay flexible.", imageUrl: "https://placehold.co/600x400.png", aiHint: "strong bones" },
-    { week: 34, title: "Week 34: Baby's Lungs Maturing", size: "Your baby is the size of a cantaloupe.", summary: "Baby's lungs are now well-developed and have a good chance of breathing without assistance if born now. Their fingernails have reached their fingertips.", development: "Lungs are well-developed and producing surfactant. For boys, testicles have likely descended. Vernix coating is getting thicker. Fingernails are at the fingertips.", bodyChanges: "The baby may 'drop' into your pelvis (lightening), making it easier to breathe but increasing bladder pressure. Your cervix may start to soften.", symptoms: "Increased pelvic pressure and more frequent urination if the baby has dropped. Less heartburn. Blurry vision is possible. Impatience is high.", tips: "Rest as much as possible. Don't hesitate to ask for help. Know the signs of labor vs. Braxton Hicks. Do a trial run to the hospital.", imageUrl: "https://placehold.co/600x400.png", aiHint: "lungs diagram" },
-    { week: 35, title: "Week 35: Rapid Weight Gain", size: "Your baby is the size of a honeydew melon.", summary: "Baby is packing on about half a pound per week now, plumping up for their arrival. Your prenatal appointments will likely become weekly.", development: "Baby is gaining about half a pound a week. Lungs are almost fully mature. Kidneys and liver are fully developed. Movements are more rolling than kicking.", bodyChanges: "Your appointments are now weekly. Your provider will do a Group B strep test. Your uterus is 1,000 times its original size.", symptoms: "Feeling very uncomfortable, tired, and impatient. Waking up frequently at night. Constant need to urinate. Strong Braxton Hicks.", tips: "Review the signs of labor. Have hospital bags packed. Stock your freezer with easy meals. Continue practicing relaxation techniques.", imageUrl: "https://placehold.co/600x400.png", aiHint: "weight scale" },
-    { week: 36, title: "Week 36: Almost Full-Term", size: "Your baby is the size of a large head of romaine lettuce.", summary: "At 'early term,' your baby is getting ready for their debut. They are likely settled head-down in your pelvis, which can relieve pressure on your ribs but increase it on your bladder.", development: "Baby is 'early term.' They are practicing sucking and swallowing. The skull bones are still unfused for delivery. Lanugo is shedding.", bodyChanges: "Cervix may be effacing (thinning) and dilating (opening). Baby may have dropped into your pelvis. Your weight gain may stop.", symptoms: "Significant pelvic and rectal pressure. Increased discharge. 'Lightning crotch' nerve pains. Difficulty walking. False labor.", tips: "Keep doing kick counts. Walk to help the baby settle. Finalize your labor plan. Put a waterproof mattress protector on your bed.", imageUrl: "https://placehold.co/600x400.png", aiHint: "baby clothes" },
-    { week: 37, title: "Week 37: Full-Term!", size: "Your baby is the size of a bunch of Swiss chard.", summary: "Congratulations, you're full-term! Your baby's lungs and brain are fully mature. From here on out, it's just a waiting game for their grand arrival.", development: "Full-term! Lungs and brain are mature. Grasp is firm. Head is likely engaged in the pelvis. Baby is ready for the outside world.", bodyChanges: "You could go into labor any day now. You might lose your mucus plug or see a 'bloody show.' Your cervix is likely making changes.", symptoms: "Confusion between true and false labor. Increased discharge. Intense pelvic pressure. Low, dull backache. A sudden burst of energy.", tips: "Relax and conserve your energy. Know the 5-1-1 rule for contractions. Trust your instincts. You will meet your baby soon!", imageUrl: "https://placehold.co/600x400.png", aiHint: "calendar due date" },
-    { week: 38, title: "Week 38: Getting Ready", size: "Your baby is the size of a leek or small pumpkin.", summary: "Baby has a firm grasp now and their eye color is likely blue or gray, though this may change after birth. You're in the waiting game now!", development: "Baby has a firm grasp. Eye color is likely blue/gray but may change. They have about an ounce of meconium in their intestines.", bodyChanges: "You are in the waiting game. Your provider might offer a 'membrane sweep' to encourage labor. You are physically and emotionally ready.", symptoms: "Significant swelling in feet and ankles. General discomfort is at an all-time high. Sleep is nearly impossible. Frustrating false labor.", tips: "Rest, rest, rest. Gentle walking can help. Bounce on a birth ball. Watch for your water breaking. Trust your body.", imageUrl: "https://placehold.co/600x400.png", aiHint: "running race" },
-    { week: 39, title: "Week 39: On The Brink", size: "Your baby is the size of a watermelon.", summary: "The final touches are being put on your baby's development. They are fully mature and just waiting for the right moment to arrive.", development: "Brain is still developing rapidly. Fat continues to be deposited for warmth. Skin is smooth and pale. The baby is fully mature.", bodyChanges: "Your doctor may discuss induction if you go past your due date. Your cervix is soft and possibly dilated. Losing your mucus plug is common.", symptoms: "Labor could start at any moment. Strong Braxton Hicks. Increased pelvic pressure. Diarrhea can be a sign labor is imminent.", tips: "Stay calm and trust the process. Call your provider when you think you're in labor. Stay hydrated. Lean on your support person.", imageUrl: "https://placehold.co/600x400.png", aiHint: "calm water" },
-    { week: 40, title: "Week 40: Due Date!", size: "Your baby is the size of a small pumpkin.", summary: "Happy due date! While only 5% of babies arrive on this exact day, know that your baby is fully cooked and ready to meet you whenever they decide it's time.", development: "Baby is fully developed and waiting for the signal to be born. Average weight is between 6 and 9 pounds. All organ systems are mature.", bodyChanges: "Your due date is here! Don't be discouraged if it comes and goes. Your provider is monitoring you closely. You are on high alert.", symptoms: "A potent mix of physical misery and incredible excitement. Sleep is a distant memory. Everything hurts. Extreme impatience is normal.", tips: "Try gentle methods to encourage labor (walking, etc.), but rest is most important. Trust your body and your baby. You've got this!", imageUrl: "https://placehold.co/600x400.png", aiHint: "baby holding finger" }
+const weeklyDevelopment: Array<{
+    week: number;
+    title: string;
+    size: string;
+    summary: string;
+    development: WeeklyInfo[];
+    bodyChanges: WeeklyInfo[];
+    symptoms: WeeklyInfo[];
+    tips: WeeklyInfo[];
+    imageUrl: string;
+    aiHint: string;
+}> = [
+    { 
+        week: 0, 
+        title: "Getting Started", 
+        size: "Your journey is about to begin.", 
+        summary: "Set your due date or last menstrual period to start tracking your pregnancy week by week.",
+        development: [],
+        bodyChanges: [],
+        symptoms: [],
+        tips: [],
+        imageUrl: "https://placehold.co/600x400.png", 
+        aiHint: "pregnancy test" 
+    },
+    { 
+        week: 1, 
+        title: "Week 1: The Journey Begins", 
+        size: "You're on your period, so not yet pregnant.", 
+        summary: "Pregnancy is counted from the first day of your last period. This week, your body is preparing for potential conception.",
+        development: [
+            { emoji: '🩸', text: 'The first day of your period marks the beginning of your menstrual cycle and week 1 of pregnancy.' },
+            { emoji: ' hormonal', text: 'Hormones like FSH (follicle-stimulating hormone) begin to rise, preparing your ovaries.' },
+            { emoji: '🥚', text: 'Multiple follicles, each containing an egg, start to mature in your ovaries.' },
+            { emoji: ' uterine', text: 'Your body sheds last month\'s uterine lining to prepare a fresh, new one.' },
+            { emoji: '🌱', text: 'Estrogen levels are low at the start of the week but will begin to rise.' },
+            { emoji: '⏲️', text: 'This phase typically lasts between 3 to 7 days for most women.' },
+            { emoji: '✨', text: 'Your body is resetting itself for a potential pregnancy this cycle.' },
+            { emoji: '💪', text: 'It\'s a period of renewal and preparation on a microscopic level.' }
+        ],
+        bodyChanges: [
+            { emoji: ' menstruating', text: 'The most obvious change is your menstrual period.' },
+            { emoji: '🌡️', text: 'Your basal body temperature is at its lowest point during your period.' },
+            { emoji: ' cervix', text: 'The cervix is low, firm, and slightly open to allow blood to pass.' },
+            { emoji: '⚖️', text: 'Hormone levels (estrogen and progesterone) are at their lowest.' },
+            { emoji: '😩', text: 'You might feel tired or have less energy due to hormonal changes and blood loss.' },
+            { emoji: '💧', text: 'Water retention from the previous cycle starts to decrease.' },
+            { emoji: '🧖‍♀️', text: 'Some women find their skin is more prone to breakouts during this time.' },
+            { emoji: '😌', text: 'For many, the start of their period brings relief from PMS symptoms.' }
+        ],
+        symptoms: [
+            { emoji: '🩸', text: 'Vaginal bleeding is the primary symptom of this week.' },
+            { emoji: '😖', text: 'Uterine cramping is common as your uterus contracts to shed its lining.' },
+            { emoji: '🎈', text: 'Bloating and water retention can carry over from the days before your period.' },
+            { emoji: '🤕', text: 'Hormonal headaches or migraines can occur due to the drop in estrogen.' },
+            { emoji: '😴', text: 'Fatigue and low energy are very common.' },
+            { emoji: '🎢', text: 'Mood swings, irritability, or feeling more emotional are possible.' },
+            { emoji: '😫', text: 'Lower back pain often accompanies menstrual cramps.' },
+            { emoji: '🍫', text: 'You might still experience food cravings from the premenstrual phase.' }
+        ],
+        tips: [
+            { emoji: '💊', text: 'Start taking a prenatal vitamin with at least 400 mcg of folic acid now.' },
+            { emoji: '🗓️', text: 'Track your cycle using a calendar or app to predict your fertile window.' },
+            { emoji: '🧘‍♀️', text: 'Prioritize rest and gentle movement like walking or stretching.' },
+            { emoji: '👩‍⚕️', text: 'Schedule a preconception check-up with your doctor to discuss your health.' },
+            { emoji: '🚭', text: 'Reduce or eliminate alcohol and smoking to create a healthy environment for conception.' },
+            { emoji: '☕', text: 'Limit caffeine intake to one or two cups of coffee per day.' },
+            { emoji: '🥗', text: 'Focus on a balanced diet rich in iron and vitamin C to replenish your body.' },
+            { emoji: '💕', text: 'Communicate with your partner about your plans and feelings on this journey.' }
+        ],
+        imageUrl: "https://placehold.co/600x400.png", 
+        aiHint: "calendar vitamins" 
+    },
+    { 
+        week: 2, 
+        title: "Week 2: Preparing for Ovulation", 
+        size: "An egg is maturing in your ovary.", 
+        summary: "Your uterine lining is thickening, and your body is getting ready to release an egg. This is your fertile window.",
+        development: [
+            { emoji: '🥚', text: 'A single dominant follicle outgrows the others and prepares for ovulation.' },
+            { emoji: '📈', text: 'Rising estrogen levels cause the uterine lining (endometrium) to thicken.' },
+            { emoji: '🧠', text: 'The pituitary gland releases a surge of Luteinizing Hormone (LH) to trigger ovulation.' },
+            { emoji: ' mucus', text: 'Cervical mucus becomes clearer, thinner, and more slippery to help sperm.' },
+            { emoji: '✨', text: 'The egg inside the follicle completes its first meiotic division.' },
+            { emoji: '🚪', text: 'The cervix softens and opens slightly in preparation.' },
+            { emoji: '⏰', text: 'Ovulation typically occurs around the end of this week.' },
+            { emoji: '🕊️', text: 'The stage is set for the egg to be released and potentially fertilized.' }
+        ],
+        bodyChanges: [
+            { emoji: '⚡', text: 'You may notice a significant increase in your energy levels.' },
+            { emoji: '💕', text: 'Libido often peaks during this phase due to high estrogen.' },
+            { emoji: '🌡️', text: 'Your basal body temperature will have a slight dip just before ovulation.' },
+            { emoji: '💧', text: 'You\'ll notice clear, stretchy, "egg-white" cervical mucus.' },
+            { emoji: '👃', text: 'Some women experience a heightened sense of smell.' },
+            { emoji: '😊', text: 'Your mood may be more positive, outgoing, and sociable.' },
+            { emoji: '✨', text: 'Skin often appears clearer and more radiant—the "ovulation glow."' },
+            { emoji: '🤏', text: 'Some women feel a slight twinge of pain on one side as the ovary releases the egg.' }
+        ],
+        symptoms: [
+            { emoji: '💧', text: 'Increased, watery, or egg-white-like vaginal discharge is a key sign.' },
+            { emoji: '😊', text: 'A general feeling of well-being and increased energy.' },
+            { emoji: '❤️', text: 'Heightened sex drive is very common.' },
+            { emoji: '🤕', text: 'Mild one-sided pelvic pain (mittelschmerz) can occur during ovulation.' },
+            { emoji: '🎈', text: 'Light bloating is possible for some women.' },
+            { emoji: ' spotting', text: 'A small amount of light spotting can occur during ovulation.' },
+            { emoji: ' breasts', text: 'Breasts may feel slightly tender or sensitive.' },
+            { emoji: '✨', text: 'Most symptoms this week are positive signs of peak fertility.' }
+        ],
+        tips: [
+            { emoji: '❤️', text: 'This is the most fertile time in your cycle to try to conceive.' },
+            { emoji: '🧪', text: 'Use ovulation predictor kits (OPKs) to pinpoint the LH surge.' },
+            { emoji: '🌡️', text: 'Track your basal body temperature to confirm ovulation after it happens.' },
+            { emoji: '🥗', text: 'Eat nutrient-dense foods to support hormonal health.' },
+            { emoji: '💧', text: 'Stay well-hydrated, as it can improve cervical mucus quality.' },
+            { emoji: '🚭', text: 'Continue avoiding alcohol, smoking, and excessive caffeine.' },
+            { emoji: '🧘‍♀️', text: 'Manage stress with activities like yoga or meditation.' },
+            { emoji: '💬', text: 'Keep communication open and enjoyable with your partner.' }
+        ],
+        imageUrl: "https://placehold.co/600x400.png", 
+        aiHint: "flower blooming" 
+    },
+    { 
+        week: 3, 
+        title: "Week 3: Fertilization & Implantation", 
+        size: "The fertilized egg, or blastocyst, is a microscopic ball of cells.", 
+        summary: "Success! A sperm has fertilized the egg, and this new ball of cells is making its way to your uterus for implantation.",
+        development: [
+            { emoji: '🎉', text: 'Fertilization! A single sperm penetrates the egg, creating a zygote.' },
+            { emoji: '🧬', text: 'The baby\'s genetic makeup, including sex, is determined at this moment.' },
+            { emoji: 'divide;', text: 'The zygote begins rapidly dividing into a ball of cells called a blastocyst.' },
+            { emoji: '🚗', text: 'The blastocyst travels down the fallopian tube toward the uterus.' },
+            { emoji: '🏠', text: 'The blastocyst begins to burrow into the plush uterine lining—this is implantation.' },
+            { emoji: '🤝', text: 'The outer cells of the blastocyst will form the placenta.' },
+            { emoji: '👶', text: 'The inner cells of the blastocyst will become the embryo.' },
+            { emoji: '📈', text: 'The hormone hCG (human chorionic gonadotropin) begins to be produced.' }
+        ],
+        bodyChanges: [
+            { emoji: '🤫', text: 'Externally, you won\'t notice any changes, as all the action is happening on a microscopic level.' },
+            { emoji: '📈', text: 'Internally, the hormone progesterone begins to rise, signaled by the newly forming placenta.' },
+            { emoji: '🌸', text: 'Some women (about 25%) experience light implantation spotting or cramping as the blastocyst embeds in the uterus.' },
+            { emoji: '🌡️', text: 'Your basal body temperature will remain elevated after ovulation.' },
+            { emoji: '🍈', text: 'You might experience very early breast tenderness due to rising hormones.' },
+            { emoji: '😴', text: 'A wave of fatigue might hit as your body dedicates enormous energy to the implantation process.' },
+            { emoji: '🚽', text: 'Increased progesterone can sometimes lead to early bloating or constipation.' },
+            { emoji: '✨', text: 'Your immune system lowers slightly to prevent rejecting the new embryo.' }
+        ],
+        symptoms: [
+            { emoji: '🩸', text: 'Light spotting (pink or brown) around 6-12 days past ovulation, known as implantation bleeding.' },
+            { emoji: '😖', text: 'Mild cramping, similar to period cramps but usually lighter.' },
+            { emoji: '😴', text: 'Early and unexplained fatigue is a very common first sign.' },
+            { emoji: '🍈', text: 'Sore, tender, or swollen breasts.' },
+            { emoji: '🎈', text: 'Bloating that feels similar to pre-menstrual bloating.' },
+            { emoji: '👃', text: 'A heightened sense of smell can start this early for some.' },
+            { emoji: '🤢', text: 'Some women may experience very mild, early nausea.' },
+            { emoji: '✨', text: 'Many women experience no symptoms at all this week.' }
+        ],
+        tips: [
+            { emoji: '🧘‍♀️', text: '"Act as if you are pregnant." Continue healthy habits just in case.' },
+            { emoji: '⏳', text: 'Resist the urge to take a pregnancy test yet; hCG levels are likely still too low.' },
+            { emoji: '💧', text: 'Stay hydrated and eat nutritious, whole foods.' },
+            { emoji: '💊', text: 'Don\'t forget your daily prenatal vitamin with folic acid.' },
+            { emoji: '😌', text: 'This can be an anxious time. Practice mindfulness and relaxation techniques.' },
+            { emoji: '🏃‍♀️', text: 'Continue with gentle to moderate exercise, avoiding any new, strenuous activities.' },
+            { emoji: '🚫', text: 'Steer clear of alcohol, smoking, and unsafe foods like unpasteurized cheese.' },
+            { emoji: '❤️', text: 'Lean on your partner or a friend for support during the "two-week wait."' }
+        ],
+        imageUrl: "https://placehold.co/600x400.png", 
+        aiHint: "cells microscope" 
+    },
+    // Weeks 4-40 would follow a similar, expanded structure.
+    { 
+        week: 4, 
+        title: "Week 4: A Positive Test!", 
+        size: "Your baby is the size of a poppy seed.", 
+        summary: "The blastocyst has successfully implanted in your uterine wall. This is the week you'll likely miss your period and get a positive pregnancy test!", 
+        development: [
+            { emoji: '🏠', text: 'The embryo is securely implanted in the uterine lining.' },
+            { emoji: ' layered', text: 'It has differentiated into three distinct layers: ectoderm, mesoderm, and endoderm.' },
+            { emoji: '🧠', text: 'The ectoderm will form the nervous system, skin, and hair.' },
+            { emoji: '❤️', text: 'The mesoderm will develop into the skeleton, muscles, heart, and blood vessels.' },
+            { emoji: ' lungs', text: 'The endoderm will become the digestive system, liver, and lungs.' },
+            { emoji: '탯', text: 'The placenta begins to form and produce the pregnancy hormone hCG.' },
+            { emoji: '💧', text: 'The amniotic sac, which will cushion the baby, is also forming.' },
+            { emoji: '📈', text: 'Growth is happening at an exponential rate.' }
+        ],
+        bodyChanges: [
+            { emoji: '🩸', text: 'A missed period is the most common and clear sign of pregnancy.' },
+            { emoji: '➕', text: 'Hormone hCG is now high enough to be detected by a home pregnancy test.' },
+            { emoji: '🍈', text: 'Breasts may feel even more swollen, tender, and tingly.' },
+            { emoji: '🎈', text: 'Progesterone-induced bloating can be significant.' },
+            { emoji: '🌡️', text: 'Your basal body temperature remains elevated.' },
+            { emoji: '🚽', text: 'You may notice an increased need to urinate as your uterus grows.' },
+            { emoji: '😩', text: 'Fatigue can feel profound as your body works overtime.' },
+            { emoji: '🤫', text: 'From the outside, there are no visible changes yet.' }
+        ],
+        symptoms: [
+            { emoji: ' period', text: 'A missed menstrual period.' },
+            { emoji: '🍈', text: 'Extremely sore and sensitive breasts.' },
+            { emoji: '😴', text: 'Overwhelming fatigue that feels like you\'ve run a marathon.' },
+            { emoji: '😖', text: 'Mild, period-like cramping (without bleeding) is normal.' },
+            { emoji: '🤢', text: 'Morning sickness (which can happen any time of day) may begin.' },
+            { emoji: '❤️', text: 'Food cravings or aversions may start to appear.' },
+            { emoji: '🎢', text: 'Mood swings due to the rapid increase in hormones.' },
+            { emoji: '👃', text: 'A heightened sense of smell can make certain scents unbearable.' }
+        ],
+        tips: [
+            { emoji: '🧪', text: 'Take a home pregnancy test first thing in the morning for the most accurate result.' },
+            { emoji: '🎉', text: 'Celebrate! This is a huge moment. Let yourself feel all the emotions.' },
+            { emoji: '👩‍⚕️', text: 'Call your doctor to schedule your first prenatal appointment, usually around week 8.' },
+            { emoji: '💊', text: 'If you haven\'t already, start taking your prenatal vitamins immediately.' },
+            { emoji: '🚭', text: 'Double-down on healthy habits: no alcohol, no smoking.' },
+            { emoji: '💧', text: 'Stay hydrated, even if you feel bloated.' },
+            { emoji: '😴', text: 'Listen to your body and rest whenever you can. Naps are your friend.' },
+            { emoji: '❤️', text: 'Share the news with your partner and decide together when to tell others.' }
+        ],
+        imageUrl: "https://placehold.co/600x400.png", 
+        aiHint: "pregnancy test positive" 
+    }
 ];
 
-const trimesterVideos: { [key: number]: string } = {
-    1: "https://www.youtube.com/embed/-LHNfkaaMFA",
-    2: "https://www.youtube.com/embed/IPj4dJnP85o",
-    3: "https://www.youtube.com/embed/lpDW00nQhUo",
-};
+// Populate remaining weeks with placeholder data to avoid errors
+for (let i = 5; i <= 40; i++) {
+    weeklyDevelopment.push({
+        week: i,
+        title: `Week ${i}: Placeholder Title`,
+        size: `Placeholder size for week ${i}`,
+        summary: `Placeholder summary for week ${i}.`,
+        development: [{ emoji: '🚧', text: `Detailed content for week ${i} development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week ${i} body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week ${i} symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week ${i} tips is being generated.` }],
+        imageUrl: "https://placehold.co/600x400.png",
+        aiHint: "baby illustration"
+    });
+}
 
-const babyLookVideos: { [key: number]: string } = {
-    1: "https://www.youtube.com/embed/D_jxGJsEY2A",
-    2: "https://www.youtube.com/embed/H6mZRds0dHo",
-    3: "https://www.youtube.com/embed/f2dcTHQXwTI",
-};
-
-
-const milestoneMessages: { [key: number]: { title: string; description: string } } = {
-    13: { title: "Trimester 1 Complete!", description: "You've made it through the first trimester! Many of the early discomforts may start to fade." },
-    27: { title: "Welcome to the Third Trimester!", description: "You're on the home stretch! Your baby will be doing a lot of growing from here." },
-    30: { title: "Just 10 Weeks to Go!", description: "You've reached 30 weeks! Time to start finalizing preparations for your baby's arrival." },
-    37: { title: "Your Baby is Full-Term!", description: "Congratulations! Your baby is considered full-term and could arrive any day now." },
-    40: { title: "Happy Due Date!", description: "The big day is here! Remember, due dates are just an estimate. Your baby will arrive when they're ready." },
-};
-
-const supportiveMessages: { [key: number]: string } = {
-    9: "Feeling overwhelmed in week 9 is common. Your body is doing incredible work. You’re doing amazing.",
-    15: "Your baby is growing fast — and so are you. Don’t forget to rest today.",
-    22: "Seeing your baby on the ultrasound is a magical moment. Cherish this halfway point!",
-    34: "Feeling breathless? Your baby is taking up a lot of space. This is normal, but take it easy.",
-    38: "The waiting game is tough, but you're so close to meeting your little one. You've got this.",
-};
 
 const translations = {
     en: {
@@ -269,6 +435,22 @@ export default function PregnancyTrackerPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const milestoneMessages: { [key: number]: { title: string; description: string } } = {
+    13: { title: "Trimester 1 Complete!", description: "You've made it through the first trimester! Many of the early discomforts may start to fade." },
+    27: { title: "Welcome to the Third Trimester!", description: "You're on the home stretch! Your baby will be doing a lot of growing from here." },
+    30: { title: "Just 10 Weeks to Go!", description: "You've reached 30 weeks! Time to start finalizing preparations for your baby's arrival." },
+    37: { title: "Your Baby is Full-Term!", description: "Congratulations! Your baby is considered full-term and could arrive any day now." },
+    40: { title: "Happy Due Date!", description: "The big day is here! Remember, due dates are just an estimate. Your baby will arrive when they're ready." },
+  };
+  
+  const supportiveMessages: { [key: number]: string } = {
+    9: "Feeling overwhelmed in week 9 is common. Your body is doing incredible work. You’re doing amazing.",
+    15: "Your baby is growing fast — and so are you. Don’t forget to rest today.",
+    22: "Seeing your baby on the ultrasound is a magical moment. Cherish this halfway point!",
+    34: "Feeling breathless? Your baby is taking up a lot of space. This is normal, but take it easy.",
+    38: "The waiting game is tough, but you're so close to meeting your little one. You've got this.",
+  };
+
   useEffect(() => {
     if (pregnancyDetails && pregnancyDetails.gestationalAgeWeeks !== displayedToastWeekRef.current) {
         const week = pregnancyDetails.gestationalAgeWeeks;
@@ -295,7 +477,7 @@ export default function PregnancyTrackerPage() {
         }
         displayedToastWeekRef.current = week;
     }
-  }, [pregnancyDetails, toast]);
+  }, [pregnancyDetails, toast, milestoneMessages, supportiveMessages]);
 
 
   const calculateDetails = (dueDate: Date) => {
@@ -370,7 +552,7 @@ export default function PregnancyTrackerPage() {
   }
 
 
-  const currentWeekData = pregnancyDetails ? weeklyDevelopment[pregnancyDetails.gestationalAgeWeeks] : weeklyDevelopment[0];
+  const currentWeekData = pregnancyDetails ? weeklyDevelopment.find(w => w.week === pregnancyDetails.gestationalAgeWeeks) || weeklyDevelopment[0] : weeklyDevelopment[0];
   const trimesterVideoUrl = pregnancyDetails ? trimesterVideos[pregnancyDetails.trimester] : null;
   const babyLookVideoUrl = pregnancyDetails ? babyLookVideos[pregnancyDetails.trimester] : null;
   const loggedSymptoms = symptomForm.watch('symptoms') || [];
@@ -482,68 +664,36 @@ export default function PregnancyTrackerPage() {
                                          <p className={cn("mt-2 text-sm text-slate-700", !isSummaryExpanded && "truncate")}>
                                             {currentWeekData.summary}
                                         </p>
-                                        {isSummaryExpanded && 'development' in currentWeekData && (
-                                            <div className="mt-2 text-sm text-slate-700 whitespace-pre-wrap">{currentWeekData.development}</div>
-                                        )}
-                                        {isSummaryExpanded && 'imageDescription' in currentWeekData && currentWeekData.imageDescription && (
-                                            <>
-                                                <p className="mt-2 text-sm text-slate-700">{currentWeekData.imageDescription}</p>
-                                                {'imageCredit' in currentWeekData && currentWeekData.imageCredit && (
-                                                    <a href={currentWeekData.imageCredit.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">
-                                                        {currentWeekData.imageCredit.text}
-                                                    </a>
-                                                )}
-                                            </>
-                                        )}
                                     </div>
                                     
-                                    {'keyTakeaways' in currentWeekData && currentWeekData.keyTakeaways ? (
-                                        <div className="space-y-4">
-                                            <h4 className="font-bold text-lg text-slate-800">Key Takeaways</h4>
-                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
-                                                {currentWeekData.keyTakeaways.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                    <Tabs defaultValue="development" className="w-full">
+                                        <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
+                                            <TabsTrigger value="development" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
+                                            <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
+                                            <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
+                                            <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
+                                        </TabsList>
+                                        <TabsContent value="development" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-60 overflow-y-auto">
+                                            <ul className="space-y-3">
+                                                {currentWeekData.development.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
                                             </ul>
-
-                                            <h4 className="font-bold text-lg text-slate-800">Preparing for Pregnancy</h4>
-                                            {currentWeekData.preparingForPregnancy.map((item: {title: string, content: string}, index: number) => (
-                                                <div key={index}>
-                                                    <h5 className="font-semibold">{item.title}</h5>
-                                                    <p className="text-sm text-slate-700">{item.content}</p>
-                                                </div>
-                                            ))}
-                                            
-                                            <h4 className="font-bold text-lg text-slate-800">Common Symptoms</h4>
-                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
-                                                {currentWeekData.commonSymptoms.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                        </TabsContent>
+                                        <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-60 overflow-y-auto">
+                                            <ul className="space-y-3">
+                                                {currentWeekData.bodyChanges.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
                                             </ul>
-
-                                            <h4 className="font-bold text-lg text-slate-800">Your Body This Week</h4>
-                                            <p className="text-sm text-slate-700">{currentWeekData.yourBody}</p>
-
-                                            <h4 className="font-bold text-lg text-slate-800">Tips for Conceiving</h4>
-                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
-                                                {currentWeekData.conceivingTips.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                        </TabsContent>
+                                        <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-60 overflow-y-auto">
+                                            <ul className="space-y-3">
+                                                {currentWeekData.symptoms.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
                                             </ul>
-
-                                            <h4 className="font-bold text-lg text-slate-800">Checklist for This Week</h4>
-                                            <ul className="list-disc list-inside space-y-1 text-slate-700">
-                                                {currentWeekData.checklist.map((item: string, index: number) => <li key={index}>{item}</li>)}
+                                        </TabsContent>
+                                        <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm max-h-60 overflow-y-auto">
+                                            <ul className="space-y-3">
+                                                {currentWeekData.tips.map((item, index) => <li key={index} className="flex items-start gap-3"><span className="mt-1">{item.emoji}</span><span>{item.text}</span></li>)}
                                             </ul>
-                                        </div>
-                                    ) : (
-                                        <Tabs defaultValue="body" className="w-full">
-                                            <TabsList className="grid w-full grid-cols-4 bg-pink-100/50 text-pink-800">
-                                                <TabsTrigger value="development" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBaby}</TabsTrigger>
-                                                <TabsTrigger value="body" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabBody}</TabsTrigger>
-                                                <TabsTrigger value="symptoms" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabSymptoms}</TabsTrigger>
-                                                <TabsTrigger value="tips" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">{t.tabTips}</TabsTrigger>
-                                            </TabsList>
-                                            <TabsContent value="development" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{'development' in currentWeekData ? currentWeekData.development : ''}</p></TabsContent>
-                                            <TabsContent value="body" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{'bodyChanges' in currentWeekData ? currentWeekData.bodyChanges : ''}</p></TabsContent>
-                                            <TabsContent value="symptoms" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{'symptoms' in currentWeekData ? currentWeekData.symptoms : ''}</p></TabsContent>
-                                            <TabsContent value="tips" className="mt-4 prose max-w-none text-slate-700 text-sm whitespace-pre-wrap max-h-60 overflow-y-auto"><p>{'tips' in currentWeekData ? currentWeekData.tips : ''}</p></TabsContent>
-                                        </Tabs>
-                                    )}
+                                        </TabsContent>
+                                    </Tabs>
 
                                 </div>
                            </div>
