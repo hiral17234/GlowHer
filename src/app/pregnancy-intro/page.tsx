@@ -26,23 +26,37 @@ export default function PregnancyIntroPage() {
                 </div>
             </header>
 
-            <main className="relative z-10 max-w-2xl">
-                <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
-                    <blockquote className="space-y-4">
-                        <p className="font-headline text-3xl md:text-4xl leading-tight">
-                            "A baby is something you carry inside you for nine months, in your arms for three years, and in your heart until the day you die."
-                        </p>
-                        <footer className="text-lg text-white/80">
-                            – Mary Mason
-                        </footer>
-                    </blockquote>
-                    <Button 
-                        onClick={() => router.push('/pregnancy-tracker')} 
-                        size="lg" 
-                        className="mt-8 bg-pink-500 hover:bg-pink-600 text-white font-bold"
-                    >
-                        Continue to My Journey <ChevronRight className="ml-2 h-5 w-5" />
-                    </Button>
+            <main className="relative z-10 w-full max-w-5xl">
+                 <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div className="aspect-video">
+                            <iframe
+                                title="Fetus week sixteen"
+                                frameBorder="0"
+                                allowFullScreen
+                                allow="autoplay; fullscreen; xr-spatial-tracking"
+                                src="https://sketchfab.com/models/2745a63da7924f5bb16109e51d6f391a/embed"
+                                className="w-full h-full rounded-lg"
+                            ></iframe>
+                        </div>
+                        <div className="flex flex-col items-center justify-center">
+                            <blockquote className="space-y-4">
+                                <p className="font-headline text-3xl md:text-4xl leading-tight">
+                                    "A baby is something you carry inside you for nine months, in your arms for three years, and in your heart until the day you die."
+                                </p>
+                                <footer className="text-lg text-white/80">
+                                    – Mary Mason
+                                </footer>
+                            </blockquote>
+                            <Button 
+                                onClick={() => router.push('/pregnancy-tracker')} 
+                                size="lg" 
+                                className="mt-8 bg-pink-500 hover:bg-pink-600 text-white font-bold"
+                            >
+                                Continue to My Journey <ChevronRight className="ml-2 h-5 w-5" />
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
