@@ -99,13 +99,13 @@ export const weeklyDevelopment: Array<{
             { emoji: '👃', text: "Some women experience a heightened sense of smell." },
             { emoji: '😊', text: "Your mood may be more positive, outgoing, and sociable." },
             { emoji: '✨', text: "Skin often appears clearer and more radiant—the 'ovulation glow.'" },
-            { emoji: '🤏', text: "Some women feel a slight twinge of pain on one side as the ovary releases the egg." }
+            { emoji: '😖', text: "Some women feel a slight twinge of pain on one side as the ovary releases the egg." }
         ],
         symptoms: [
             { emoji: '💧', text: "Increased, watery, or egg-white-like vaginal discharge is a key sign." },
             { emoji: '😊', text: "A general feeling of well-being and increased energy." },
             { emoji: '❤️', text: "Heightened sex drive is very common." },
-            { emoji: '🤕', text: "Mild one-sided pelvic pain (mittelschmerz) can occur during ovulation." },
+            { emoji: '😖', text: "Mild one-sided pelvic pain (mittelschmerz) can occur during ovulation." },
             { emoji: '🎈', text: "Light bloating is possible for some women." },
             { emoji: '✨', text: "A small amount of light spotting can occur during ovulation." },
             { emoji: '🍈', text: "Breasts may feel slightly tender or sensitive." },
@@ -405,7 +405,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '💧', text: "Drink plenty of water to help with bloating and constipation." },
             { emoji: '🧘‍♀️', text: "Gentle exercise can boost your mood and energy. Try prenatal yoga or swimming." },
             { emoji: '🥗', text: "Focus on folic acid, calcium, and iron in your diet." },
-            { emoji: '🗣️', text: "Start thinking about how you want to announce your pregnancy, if you haven't already." },
+            { emoji: '🗣️', text: "Start thinking about how you want to announce your pregnancy, if you haven’t already." },
             { emoji: '❤️', text: "Share your feelings and anxieties with your partner or a trusted friend." },
             { emoji: '📚', text: "It's a good time to start reading up on pregnancy and childbirth." }
         ],
@@ -480,7 +480,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🍈', text: "Your breasts are likely larger and more sensitive." },
             { emoji: '❤️', text: "You can see more prominent veins on your skin due to increased blood flow." },
             { emoji: '📈', text: "Hormone levels are peaking, which can intensify symptoms." },
-            { emoji: '😩', text: "Round ligament pain, sharp pains in the lower abdomen, might occur as the uterus grows." },
+            { emoji: '😖', text: "Round ligament pain, sharp pains in the lower abdomen, might occur as the uterus grows." },
             { emoji: '😊', text: "Some women start to feel a bit better as the first trimester nears its end." },
             { emoji: '⚖️', text: "A weight gain of 1-5 pounds is typical by this point." },
             { emoji: '✨', text: "Your body is now fully in pregnancy mode, supporting your growing baby." }
@@ -839,7 +839,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🥗', text: "Avoid spicy or greasy foods to minimize heartburn." },
             { emoji: '💧', text: "Drink lots of water to help with swelling and constipation." },
             { emoji: '🗣️', text: "Start conversations about your parenting styles and values with your partner." },
-            { emoji: '❤️', text: "Enjoy this period of feeling the baby move and having more energy." }
+            { emoji: '❤️', text: "Enjoy feeling your baby move and respond to your voice." }
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/17-fetaldev-E-deeptan-4x3.png",
         aiHint: "turnip vegetable"
@@ -886,7 +886,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '🧘‍♀️', text: "Stretching can help alleviate aches and pains." },
             { emoji: '🥗', text: "Eat smaller, more frequent meals to help with indigestion." },
             { emoji: '💧', text: "Continue to drink plenty of water." },
-            { emoji: '🗣️', text: "Your partner might be able to hear the baby’s heartbeat by placing an ear on your belly soon." },
+            { emoji: '❤️', text: "Your partner might be able to hear the baby’s heartbeat by placing an ear on your belly soon." },
             { emoji: '👶', text: "Start thinking about whether you want to find out the baby’s sex at the anatomy scan." }
         ],
         imageUrl: "https://assets.babycenter.com/ims/2024/09/18-fetaldev-E-deeptan-4x3.png",
@@ -1480,5 +1480,520 @@ export const weeklyDevelopment: Array<{
             { emoji: '⚖️', text: "The baby is gaining about half a pound a week." },
             { emoji: '🌡️', text: "The fat layers continue to develop, helping with temperature control." },
             { emoji: '🫁', text: "The lungs are still maturing." },
-            { emoji: '💪', text: "The baby is gett
-  
+            { emoji: '💪', text: "The baby is getting stronger every day." },
+            { emoji: '💧', text: "The amount of amniotic fluid peaks around this time." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "You might feel the baby's movements are jabs and pokes rather than flutters." },
+            { emoji: '😮‍💨', text: "Shortness of breath is common as your uterus presses up against your diaphragm." },
+            { emoji: '😖', text: "Braxton Hicks contractions may be more frequent." },
+            { emoji: '🍈', text: "Your breasts may leak colostrum, the first milk." },
+            { emoji: '😴', text: "Sleep can be very challenging due to your size and discomfort." },
+            { emoji: '😫', text: "Your back, hips, and pelvis are likely feeling the strain." },
+            { emoji: '💧', text: "Swelling in your extremities is normal." },
+            { emoji: '✨', text: "The nesting urge to clean and organize might be very strong." }
+        ],
+        symptoms: [
+            { emoji: '😮‍💨', text: "Breathlessness." },
+            { emoji: '😖', text: "Braxton Hicks contractions." },
+            { emoji: '😴', text: "Difficulty sleeping and finding a comfortable position." },
+            { emoji: '😫', text: "Achy body, especially the back and hips." },
+            { emoji: '🎈', text: "Hemorrhoids." },
+            { emoji: '🔥', text: "Heartburn." },
+            { emoji: '🍈', text: "Leaky breasts." },
+            { emoji: '💧', text: "Swelling." }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: "Know the difference between Braxton Hicks and real labor. When in doubt, call your doctor." },
+            { emoji: '🗣️', text: "Take a childbirth class to prepare for labor, delivery, and postpartum." },
+            { emoji: '🧘‍♀️', text: "A warm bath can do wonders for your aching muscles." },
+            { emoji: '😴', text: "Nap whenever you get the chance." },
+            { emoji: '👶', text: "Finish any last-minute shopping for baby supplies." },
+            { emoji: '🏥', text: "Pack your hospital bag so it's ready to go." },
+            { emoji: '❤️', text: "Accept offers of help from friends and family." },
+            { emoji: '💧', text: "Continue to drink lots of water." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/31-fetaldev-E-deeptan-4x3.png",
+        aiHint: "coconut fruit"
+    },
+    {
+        week: 32,
+        title: "Week 32: Practice Makes Perfect",
+        size: "Your baby is the size of a jicama.",
+        summary: "Your baby is practicing all the skills they'll need for the outside world, like breathing, sucking, and swallowing. They are likely in a head-down position now.",
+        development: [
+            { emoji: '👇', text: "The baby is likely positioned head-down in preparation for birth." },
+            { emoji: '🫁', text: "Rhythmic breathing movements are occurring, though no air is inhaled." },
+            { emoji: '💅', text: "Fingernails and toenails are fully formed." },
+            { emoji: '🍑', text: "The lanugo is starting to shed." },
+            { emoji: '⚖️', text: "Your baby weighs close to 4 pounds." },
+            { emoji: '💪', text: "Bones are fully developed but still soft and flexible." },
+            { emoji: '👁️', text: "The pupils can constrict and dilate in response to light." },
+            { emoji: '✨', text: "The skin is smooth and soft." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "Your fundal height is about halfway between your belly button and your sternum." },
+            { emoji: '😮‍💨', text: "You are likely feeling very breathless." },
+            { emoji: '😖', text: "Braxton Hicks contractions might be stronger and more frequent." },
+            { emoji: '😫', text: "Your body is feeling heavy and achy." },
+            { emoji: '🔥', text: "Heartburn is a constant companion for many." },
+            { emoji: '💧', text: "Swelling is common." },
+            { emoji: '😴', text: "Sleep is elusive." },
+            { emoji: '❤️', text: "You are eagerly awaiting the arrival of your little one." }
+        ],
+        symptoms: [
+            { emoji: '😮‍💨', text: "Shortness of breath." },
+            { emoji: '😖', text: "Stronger Braxton Hicks." },
+            { emoji: '😫', text: "Back pain and pelvic pressure." },
+            { emoji: '🔥', text: "Heartburn." },
+            { emoji: '🎈', text: "Constipation." },
+            { emoji: '💧', text: "Swelling." },
+            { emoji: '😴', text: "Fatigue." },
+            { emoji: '🍈', text: "Leaky breasts." }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: "Your prenatal visits will likely be every two weeks from now on." },
+            { emoji: '🗣️', text: "Discuss your pain management options for labor with your doctor." },
+            { emoji: '😴', text: "Sleep propped up with pillows to help with heartburn and breathlessness." },
+            { emoji: '🧘‍♀️', text: "Continue with gentle stretches and walking if you feel up to it." },
+            { emoji: '👶', text: "Install the baby's car seat and have it inspected." },
+            { emoji: '🥗', text: "Eat small, frequent meals." },
+            { emoji: '❤️', text: "Spend some quiet time each day just focusing on your baby's movements." },
+            { emoji: '📝', text: "Make a list of people to call or text when you go into labor." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/32-fetaldev-E-deeptan-4x3.png",
+        aiHint: "jicama vegetable"
+    },
+    {
+        week: 33,
+        title: "Week 33: Brain Power",
+        size: "Your baby is the size of a pineapple.",
+        summary: "Your baby's brain is developing at an incredible pace, and their head is growing to accommodate it. They are also passing antibodies from you, building their immune system.",
+        development: [
+            { emoji: '🧠', text: "The baby's brain is growing rapidly, and the head circumference increases by about half an inch this week." },
+            { emoji: '💪', text: "The baby is developing its own immune system, but also absorbing antibodies from you." },
+            { emoji: '🦴', text: "The bones in the baby's skull are still soft and not yet fused to allow for delivery." },
+            { emoji: '💧', text: "The amount of amniotic fluid has reached its maximum level." },
+            { emoji: '⚖️', text: "The baby weighs about 4 to 4.5 pounds." },
+            { emoji: '👁️', text: "The pupils can now react to light." },
+            { emoji: '✨', text: "The skin is becoming less red and wrinkled." },
+            { emoji: '🤸', text: "Movements might feel less like sharp kicks and more like rolls and stretches." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "You are gaining about a pound a week." },
+            { emoji: '😖', text: "You might feel pressure in your pelvis as the baby settles lower." },
+            { emoji: '😮‍💨', text: "Shortness of breath can be intense." },
+            { emoji: '😴', text: "Getting comfortable is nearly impossible." },
+            { emoji: '😫', text: "Your body is feeling very tired and heavy." },
+            { emoji: '💧', text: "You may have numbness or tingling in your hands (carpal tunnel syndrome)." },
+            { emoji: '🔥', text: "Heartburn is likely still an issue." },
+            { emoji: '😊', text: "You are in the home stretch!" }
+        ],
+        symptoms: [
+            { emoji: '😮‍💨', text: "Shortness of breath." },
+            { emoji: '😫', text: "Aches and pains." },
+            { emoji: '😴', text: "Difficulty sleeping." },
+            { emoji: '💧', text: "Numbness or tingling in hands and feet." },
+            { emoji: '🔥', text: "Heartburn." },
+            { emoji: '😖', text: "Braxton Hicks contractions." },
+            { emoji: '🎈', text: "Constipation." },
+            { emoji: '🧠', text: "Clumsiness and brain fog." }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: "Discuss any signs of preeclampsia with your doctor, such as severe swelling or headaches." },
+            { emoji: '🗣️', text: "Review your birth plan with your partner and provider." },
+            { emoji: '😴', text: "Rest as much as you can. Put your feet up whenever possible." },
+            { emoji: '🧘‍♀️', text: "Gentle stretching and deep breathing can help with discomfort." },
+            { emoji: '👶', text: "Finish any last-minute nursery preparations." },
+            { emoji: '❤️', text: "Have a date night with your partner before the baby arrives." },
+            { emoji: '🥗', text: "Continue to eat a healthy diet and drink lots of water." },
+            { emoji: '📝', text: "Start thinking about your postpartum recovery plan." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/33-fetaldev-E-deeptan-4x3.png",
+        aiHint: "pineapple fruit"
+    },
+    {
+        week: 34,
+        title: "Week 34: Final Touches",
+        size: "Your baby is the size of a butternut squash.",
+        summary: "The baby's lungs and central nervous system are continuing to mature. The waxy vernix on their skin is getting thicker, providing protection.",
+        development: [
+            { emoji: '🫁', text: "The lungs are well-developed." },
+            { emoji: '🧠', text: "The central nervous system is still maturing." },
+            { emoji: '✨', text: "The vernix caseosa, the waxy coating on the skin, is getting thicker." },
+            { emoji: '⚖️', text: "The baby weighs around 5 pounds." },
+            { emoji: '💅', text: "Fingernails have reached the fingertips." },
+            { emoji: '🤸', text: "Movements might feel different as space becomes more limited." },
+            { emoji: '👇', text: "If you're having a boy, his testicles are descending into the scrotum." },
+            { emoji: '😴', text: "The baby is spending a lot of time sleeping." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "Your baby bump might be making it hard to see your feet." },
+            { emoji: '😮‍💨', text: "You may feel like you can't take a deep breath." },
+            { emoji: '😴', text: "Fatigue has likely returned with a vengeance." },
+            { emoji: '💧', text: "Your ankles and feet might be quite swollen." },
+            { emoji: '😖', text: "Braxton Hicks contractions can be more noticeable." },
+            { emoji: '👁️', text: "Your vision might be a bit blurry due to fluid retention." },
+            { emoji: '😫', text: "General discomfort is the name of the game." },
+            { emoji: '😊', text: "The anticipation is building!" }
+        ],
+        symptoms: [
+            { emoji: '😴', text: "Fatigue." },
+            { emoji: '😫', text: "Achy body." },
+            { emoji: '😖', text: "Braxton Hicks." },
+            { emoji: '💧', text: "Swelling." },
+            { emoji: '🎈', text: "Constipation." },
+            { emoji: '🔥', text: "Heartburn." },
+            { emoji: '😮‍💨', text: "Shortness of breath." },
+            { emoji: '👁️', text: "Blurry vision." }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: "Learn the 5-1-1 rule for timing contractions: when they are 5 minutes apart, last for 1 minute, for at least 1 hour." },
+            { emoji: '🧘‍♀️', text: "Practice the breathing techniques you learned in childbirth class." },
+            { emoji: '😴', text: "Rest, rest, and more rest." },
+            { emoji: '💧', text: "Drink plenty of water to reduce swelling and prevent contractions." },
+            { emoji: '👶', text: "Wash all the baby's clothes, blankets, and sheets." },
+            { emoji: '🏥', text: "Keep your hospital bag by the door." },
+            { emoji: '❤️', text: "Arrange for help after the baby is born (e.g., meal delivery, help with cleaning)." },
+            { emoji: '🗣️', text: "Talk to your partner about your hopes and fears for labor and parenthood." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/34-fetaldev-E-deeptan-4x3.png",
+        aiHint: "butternut squash"
+    },
+    {
+        week: 35,
+        title: "Week 35: Gaining Weight",
+        size: "Your baby is the size of a honeydew melon.",
+        summary: "Your baby doesn't have much room to move, but you'll still feel stretches and wiggles. They are rapidly gaining fat, which will help them regulate their body temperature after birth.",
+        development: [
+            { emoji: '⚖️', text: "The baby is gaining about half a pound per week." },
+            { emoji: '🫁', text: "The lungs are nearly fully mature." },
+            { emoji: '💪', text: "The baby has a firm grasp." },
+            { emoji: '🧠', text: "The brain continues to develop at a rapid pace." },
+            { emoji: '👶', text: "The baby is likely in the head-down position." },
+            { emoji: '✨', text: "The kidneys are fully developed." },
+            { emoji: '💧', text: "The liver can process some waste products." },
+            { emoji: '👂', text: "The baby listens and responds to familiar voices." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "Your uterus is now up under your ribs." },
+            { emoji: '😮‍💨', text: "You might feel like you have more room to breathe if the baby has 'dropped' into your pelvis." },
+            { emoji: '🚽', text: "You'll have to pee even more frequently once the baby drops." },
+            { emoji: '😖', text: "You'll feel more pressure in your lower abdomen and pelvis." },
+            { emoji: '😴', text: "Sleeping is very difficult." },
+            { emoji: '😫', text: "You are likely feeling very ready to be done with pregnancy." },
+            { emoji: '💧', text: "Swelling can be significant." },
+            { emoji: '❤️', text: "Your emotions might be all over the place." }
+        ],
+        symptoms: [
+            { emoji: '🚽', text: "Frequent urination." },
+            { emoji: '😫', text: "Pelvic pressure and discomfort." },
+            { emoji: '😮‍💨', text: "Shortness of breath or easier breathing if baby has dropped." },
+            { emoji: '😖', text: "Braxton Hicks contractions." },
+            { emoji: '😴', text: "Insomnia." },
+            { emoji: '🔥', text: "Heartburn." },
+            { emoji: '😫', text: "General achiness." },
+            { emoji: '💧', text: "Swelling." }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: "Your doctor may perform a Group B strep test around now." },
+            { emoji: '🧘‍♀️', text: "Rest as much as humanly possible." },
+            { emoji: '💧', text: "Keep drinking water." },
+            { emoji: '👶', text: "Stock your freezer with easy meals for after the baby comes." },
+            { emoji: '🗣️', text: "Review the signs of labor with your partner." },
+            { emoji: '🏥', text: "Finalize what you need in your hospital bag." },
+            { emoji: '❤️', text: "Lean on your support system." },
+            { emoji: '👩‍⚕️', text: 'Ask your doctor about perineal massage to prepare for delivery.' }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/35-fetaldev-E-deeptan-4x3.png",
+        aiHint: "honeydew melon"
+    },
+    {
+        week: 36,
+        title: "Week 36: Getting Ready",
+        size: "Your baby is the size of a head of romaine lettuce.",
+        summary: "Your baby is considered 'early term.' They continue to gain weight, and their lungs are preparing for their first breath of air.",
+        development: [
+            { emoji: '🎉', text: "The baby is now considered 'early term'." },
+            { emoji: '👇', text: "The baby is dropping lower into your pelvis, a process called 'lightening'." },
+            { emoji: '🍑', text: "Most of the downy lanugo has been shed." },
+            { emoji: '✨', text: "The waxy vernix is still protecting the skin." },
+            { emoji: '⚖️', text: "The baby weighs nearly 6 pounds." },
+            { emoji: '🫁', text: "The lungs are mature." },
+            { emoji: '💪', text: "The baby's immune system is still developing." },
+            { emoji: '😴', text: "The baby is practicing for life on the outside." }
+        ],
+        bodyChanges: [
+            { emoji: '😮‍💨', text: "You might be able to breathe more easily as the baby drops." },
+            { emoji: '🚽', text: "The trade-off for easier breathing is even more pressure on your bladder." },
+            { emoji: '😖', text: "Pelvic pressure can be intense." },
+            { emoji: '💧', text: "Your vaginal discharge might increase." },
+            { emoji: '😴', text: "Sleeping is a real challenge." },
+            { emoji: '😫', text: "You are likely feeling very uncomfortable." },
+            { emoji: '✨', text: "Nesting instinct is strong." },
+            { emoji: '❤️', text: "The end is in sight!" }
+        ],
+        symptoms: [
+            { emoji: '🚽', text: "Increased urination." },
+            { emoji: '😖', text: "Pelvic pressure." },
+            { emoji: '😮‍💨', text: "Easier breathing." },
+            { emoji: '😴', text: "Difficulty sleeping." },
+            { emoji: '💧', text: "Changes in vaginal discharge." },
+            { emoji: '😫', text: "General discomfort." },
+            { emoji: '😖', text: "Braxton Hicks." },
+            { emoji: '🔥', text: "Heartburn." }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: "Your doctor will start checking your cervix for dilation and effacement." },
+            { emoji: '🧘‍♀️', text: "Rest as much as you can. Save your energy for labor." },
+            { emoji: '🗣️', text: "Review your birth plan, but be prepared for it to change." },
+            { emoji: '👶', text: "Make sure everything is ready for the baby's arrival." },
+            { emoji: '❤️', text: "Spend quality time with your partner." },
+            { emoji: '🏥', text: "Know the route to the hospital like the back of your hand." },
+            { emoji: '💧', text: "Stay hydrated." },
+            { emoji: '📝', text: "Write a letter to your baby to read in the future." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/36-fetaldev-E-deeptan-4x3.png",
+        aiHint: "romaine lettuce"
+    },
+    {
+        week: 37,
+        title: "Week 37: Full Term!",
+        size: "Your baby is the size of a bunch of Swiss chard.",
+        summary: "Congratulations! Your baby is now considered full term. Their organs are ready for life outside the womb. Now, it's just a waiting game.",
+        development: [
+            { emoji: '🎉', text: "Your baby is officially 'full term'!" },
+            { emoji: '🧠', text: "The brain and lungs will continue to mature until birth." },
+            { emoji: '💪', text: "The baby has a strong grip." },
+            { emoji: '✨', text: "The baby is shedding the last of its lanugo." },
+            { emoji: '⚖️', text: "The baby is gaining about half an ounce a day." },
+            { emoji: '🤸', text: "Movements might be less dramatic but you should still feel them regularly." },
+            { emoji: '👇', text: "The baby is likely settled head-down in your pelvis." },
+            { emoji: '😴', text: "The baby is getting ready for its big debut." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "Your body is preparing for labor." },
+            { emoji: '💧', text: "You might lose your mucus plug, a sign that labor is near." },
+            { emoji: '😖', text: "Braxton Hicks contractions might be more frequent and intense." },
+            { emoji: '🚽', text: "You are living in the bathroom." },
+            { emoji: '😫', text: "You are likely feeling very impatient and uncomfortable." },
+            { emoji: '😴', text: "Sleep is a luxury." },
+            { emoji: '❤️', text: "Emotions are running high." },
+            { emoji: '✨', text: "Your body has done an amazing thing." }
+        ],
+        symptoms: [
+            { emoji: '😖', text: "Stronger Braxton Hicks." },
+            { emoji: '💧', text: "Loss of mucus plug or 'bloody show'." },
+            { emoji: '😫', text: "Pelvic pressure and cramping." },
+            { emoji: '🚽', text: "Constant need to urinate." },
+            { emoji: '😴', text: "Insomnia." },
+            { emoji: '😫', text: "Back pain." },
+            { emoji: '💧', text: "Swelling." },
+            { emoji: '🎢', text: "Anxiety and excitement." }
+        ],
+        tips: [
+            { emoji: '👩‍⚕️', text: "Pay close attention to your baby's movements. Call your doctor if you notice a decrease." },
+            { emoji: '🧘‍♀️', text: "Rest as much as you can. Conserve your energy." },
+            { emoji: '🗣️', text: "Review the signs of labor one more time." },
+            { emoji: '🏥', text: "Have your hospital bag in the car." },
+            { emoji: '❤️', text: "Trust your body. It knows what to do." },
+            { emoji: '👶', text: "Enjoy these last few days or weeks of pregnancy." },
+            { emoji: '💧', text: "Stay hydrated." },
+            { emoji: '🎥', text: "Watch a funny movie to pass the time and relax." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/37-fetaldev-E-deeptan-4x3.png",
+        aiHint: "swiss chard"
+    },
+    {
+        week: 38,
+        title: "Week 38: Final Preparations",
+        size: "Your baby is the size of a pumpkin.",
+        summary: "Your baby has plumped up and their organs are fully mature. They are just waiting for the right time to make their grand entrance.",
+        development: [
+            { emoji: '🫁', text: "The lungs are producing plenty of surfactant." },
+            { emoji: '🧠', text: "The brain is still forming new connections." },
+            { emoji: '⚖️', text: "The baby weighs around 6.5 to 7 pounds." },
+            { emoji: '👁️', text: "The eyes are likely a dark grey or blue; true eye color will develop after birth." },
+            { emoji: '💪', text: "The baby's grip is very strong." },
+            { emoji: '✨', text: "The vernix caseosa and lanugo are almost completely gone." },
+            { emoji: '💧', text: "The baby continues to swallow amniotic fluid." },
+            { emoji: '😴', text: "The baby is resting up for the journey of birth." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "Your body is ready for labor." },
+            { emoji: '💧', text: "You might lose your mucus plug if you haven't already." },
+            { emoji: '😖', text: "Contractions, real or practice, are common." },
+            { emoji: '😫', text: "You are likely feeling very ready to meet your baby." },
+            { emoji: '😴', text: "Sleep is hard to come by." },
+            { emoji: '🍈', text: "Your breasts are full and may be leaking." },
+            { emoji: '❤️', text: "Your emotions are a mix of excitement, fear, and impatience." },
+            { emoji: '✨', text: "Any day now!" }
+        ],
+        symptoms: [
+            { emoji: '💧', text: "Leaky breasts (colostrum)." },
+            { emoji: '😖', text: "Contractions." },
+            { emoji: '😫', text: "Pelvic and rectal pressure." },
+            { emoji: '😴', text: "Insomnia." },
+            { emoji: '💧', text: "Swelling." },
+            { emoji: '😫', text: "Extreme fatigue." },
+            { emoji: '🚽', text: "Frequent urination." },
+            { emoji: '✨', text: "Bloody show." }
+        ],
+        tips: [
+            { emoji: '🧘‍♀️', text: "Rest, rest, rest." },
+            { emoji: '💧', text: "Stay hydrated." },
+            { emoji: '🗣️', text: "Keep your support person close." },
+            { emoji: '🏥', text: "Know when to go to the hospital." },
+            { emoji: '❤️', text: "Try to relax and trust the process." },
+            { emoji: '👶', text: "Enjoy the quiet moments before your life changes forever." },
+            { emoji: '👩‍⚕️', text: "Don't hesitate to call your doctor with any questions or concerns." },
+            { emoji: '🎥', text: "Binge-watch your favorite show while you wait." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/38-fetaldev-E-deeptan-4x3.png",
+        aiHint: "pumpkin vegetable"
+    },
+    {
+        week: 39,
+        title: "Week 39: Ready for a Cuddle",
+        size: "Your baby is the size of a watermelon.",
+        summary: "Your baby is fully developed and ready for life on the outside. They are nice and plump, with a layer of fat to keep them warm.",
+        development: [
+            { emoji: '🎉', text: "The baby is fully mature and ready for birth." },
+            { emoji: '🧠', text: "The brain is still developing and will continue to do so for years." },
+            { emoji: '💪', text: "The baby is strong and has coordinated reflexes." },
+            { emoji: '⚖️', text: "The average birth weight is around 7 to 8 pounds." },
+            { emoji: '👁️', text: "Vision is still blurry at birth." },
+            { emoji: '✨', text: "The baby is receiving antibodies from you to protect against illness." },
+            { emoji: '🫁', text: "The lungs are ready for their first breath." },
+            { emoji: '😴', text: "The baby is just waiting for the signal to be born." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "You are at the finish line." },
+            { emoji: '😖', text: "You might be experiencing early labor signs." },
+            { emoji: '💧', text: "Your water might break at any time." },
+            { emoji: '😫', text: "You are likely very uncomfortable." },
+            { emoji: '😴', text: "Sleep is a distant dream." },
+            { emoji: '❤️', text: "The anticipation is at its peak." },
+            { emoji: '✨', text: "Your body is amazing." },
+            { emoji: '👶', text: "You will meet your baby very soon." }
+        ],
+        symptoms: [
+            { emoji: '💧', text: "Leaking amniotic fluid." },
+            { emoji: '😖', text: "Regular, painful contractions." },
+            { emoji: '😫', text: "Intense pelvic pressure." },
+            { emoji: '✨', text: "Losing your mucus plug." },
+            { emoji: '😴', text: "Exhaustion." },
+            { emoji: '🎢', text: "A rollercoaster of emotions." },
+            { emoji: '✨', text: "A sudden burst of energy (nesting)." },
+            { emoji: '🚽', text: "Diarrhea or loose stools." }
+        ],
+        tips: [
+            { emoji: '🧘‍♀️', text: "Try to relax and stay calm." },
+            { emoji: '💧', text: "Stay hydrated." },
+            { emoji: '🚶‍♀️', text: "Gentle walking can help encourage labor to start." },
+            { emoji: '🗣️', text: "Keep your labor support partner nearby." },
+            { emoji: '🏥', text: "Head to the hospital when your contractions are consistent and strong." },
+            { emoji: '❤️', text: "You've got this!" },
+            { emoji: '👩‍⚕️', text: "Call your doctor if your water breaks or if you have any concerns." },
+            { emoji: '👶', text: "Get ready to meet your baby!" }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/39-fetaldev-E-deeptan-4x3.png",
+        aiHint: "watermelon fruit"
+    },
+    {
+        week: 40,
+        title: "Week 40: Due Date!",
+        size: "Your baby is the size of a small pumpkin.",
+        summary: "This is your estimated due date, but don't worry if your baby hasn't arrived yet. Many first-time moms go past their due date. Your baby is ready whenever you are.",
+        development: [
+            { emoji: '🎉', text: "Happy due date! But remember, it's just an estimate." },
+            { emoji: '⚖️', text: "The baby is fully grown and ready for the world." },
+            { emoji: '🧠', text: "Brain development continues." },
+            { emoji: '💪', text: "The baby is strong and has all the necessary reflexes for survival." },
+            { emoji: '😴', text: "The baby is waiting patiently (or not so patiently!)." },
+            { emoji: '✨', text: "The baby's head has likely engaged in your pelvis." },
+            { emoji: '🫁', text: "The lungs are mature and ready for air." },
+            { emoji: '❤️', text: "The heart and circulatory system are ready for the transition to life outside the womb." }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "You are likely feeling very, very pregnant." },
+            { emoji: '😖', text: "You might be experiencing signs of early labor." },
+            { emoji: '😫', text: "Discomfort is at an all-time high." },
+            { emoji: '❤️', text: "Impatience and excitement are your constant companions." },
+            { emoji: '✨', text: "Your body is poised and ready." },
+            { emoji: '😴', text: "Rest is crucial." },
+            { emoji: '💧', text: "Look out for your water breaking." },
+            { emoji: '👶', text: "It's time!" }
+        ],
+        symptoms: [
+            { emoji: '😖', text: "Labor contractions (regular, getting stronger, and closer together)." },
+            { emoji: '💧', text: "Your water breaking." },
+            { emoji: '✨', text: "Bloody show." },
+            { emoji: '😫', text: "Intense back pain." },
+            { emoji: '🚽', text: "Diarrhea." },
+            { emoji: '😴', text: "Exhaustion mixed with bursts of energy." },
+            { emoji: '🎢', text: "Every emotion imaginable." },
+            { emoji: '👶', text: "The feeling that the baby is very low in your pelvis." }
+        ],
+        tips: [
+            { emoji: '🧘‍♀️', text: "Try to stay as relaxed as possible." },
+            { emoji: '💧', text: "Keep sipping water." },
+            { emoji: '🚶‍♀️', text: "Walking can help labor progress." },
+            { emoji: '🗣️', text: "Lean on your support person." },
+            { emoji: '🏥', text: "Time your contractions and know when to go to the hospital." },
+            { emoji: '❤️', text: "You are about to embark on the most amazing journey. You can do this." },
+            { emoji: '👩‍⚕️', text: "Stay in close contact with your doctor or midwife." },
+            { emoji: '👶', text: "Get ready for the moment you've been waiting for." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/40-fetaldev-E-deeptan-4x3.png",
+        aiHint: "small pumpkin"
+    },
+    {
+        week: 41,
+        title: "Week 41: Overdue but Not for Long",
+        size: "Your baby is the size of a watermelon.",
+        summary: "It's common to go past your due date, especially with a first baby. Your doctor will be monitoring you and your baby closely and may discuss induction.",
+        development: [
+            { emoji: '⏰', text: "The baby is fashionably late, but still comfortable." },
+            { emoji: '💪', text: "Your baby continues to grow, and their hair and nails are getting longer." },
+            { emoji: '✨', text: "The vernix caseosa is mostly gone, so the skin might be a bit dry after birth." },
+            { emoji: '🧠', text: "Brain development is ongoing." },
+            { emoji: '⚖️', text: "The baby is still gaining a bit of weight." },
+            { emoji: '😴', text: "The baby is conserving energy for the upcoming birth." },
+            { emoji: '🤸', text: "You should still feel regular movements." },
+            { emoji: '👶', text: "Your baby is fully cooked and ready to come out!" }
+        ],
+        bodyChanges: [
+            { emoji: '🤰', text: "You feel larger than life and are probably tired of being pregnant." },
+            { emoji: '👩‍⚕️', text: "Your doctor will monitor you closely with non-stress tests or biophysical profiles." },
+            { emoji: '🤔', text: "You might be discussing induction options with your provider." },
+            { emoji: '😫', text: "Discomfort levels are very high." },
+            { emoji: '❤️', text: "Impatience is the primary emotion of the week." },
+            { emoji: '✨', text: "Your body is still preparing, and labor could start at any moment." },
+            { emoji: '😖', text: "You continue to experience Braxton Hicks and other late-pregnancy symptoms." },
+            { emoji: '😴', text: "Resting is your most important job right now." }
+        ],
+        symptoms: [
+            { emoji: '😫', text: "Extreme discomfort." },
+            { emoji: '😴', text: "Exhaustion." },
+            { emoji: '💧', text: "Swelling." },
+            { emoji: '😖', text: "Pelvic pressure." },
+            { emoji: '🚽', text: "Frequent urination." },
+            { emoji: '🎢', text: "Anxiety and impatience." },
+            { emoji: '✨', text: "Possible signs of labor at any time." },
+            { emoji: '🔥', text: "Heartburn." }
+        ],
+        tips: [
+            { emoji: '🧘‍♀️', text: "Try to stay patient and relaxed, though it's hard." },
+            { emoji: '🗣️', text: "Talk to your doctor about the pros and cons of induction." },
+            { emoji: '🚶‍♀️', text: "Continue gentle walking if you feel up to it." },
+            { emoji: '❤️', text: "Do something nice for yourself to pass the time." },
+            { emoji: '👩‍⚕️', text: "Keep a close eye on your baby's movements and call your doctor if they decrease." },
+            { emoji: '😴', text: "Sleep and rest as much as possible." },
+            { emoji: '💧', text: "Stay hydrated." },
+            { emoji: '👶', text: "Know that your baby will be here very, very soon." }
+        ],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/41-fetaldev-E-deeptan-4x3.png",
+        aiHint: "waiting baby"
+    }
+];
