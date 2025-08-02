@@ -690,10 +690,178 @@ export const weeklyDevelopment: Array<{
         imageUrl: "https://assets.babycenter.com/ims/2024/09/16-fetaldev-E-deeptan-4x3.png",
         aiHint: "baby illustration"
     },
+    {
+        week: 17,
+        title: "Week 17: Placeholder Title",
+        size: "Placeholder size for week 17",
+        summary: "Placeholder summary for week 17.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 17 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 17 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 17 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 17 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/17-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 18,
+        title: "Week 18: Placeholder Title",
+        size: "Placeholder size for week 18",
+        summary: "Placeholder summary for week 18.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 18 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 18 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 18 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 18 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/18-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 19,
+        title: "Week 19: Placeholder Title",
+        size: "Placeholder size for week 19",
+        summary: "Placeholder summary for week 19.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 19 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 19 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 19 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 19 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/19-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 20,
+        title: "Week 20: Placeholder Title",
+        size: "Placeholder size for week 20",
+        summary: "Placeholder summary for week 20.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 20 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 20 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 20 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 20 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/20-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 21,
+        title: "Week 21: Placeholder Title",
+        size: "Placeholder size for week 21",
+        summary: "Placeholder summary for week 21.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 21 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 21 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 21 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 21 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/21-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 22,
+        title: "Week 22: Placeholder Title",
+        size: "Placeholder size for week 22",
+        summary: "Placeholder summary for week 22.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 22 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 22 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 22 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 22 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/22-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 23,
+        title: "Week 23: Placeholder Title",
+        size: "Placeholder size for week 23",
+        summary: "Placeholder summary for week 23.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 23 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 23 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 23 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 23 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/23-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 24,
+        title: "Week 24: Placeholder Title",
+        size: "Placeholder size for week 24",
+        summary: "Placeholder summary for week 24.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 24 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 24 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 24 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 24 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/24-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 25,
+        title: "Week 25: Placeholder Title",
+        size: "Placeholder size for week 25",
+        summary: "Placeholder summary for week 25.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 25 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 25 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 25 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 25 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/25-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 26,
+        title: "Week 26: Placeholder Title",
+        size: "Placeholder size for week 26",
+        summary: "Placeholder summary for week 26.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 26 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 26 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 26 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 26 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/26-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 27,
+        title: "Week 27: Placeholder Title",
+        size: "Placeholder size for week 27",
+        summary: "Placeholder summary for week 27.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 27 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 27 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 27 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 27 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/27-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 28,
+        title: "Week 28: Placeholder Title",
+        size: "Placeholder size for week 28",
+        summary: "Placeholder summary for week 28.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 28 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 28 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 28 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 28 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/28-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 29,
+        title: "Week 29: Placeholder Title",
+        size: "Placeholder size for week 29",
+        summary: "Placeholder summary for week 29.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 29 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 29 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 29 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 29 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/29-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    {
+        week: 30,
+        title: "Week 30: Placeholder Title",
+        size: "Placeholder size for week 30",
+        summary: "Placeholder summary for week 30.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 30 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 30 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 30 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 30 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/30-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    }
 ];
 
 // Populate remaining weeks with placeholder data to avoid errors
-for (let i = 17; i <= 40; i++) {
+for (let i = 31; i <= 40; i++) {
     if (!weeklyDevelopment.find(w => w.week === i)) {
         weeklyDevelopment.push({
             week: i,
