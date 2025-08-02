@@ -112,7 +112,7 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                         <CardDescription>A visual look at how your body might be changing this week.</CardDescription>
                     </CardHeader>
                      <CardContent className="p-0 flex items-center justify-center">
-                        <Image src={weekData.motherImageUrl} alt={`Illustration of mother's body at week ${weekData.week}`} width={600} height={600} className="object-contain w-full h-auto" />
+                        <Image src={weekData.motherImageUrl} alt={`Illustration of mother's body at week ${weekData.week}`} width={600} height={600} className="object-contain w-full h-auto max-w-sm" />
                     </CardContent>
                 </Card>
 
