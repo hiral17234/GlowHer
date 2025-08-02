@@ -653,21 +653,60 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2025/03/13-fetaldev-G-warmbeige_4x3.jpg?width=396",
         aiHint: "peach fruit"
-    }
+    },
+    { 
+        week: 14, 
+        title: "Week 14: Placeholder Title", 
+        size: "Placeholder size for week 14", 
+        summary: "Placeholder summary for week 14.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 14 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 14 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 14 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 14 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/14-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    { 
+        week: 15, 
+        title: "Week 15: Placeholder Title", 
+        size: "Placeholder size for week 15", 
+        summary: "Placeholder summary for week 15.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 15 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 15 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 15 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 15 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/15-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
+    { 
+        week: 16, 
+        title: "Week 16: Placeholder Title", 
+        size: "Placeholder size for week 16", 
+        summary: "Placeholder summary for week 16.",
+        development: [{ emoji: '🚧', text: `Detailed content for week 16 development is being generated.` }],
+        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week 16 body changes is being generated.` }],
+        symptoms: [{ emoji: '🚧', text: `Detailed content for week 16 symptoms is being generated.` }],
+        tips: [{ emoji: '🚧', text: `Detailed content for week 16 tips is being generated.` }],
+        imageUrl: "https://assets.babycenter.com/ims/2024/09/16-fetaldev-E-deeptan-4x3.png",
+        aiHint: "baby illustration"
+    },
 ];
 
 // Populate remaining weeks with placeholder data to avoid errors
-for (let i = 14; i <= 40; i++) {
-    weeklyDevelopment.push({
-        week: i,
-        title: `Week ${i}: Placeholder Title`,
-        size: `Placeholder size for week ${i}`,
-        summary: `Placeholder summary for week ${i}.`,
-        development: [{ emoji: '🚧', text: `Detailed content for week ${i} development is being generated.` }],
-        bodyChanges: [{ emoji: '🚧', text: `Detailed content for week ${i} body changes is being generated.` }],
-        symptoms: [{ emoji: '🚧', text: `Detailed content for week ${i} symptoms is being generated.` }],
-        tips: [{ emoji: '🚧', text: `Detailed content for week ${i} tips is being generated.` }],
-        imageUrl: "https://placehold.co/600x400.png",
-        aiHint: "baby illustration"
-    });
+for (let i = 17; i <= 40; i++) {
+    if (!weeklyDevelopment.find(w => w.week === i)) {
+        weeklyDevelopment.push({
+            week: i,
+            title: `Week ${i}: Placeholder Title`,
+            size: `Placeholder size for week ${i}`,
+            summary: `Placeholder summary for week ${i}.`,
+            development: [{ emoji: '🚧', text: `Detailed content for week ${i} development is being generated.` }],
+            bodyChanges: [{ emoji: '🚧', text: `Detailed content for week ${i} body changes is being generated.` }],
+            symptoms: [{ emoji: '🚧', text: `Detailed content for week ${i} symptoms is being generated.` }],
+            tips: [{ emoji: '🚧', text: `Detailed content for week ${i} tips is being generated.` }],
+            imageUrl: "https://placehold.co/600x400.png",
+            aiHint: "baby illustration"
+        });
+    }
 }
+weeklyDevelopment.sort((a,b) => a.week - b.week);
