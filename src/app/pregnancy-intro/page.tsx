@@ -26,7 +26,7 @@ export default function PregnancyIntroPage() {
                 </div>
             </header>
 
-            <main className="relative z-10 w-full max-w-6xl mx-auto">
+            <main className="relative z-10 w-full max-w-6xl mx-auto pt-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
                     <div className="space-y-8">
                         <blockquote className="space-y-4">
