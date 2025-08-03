@@ -21,11 +21,11 @@ export default function PregnancyIntroPage() {
             <header className="absolute top-0 left-0 w-full container mx-auto px-4 py-6 z-10">
                 <div className="flex justify-between items-center">
                     <GlowHerLogo />
-                    <Link href="/" passHref>
-                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white" aria-label="Go to Dashboard">
-                            <Home className="h-6 w-6" />
-                        </Button>
-                    </Link>
+                    <Button asChild variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">
+                      <Link href="/" aria-label="Go to Dashboard">
+                        <Home className="h-6 w-6" />
+                      </Link>
+                    </Button>
                 </div>
             </header>
 
