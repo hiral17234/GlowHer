@@ -58,7 +58,7 @@ export default function PregnancyIntroPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-8 border-t border-white/20 pt-8">
+                    <div className="space-y-8 border-t border-white/20 pt-8">
                          <div className="aspect-video">
                             <iframe 
                                 title="Human embryonic - fetal development stages" 
