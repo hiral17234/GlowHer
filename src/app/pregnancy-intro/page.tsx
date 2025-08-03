@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRouter } from 'next/navigation';
@@ -26,13 +25,13 @@ export default function PregnancyIntroPage() {
                 </div>
             </header>
 
-            <main className="relative z-10 w-full max-w-5xl">
-                 <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl space-y-8">
-                    <div className="flex flex-col items-center justify-center">
+            <main className="relative z-10 w-full max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
+                    <div className="space-y-8">
                         <blockquote className="space-y-4">
                             <p className="font-headline text-3xl md:text-4xl leading-tight">
                                 "A baby is something you carry inside you for nine months, in your arms for three years, and in your heart until the day you die."
-                            </blockquote>
+                            </p>
                             <footer className="text-lg text-white/80">
                                 – Mary Mason
                             </footer>
@@ -40,10 +39,50 @@ export default function PregnancyIntroPage() {
                         <Button 
                             onClick={() => router.push('/pregnancy-tracker')} 
                             size="lg" 
-                            className="mt-8 bg-pink-500 hover:bg-pink-600 text-white font-bold"
+                            className="bg-pink-500 hover:bg-pink-600 text-white font-bold"
                         >
                             Continue to My Journey <ChevronRight className="ml-2 h-5 w-5" />
                         </Button>
+                    </div>
+                    <div className="aspect-w-16 aspect-h-9">
+                        <iframe 
+                            title="Embryo to Fetus" 
+                            frameBorder="0" 
+                            allowFullScreen 
+                            allow="autoplay; fullscreen; xr-spatial-tracking" 
+                            src="https://sketchfab.com/models/2745a63da7924f5bb16109e51d6f391a/embed"
+                            className="w-full h-full rounded-lg"
+                            style={{minHeight: '400px'}}
+                        ></iframe>
+                    </div>
+                </div>
+
+                <div className="mt-8 space-y-8">
+                    <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
+                         <div className="aspect-w-16 aspect-h-9">
+                            <iframe 
+                                title="Fetal Development Stages" 
+                                frameBorder="0" 
+                                allowFullScreen 
+                                allow="autoplay; fullscreen; xr-spatial-tracking" 
+                                src="https://sketchfab.com/models/c61d36916894432194902c525a720448/embed"
+                                className="w-full h-full rounded-lg"
+                                style={{minHeight: '400px'}}
+                            ></iframe>
+                        </div>
+                    </div>
+                    <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
+                         <div className="aspect-w-16 aspect-h-9">
+                            <iframe 
+                                title="Fetus week eight" 
+                                frameBorder="0" 
+                                allowFullScreen
+                                allow="autoplay; fullscreen; xr-spatial-tracking" 
+                                src="https://sketchfab.com/models/b517e47138374d0ab0a26dc344c15147/embed"
+                                className="w-full h-full rounded-lg"
+                                style={{minHeight: '400px'}}
+                            ></iframe>
+                        </div>
                     </div>
                 </div>
             </main>
