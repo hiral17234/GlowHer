@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRouter } from 'next/navigation';
@@ -45,10 +46,10 @@ export default function PregnancyIntroPage() {
                         </Button>
                     </div>
                     <div className="aspect-w-16 aspect-h-9">
-                        <iframe 
+                         <iframe 
                             title="Embryo to Fetus" 
                             frameBorder="0" 
-                            allowFullScreen 
+                            allowFullScreen
                             allow="autoplay; fullscreen; xr-spatial-tracking" 
                             src="https://sketchfab.com/models/2745a63da7924f5bb16109e51d6f391a/embed"
                             className="w-full h-full rounded-lg"
@@ -60,12 +61,12 @@ export default function PregnancyIntroPage() {
                 <div className="mt-8 space-y-8">
                     <div className="bg-black/20 backdrop-blur-sm p-8 rounded-2xl">
                          <div className="aspect-w-16 aspect-h-9">
-                            <iframe 
-                                title="Fetal Development Stages" 
+                             <iframe 
+                                title="Human embryonic - fetal development stages" 
                                 frameBorder="0" 
                                 allowFullScreen 
                                 allow="autoplay; fullscreen; xr-spatial-tracking" 
-                                src="https://sketchfab.com/models/c61d36916894432194902c525a720448/embed"
+                                src="https://sketchfab.com/models/9fb225b983c14b20b67b639e17126f5b/embed"
                                 className="w-full h-full rounded-lg"
                                 style={{minHeight: '400px'}}
                             ></iframe>
