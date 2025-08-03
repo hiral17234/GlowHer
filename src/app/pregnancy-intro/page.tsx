@@ -33,7 +33,7 @@ export default function PregnancyIntroPage() {
                             <iframe
                                 title="Fetus week sixteen"
                                 frameBorder="0"
-                                allowFullScreen
+                                allowFullScreen={true}
                                 allow="autoplay; fullscreen; xr-spatial-tracking"
                                 src="https://sketchfab.com/models/2745a63da7924f5bb16109e51d6f391a/embed"
                                 className="w-full h-full rounded-lg"
@@ -63,7 +63,7 @@ export default function PregnancyIntroPage() {
                             <iframe 
                                 title="Human embryonic - fetal development stages" 
                                 frameBorder="0" 
-                                allowFullScreen
+                                allowFullScreen={true}
                                 allow="autoplay; fullscreen; xr-spatial-tracking" 
                                 src="https://sketchfab.com/models/9fb225b983c14b20b67b639e17126f5b/embed"
                                 className="w-full h-full rounded-lg"
@@ -74,7 +74,7 @@ export default function PregnancyIntroPage() {
                              <iframe 
                                 title="Fetus week eight" 
                                 frameBorder="0" 
-                                allowFullScreen
+                                allowFullScreen={true}
                                 allow="autoplay; fullscreen; xr-spatial-tracking" 
                                 src="https://sketchfab.com/models/8bf872eed84e47dba4555f4675077453/embed"
                                 className="w-full h-full rounded-lg"
