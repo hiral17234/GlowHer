@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { addDays, format, differenceInDays, startOfDay, addWeeks, subDays, differenceInWeeks } from 'date-fns';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -150,7 +150,7 @@ const translations = {
 };
 
 const navItems = [
-    { href: '/', icon: Home, label: 'Dashboard' },
+    { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
     { href: '/pregnancy-symptom-history', icon: FileText, label: 'Health Log' },
     { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
     { href: '/pregnancy-journal', icon: BookOpen, label: 'Journal' },
@@ -159,6 +159,7 @@ const navItems = [
 
 export default function PregnancyTrackerPage() {
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
   const { language } = useLanguage();
   const [pregnancyDetails, setPregnancyDetails] = useState<PregnancyDetails | null>(null);
@@ -352,7 +353,7 @@ export default function PregnancyTrackerPage() {
                 {navItems.map(item => (
                     <Link key={item.href} href={item.href} title={item.label}>
                          <Button
-                            variant={'ghost'}
+                            variant={pathname === item.href ? 'secondary' : 'ghost'}
                             className={cn("w-full justify-start text-base", !isSidebarOpen && "justify-center")}
                         >
                             <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
@@ -628,14 +629,17 @@ export default function PregnancyTrackerPage() {
             {/* Mobile Bottom Nav */}
             <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white/80 backdrop-blur-md border-t border-white/30">
                 <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-                    {navItems.map((item) => (
-                         <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/50 group">
-                            <item.icon className={cn("w-6 h-6 mb-1 text-slate-500 group-hover:text-pink-600", router.pathname === item.href && "text-pink-600")} />
-                            <span className={cn("text-xs text-slate-500 group-hover:text-pink-600", router.pathname === item.href && "text-pink-600")}>
-                                {item.label}
-                            </span>
-                        </Link>
-                    ))}
+                    {navItems.map((item) => {
+                        const isActive = pathname === item.href;
+                        return (
+                             <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/50 group">
+                                <item.icon className={cn("w-6 h-6 mb-1 text-slate-500 group-hover:text-pink-600", isActive && "text-pink-600")} />
+                                <span className={cn("text-xs text-slate-500 group-hover:text-pink-600", isActive && "text-pink-600")}>
+                                    {item.label}
+                                </span>
+                            </Link>
+                        )
+                    })}
                 </div>
             </div>
         </div>
