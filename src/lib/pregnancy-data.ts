@@ -16,6 +16,13 @@ export const weeklyDevelopment: Array<{
     imageUrl: string;
     aiHint: string;
     motherImageUrl: string;
+    details?: {
+        title: string;
+        sections: {
+            heading: string;
+            points: string[];
+        }[];
+    }
 }> = [
     { 
         week: 0, 
@@ -126,7 +133,65 @@ export const weeklyDevelopment: Array<{
         ],
         imageUrl: "https://assets.babycenter.com/ims/2025/03/02-fetaldev-all-skintones_4x3.jpg?width=396", 
         aiHint: "flower blooming",
-        motherImageUrl: "https://assets.babycenter.com/ims/2024/08/02-body-E-deeptan-4x3.png"
+        motherImageUrl: "https://assets.babycenter.com/ims/2024/08/02-body-E-deeptan-4x3.png",
+        details: {
+            title: "Highlights This Week",
+            sections: [
+                {
+                    heading: "Are you pregnant this week?",
+                    points: [
+                        "You're not pregnant yet, but if you conceive this week, you'll be two weeks pregnant. That's because healthcare providers use your last menstrual period to determine your due date, so technically the first day of your period is also the first day of your pregnancy. Since you ovulate about two weeks into your cycle, conception happens around the time you're two weeks pregnant."
+                    ]
+                },
+                {
+                    heading: "The best time to conceive",
+                    points: [
+                        "You're most fertile during the three days leading up to ovulation. Signs you may be ovulating include changes in your basal body temperature, breast tenderness, mild cramps, and increased vaginal discharge.",
+                        "During ovulation, you may feel many of these symptoms or none at all."
+                    ]
+                },
+                {
+                    heading: "Detecting ovulation",
+                    points: [
+                        "To get pregnant faster, you can use ovulation test strips to figure out the days when sex (or insemination) is most likely to lead to pregnancy."
+                    ]
+                },
+                {
+                    heading: "Baby development at 2 weeks",
+                    points: [
+                        "Getting ready to grow a baby: During the past few days, an increase in estrogen and progesterone prompted the lining of your uterus to thicken to support a fertilized egg. At the same time, in your ovaries, eggs have 'ripened' in fluid-filled sacs called follicles.",
+                        "An egg is released: Once you ovulate, an egg erupts from its follicle and is swept from your ovary into a fallopian tube. Ovulation doesn't necessarily occur right in the middle of your cycle. For example, it could happen any time between days 9 and 21 for women with a 28-day cycle.",
+                        "Fertilization: During the 24 hours after ovulation, your egg will be fertilized if one healthy sperm manages to swim from your vagina through your cervix, then up through your uterus into your fallopian tube, and penetrate the egg. There are nearly 250 million sperm in an ejaculation, and about 400 sperm survive the 10-hour journey to the egg. But it's usually only one that succeeds in burrowing through its outer membrane.",
+                        "The genes combine: In the next 10 to 30 hours, the successful sperm's nucleus merges with the egg's and they combine their genetic material. If the sperm carries a Y chromosome, your baby will be a boy. If it has an X chromosome, you'll conceive a girl. The fertilized egg is called a zygote.",
+                        "Implantation: The egg takes three or four days to travel from the fallopian tube to your uterus, dividing into 100 or more identical cells along the way. Once it enters the uterus, it's called a blastocyst. A day or two later, it will begin burrowing into the lush lining of your uterus, where it continues to grow and divide."
+                    ]
+                },
+                {
+                    heading: "Pregnancy symptoms during week 2",
+                    points: [
+                        "Slippery cervical mucus: In the days around ovulation, it'll be clear, slippery, and stretchy – like raw egg whites.",
+                        "Mild cramping: Some women notice mild cramps or twinges of pain in their abdomen, or a one-sided backache, around the time of ovulation. This is known as mittelschmerz.",
+                        "Increased sex drive: Your sex drive may rev up and your body odor may be more attractive to men around the time you're fertile.",
+                        "Heightened sense of smell: Some studies have found that a woman's sense of smell gets stronger near ovulation.",
+                        "Tender breasts: Hormonal changes around ovulation may make your breasts feel a bit full or sore.",
+                        "Cervical changes: During ovulation, your cervix is softer, higher, wetter, and more open.",
+                        "A boost in your basal body temperature (BBT): On the day after you ovulate, it goes up a bit and stays elevated until your next period."
+                    ]
+                },
+                {
+                    heading: "Pregnancy checklist at 2 weeks pregnant",
+                    points: [
+                        "Take your vitamins: If you haven't yet, start taking a prenatal vitamin with at least 400 micrograms (mcg) of folic acid every day.",
+                        "See your healthcare provider: It's a good idea to have a preconception checkup to make sure your body is in the best possible shape for baby-making.",
+                        "Consider this blood test: You and your partner may want to get genetic carrier screening to see whether you carry genes that would put your baby at risk for serious inherited illnesses.",
+                        "Have frequent sex: Studies show that the highest pregnancy rates are in couples who have sex daily or every other day.",
+                        "Make time for self-care: Reducing your stress levels can increase your odds of conceiving and having a healthy pregnancy.",
+                        "Prepare your body for pregnancy: A stronger core prevents back problems as your bump grows, and even shortens your recovery time after childbirth.",
+                        "Know what to avoid: When you're trying to conceive and newly pregnant, you'll want to steer clear of tobacco, marijuana, illegal drugs, alcohol, and too much caffeine."
+                    ]
+                }
+            ]
+        }
     },
     { 
         week: 3, 
@@ -1932,7 +1997,7 @@ export const weeklyDevelopment: Array<{
             { emoji: '💧', text: "Stay hydrated." },
             { emoji: '🚶‍♀️', text: "Gentle walking can help labor progress." },
             { emoji: '🗣️', text: "Lean on your support person." },
-            { emoji: '🏥', text: "Head to the hospital when your contractions are consistent and strong." },
+            { emoji: '🏥', text: "Time your contractions and know when to go to the hospital." },
             { emoji: '❤️', text: "You've got this!" },
             { emoji: '👩‍⚕️', text: "Call your doctor if your water breaks or if you have any concerns." },
             { emoji: '👶', text: "Get ready for the moment you've been waiting for." }
