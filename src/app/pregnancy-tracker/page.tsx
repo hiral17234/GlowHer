@@ -151,7 +151,6 @@ const translations = {
 
 const navItems = [
     { href: '/', icon: Home, label: 'Dashboard' },
-    { href: '/pregnancy-tracker', icon: Baby, label: 'Weekly Guide' },
     { href: '/pregnancy-symptom-history', icon: FileText, label: 'Health Log' },
     { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
     { href: '/pregnancy-guide', icon: BookOpen, label: 'Guide' },
@@ -352,7 +351,7 @@ export default function PregnancyTrackerPage() {
                 {navItems.map(item => (
                     <Link key={item.href} href={item.href} title={item.label}>
                          <Button
-                            variant={router.pathname === item.href ? 'secondary' : 'ghost'}
+                            variant={'ghost'}
                             className={cn("w-full justify-start text-base", !isSidebarOpen && "justify-center")}
                         >
                             <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
