@@ -38,6 +38,7 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                 <CardTitle className="font-headline text-3xl text-slate-800">Highlights This Week</CardTitle>
             </CardHeader>
             <CardContent className="prose max-w-none text-slate-700">
+                <h3>Are you pregnant this week?</h3>
                 <p>You're not pregnant yet, but if you conceive this week, you'll be two weeks pregnant. That's because healthcare providers use your last menstrual period to determine your due date, so technically the first day of your period is also the first day of your pregnancy. Since you ovulate about two weeks into your cycle, conception happens around the time you're two weeks pregnant.</p>
                 
                 <h3>The best time to conceive</h3>
@@ -77,7 +78,7 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                 <ul>
                     <li><strong>Take your vitamins:</strong> If you haven't yet, start taking a prenatal vitamin with at least 400 micrograms (mcg) of folic acid every day.</li>
                     <li><strong>See your healthcare provider:</strong> It's a good idea to have a preconception checkup to make sure your body is in the best possible shape for baby-making.</li>
-                    <li><strong>Consider this blood test:</strong> You and your partner may want to get genetic carrier screening.</li>
+                    <li><strong>Consider this blood test:</strong> You and your partner may want to get genetic carrier screening to see whether you carry genes that would put your baby at risk for serious inherited illnesses.</li>
                     <li><strong>Have frequent sex:</strong> Studies show that the highest pregnancy rates are in couples who have sex daily or every other day.</li>
                     <li><strong>Make time for self-care:</strong> Reducing your stress levels can increase your odds of conceiving and having a healthy pregnancy.</li>
                     <li><strong>Prepare your body for pregnancy:</strong> A stronger core prevents back problems as your bump grows, and even shortens your recovery time after childbirth.</li>
