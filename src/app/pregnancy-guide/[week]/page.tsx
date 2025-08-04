@@ -38,7 +38,7 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                 <CardTitle className="font-headline text-3xl text-slate-800">Highlights This Week</CardTitle>
             </CardHeader>
             <CardContent className="prose max-w-none text-slate-700">
-                <h3 className="font-semibold text-xl">Are you pregnant this week?</h3>
+                 <h3 className="font-semibold text-xl">Are you pregnant this week?</h3>
                 <p>You're not pregnant yet, but if you conceive this week, you'll be two weeks pregnant. That's because healthcare providers use your last menstrual period to determine your due date, so technically the first day of your period is also the first day of your pregnancy. Since you ovulate about two weeks into your cycle, conception happens around the time you're two weeks pregnant.</p>
                 
                 <h3 className="font-semibold text-xl mt-4">The best time to conceive</h3>
