@@ -151,7 +151,7 @@ const translations = {
 
 const navItems = [
     { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
-    { href: '/health-log', icon: FileText, label: 'Health Log' },
+    { href: '/log-symptoms', icon: FileText, label: 'Health Log' },
     { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
     { href: '/pregnancy-journal', icon: BookOpen, label: 'Journal' },
     { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
