@@ -14,11 +14,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, ChevronLeft, BookText, PlusCircle, Clock } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, BookText, PlusCircle, Clock, Image as ImageIcon, X } from 'lucide-react';
 import { AppointmentsHistory } from '@/components/glowher/AppointmentsHistory';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 
 const appointmentFormSchema = z.object({
@@ -30,6 +31,7 @@ const appointmentFormSchema = z.object({
   location: z.string().optional(),
   purpose: z.string().min(1, "Purpose of visit is required."),
   notes: z.string().max(500).optional(),
+  imageUrl: z.string().optional(),
 });
 
 type AppointmentFormData = z.infer<typeof appointmentFormSchema>;
@@ -43,8 +45,9 @@ export default function AppointmentsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  // State to force re-render of history component
   const [historyKey, setHistoryKey] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentFormSchema),
@@ -55,6 +58,7 @@ export default function AppointmentsPage() {
       notes: "",
       doctor: "",
       location: "",
+      imageUrl: "",
     },
   });
 
@@ -76,7 +80,7 @@ export default function AppointmentsPage() {
     try {
       localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(updatedAppointments));
       setAppointments(updatedAppointments);
-      setHistoryKey(prev => prev + 1); // Update key to trigger re-render
+      setHistoryKey(prev => prev + 1);
     } catch (e) {
       console.error("Failed to save appointments:", e);
       toast({ variant: 'destructive', title: 'Error saving appointment.' });
@@ -103,31 +107,48 @@ export default function AppointmentsPage() {
       notes: "",
       doctor: "",
       location: "",
+      imageUrl: "",
     });
+    setImagePreview(null);
   }
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+            const dataUrl = readerEvent.target?.result as string;
+            form.setValue('imageUrl', dataUrl);
+            setImagePreview(dataUrl);
+        };
+        reader.readAsDataURL(file);
+    }
+  };
+
+
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
-      <header className="container mx-auto px-4 py-6 z-10 sticky top-0 bg-white/30 backdrop-blur-md">
-        <div className="flex justify-between items-center">
+    <div className="flex flex-col min-h-screen bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/1200x/22/56/2b/22562ba3f7c7b7c70ee31d9757b3afb5.jpg')"}}>
+       <div className="absolute inset-0 bg-black/30 z-0"/>
+      <header className="relative z-10 container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center text-white">
           <GlowHerLogo />
-          <Button variant="ghost" onClick={() => router.push('/pregnancy-tracker')}>
+          <Button variant="ghost" onClick={() => router.push('/pregnancy-tracker')} className="text-white hover:bg-white/10 hover:text-white">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Tracker
           </Button>
         </div>
       </header>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="relative z-10 flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-8">
-          <div className="text-center">
+          <div className="text-center text-white">
             <h1 className="font-headline text-4xl md:text-5xl font-bold">Appointments</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Keep track of your prenatal visits and important dates.</p>
+            <p className="mt-2 text-lg text-white/80">Keep track of your prenatal visits and important dates.</p>
           </div>
 
-          <Card className="shadow-lg bg-white/70 backdrop-blur-md">
+          <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><PlusCircle className="text-pink-500"/> Add a New Appointment</CardTitle>
+                <CardTitle className="flex items-center gap-2"><PlusCircle className="text-pink-400"/> Add a New Appointment</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <Form {...form}>
@@ -139,13 +160,13 @@ export default function AppointmentsPage() {
                       name="date"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
-                          <FormLabel className="font-semibold">Date</FormLabel>
+                          <FormLabel className="font-semibold text-white">Date</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
                                 <Button
                                   variant={"outline"}
-                                  className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
+                                  className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 hover:bg-white/20 text-white", !field.value && "text-slate-400")}
                                 >
                                   <CalendarIcon className="mr-2 h-4 w-4" />
                                   {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
@@ -171,11 +192,11 @@ export default function AppointmentsPage() {
                       name="time"
                       render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-semibold">Time</FormLabel>
+                            <FormLabel className="font-semibold text-white">Time</FormLabel>
                             <FormControl>
                                 <div className="relative">
-                                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
-                                    <Input type="time" {...field} className="pl-9"/>
+                                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"/>
+                                    <Input type="time" {...field} className="pl-9 bg-white/10 border-white/20 text-white"/>
                                 </div>
                             </FormControl>
                             <FormMessage />
@@ -189,9 +210,9 @@ export default function AppointmentsPage() {
                     name="purpose"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-semibold">Purpose of Visit</FormLabel>
+                        <FormLabel className="font-semibold text-white">Purpose of Visit</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., 20-week anatomy scan" {...field}/>
+                            <Input placeholder="e.g., 20-week anatomy scan" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-slate-400"/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -204,9 +225,9 @@ export default function AppointmentsPage() {
                         name="doctor"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-semibold">Doctor (Optional)</FormLabel>
+                            <FormLabel className="font-semibold text-white">Doctor (Optional)</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g., Dr. Smith" {...field}/>
+                                <Input placeholder="e.g., Dr. Smith" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-slate-400"/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -217,9 +238,9 @@ export default function AppointmentsPage() {
                         name="location"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-semibold">Location (Optional)</FormLabel>
+                            <FormLabel className="font-semibold text-white">Location (Optional)</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g., General Hospital" {...field}/>
+                                <Input placeholder="e.g., General Hospital" {...field} className="bg-white/10 border-white/20 text-white placeholder:text-slate-400"/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -232,13 +253,13 @@ export default function AppointmentsPage() {
                     name="notes"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-semibold flex items-center gap-2">
-                          <BookText /> Questions or Notes for the Doctor
+                        <FormLabel className="font-semibold flex items-center gap-2 text-white">
+                          <BookText /> Questions or Notes
                         </FormLabel>
                         <FormControl>
                             <Textarea
                                 placeholder="e.g., Ask about exercise recommendations, discuss birth plan..."
-                                className="resize-y"
+                                className="resize-y bg-white/10 border-white/20 text-white placeholder:text-slate-400"
                                 {...field}
                             />
                         </FormControl>
@@ -246,6 +267,45 @@ export default function AppointmentsPage() {
                       </FormItem>
                     )}
                   />
+
+                  <FormItem>
+                    <FormLabel className="font-semibold flex items-center gap-2 text-white">
+                        <ImageIcon /> Attach a Photo (Optional)
+                    </FormLabel>
+                    <FormControl>
+                        <div>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                onChange={handleImageUpload}
+                                accept="image/*"
+                            />
+                            {!imagePreview ? (
+                                <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} className="bg-transparent hover:bg-white/10 border-white/30 text-white">
+                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                    Add Image
+                                </Button>
+                            ) : (
+                                <div className="relative w-48 h-48">
+                                    <Image src={imagePreview} alt="Preview" layout="fill" className="object-cover rounded-md border" />
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="icon"
+                                        className="absolute top-1 right-1 h-7 w-7"
+                                        onClick={() => {
+                                            setImagePreview(null);
+                                            form.setValue('imageUrl', '');
+                                        }}
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </FormControl>
+                  </FormItem>
 
                   <Button type="submit" size="lg" className="w-full bg-pink-500 hover:bg-pink-600 text-white">Save Appointment</Button>
                 </form>
