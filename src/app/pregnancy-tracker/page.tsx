@@ -153,7 +153,8 @@ const navItems = [
     { href: '/', icon: Home, label: 'Dashboard' },
     { href: '/pregnancy-symptom-history', icon: FileText, label: 'Health Log' },
     { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
-    { href: '/pregnancy-guide', icon: BookOpen, label: 'Guide' },
+    { href: '/pregnancy-journal', icon: BookOpen, label: 'Journal' },
+    { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
 ];
 
 export default function PregnancyTrackerPage() {
@@ -379,7 +380,7 @@ export default function PregnancyTrackerPage() {
                     </div>
                 </header>
 
-                <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8">
+                <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8 pb-24 md:pb-8">
                     <div className="text-center md:text-left md:hidden">
                         <h1 className="font-headline text-4xl font-bold text-slate-900">
                             {userName ? `Hi ${userName} 👋` : ''}
@@ -637,7 +638,6 @@ export default function PregnancyTrackerPage() {
                     ))}
                 </div>
             </div>
-            <div className="pb-16 md:pb-0" /> {/* Spacer for bottom nav */}
         </div>
     )
   }
