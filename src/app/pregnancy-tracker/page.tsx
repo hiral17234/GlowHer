@@ -151,7 +151,7 @@ const translations = {
 
 const navItems = [
     { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
-    { href: '/pregnancy-symptom-history', icon: FileText, label: 'Health Log' },
+    { href: '/health-log', icon: FileText, label: 'Health Log' },
     { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
     { href: '/pregnancy-journal', icon: BookOpen, label: 'Journal' },
     { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
@@ -494,7 +494,7 @@ export default function PregnancyTrackerPage() {
                             <CardHeader>
                                 <div className="flex justify-between items-center">
                                     <CardTitle className="font-headline text-2xl text-pink-600">{t.symptomTrackerTitle}</CardTitle>
-                                    <Button variant="outline" onClick={() => router.push('/pregnancy-symptom-history')}>
+                                    <Button variant="outline" onClick={() => router.push('/health-log')}>
                                         <History className="mr-2 h-4 w-4" />
                                         {t.viewHistory}
                                     </Button>

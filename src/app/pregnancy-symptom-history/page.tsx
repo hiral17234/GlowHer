@@ -24,7 +24,7 @@ type LogData = {
   notes?: string;
 };
 
-export default function PregnancySymptomHistoryPage() {
+export default function HealthLogPage() {
   const router = useRouter();
   const [logs, setLogs] = useState<LogData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +59,7 @@ export default function PregnancySymptomHistoryPage() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">Pregnancy Symptom History</h1>
+            <h1 className="font-headline text-4xl md:text-5xl font-bold">Health Log</h1>
             <p className="mt-2 text-lg text-muted-foreground">Review your past symptom entries from your pregnancy journey.</p>
           </div>
 
