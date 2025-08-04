@@ -381,7 +381,7 @@ export default function PregnancyTrackerPage() {
                     </div>
                 </header>
 
-                <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8 pb-24 md:pb-8">
+                <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8 pb-24">
                     <div className="text-center md:text-left md:hidden">
                         <h1 className="font-headline text-4xl font-bold text-slate-900">
                             {userName ? `Hi ${userName} 👋` : ''}
