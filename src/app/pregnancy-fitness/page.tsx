@@ -193,7 +193,13 @@ export default function PregnancyFitnessPage() {
          try {
             const prevCompletedDays = completedDays;
             const totalMinutes = duration.hours * 60 + duration.minutes;
-            const finalData = { ...data, minutes: totalMinutes };
+            
+            // Read existing data for the day to avoid overwriting other fields if any
+            const logKey = `${PREGNANCY_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`;
+            const existingLogJSON = localStorage.getItem(logKey);
+            let dayLog = existingLogJSON ? JSON.parse(existingLogJSON) : {};
+
+            const finalData = { ...dayLog, ...data, minutes: totalMinutes };
             
             const validation = pregnancyLogSchema.safeParse(finalData);
             if(!validation.success) {
@@ -206,13 +212,20 @@ export default function PregnancyFitnessPage() {
                 return;
             }
 
-            localStorage.setItem(`${PREGNANCY_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(finalData));
+            localStorage.setItem(logKey, JSON.stringify(finalData));
             toast({ title: "Movement Logged!", description: `Logged ${totalMinutes} minutes for ${format(data.logDate, 'PPP')}.` }); 
             
             const goalDays = pregnancyGoalForm.getValues('days');
-            const newCompletedDays = weeklyPregnancyLogs.filter(d => d.minutes > 0).length + (totalMinutes > 0 ? 1 : 0);
             
             loadWeeklyPregnancyLogs();
+
+            // We need to re-check the completed days after loading the logs.
+            // This is a bit tricky with state updates, so we'll check based on the new log.
+            const weeklyLogsAfterUpdate = [...weeklyPregnancyLogs];
+            const dayIndex = weeklyLogsAfterUpdate.findIndex(d => d.name === format(data.logDate, 'EEE'));
+            if(dayIndex !== -1) weeklyLogsAfterUpdate[dayIndex].minutes = totalMinutes;
+            const newCompletedDays = weeklyLogsAfterUpdate.filter(d => d.minutes > 0).length;
+
 
             if (prevCompletedDays < goalDays && newCompletedDays >= goalDays) {
                 toast({
@@ -417,3 +430,5 @@ export default function PregnancyFitnessPage() {
         </div>
     );
 }
+
+    

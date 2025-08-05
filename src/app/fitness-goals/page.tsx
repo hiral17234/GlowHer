@@ -32,7 +32,7 @@ const defaultGoalSchema = z.object({
   workouts: z.coerce.number().min(1, "Minimum 1 workout").max(7, "Maximum 7 workouts"),
 });
 
-const defaultLogSchema = z.object({
+const logFormSchema = z.object({
     logDate: z.date(),
     activityType: z.enum(["step-based", "workout-based"]),
     // Step-based fields
@@ -41,7 +41,6 @@ const defaultLogSchema = z.object({
     // Workout-based fields
     workoutType: z.string().optional(),
     duration: z.coerce.number().min(5).optional(),
-    intensity: z.enum(["Low", "Medium", "High"]).optional(),
 }).refine(data => {
     if (data.activityType === 'step-based') {
         return data.steps !== undefined && data.steps >= 0 && data.stepWorkoutType;
@@ -58,7 +57,18 @@ const defaultLogSchema = z.object({
 
 // --- TYPES ---
 type DefaultGoalData = z.infer<typeof defaultGoalSchema>;
-type DefaultLogData = z.infer<typeof defaultLogSchema>;
+type LogFormData = z.infer<typeof logFormSchema>;
+type DailyFitnessLog = {
+    logDate: string;
+    steps?: {
+        count: number;
+        workoutType: string;
+    };
+    workout?: {
+        type: string;
+        duration: number; // in minutes
+    };
+};
 
 // --- LOCAL STORAGE KEYS ---
 const DEFAULT_GOALS_KEY = 'glowher-fitness-goals';
@@ -87,8 +97,8 @@ export default function FitnessGoalsPage() {
 
     // --- FORM HOOKS ---
     const defaultGoalForm = useForm<DefaultGoalData>({ resolver: zodResolver(defaultGoalSchema), defaultValues: { steps: 8000, workouts: 3 }});
-    const defaultLogForm = useForm<DefaultLogData>({ 
-        resolver: zodResolver(defaultLogSchema), 
+    const logForm = useForm<LogFormData>({ 
+        resolver: zodResolver(logFormSchema), 
         defaultValues: { 
             logDate: new Date(),
             activityType: 'step-based', 
@@ -109,7 +119,7 @@ export default function FitnessGoalsPage() {
             const initialDate = lastDateStr ? new Date(lastDateStr) : new Date();
 
             loadLogForDate(initialDate);
-            defaultLogForm.setValue('logDate', initialDate);
+            logForm.setValue('logDate', initialDate);
 
             loadWeeklyLogs();
 
@@ -125,16 +135,24 @@ export default function FitnessGoalsPage() {
         try {
             const savedData = localStorage.getItem(key);
             if (savedData) {
-                const parsedData = JSON.parse(savedData);
-                parsedData.logDate = new Date(parsedData.logDate);
-                defaultLogForm.reset(parsedData);
-                setSelectedActivityType(parsedData.activityType);
+                const parsedData: DailyFitnessLog = JSON.parse(savedData);
+                logForm.reset({
+                    logDate: date,
+                    activityType: 'step-based',
+                    steps: parsedData.steps?.count || 0,
+                    stepWorkoutType: parsedData.steps?.workoutType || 'Walking',
+                    workoutType: parsedData.workout?.type || undefined,
+                    duration: parsedData.workout?.duration || undefined,
+                });
+                setSelectedActivityType('step-based');
             } else {
-                defaultLogForm.reset({
+                logForm.reset({
                     logDate: date,
                     activityType: 'step-based',
                     steps: 0,
                     stepWorkoutType: 'Walking',
+                    duration: undefined,
+                    workoutType: undefined,
                 });
                 setSelectedActivityType('step-based');
             }
@@ -145,7 +163,7 @@ export default function FitnessGoalsPage() {
 
 
      // Effect for handling date changes in default log form
-    const watchedDefaultLogDate = defaultLogForm.watch('logDate');
+    const watchedDefaultLogDate = logForm.watch('logDate');
     useEffect(() => {
         if (!watchedDefaultLogDate) return;
         
@@ -195,9 +213,15 @@ export default function FitnessGoalsPage() {
         // Streak calculation
         for (let i = 0; i < 365; i++) {
             const date = subDays(today, i);
-            const log = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+            const logKey = `${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`;
+            const log = localStorage.getItem(logKey);
             if (log) {
-                if (!streakBroken) consecutiveDays++;
+                const parsedLog: DailyFitnessLog = JSON.parse(log);
+                if (parsedLog.steps || parsedLog.workout) {
+                    if (!streakBroken) consecutiveDays++;
+                } else {
+                     streakBroken = true;
+                }
             } else {
                 streakBroken = true;
             }
@@ -211,20 +235,21 @@ export default function FitnessGoalsPage() {
         for (let i = 0; i < 7; i++) {
             const date = addDays(weekStart, i);
             const dayName = format(date, 'EEE');
-            const savedLog = localStorage.getItem(`${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`);
+            const logKey = `${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`;
+            const savedLog = localStorage.getItem(logKey);
             
             let steps = 0;
             let minutes = 0;
 
             if (savedLog) {
                 try {
-                    const logData = JSON.parse(savedLog);
-                    if (logData.activityType === 'workout-based') {
-                        minutes = logData.duration || 0;
+                    const logData: DailyFitnessLog = JSON.parse(savedLog);
+                    if (logData.workout) {
+                        minutes = logData.workout.duration || 0;
                         workoutsThisWeek++;
                     }
-                    if (logData.activityType === 'step-based') {
-                        steps = logData.steps || 0;
+                    if (logData.steps) {
+                        steps = logData.steps.count || 0;
                     }
                 } catch(e) { console.error("Error parsing log for chart", e); }
             }
@@ -240,17 +265,29 @@ export default function FitnessGoalsPage() {
     // --- FORM SUBMISSION HANDLERS ---
     function onGoalSubmit(data: DefaultGoalData) { try { localStorage.setItem(DEFAULT_GOALS_KEY, JSON.stringify(data)); toast({ title: "Goals Updated!"}); setIsEditingGoals(false); } catch(e) { toast({ variant: 'destructive', title: "Error" }); }}
     
-    function onLogSubmit(data: DefaultLogData) { 
+    function onLogSubmit(data: LogFormData) { 
         try { 
             const prevCompletedWorkouts = completedWorkouts;
-            localStorage.setItem(`${DEFAULT_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`, JSON.stringify(data)); 
-            
+            const logKey = `${DEFAULT_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`;
+
+            // Read existing log for the day
+            const existingLogJSON = localStorage.getItem(logKey);
+            let dayLog: DailyFitnessLog = existingLogJSON 
+                ? JSON.parse(existingLogJSON) 
+                : { logDate: format(data.logDate, 'yyyy-MM-dd') };
+
             let toastMessage = "";
-            if (data.activityType === 'step-based') {
-                toastMessage = `Logged ${data.steps?.toLocaleString()} steps of ${data.stepWorkoutType} for ${format(data.logDate, 'PPP')}.`;
-            } else {
+
+            if (data.activityType === 'step-based' && data.steps !== undefined && data.stepWorkoutType) {
+                dayLog.steps = { count: data.steps, workoutType: data.stepWorkoutType };
+                toastMessage = `Logged ${data.steps?.toLocaleString()} steps for ${format(data.logDate, 'PPP')}.`;
+            } else if (data.activityType === 'workout-based' && data.duration && data.workoutType) {
+                dayLog.workout = { type: data.workoutType, duration: data.duration };
                 toastMessage = `Logged ${data.duration} minutes of ${data.workoutType} for ${format(data.logDate, 'PPP')}.`;
             }
+            
+            localStorage.setItem(logKey, JSON.stringify(dayLog)); 
+
             toast({ title: "Activity Logged!", description: toastMessage });
             
             loadWeeklyLogs();
@@ -333,11 +370,11 @@ export default function FitnessGoalsPage() {
                                             <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Activity</CardTitle>
                                         </CardHeader>
                                         <CardContent>
-                                            <Form {...defaultLogForm}>
-                                                <form onSubmit={defaultLogForm.handleSubmit(onLogSubmit)} className="space-y-4">
-                                                    <FormField control={defaultLogForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel className="flex items-center gap-2"><CalendarIcon className="h-4 w-4"/>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
+                                            <Form {...logForm}>
+                                                <form onSubmit={logForm.handleSubmit(onLogSubmit)} className="space-y-4">
+                                                    <FormField control={logForm.control} name="logDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel className="flex items-center gap-2"><CalendarIcon className="h-4 w-4"/>Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={"w-[240px] pl-3 text-left font-normal"}><CalendarIcon className="ml-auto h-4 w-4 opacity-50" />{field.value ? format(field.value, "PPP") : <span>Pick a date</span>}</Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus /></PopoverContent></Popover><FormMessage/></FormItem>)}/>
                                                     <FormField
-                                                        control={defaultLogForm.control}
+                                                        control={logForm.control}
                                                         name="activityType"
                                                         render={({ field }) => (
                                                         <FormItem>
@@ -357,14 +394,14 @@ export default function FitnessGoalsPage() {
                                                     />
                                                     {selectedActivityType === 'step-based' && (
                                                         <>
-                                                            <FormField control={defaultLogForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/> Steps Taken</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                                                            <FormField control={defaultLogForm.control} name="stepWorkoutType" render={({ field }) => (<FormItem><FormLabel>Type of Step-Based Workout</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Running">Running</SelectItem><SelectItem value="Hiking">Hiking</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                                            <FormField control={logForm.control} name="steps" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Footprints/> Steps Taken</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                            <FormField control={logForm.control} name="stepWorkoutType" render={({ field }) => (<FormItem><FormLabel>Type of Step-Based Workout</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Walking">Walking</SelectItem><SelectItem value="Running">Running</SelectItem><SelectItem value="Hiking">Hiking</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
                                                         </>
                                                     )}
                                                     {selectedActivityType === 'workout-based' && (
                                                         <>
-                                                            <FormField control={defaultLogForm.control} name="workoutType" render={({ field }) => (<FormItem><FormLabel>Workout Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Pilates">Pilates</SelectItem><SelectItem value="Dance">Dance</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
-                                                            <FormField control={defaultLogForm.control} name="duration" render={({ field }) => (<FormItem><FormLabel>Duration (minutes)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                                            <FormField control={logForm.control} name="workoutType" render={({ field }) => (<FormItem><FormLabel>Workout Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a workout" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Yoga">Yoga</SelectItem><SelectItem value="Strength Training">Strength Training</SelectItem><SelectItem value="Pilates">Pilates</SelectItem><SelectItem value="Dance">Dance</SelectItem><SelectItem value="Cycling">Cycling</SelectItem><SelectItem value="Swimming">Swimming</SelectItem><SelectItem value="Other">Other</SelectItem></SelectContent></Select><FormMessage/></FormItem>)}/>
+                                                            <FormField control={logForm.control} name="duration" render={({ field }) => (<FormItem><FormLabel>Duration (minutes)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                                                         </>
                                                     )}
                                                     <Button type="submit" className="w-full">Log Activity</Button>
@@ -485,3 +522,5 @@ export default function FitnessGoalsPage() {
         </div>
     );
 }
+
+    
