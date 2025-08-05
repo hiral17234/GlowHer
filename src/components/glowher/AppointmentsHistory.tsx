@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, MapPin, Stethoscope, BookText, Trash2, ImageIcon } from 'lucide-react';
+import { Calendar, Clock, MapPin, Stethoscope, BookText, Trash2, ImageIcon, Edit } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Appointment } from '@/app/appointments/page';
 import {
@@ -30,9 +30,10 @@ import Image from 'next/image';
 interface AppointmentsHistoryProps {
     appointments: Appointment[];
     setAppointments: (appointments: Appointment[]) => void;
+    onEdit: (appointment: Appointment) => void;
 }
 
-export function AppointmentsHistory({ appointments, setAppointments }: AppointmentsHistoryProps) {
+export function AppointmentsHistory({ appointments, setAppointments, onEdit }: AppointmentsHistoryProps) {
 
   const upcomingAppointments = appointments
     .filter(a => isFuture(parseISO(a.date.toISOString())))
@@ -89,25 +90,30 @@ export function AppointmentsHistory({ appointments, setAppointments }: Appointme
                                 </div>
                             </div>
                         )}
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="sm" className="mt-2">
-                                    <Trash2 className="mr-2 h-4 w-4"/> Delete
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This will permanently delete this appointment. This action cannot be undone.
-                                </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(appt.id)}>Delete</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        <div className="flex gap-2">
+                            <Button variant="outline" size="sm" onClick={() => onEdit(appt)} className="mt-2 bg-transparent hover:bg-white/10 text-white">
+                                <Edit className="mr-2 h-4 w-4"/> Edit
+                            </Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive" size="sm" className="mt-2">
+                                        <Trash2 className="mr-2 h-4 w-4"/> Delete
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This will permanently delete this appointment. This action cannot be undone.
+                                    </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => handleDelete(appt.id)}>Delete</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   ))}

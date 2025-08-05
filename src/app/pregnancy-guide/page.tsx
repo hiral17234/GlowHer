@@ -1,24 +1,12 @@
 
 "use client";
 
-import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
-import { ChevronLeft, Home, PanelLeft, FileText, CalendarCheck, Library, BookOpen } from 'lucide-react';
 import { weeklyDevelopment } from '@/lib/pregnancy-data';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-
-const navItems = [
-    { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
-    { href: '/log-symptoms', icon: FileText, label: 'Health Log' },
-    { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
-    { href: '/pregnancy-journal', icon: BookOpen, label: 'Journal' },
-    { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
-];
+import { PregnancyNav } from '@/components/glowher/PregnancyNav';
 
 const Trimester = ({ title, weeks }: { title: string; weeks: typeof weeklyDevelopment }) => {
     const router = useRouter();
@@ -56,53 +44,22 @@ const Trimester = ({ title, weeks }: { title: string; weeks: typeof weeklyDevelo
 
 
 export default function PregnancyGuidePage() {
-    const router = useRouter();
-    const pathname = usePathname();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
     const firstTrimesterWeeks = weeklyDevelopment.filter(w => w.week >= 1 && w.week <= 13);
     const secondTrimesterWeeks = weeklyDevelopment.filter(w => w.week >= 14 && w.week <= 27);
     const thirdTrimesterWeeks = weeklyDevelopment.filter(w => w.week >= 28 && w.week <= 41);
 
-
     return (
         <div className="relative flex min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
-            <nav className={cn(
-                "hidden md:flex flex-col p-4 space-y-2 bg-white/50 border-r border-white/30 min-h-screen sticky top-0 transition-all duration-300",
-                isSidebarOpen ? "w-64" : "w-20"
-            )}>
-                <div className="p-2 mb-4 flex items-center justify-between">
-                    <GlowHerLogo className={cn(!isSidebarOpen && "hidden")} />
-                </div>
-                {navItems.map(item => (
-                    <Link key={item.href} href={item.href} title={item.label}>
-                         <Button
-                            variant={pathname === item.href ? 'secondary' : 'ghost'}
-                            className={cn("w-full justify-start text-base", !isSidebarOpen && "justify-center")}
-                        >
-                            <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
-                            <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
-                        </Button>
-                    </Link>
-                ))}
-            </nav>
+            <PregnancyNav />
 
             <div className="flex-1 flex flex-col">
                 <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
-                    <div className="flex items-center justify-between">
-                        <Button variant="ghost" size="icon" className="hidden md:inline-flex" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                            <PanelLeft className="h-6 w-6" />
-                        </Button>
-                        <div className="md:hidden">
-                            <GlowHerLogo />
-                        </div>
+                     <div className="flex items-center justify-between">
+                         <div>{/* Spacer */}</div>
                         <h1 className="font-headline text-3xl font-bold text-slate-900 hidden md:block">
                             Pregnancy Guide
                         </h1>
-                        <Button variant="ghost" onClick={() => router.push('/')}>
-                            <ChevronLeft className="mr-2 h-4 w-4" />
-                            Main Dashboard
-                        </Button>
+                         <div>{/* Spacer */}</div>
                     </div>
                 </header>
 
@@ -117,22 +74,6 @@ export default function PregnancyGuidePage() {
                     <Trimester title="Third Trimester" weeks={thirdTrimesterWeeks} />
 
                 </main>
-            </div>
-
-            <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white/80 backdrop-blur-md border-t border-white/30">
-                <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-                    {navItems.map((item) => {
-                        const isActive = pathname === item.href;
-                        return (
-                             <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/50 group">
-                                <item.icon className={cn("w-6 h-6 mb-1 text-slate-500 group-hover:text-pink-600", isActive && "text-pink-600")} />
-                                <span className={cn("text-xs text-slate-500 group-hover:text-pink-600", isActive && "text-pink-600")}>
-                                    {item.label}
-                                </span>
-                            </Link>
-                        )
-                    })}
-                </div>
             </div>
         </div>
     );

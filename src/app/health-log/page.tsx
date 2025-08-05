@@ -15,6 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { ChevronLeft, Calendar, Tag, BookText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-pregnancy-symptom-';
 
@@ -66,7 +67,11 @@ export default function HealthLogPage() {
           <Card className="shadow-lg">
             <CardContent className="p-6">
               {loading ? (
-                <p>Loading history...</p>
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                </div>
               ) : logs.length === 0 ? (
                 <div className="text-center py-12">
                     <p className="text-muted-foreground text-lg">You haven't logged any symptoms yet.</p>

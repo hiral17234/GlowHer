@@ -12,16 +12,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, ChevronLeft, BookText, PlusCircle, Clock, Image as ImageIcon, X, Home, PanelLeft, FileText, CalendarCheck, Library, BookOpen } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, BookText, PlusCircle, Clock, Image as ImageIcon, X } from 'lucide-react';
 import { AppointmentsHistory } from '@/components/glowher/AppointmentsHistory';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import Link from 'next/link';
-
+import { PregnancyNav } from '@/components/glowher/PregnancyNav';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const appointmentFormSchema = z.object({
   date: z.date({
@@ -41,24 +39,15 @@ export type Appointment = AppointmentFormData & { id: string };
 
 const APPOINTMENTS_KEY = 'glowher-appointments';
 
-
-const navItems = [
-    { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
-    { href: '/log-symptoms', icon: FileText, label: 'Health Log' },
-    { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
-    { href: '/pregnancy-journal', icon: BookOpen, label: 'Journal' },
-    { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
-];
-
 export default function AppointmentsPage() {
   const router = useRouter();
-  const pathname = usePathname();
   const { toast } = useToast();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [historyKey, setHistoryKey] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentFormSchema),
@@ -84,6 +73,8 @@ export default function AppointmentsPage() {
       }
     } catch(e) {
       console.error("Failed to load appointments:", e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -99,18 +90,23 @@ export default function AppointmentsPage() {
   }
 
   function onSubmit(data: AppointmentFormData) {
-    const newAppointment: Appointment = {
-      ...data,
-      id: new Date().toISOString(),
-    };
+    if (editingId) {
+        const updatedAppointments = appointments.map(appt => 
+            appt.id === editingId ? { ...data, id: editingId } : appt
+        );
+        saveAppointments(updatedAppointments);
+        toast({ title: "Appointment Updated!", description: `Your appointment for ${data.purpose} has been updated.` });
+        setEditingId(null);
+    } else {
+        const newAppointment: Appointment = {
+            ...data,
+            id: new Date().toISOString(),
+        };
+        const updatedAppointments = [...appointments, newAppointment];
+        saveAppointments(updatedAppointments);
+        toast({ title: "Appointment Saved!", description: `Your appointment for ${data.purpose} has been added.` });
+    }
     
-    const updatedAppointments = [...appointments, newAppointment];
-    saveAppointments(updatedAppointments);
-    
-    toast({
-      title: "Appointment Saved!",
-      description: `Your appointment for ${data.purpose} has been added.`,
-    });
     form.reset({
       date: new Date(),
       time: format(new Date(), 'HH:mm'),
@@ -122,6 +118,15 @@ export default function AppointmentsPage() {
     });
     setImagePreview(null);
   }
+
+  const handleEdit = (appointment: Appointment) => {
+    setEditingId(appointment.id);
+    form.reset({
+        ...appointment,
+        date: parseISO(appointment.date.toISOString()),
+    });
+    setImagePreview(appointment.imageUrl || null);
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -136,39 +141,30 @@ export default function AppointmentsPage() {
     }
   };
 
+  const cancelEdit = () => {
+    setEditingId(null);
+    form.reset({
+      date: new Date(),
+      time: format(new Date(), 'HH:mm'),
+      purpose: "",
+      notes: "",
+      doctor: "",
+      location: "",
+      imageUrl: "",
+    });
+    setImagePreview(null);
+  };
 
   return (
     <div className="relative flex min-h-screen bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/1200x/22/56/2b/22562ba3f7c7b7c70ee31d9757b3afb5.jpg')"}}>
        <div className="absolute inset-0 bg-black/30 z-0"/>
        
-       <nav className={cn(
-                "hidden md:flex flex-col p-4 space-y-2 bg-black/10 backdrop-blur-lg border-r border-white/20 min-h-screen sticky top-0 transition-all duration-300",
-                isSidebarOpen ? "w-64" : "w-20"
-            )}>
-                <div className="p-2 mb-4 flex items-center justify-between">
-                    <GlowHerLogo className={cn("text-white", !isSidebarOpen && "hidden")} />
-                </div>
-                {navItems.map(item => (
-                    <Link key={item.href} href={item.href} title={item.label}>
-                         <Button
-                            variant={pathname === item.href ? 'secondary' : 'ghost'}
-                            className={cn("w-full justify-start text-base text-white hover:bg-white/10 hover:text-white", !isSidebarOpen && "justify-center")}
-                        >
-                            <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
-                            <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
-                        </Button>
-                    </Link>
-                ))}
-            </nav>
+       <PregnancyNav />
 
        <div className="flex-1 flex flex-col">
             <header className="relative z-10 container mx-auto px-4 py-6 md:flex justify-between items-center hidden">
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                    <PanelLeft className="h-6 w-6" />
-                </Button>
-                <div className="md:hidden">
-                    <GlowHerLogo />
-                </div>
+                 {/* This space is intentionally left for the sidebar trigger in PregnancyNav */}
+                 <div></div>
                 <h1 className="font-headline text-3xl font-bold text-white hidden md:block">
                     Appointments
                 </h1>
@@ -187,7 +183,7 @@ export default function AppointmentsPage() {
 
                 <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><PlusCircle className="text-pink-400"/> Add a New Appointment</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><PlusCircle className="text-pink-400"/> {editingId ? 'Edit Appointment' : 'Add a New Appointment'}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                     <Form {...form}>
@@ -205,7 +201,7 @@ export default function AppointmentsPage() {
                                     <FormControl>
                                         <Button
                                         variant={"outline"}
-                                        className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 hover:bg-white/20 text-white", !field.value && "text-slate-400")}
+                                        className="w-full justify-start text-left font-normal bg-white/10 border-white/20 hover:bg-white/20 text-white"
                                         >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
                                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
@@ -346,33 +342,31 @@ export default function AppointmentsPage() {
                             </FormControl>
                         </FormItem>
 
-                        <Button type="submit" size="lg" className="w-full bg-pink-500 hover:bg-pink-600 text-white">Save Appointment</Button>
+                        <div className="flex gap-4">
+                            <Button type="submit" size="lg" className="w-full bg-pink-500 hover:bg-pink-600 text-white">{editingId ? 'Update Appointment' : 'Save Appointment'}</Button>
+                            {editingId && <Button type="button" size="lg" variant="ghost" className="w-full text-white hover:bg-white/10" onClick={cancelEdit}>Cancel</Button>}
+                        </div>
                         </form>
                     </Form>
                     </CardContent>
                 </Card>
                 
-                <AppointmentsHistory key={historyKey} appointments={appointments} setAppointments={saveAppointments} />
-
+                {loading ? (
+                    <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
+                        <CardHeader>
+                            <Skeleton className="h-6 w-1/2"/>
+                            <Skeleton className="h-4 w-3/4"/>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                           <Skeleton className="h-12 w-full"/>
+                           <Skeleton className="h-12 w-full"/>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <AppointmentsHistory key={historyKey} appointments={appointments} setAppointments={saveAppointments} onEdit={handleEdit} />
+                )}
                 </div>
             </main>
-
-            <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-black/30 backdrop-blur-md border-t border-white/20">
-                <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-                    {navItems.map((item) => {
-                        const isActive = pathname === item.href;
-                        return (
-                            <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/10 group">
-                                <item.icon className={cn("w-6 h-6 mb-1 text-white/70 group-hover:text-pink-400", isActive && "text-pink-400")} />
-                                <span className={cn("text-xs text-white/70 group-hover:text-pink-400", isActive && "text-pink-400")}>
-                                    {item.label}
-                                </span>
-                            </Link>
-                        )
-                    })}
-                </div>
-            </div>
-
         </div>
     </div>
   );

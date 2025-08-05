@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import {
   Accordion,
   AccordionContent,
@@ -16,6 +16,7 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { ChevronLeft, Calendar, Tag, Smile, Edit } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-log-';
 
@@ -78,7 +79,11 @@ export default function LogHistoryPage() {
               <Card className="shadow-lg bg-black/20 backdrop-blur-lg border-white/20 text-white">
                 <CardContent className="p-6">
                   {loading ? (
-                    <p>Loading history...</p>
+                    <div className="space-y-4">
+                      <Skeleton className="h-12 w-full" />
+                      <Skeleton className="h-12 w-full" />
+                      <Skeleton className="h-12 w-full" />
+                    </div>
                   ) : logs.length === 0 ? (
                     <div className="text-center py-12">
                         <p className="text-white/70 text-lg">You haven't logged any symptoms or moods yet.</p>

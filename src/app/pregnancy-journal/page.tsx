@@ -12,13 +12,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, ChevronLeft, BookText, History, ImageIcon, PlusCircle, X, Home, PanelLeft, FileText, CalendarCheck, Library, BookOpen as BookOpenIcon } from 'lucide-react';
+import { CalendarIcon, BookText, History, ImageIcon, PlusCircle, X } from 'lucide-react';
 import { RichTextEditor } from '@/components/glowher/RichTextEditor';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { PregnancyNav } from '@/components/glowher/PregnancyNav';
+
 
 const themes = [
     { name: 'None', url: '' },
@@ -48,22 +48,12 @@ type FormData = z.infer<typeof FormSchema>;
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-pregnancy-journal-';
 
-const navItems = [
-    { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
-    { href: '/log-symptoms', icon: FileText, label: 'Health Log' },
-    { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
-    { href: '/pregnancy-journal', icon: BookOpenIcon, label: 'Journal' },
-    { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
-];
-
 export default function PregnancyJournalPage() {
   const router = useRouter();
-  const pathname = usePathname();
   const { toast } = useToast();
   const [currentDate, setCurrentDate] = useState(new Date());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -143,42 +133,16 @@ export default function PregnancyJournalPage() {
 
   return (
     <div className="relative flex min-h-screen text-foreground" style={{ backgroundImage: "url('https://i.pinimg.com/736x/e2/43/86/e243863fedaf6e675fd150476c75a35a.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
-      <nav className={cn(
-        "hidden md:flex flex-col p-4 space-y-2 bg-black/10 backdrop-blur-lg border-r border-white/20 min-h-screen sticky top-0 transition-all duration-300",
-        isSidebarOpen ? "w-64" : "w-20"
-        )}>
-            <div className="p-2 mb-4 flex items-center justify-between">
-                <GlowHerLogo className={cn("text-white", !isSidebarOpen && "hidden")} />
-            </div>
-            {navItems.map(item => (
-                <Link key={item.href} href={item.href} title={item.label}>
-                        <Button
-                        variant={pathname === item.href ? 'secondary' : 'ghost'}
-                        className={cn("w-full justify-start text-base text-white hover:bg-white/10 hover:text-white", !isSidebarOpen && "justify-center")}
-                    >
-                        <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
-                        <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
-                    </Button>
-                </Link>
-            ))}
-        </nav>
+      <PregnancyNav />
 
         <div className="flex-1 flex flex-col">
             <header className="container mx-auto px-4 py-4 sticky top-0 bg-black/10 backdrop-blur-md z-40 border-b border-white/20">
                 <div className="flex items-center justify-between">
-                    <Button variant="ghost" size="icon" className="hidden md:inline-flex text-white hover:bg-white/10 hover:text-white" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                        <PanelLeft className="h-6 w-6" />
-                    </Button>
-                    <div className="md:hidden">
-                        <GlowHerLogo className="text-white"/>
-                    </div>
+                     <div>{/* Spacer */}</div>
                      <h1 className="font-headline text-3xl font-bold text-white hidden md:block">
                         Pregnancy Journal
                     </h1>
-                    <Button variant="outline" onClick={() => router.push('/')} className="bg-white/20 text-white hover:bg-white/30 border-white/30">
-                        <ChevronLeft className="mr-2 h-4 w-4" />
-                        Main Dashboard
-                    </Button>
+                     <div>{/* Spacer */}</div>
                 </div>
             </header>
 
@@ -342,22 +306,6 @@ export default function PregnancyJournalPage() {
                 </Card>
                 </div>
             </main>
-        </div>
-
-        <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-black/30 backdrop-blur-md border-t border-white/20">
-            <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-                {navItems.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                            <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/10 group">
-                            <item.icon className={cn("w-6 h-6 mb-1 text-white/70 group-hover:text-pink-400", isActive && "text-pink-400")} />
-                            <span className={cn("text-xs text-white/70 group-hover:text-pink-400", isActive && "text-pink-400")}>
-                                {item.label}
-                            </span>
-                        </Link>
-                    )
-                })}
-            </div>
         </div>
     </div>
   );
