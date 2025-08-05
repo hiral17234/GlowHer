@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PregnancyNav } from '@/components/glowher/PregnancyNav';
-import { Footprints, Play, RotateCw, Timer, Siren, CheckCircle } from 'lucide-react';
+import { Footprints, Play, RotateCw, Timer, Siren, CheckCircle, Square } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { KickCounterHistory } from './KickCounterHistory';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -12,7 +13,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 export type KickCounterSession = {
     startTime: number;
     endTime: number;
-    kicks: { time: number }[];
+    kickCount: number;
+    duration: number; // in seconds
 };
 
 const KICK_COUNT_LOG_KEY = 'glowher-kick-count-log';
@@ -53,6 +55,32 @@ export default function KickCounterPage() {
         setTimer(0);
         setSessionStartTime(Date.now());
     };
+    
+    const saveSession = (finalKickCount: number, finalDuration: number) => {
+        if (!sessionStartTime) return;
+        
+        const newSession: KickCounterSession = {
+            startTime: sessionStartTime,
+            endTime: Date.now(),
+            kickCount: finalKickCount,
+            duration: finalDuration,
+        };
+        const updatedLog = [newSession, ...sessionLog];
+        setSessionLog(updatedLog);
+        try {
+            localStorage.setItem(KICK_COUNT_LOG_KEY, JSON.stringify(updatedLog));
+            return true;
+        } catch (e) {
+            console.error(e);
+            toast({
+                variant: 'destructive',
+                title: "Error Saving Session",
+                description: "There was an issue saving your session log."
+            });
+            return false;
+        }
+    };
+
 
     const handleKick = () => {
         if (!isCounting || kickCount >= 10) return;
@@ -62,25 +90,25 @@ export default function KickCounterPage() {
 
         if (newKickCount === 10) {
             setIsCounting(false);
-            const endTime = Date.now();
-            const newSession: KickCounterSession = {
-                startTime: sessionStartTime!,
-                endTime: endTime,
-                kicks: [...Array(10)].map(() => ({ time: endTime })) // Simplified for logging
-            };
-            const updatedLog = [newSession, ...sessionLog];
-            setSessionLog(updatedLog);
-            try {
-                 localStorage.setItem(KICK_COUNT_LOG_KEY, JSON.stringify(updatedLog));
-            } catch(e) { console.error(e); }
-
-            toast({
-                title: "Session Complete!",
-                description: `You felt 10 kicks in ${Math.floor(timer / 60)} minutes and ${timer % 60} seconds.`,
-            });
+            if (saveSession(newKickCount, timer)) {
+                toast({
+                    title: "Session Complete!",
+                    description: `You felt 10 kicks in ${Math.floor(timer / 60)} minutes and ${timer % 60} seconds.`,
+                });
+            }
         }
     };
     
+    const handleStopSession = () => {
+        setIsCounting(false);
+        if (saveSession(kickCount, timer)) {
+            toast({
+                title: "Session Saved",
+                description: `You logged ${kickCount} kicks over ${Math.floor(timer / 60)}m ${timer % 60}s.`
+            });
+        }
+    };
+
     const resetSession = () => {
         setIsCounting(false);
         setKickCount(0);
@@ -143,9 +171,14 @@ export default function KickCounterPage() {
                                     </Button>
                                 )}
                                 {isCounting && (
-                                    <Button onClick={handleKick} size="lg" className="w-full h-16 text-lg bg-pink-500 hover:bg-pink-600 text-white">
-                                        <Footprints className="mr-2 h-6 w-6"/> I Felt a Kick!
-                                    </Button>
+                                    <div className="space-y-4">
+                                        <Button onClick={handleKick} size="lg" className="w-full h-16 text-lg bg-pink-500 hover:bg-pink-600 text-white">
+                                            <Footprints className="mr-2 h-6 w-6"/> I Felt a Kick!
+                                        </Button>
+                                         <Button onClick={handleStopSession} size="lg" variant="outline" className="w-full h-12 text-base">
+                                            <Square className="mr-2 h-5 w-5"/> Stop & Save Session
+                                        </Button>
+                                    </div>
                                 )}
                                 {kickCount === 10 && (
                                     <div className="p-4 rounded-lg bg-green-100 text-green-800">
@@ -166,4 +199,3 @@ export default function KickCounterPage() {
         </div>
     );
 }
-    

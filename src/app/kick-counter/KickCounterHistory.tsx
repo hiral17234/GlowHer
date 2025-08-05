@@ -1,6 +1,6 @@
+
 "use client";
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { Activity } from 'lucide-react';
@@ -42,16 +42,16 @@ export function KickCounterHistory({ sessions }: KickCounterHistoryProps) {
                     {sessions.map(session => (
                         <div key={session.startTime} className="p-4 rounded-lg bg-white/40 border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                             <div>
-                                <p className="text-sm text-slate-500">Date</p>
-                                <p className="font-semibold text-slate-800">{format(new Date(session.startTime), 'MMM d, yyyy')}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-slate-500">Start Time</p>
-                                <p className="font-semibold text-slate-800">{format(new Date(session.startTime), 'p')}</p>
+                                <p className="text-sm text-slate-500">Date & Time</p>
+                                <p className="font-semibold text-slate-800">{format(new Date(session.startTime), 'MMM d, p')}</p>
                             </div>
                              <div>
-                                <p className="text-sm text-slate-500">Duration for 10 Kicks</p>
-                                <p className="font-semibold text-slate-800">{Math.floor((session.endTime - session.startTime) / 60000)} minutes</p>
+                                <p className="text-sm text-slate-500">Kicks Counted</p>
+                                <p className="font-semibold text-slate-800">{session.kickCount}</p>
+                            </div>
+                             <div>
+                                <p className="text-sm text-slate-500">Duration</p>
+                                <p className="font-semibold text-slate-800">{Math.floor(session.duration / 60)}m {session.duration % 60}s</p>
                             </div>
                         </div>
                     ))}
