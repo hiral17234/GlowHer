@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CalendarIcon, ChevronLeft, Info, Droplet, Sun, Moon, Wind, Heart, Brain, Dumbbell, Utensils, Coffee, Shield, CheckCircle2, Calendar as CalendarIconMini, CircleDotDashed, Activity, AlertTriangle } from 'lucide-react';
-import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -19,6 +18,7 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Calendar } from '@/components/ui/calendar';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AppSidebar } from '@/components/glowher/AppSidebar';
 
 
 const formSchema = z.object({
@@ -231,18 +231,9 @@ export default function PeriodTrackerPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-rose-50 text-slate-800">
-       <div className="flex flex-col min-h-screen">
-            <header className="container mx-auto px-4 py-6">
-                <div className="flex justify-between items-center">
-                    <GlowHerLogo />
-                    <Button variant="ghost" onClick={() => router.push('/')} className="hover:bg-rose-200/50">
-                        <ChevronLeft className="mr-2 h-4 w-4" />
-                        Back to Dashboard
-                    </Button>
-                </div>
-            </header>
-
-            <main className="flex-grow container mx-auto px-4 py-8">
+       <div className="flex">
+            <AppSidebar />
+            <main className="flex-1 flex-grow container mx-auto px-4 py-8">
                 <div className="text-center mb-10">
                     <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-800">Period Tracker</h1>
                     <p className="mt-2 text-lg text-slate-600">Your personal cycle and wellness guide</p>
@@ -372,4 +363,3 @@ export default function PeriodTrackerPage() {
     </div>
   );
 }
-    

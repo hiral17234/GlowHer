@@ -12,7 +12,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,6 +19,7 @@ import { CalendarIcon, ChevronLeft, Bed, Star, BookText, Moon, Award, Info, Spar
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { SleepLogHistory } from '@/components/glowher/SleepLogHistory';
+import { AppSidebar } from '@/components/glowher/AppSidebar';
 
 
 const FormSchema = z.object({
@@ -282,242 +282,235 @@ export default function SleepTrackerPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 text-foreground">
-      <header className="container mx-auto px-4 py-6 z-10">
-        <div className="flex justify-between items-center">
-          <GlowHerLogo />
-          <Button variant="ghost" onClick={() => router.push('/')}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
-        </div>
-      </header>
-
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="text-center mb-10">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold">Sleep Tracker</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Track your sleep to uncover patterns and improve your rest.</p>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-3 space-y-8">
-                <Card className="shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-3 text-2xl font-bold">
-                            <Moon className="text-indigo-400"/>
-                            Log Last Night's Sleep
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        <FormField
-                            control={form.control}
-                            name="logDate"
-                            render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel className="font-semibold">Night Of</FormLabel>
-                                <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                    <Button
-                                        variant={"outline"}
-                                        className={"w-[240px] pl-3 text-left font-normal"}
-                                    >
-                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                    </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                    mode="single"
-                                    selected={field.value}
-                                    onSelect={field.onChange}
-                                    disabled={(date) => date >= new Date()} // Cannot log future dates
-                                    initialFocus
-                                    />
-                                </PopoverContent>
-                                </Popover>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="sleepDuration"
-                            render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="font-semibold flex items-center gap-2">
-                                    <Bed/> Sleep Duration: <span className="font-bold text-indigo-400">{field.value?.[0] ?? 0} hours</span>
-                                </FormLabel>
-                                <FormControl>
-                                <Slider
-                                    value={field.value}
-                                    max={16}
-                                    step={0.5}
-                                    onValueChange={field.onChange}
-                                />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-                         <FormField
-                            control={form.control}
-                            name="sleepQuality"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-semibold flex items-center gap-2">
-                                        <Star /> Sleep Quality: <span className="font-bold text-indigo-400">{qualityLabel}</span>
-                                    </FormLabel>
-                                    <FormControl>
-                                        <div className="flex justify-between gap-2 pt-2">
-                                            {qualityOptions.map(option => (
-                                                <Button
-                                                    key={option.value}
-                                                    type="button"
-                                                    variant={sleepQualityValue[0] === option.value ? 'secondary' : 'outline'}
-                                                    onClick={() => field.onChange([option.value])}
-                                                    className={cn(
-                                                        "flex-1 h-16 text-lg transition-all",
-                                                    )}
-                                                >
-                                                    <div className="flex flex-col items-center">
-                                                        <span className="text-2xl">{option.icon}</span>
-                                                        <span className="text-xs mt-1">{option.label}</span>
-                                                    </div>
-                                                </Button>
-                                            ))}
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="notes"
-                            render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="font-semibold flex items-center gap-2">
-                                    <BookText /> Sleep Notes
-                                </FormLabel>
-                                <FormControl>
-                                <Textarea
-                                    placeholder="e.g., Woke up twice, felt restless, had a weird dream..."
-                                    className="resize-none"
-                                    {...field}
-                                />
-                                </FormControl>
-                                <FormDescription className="text-right">
-                                {notesValue?.length || 0} / 300
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-
-                        <Button type="submit" size="lg" className="w-full">Save Sleep Log</Button>
-                        </form>
-                    </Form>
-                    </CardContent>
-                </Card>
-
-                <div className="mt-8">
-                  <SleepLogHistory key={logKey} />
+        <div className="flex">
+            <AppSidebar />
+            <main className="flex-1 flex-grow container mx-auto px-4 py-8">
+                <div className="text-center mb-10">
+                    <h1 className="font-headline text-4xl md:text-5xl font-bold">Sleep Tracker</h1>
+                    <p className="mt-2 text-lg text-muted-foreground">Track your sleep to uncover patterns and improve your rest.</p>
                 </div>
-                 <Card className="shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 font-bold"><History className="text-indigo-400"/> Recent Logs</CardTitle>
-                        <CardDescription>Your sleep entries from the last 7 days.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        {recentLogs.length > 0 ? (
-                           <ul className="space-y-3">
-                                {recentLogs.map((log, index) => (
-                                    <li key={index} className="flex justify-between items-center p-3 rounded-lg bg-muted">
-                                        <div className="font-semibold">{format(new Date(log.logDate), 'EEEE, MMM d')}</div>
-                                        <div className="flex items-center gap-4 text-sm">
-                                            <span><Bed className="inline-block mr-1 h-4 w-4" /> {log.sleepDuration[0]}h</span>
-                                            <span><Star className="inline-block mr-1 h-4 w-4" /> {getQualityLabel(log.sleepQuality[0])}</span>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-center text-muted-foreground py-4">No recent sleep logs found.</p>
-                        )}
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="lg:col-span-2 space-y-6">
-                <Card className="shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="font-bold flex items-center gap-2">
-                            <Sparkles className="text-indigo-400" /> Sleep Summary
-                        </CardTitle>
-                        <CardDescription>Your last logged night.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-muted">
-                            <span className="font-semibold flex items-center gap-2"><Bed className="text-indigo-400"/> Duration</span>
-                            <span className="font-bold text-lg">{sleepDurationValue?.[0] ?? 'N/A'} hours</span>
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <div className="lg:col-span-3 space-y-8">
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-3 text-2xl font-bold">
+                                    <Moon className="text-indigo-400"/>
+                                    Log Last Night's Sleep
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-6">
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                <FormField
+                                    control={form.control}
+                                    name="logDate"
+                                    render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel className="font-semibold">Night Of</FormLabel>
+                                        <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={"w-[240px] pl-3 text-left font-normal"}
+                                            >
+                                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => date >= new Date()} // Cannot log future dates
+                                            initialFocus
+                                            />
+                                        </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="sleepDuration"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="font-semibold flex items-center gap-2">
+                                            <Bed/> Sleep Duration: <span className="font-bold text-indigo-400">{field.value?.[0] ?? 0} hours</span>
+                                        </FormLabel>
+                                        <FormControl>
+                                        <Slider
+                                            value={field.value}
+                                            max={16}
+                                            step={0.5}
+                                            onValueChange={field.onChange}
+                                        />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="sleepQuality"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-semibold flex items-center gap-2">
+                                                <Star /> Sleep Quality: <span className="font-bold text-indigo-400">{qualityLabel}</span>
+                                            </FormLabel>
+                                            <FormControl>
+                                                <div className="flex justify-between gap-2 pt-2">
+                                                    {qualityOptions.map(option => (
+                                                        <Button
+                                                            key={option.value}
+                                                            type="button"
+                                                            variant={sleepQualityValue[0] === option.value ? 'secondary' : 'outline'}
+                                                            onClick={() => field.onChange([option.value])}
+                                                            className={cn(
+                                                                "flex-1 h-16 text-lg transition-all",
+                                                            )}
+                                                        >
+                                                            <div className="flex flex-col items-center">
+                                                                <span className="text-2xl">{option.icon}</span>
+                                                                <span className="text-xs mt-1">{option.label}</span>
+                                                            </div>
+                                                        </Button>
+                                                    ))}
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="notes"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="font-semibold flex items-center gap-2">
+                                            <BookText /> Sleep Notes
+                                        </FormLabel>
+                                        <FormControl>
+                                        <Textarea
+                                            placeholder="e.g., Woke up twice, felt restless, had a weird dream..."
+                                            className="resize-none"
+                                            {...field}
+                                        />
+                                        </FormControl>
+                                        <FormDescription className="text-right">
+                                        {notesValue?.length || 0} / 300
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+
+                                <Button type="submit" size="lg" className="w-full">Save Sleep Log</Button>
+                                </form>
+                            </Form>
+                            </CardContent>
+                        </Card>
+
+                        <div className="mt-8">
+                        <SleepLogHistory key={logKey} />
                         </div>
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-muted">
-                            <span className="font-semibold flex items-center gap-2"><Star className="text-indigo-400"/> Quality</span>
-                            <span className="font-bold text-lg">{qualityLabel}</span>
-                        </div>
-                        {sleepDurationValue?.[0] < 4 && (
-                            <Alert variant="destructive">
-                                <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle>Take Care!</AlertTitle>
-                                <AlertDescription>
-                                    Getting less than 4 hours of sleep can impact your health. Prioritize rest when you can.
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 font-bold"><History className="text-indigo-400"/> Recent Logs</CardTitle>
+                                <CardDescription>Your sleep entries from the last 7 days.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {recentLogs.length > 0 ? (
+                                <ul className="space-y-3">
+                                        {recentLogs.map((log, index) => (
+                                            <li key={index} className="flex justify-between items-center p-3 rounded-lg bg-muted">
+                                                <div className="font-semibold">{format(new Date(log.logDate), 'EEEE, MMM d')}</div>
+                                                <div className="flex items-center gap-4 text-sm">
+                                                    <span><Bed className="inline-block mr-1 h-4 w-4" /> {log.sleepDuration[0]}h</span>
+                                                    <span><Star className="inline-block mr-1 h-4 w-4" /> {getQualityLabel(log.sleepQuality[0])}</span>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="text-center text-muted-foreground py-4">No recent sleep logs found.</p>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="lg:col-span-2 space-y-6">
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="font-bold flex items-center gap-2">
+                                    <Sparkles className="text-indigo-400" /> Sleep Summary
+                                </CardTitle>
+                                <CardDescription>Your last logged night.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between p-4 rounded-lg bg-muted">
+                                    <span className="font-semibold flex items-center gap-2"><Bed className="text-indigo-400"/> Duration</span>
+                                    <span className="font-bold text-lg">{sleepDurationValue?.[0] ?? 'N/A'} hours</span>
+                                </div>
+                                <div className="flex items-center justify-between p-4 rounded-lg bg-muted">
+                                    <span className="font-semibold flex items-center gap-2"><Star className="text-indigo-400"/> Quality</span>
+                                    <span className="font-bold text-lg">{qualityLabel}</span>
+                                </div>
+                                {sleepDurationValue?.[0] < 4 && (
+                                    <Alert variant="destructive">
+                                        <AlertTriangle className="h-4 w-4" />
+                                        <AlertTitle>Take Care!</AlertTitle>
+                                        <AlertDescription>
+                                            Getting less than 4 hours of sleep can impact your health. Prioritize rest when you can.
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
+                            </CardContent>
+                        </Card>
+                        {currentPhase && phaseTips[currentPhase] && (
+                            <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-900 dark:text-indigo-100 [&>svg]:text-indigo-600">
+                                <Info className="h-4 w-4" />
+                                <AlertTitle className="font-bold text-slate-800">{phaseTips[currentPhase].title}</AlertTitle>
+                                <AlertDescription className="text-slate-700">
+                                    {phaseTips[currentPhase].tip}
                                 </AlertDescription>
                             </Alert>
                         )}
-                    </CardContent>
-                </Card>
-                {currentPhase && phaseTips[currentPhase] && (
-                    <Alert className="bg-indigo-500/10 border-indigo-500/20 text-indigo-900 dark:text-indigo-100 [&>svg]:text-indigo-600">
-                        <Info className="h-4 w-4" />
-                        <AlertTitle className="font-bold text-slate-800">{phaseTips[currentPhase].title}</AlertTitle>
-                        <AlertDescription className="text-slate-700">
-                            {phaseTips[currentPhase].tip}
-                        </AlertDescription>
-                    </Alert>
-                )}
-                 <Card className="shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 font-bold"><Award className="text-amber-400"/> Achievements</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className={cn(
-                            "flex items-center gap-4 p-4 rounded-lg transition-all",
-                            achievements.star ? "bg-amber-500/20" : "bg-muted text-muted-foreground opacity-70"
-                        )}>
-                            <Award className={cn("h-8 w-8", achievements.star ? "text-red-500 fill-red-500" : "text-slate-400")} />
-                            <div className={cn(achievements.star && "font-bold text-slate-800")}>
-                                <h4 className="font-semibold">Sleep Star</h4>
-                                <p className="text-sm">Log 8+ hours of sleep for 3 days in a row.</p>
-                            </div>
-                        </div>
-                        <div className={cn(
-                            "flex items-center gap-4 p-4 rounded-lg transition-all",
-                             achievements.queen ? "bg-primary/20" : "bg-muted text-muted-foreground opacity-70"
-                        )}>
-                             <Award className={cn("h-8 w-8", achievements.queen ? "text-red-500 fill-red-500" : "text-slate-400")} />
-                            <div className={cn(achievements.queen && "font-bold text-slate-800")}>
-                                <h4 className="font-semibold">Rest Queen</h4>
-                                <p className="text-sm">Maintain 'Good' or 'Excellent' sleep for a week.</p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 font-bold"><Award className="text-amber-400"/> Achievements</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className={cn(
+                                    "flex items-center gap-4 p-4 rounded-lg transition-all",
+                                    achievements.star ? "bg-amber-500/20" : "bg-muted text-muted-foreground opacity-70"
+                                )}>
+                                    <Award className={cn("h-8 w-8", achievements.star ? "text-red-500 fill-red-500" : "text-slate-400")} />
+                                    <div className={cn(achievements.star && "font-bold text-slate-800")}>
+                                        <h4 className="font-semibold">Sleep Star</h4>
+                                        <p className="text-sm">Log 8+ hours of sleep for 3 days in a row.</p>
+                                    </div>
+                                </div>
+                                <div className={cn(
+                                    "flex items-center gap-4 p-4 rounded-lg transition-all",
+                                    achievements.queen ? "bg-primary/20" : "bg-muted text-muted-foreground opacity-70"
+                                )}>
+                                    <Award className={cn("h-8 w-8", achievements.queen ? "text-red-500 fill-red-500" : "text-slate-400")} />
+                                    <div className={cn(achievements.queen && "font-bold text-slate-800")}>
+                                        <h4 className="font-semibold">Rest Queen</h4>
+                                        <p className="text-sm">Maintain 'Good' or 'Excellent' sleep for a week.</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            </main>
         </div>
-      </main>
     </div>
   );
 }

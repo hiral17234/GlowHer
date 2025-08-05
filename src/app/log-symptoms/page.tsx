@@ -13,7 +13,6 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
@@ -41,6 +40,7 @@ import {
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AppSidebar } from '@/components/glowher/AppSidebar';
 
 const symptomsList = [
     { id: 'cramps', label: 'Cramps', icon: Flame },
@@ -174,17 +174,8 @@ export default function LogSymptomsPage() {
   return (
     <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/1200x/77/f5/37/77f5373552698548522b033a838a3b35.jpg')"}}>
        <div className="absolute inset-0 bg-black/30 z-0"/>
-       <div className="relative z-10 flex flex-col min-h-screen text-white">
-        <header className="container mx-auto px-4 py-6">
-            <div className="flex justify-between items-center">
-            <GlowHerLogo />
-            <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:text-white hover:bg-white/10">
-                <ChevronLeft className="mr-2 h-4 w-4" />
-                Back to Dashboard
-            </Button>
-            </div>
-        </header>
-
+       <div className="relative z-10 flex text-white">
+        <AppSidebar />
         <main className="flex-grow container mx-auto px-4 py-8">
             <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8 p-4 rounded-lg">
