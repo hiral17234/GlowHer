@@ -315,7 +315,7 @@ export default function FitnessGoalsPage() {
     const { steps: stepGoal, workouts: workoutGoal } = defaultGoalForm.getValues();
 
     return (
-        <div className="flex flex-col min-h-screen bg-background text-foreground bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/1200x/e6/6b/c3/e66bc350d928193530331c3a233498bf.jpg')"}}>
+        <div className="flex flex-col min-h-screen bg-background text-foreground bg-cover bg-center" style={{backgroundImage: "url('https://i.pinimg.com/1200x/b1/0a/fa/b10afa0b0f7754dad02c7c0e71cc9f97.jpg')"}}>
             <div className="flex">
                 <AppSidebar />
                 <div className="flex-1 flex flex-col">
@@ -522,7 +522,3 @@ export default function FitnessGoalsPage() {
         </div>
     );
 }
-
-    
-
-    
