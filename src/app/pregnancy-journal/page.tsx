@@ -2,9 +2,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { format, isSameDay } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, ChevronLeft, BookText, History, ImageIcon, PlusCircle, X } from 'lucide-react';
+import { CalendarIcon, ChevronLeft, BookText, History, ImageIcon, PlusCircle, X, Home, PanelLeft, FileText, CalendarCheck, Library, BookOpen as BookOpenIcon } from 'lucide-react';
 import { RichTextEditor } from '@/components/glowher/RichTextEditor';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const themes = [
     { name: 'None', url: '' },
@@ -47,12 +48,22 @@ type FormData = z.infer<typeof FormSchema>;
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-pregnancy-journal-';
 
+const navItems = [
+    { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
+    { href: '/log-symptoms', icon: FileText, label: 'Health Log' },
+    { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
+    { href: '/pregnancy-journal', icon: BookOpenIcon, label: 'Journal' },
+    { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
+];
+
 export default function PregnancyJournalPage() {
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
   const [currentDate, setCurrentDate] = useState(new Date());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -131,177 +142,223 @@ export default function PregnancyJournalPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen text-foreground" style={{ backgroundImage: "url('https://i.pinimg.com/736x/e2/43/86/e243863fedaf6e675fd150476c75a35a.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
-      <header className="container mx-auto px-4 py-6 z-10 bg-black/10 backdrop-blur-sm">
-        <div className="flex justify-between items-center">
-          <GlowHerLogo />
-          <Button variant="outline" onClick={() => router.push('/pregnancy-tracker')} className="bg-white/80 text-black hover:bg-white">
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to Tracker
-          </Button>
-        </div>
-      </header>
+    <div className="relative flex min-h-screen text-foreground" style={{ backgroundImage: "url('https://i.pinimg.com/736x/e2/43/86/e243863fedaf6e675fd150476c75a35a.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+      <nav className={cn(
+        "hidden md:flex flex-col p-4 space-y-2 bg-black/10 backdrop-blur-lg border-r border-white/20 min-h-screen sticky top-0 transition-all duration-300",
+        isSidebarOpen ? "w-64" : "w-20"
+        )}>
+            <div className="p-2 mb-4 flex items-center justify-between">
+                <GlowHerLogo className={cn("text-white", !isSidebarOpen && "hidden")} />
+            </div>
+            {navItems.map(item => (
+                <Link key={item.href} href={item.href} title={item.label}>
+                        <Button
+                        variant={pathname === item.href ? 'secondary' : 'ghost'}
+                        className={cn("w-full justify-start text-base text-white hover:bg-white/10 hover:text-white", !isSidebarOpen && "justify-center")}
+                    >
+                        <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
+                        <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
+                    </Button>
+                </Link>
+            ))}
+        </nav>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <div className="text-center p-4 rounded-lg bg-black/20 backdrop-blur-sm">
-            <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Pregnancy Journal</h1>
-            <p className="mt-2 text-lg text-white">A private space for your thoughts, questions, and feelings.</p>
-          </div>
-
-          <Card className="shadow-lg bg-background/80 backdrop-blur-md border-white/20">
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    <CardTitle>New Journal Entry</CardTitle>
-                    <Button variant="outline" onClick={() => router.push('/pregnancy-journal-history')}>
-                        <History className="mr-2 h-4 w-4" />
-                        View History
+        <div className="flex-1 flex flex-col">
+            <header className="container mx-auto px-4 py-4 sticky top-0 bg-black/10 backdrop-blur-md z-40 border-b border-white/20">
+                <div className="flex items-center justify-between">
+                    <Button variant="ghost" size="icon" className="hidden md:inline-flex text-white hover:bg-white/10 hover:text-white" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                        <PanelLeft className="h-6 w-6" />
+                    </Button>
+                    <div className="md:hidden">
+                        <GlowHerLogo className="text-white"/>
+                    </div>
+                     <h1 className="font-headline text-3xl font-bold text-white hidden md:block">
+                        Pregnancy Journal
+                    </h1>
+                    <Button variant="outline" onClick={() => router.push('/')} className="bg-white/20 text-white hover:bg-white/30 border-white/30">
+                        <ChevronLeft className="mr-2 h-4 w-4" />
+                        Main Dashboard
                     </Button>
                 </div>
-                <CardDescription>
-                    Use this space to jot down notes for your doctor, track feelings, or record special moments.
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="p-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                  <FormField
-                    control={form.control}
-                    name="logDate"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel className="text-lg font-semibold">Date</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={"w-[240px] pl-3 text-left font-normal"}
-                              >
-                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) => date > new Date()}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+            </header>
 
-                  <FormField
-                        control={form.control}
-                        name="themeUrl"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                                <ImageIcon /> Journal Theme
-                            </FormLabel>
-                            <FormControl>
-                                <div className="flex flex-wrap gap-4 pt-2">
-                                    {themes.map(theme => (
-                                        <button
-                                            key={theme.name}
-                                            type="button"
-                                            className={cn(
-                                                "w-20 h-14 rounded-lg border-2 overflow-hidden transition-all duration-200 transform hover:scale-105",
-                                                field.value === theme.url ? "border-primary ring-2 ring-primary/50" : "border-muted"
-                                            )}
-                                            onClick={() => field.onChange(theme.url)}
-                                        >
-                                            {theme.url ? (
-                                                <Image src={theme.url} alt={theme.name} width={80} height={56} className="object-cover w-full h-full"/>
-                                            ) : (
-                                                <div className="w-full h-full bg-muted flex items-center justify-center text-sm">None</div>
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
+            <main className="flex-grow container mx-auto px-4 py-8 pb-24 md:pb-8">
+                <div className="max-w-3xl mx-auto space-y-8">
+                <div className="text-center p-4 rounded-lg bg-black/20 backdrop-blur-sm md:hidden">
+                    <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Pregnancy Journal</h1>
+                    <p className="mt-2 text-lg text-white">A private space for your thoughts, questions, and feelings.</p>
+                </div>
 
-                  <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                          <BookText /> Journal Entry
-                        </FormLabel>
-                        <FormControl>
-                            <RichTextEditor
-                                value={field.value}
-                                onChange={field.onChange}
-                                placeholder="E.g., Asked Dr. Smith about prenatal vitamins. Felt the first kick today! Feeling a bit anxious about the nursery..."
-                                themeUrl={selectedTheme}
-                            />
-                        </FormControl>
-                        <FormDescription className="text-right">
-                          {notesValue?.length || 0} / 2000
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                   <FormItem>
-                        <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                            <ImageIcon /> Attach an Image
-                        </FormLabel>
-                        <FormControl>
-                            <div>
-                                <input
-                                    type="file"
-                                    ref={fileInputRef}
-                                    className="hidden"
-                                    onChange={handleImageUpload}
-                                    accept="image/*"
-                                />
-                                {!imagePreview ? (
-                                    <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
-                                        <PlusCircle className="mr-2 h-4 w-4" />
-                                        Add Image
+                <Card className="shadow-lg bg-background/80 backdrop-blur-md border-white/20">
+                    <CardHeader>
+                        <div className="flex justify-between items-center">
+                            <CardTitle>New Journal Entry</CardTitle>
+                            <Button variant="outline" onClick={() => router.push('/pregnancy-journal-history')}>
+                                <History className="mr-2 h-4 w-4" />
+                                View History
+                            </Button>
+                        </div>
+                        <CardDescription>
+                            Use this space to jot down notes for your doctor, track feelings, or record special moments.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="logDate"
+                            render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel className="text-lg font-semibold">Date</FormLabel>
+                                <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                    <Button
+                                        variant={"outline"}
+                                        className={"w-[240px] pl-3 text-left font-normal"}
+                                    >
+                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                     </Button>
-                                ) : (
-                                    <div className="relative w-48 h-48">
-                                        <Image src={imagePreview} alt="Preview" layout="fill" className="object-cover rounded-md border" />
-                                        <Button
-                                            type="button"
-                                            variant="destructive"
-                                            size="icon"
-                                            className="absolute top-1 right-1 h-7 w-7"
-                                            onClick={() => {
-                                                setImagePreview(null);
-                                                form.setValue('imageUrl', '');
-                                            }}
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                )}
-                            </div>
-                        </FormControl>
-                    </FormItem>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                    mode="single"
+                                    selected={field.value}
+                                    onSelect={field.onChange}
+                                    disabled={(date) => date > new Date()}
+                                    initialFocus
+                                    />
+                                </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
 
-                  <Button type="submit" size="lg" className="w-full">Save Entry</Button>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
+                        <FormField
+                                control={form.control}
+                                name="themeUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                                        <ImageIcon /> Journal Theme
+                                    </FormLabel>
+                                    <FormControl>
+                                        <div className="flex flex-wrap gap-4 pt-2">
+                                            {themes.map(theme => (
+                                                <button
+                                                    key={theme.name}
+                                                    type="button"
+                                                    className={cn(
+                                                        "w-20 h-14 rounded-lg border-2 overflow-hidden transition-all duration-200 transform hover:scale-105",
+                                                        field.value === theme.url ? "border-primary ring-2 ring-primary/50" : "border-muted"
+                                                    )}
+                                                    onClick={() => field.onChange(theme.url)}
+                                                >
+                                                    {theme.url ? (
+                                                        <Image src={theme.url} alt={theme.name} width={80} height={56} className="object-cover w-full h-full"/>
+                                                    ) : (
+                                                        <div className="w-full h-full bg-muted flex items-center justify-center text-sm">None</div>
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+
+                        <FormField
+                            control={form.control}
+                            name="notes"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                                <BookText /> Journal Entry
+                                </FormLabel>
+                                <FormControl>
+                                    <RichTextEditor
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        placeholder="E.g., Asked Dr. Smith about prenatal vitamins. Felt the first kick today! Feeling a bit anxious about the nursery..."
+                                        themeUrl={selectedTheme}
+                                    />
+                                </FormControl>
+                                <FormDescription className="text-right">
+                                {notesValue?.length || 0} / 2000
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+
+                        <FormItem>
+                                <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                                    <ImageIcon /> Attach an Image
+                                </FormLabel>
+                                <FormControl>
+                                    <div>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            className="hidden"
+                                            onChange={handleImageUpload}
+                                            accept="image/*"
+                                        />
+                                        {!imagePreview ? (
+                                            <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
+                                                <PlusCircle className="mr-2 h-4 w-4" />
+                                                Add Image
+                                            </Button>
+                                        ) : (
+                                            <div className="relative w-48 h-48">
+                                                <Image src={imagePreview} alt="Preview" layout="fill" className="object-cover rounded-md border" />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    className="absolute top-1 right-1 h-7 w-7"
+                                                    onClick={() => {
+                                                        setImagePreview(null);
+                                                        form.setValue('imageUrl', '');
+                                                    }}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+
+                        <Button type="submit" size="lg" className="w-full">Save Entry</Button>
+                        </form>
+                    </Form>
+                    </CardContent>
+                </Card>
+                </div>
+            </main>
         </div>
-      </main>
+
+        <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-black/30 backdrop-blur-md border-t border-white/20">
+            <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
+                {navItems.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                            <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/10 group">
+                            <item.icon className={cn("w-6 h-6 mb-1 text-white/70 group-hover:text-pink-400", isActive && "text-pink-400")} />
+                            <span className={cn("text-xs text-white/70 group-hover:text-pink-400", isActive && "text-pink-400")}>
+                                {item.label}
+                            </span>
+                        </Link>
+                    )
+                })}
+            </div>
+        </div>
     </div>
   );
 }
