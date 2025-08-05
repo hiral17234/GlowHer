@@ -63,9 +63,8 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
             <PregnancyNav />
 
             <div className="flex-1 flex flex-col">
-                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
-                    <div className="flex justify-between items-center">
-                         <div>{/* Spacer */}</div>
+                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30 hidden md:block">
+                    <div className="flex justify-end items-center">
                         <div className="flex items-center gap-2">
                             <Button variant="ghost" onClick={() => router.push('/pregnancy-guide')}>
                                 <Home className="mr-2 h-4 w-4" />
@@ -81,6 +80,15 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                     </div>
                 </header>
                 <main className="flex-grow container mx-auto px-4 py-8 space-y-8 pb-24 md:pb-8">
+                    <div className="flex justify-between items-center md:hidden mt-12">
+                         <Button variant="ghost" size="icon" onClick={() => goToWeek(weekNumber - 1)} disabled={weekNumber <= 1}>
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                         <Button variant="ghost" size="icon" onClick={() => goToWeek(weekNumber + 1)} disabled={weekNumber >= 41}>
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                    </div>
+
                     <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
                         <CardContent className="p-0">
                             <div className="grid grid-cols-1 lg:grid-cols-2">

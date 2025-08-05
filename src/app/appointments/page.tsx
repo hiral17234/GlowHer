@@ -162,21 +162,15 @@ export default function AppointmentsPage() {
        <PregnancyNav />
 
        <div className="flex-1 flex flex-col">
-            <header className="relative z-10 container mx-auto px-4 py-6 md:flex justify-between items-center hidden">
-                 {/* This space is intentionally left for the sidebar trigger in PregnancyNav */}
-                 <div></div>
+            <header className="relative z-10 container mx-auto px-4 py-6 md:flex justify-center items-center hidden">
                 <h1 className="font-headline text-3xl font-bold text-white hidden md:block">
                     Appointments
                 </h1>
-                <Button variant="ghost" onClick={() => router.push('/')} className="text-white hover:bg-white/10 hover:text-white">
-                    <ChevronLeft className="mr-2 h-4 w-4" />
-                    Back to Main Dashboard
-                </Button>
             </header>
 
             <main className="relative z-10 flex-grow container mx-auto px-4 py-8 pb-24 md:pb-8">
                 <div className="max-w-3xl mx-auto space-y-8">
-                <div className="text-center text-white md:hidden">
+                <div className="text-center text-white md:hidden mt-12">
                     <h1 className="font-headline text-4xl md:text-5xl font-bold">Appointments</h1>
                     <p className="mt-2 text-lg text-white/80">Keep track of your prenatal visits and important dates.</p>
                 </div>

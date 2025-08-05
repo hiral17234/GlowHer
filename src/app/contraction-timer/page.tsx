@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -128,7 +129,7 @@ export default function ContractionTimerPage() {
             <PregnancyNav />
 
             <div className="flex-1 flex flex-col">
-                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
+                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30 hidden md:block">
                     <div className="flex items-center justify-center">
                         <h1 className="font-headline text-3xl font-bold text-slate-900">
                             Contraction Timer
@@ -137,6 +138,9 @@ export default function ContractionTimerPage() {
                 </header>
 
                 <main className="flex-grow container mx-auto px-4 py-8 pb-24 md:pb-8">
+                    <div className="text-center mb-12 mt-12 md:mt-0">
+                        <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900">Contraction Timer</h1>
+                    </div>
                     <div className="max-w-2xl mx-auto space-y-8">
                         <Alert variant="destructive" className="bg-red-100 border-red-300">
                             <Siren className="h-4 w-4" />
@@ -218,5 +222,3 @@ export default function ContractionTimerPage() {
         </div>
     );
 }
-
-    

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -113,7 +114,7 @@ export default function WeightTrackerPage() {
             <PregnancyNav />
 
             <div className="flex-1 flex flex-col">
-                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
+                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30 hidden md:block">
                     <div className="flex items-center justify-center">
                         <h1 className="font-headline text-3xl font-bold text-slate-900">
                             Weight Tracker
@@ -122,6 +123,9 @@ export default function WeightTrackerPage() {
                 </header>
                 
                 <main className="flex-grow container mx-auto px-4 py-8 pb-24 md:pb-8">
+                     <div className="text-center mb-12 mt-12 md:mt-0">
+                        <h1 className="font-headline text-4xl md:text-5xl font-bold text-slate-900">Weight Tracker</h1>
+                    </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="space-y-8">
                             <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30">
@@ -220,5 +224,3 @@ export default function WeightTrackerPage() {
         </div>
     );
 }
-
-    

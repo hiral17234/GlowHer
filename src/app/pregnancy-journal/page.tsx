@@ -136,19 +136,17 @@ export default function PregnancyJournalPage() {
       <PregnancyNav />
 
         <div className="flex-1 flex flex-col">
-            <header className="container mx-auto px-4 py-4 sticky top-0 bg-black/10 backdrop-blur-md z-40 border-b border-white/20">
-                <div className="flex items-center justify-between">
-                     <div>{/* Spacer */}</div>
-                     <h1 className="font-headline text-3xl font-bold text-white hidden md:block">
+            <header className="container mx-auto px-4 py-4 sticky top-0 bg-black/10 backdrop-blur-md z-40 border-b border-white/20 hidden md:block">
+                <div className="flex items-center justify-center">
+                     <h1 className="font-headline text-3xl font-bold text-white">
                         Pregnancy Journal
                     </h1>
-                     <div>{/* Spacer */}</div>
                 </div>
             </header>
 
             <main className="flex-grow container mx-auto px-4 py-8 pb-24 md:pb-8">
                 <div className="max-w-3xl mx-auto space-y-8">
-                <div className="text-center p-4 rounded-lg bg-black/20 backdrop-blur-sm md:hidden">
+                <div className="text-center p-4 rounded-lg bg-black/20 backdrop-blur-sm md:hidden mt-12">
                     <h1 className="font-headline text-4xl md:text-5xl font-bold text-white">Pregnancy Journal</h1>
                     <p className="mt-2 text-lg text-white">A private space for your thoughts, questions, and feelings.</p>
                 </div>

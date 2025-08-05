@@ -53,18 +53,16 @@ export default function PregnancyGuidePage() {
             <PregnancyNav />
 
             <div className="flex-1 flex flex-col">
-                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
-                     <div className="flex items-center justify-between">
-                         <div>{/* Spacer */}</div>
-                        <h1 className="font-headline text-3xl font-bold text-slate-900 hidden md:block">
+                <header className="container mx-auto px-4 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30 hidden md:block">
+                     <div className="flex items-center justify-center">
+                        <h1 className="font-headline text-3xl font-bold text-slate-900">
                             Pregnancy Guide
                         </h1>
-                         <div>{/* Spacer */}</div>
                     </div>
                 </header>
 
                 <main className="flex-grow container mx-auto px-4 py-8 pb-24 md:pb-8">
-                    <div className="text-center mb-12 md:hidden">
+                    <div className="text-center mb-12 mt-12 md:mt-0">
                         <h1 className="font-headline text-4xl md:text-5xl font-bold">Pregnancy Week by Week</h1>
                         <p className="mt-2 text-lg text-muted-foreground">Explore the amazing journey of your pregnancy, from conception to birth.</p>
                     </div>

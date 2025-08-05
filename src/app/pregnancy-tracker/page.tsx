@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/use-language';
 import Link from 'next/link';
 import { weeklyDevelopment } from '@/lib/pregnancy-data';
+import { PregnancyNav } from '@/components/glowher/PregnancyNav';
 
 
 const pregnancyFormSchema = z.object({
@@ -70,7 +71,7 @@ const animatedTrimesterVideos: { [key: number]: string } = {
 const knowledgeTrimesterVideos: { [key: number]: string } = {
     1: 'cfn04QUO4B8',
     2: 'IPj4dJnP85o',
-    3: 'lpDW00nQhUo',
+    3: 'lpDW09QhUo',
 };
 
 
@@ -148,14 +149,6 @@ const translations = {
         calculateAndTrack: "देय तिथि की गणना करें और ट्रैक करें"
     }
 };
-
-const navItems = [
-    { href: '/pregnancy-tracker', icon: Home, label: 'Dashboard' },
-    { href: '/log-symptoms', icon: FileText, label: 'Health Log' },
-    { href: '/appointments', icon: CalendarCheck, label: 'Appointments' },
-    { href: '/pregnancy-journal', icon: BookOpen, label: 'Journal' },
-    { href: '/pregnancy-guide', icon: Library, label: 'Guide' },
-];
 
 export default function PregnancyTrackerPage() {
   const router = useRouter();
@@ -339,40 +332,12 @@ export default function PregnancyTrackerPage() {
   if (pregnancyDetails && currentWeekData) {
     return (
         <div className="relative flex min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-white text-slate-800">
-            {/* Desktop Sidebar */}
-            <nav className={cn(
-                "hidden md:flex flex-col p-4 space-y-2 bg-white/50 border-r border-white/30 min-h-screen sticky top-0 transition-all duration-300",
-                isSidebarOpen ? "w-64" : "w-20"
-            )}>
-                <div className="p-2 mb-4 flex items-center justify-between">
-                    <GlowHerLogo className={cn(!isSidebarOpen && "hidden")} />
-                    <div className={cn("md:hidden", isSidebarOpen && "hidden")}>
-                        <Baby className="h-6 w-6 text-pink-500"/>
-                    </div>
-                </div>
-                {navItems.map(item => (
-                    <Link key={item.href} href={item.href} title={item.label}>
-                         <Button
-                            variant={pathname === item.href ? 'secondary' : 'ghost'}
-                            className={cn("w-full justify-start text-base", !isSidebarOpen && "justify-center")}
-                        >
-                            <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
-                            <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
-                        </Button>
-                    </Link>
-                ))}
-            </nav>
+            <PregnancyNav />
 
             <div className="flex-1 flex flex-col">
-                <header className="container mx-auto px-4 md:px-8 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30">
-                    <div className="flex items-center justify-between">
-                        <Button variant="ghost" size="icon" className="hidden md:inline-flex" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                            <PanelLeft className="h-6 w-6" />
-                        </Button>
-                        <div className="md:hidden">
-                            <GlowHerLogo />
-                        </div>
-                        <h1 className="font-headline text-2xl md:text-3xl font-bold text-slate-900 hidden md:block">
+                <header className="container mx-auto px-4 md:px-8 py-4 sticky top-0 bg-white/30 backdrop-blur-md z-40 border-b border-white/30 hidden md:flex">
+                    <div className="flex items-center justify-between w-full">
+                        <h1 className="font-headline text-2xl md:text-3xl font-bold text-slate-900">
                             {userName ? `Hi ${userName} 👋` : ''}
                         </h1>
                          <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
@@ -381,9 +346,9 @@ export default function PregnancyTrackerPage() {
                     </div>
                 </header>
 
-                <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8 pb-24">
-                    <div className="text-center md:text-left md:hidden">
-                        <h1 className="font-headline text-4xl font-bold text-slate-900">
+                <main className="flex-grow container mx-auto px-4 md:px-8 py-8 space-y-8 pb-24 md:pb-8">
+                    <div className="text-center md:text-left mt-12 md:mt-0">
+                        <h1 className="font-headline text-4xl font-bold text-slate-900 md:hidden">
                             {userName ? `Hi ${userName} 👋` : ''}
                         </h1>
                         <p className="mt-2 text-lg text-slate-600">{t.pageTitle}</p>
@@ -624,23 +589,6 @@ export default function PregnancyTrackerPage() {
                     </div>
 
                 </main>
-            </div>
-
-            {/* Mobile Bottom Nav */}
-            <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white/80 backdrop-blur-md border-t border-white/30">
-                <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-                    {navItems.map((item) => {
-                        const isActive = pathname === item.href;
-                        return (
-                             <Link key={item.href} href={item.href} className="inline-flex flex-col items-center justify-center px-2 hover:bg-pink-100/50 group">
-                                <item.icon className={cn("w-6 h-6 mb-1 text-slate-500 group-hover:text-pink-600", isActive && "text-pink-600")} />
-                                <span className={cn("text-xs text-slate-500 group-hover:text-pink-600", isActive && "text-pink-600")}>
-                                    {item.label}
-                                </span>
-                            </Link>
-                        )
-                    })}
-                </div>
             </div>
         </div>
     )
