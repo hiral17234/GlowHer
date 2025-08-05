@@ -25,19 +25,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const weightLogSchema = z.object({
   date: z.date(),
   weight: z.coerce.number().min(1, "Weight must be a positive number."),
 });
 
-export type WeightLog = { id: string } & z.infer<typeof weightLogSchema>;
+export type WeightLog = { id: string; weight: number; date: Date }; // weight is always stored in lbs
+
+type Unit = 'lbs' | 'kgs';
+
+const LBS_TO_KG = 0.453592;
+const KG_TO_LBS = 2.20462;
 
 const WEIGHT_LOG_KEY = 'glowher-weight-log';
 
 export default function WeightTrackerPage() {
     const [log, setLog] = useState<WeightLog[]>([]);
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [unit, setUnit] = useState<Unit>('lbs');
     const { toast } = useToast();
 
     const form = useForm<z.infer<typeof weightLogSchema>>({
@@ -72,8 +79,17 @@ export default function WeightTrackerPage() {
         }
     };
 
+    const convertWeight = (weight: number, toUnit: Unit) => {
+        if (toUnit === 'kgs') {
+            return parseFloat((weight * LBS_TO_KG).toFixed(1));
+        }
+        return parseFloat(weight.toFixed(1));
+    };
+
     const onSubmit = (data: z.infer<typeof weightLogSchema>) => {
-        // Prevent duplicate entries for the same day
+        const weightInLbs = unit === 'kgs' ? data.weight * KG_TO_LBS : data.weight;
+        const finalData = { date: data.date, weight: weightInLbs };
+        
         if (!editingId && log.some(entry => isSameDay(entry.date, data.date))) {
             toast({
                 variant: 'destructive',
@@ -84,12 +100,12 @@ export default function WeightTrackerPage() {
         }
 
         if (editingId) {
-            const updatedLog = log.map(item => item.id === editingId ? { ...item, ...data } : item);
+            const updatedLog = log.map(item => item.id === editingId ? { ...item, ...finalData } : item);
             saveLog(updatedLog);
             toast({ title: "Entry Updated" });
             setEditingId(null);
         } else {
-            const newEntry: WeightLog = { ...data, id: new Date().toISOString() };
+            const newEntry: WeightLog = { ...finalData, id: new Date().toISOString() };
             saveLog([...log, newEntry]);
             toast({ title: "Weight Logged!" });
         }
@@ -98,7 +114,8 @@ export default function WeightTrackerPage() {
 
     const handleEdit = (entry: WeightLog) => {
         setEditingId(entry.id);
-        form.reset(entry);
+        const weightInCurrentUnit = convertWeight(entry.weight, unit);
+        form.reset({ date: entry.date, weight: weightInCurrentUnit });
     };
 
     const handleDelete = (id: string) => {
@@ -138,12 +155,12 @@ export default function WeightTrackerPage() {
                                 <CardContent>
                                     <Form {...form}>
                                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                 <FormField
+                                            <div className="flex items-center gap-4">
+                                                <FormField
                                                     control={form.control}
                                                     name="date"
                                                     render={({ field }) => (
-                                                    <FormItem className="flex flex-col">
+                                                    <FormItem className="flex flex-col flex-grow">
                                                         <FormLabel>Date</FormLabel>
                                                         <Popover>
                                                             <PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : (<span>Pick a date</span>)}</Button></FormControl></PopoverTrigger>
@@ -153,18 +170,27 @@ export default function WeightTrackerPage() {
                                                     </FormItem>
                                                     )}
                                                 />
-                                                 <FormField
-                                                    control={form.control}
-                                                    name="weight"
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Weight (lbs)</FormLabel>
-                                                            <FormControl><Input type="number" placeholder="e.g., 145.5" {...field} /></FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
+                                                <div className="flex-shrink-0">
+                                                    <FormLabel>Unit</FormLabel>
+                                                    <Tabs value={unit} onValueChange={(value) => setUnit(value as Unit)} className="w-[100px] mt-2">
+                                                        <TabsList className="grid w-full grid-cols-2 h-10">
+                                                            <TabsTrigger value="lbs">lbs</TabsTrigger>
+                                                            <TabsTrigger value="kgs">kgs</TabsTrigger>
+                                                        </TabsList>
+                                                    </Tabs>
+                                                </div>
                                             </div>
+                                             <FormField
+                                                control={form.control}
+                                                name="weight"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Weight ({unit})</FormLabel>
+                                                        <FormControl><Input type="number" placeholder={unit === 'lbs' ? 'e.g., 145.5' : 'e.g., 66.0'} {...field} /></FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
                                             <div className="flex gap-2">
                                                 <Button type="submit" className="w-full bg-pink-500 hover:bg-pink-600 text-white">
                                                     <Plus className="mr-2 h-4 w-4" /> {editingId ? "Update Entry" : "Add Entry"}
@@ -191,7 +217,7 @@ export default function WeightTrackerPage() {
                                             <TableHeader>
                                                 <TableRow>
                                                     <TableHead>Date</TableHead>
-                                                    <TableHead>Weight (lbs)</TableHead>
+                                                    <TableHead>Weight ({unit})</TableHead>
                                                     <TableHead className="text-right">Actions</TableHead>
                                                 </TableRow>
                                             </TableHeader>
@@ -199,7 +225,7 @@ export default function WeightTrackerPage() {
                                                 {sortedLog.map(entry => (
                                                     <TableRow key={entry.id}>
                                                         <TableCell className="font-medium">{format(entry.date, "MMM d, yyyy")}</TableCell>
-                                                        <TableCell>{entry.weight}</TableCell>
+                                                        <TableCell>{convertWeight(entry.weight, unit)}</TableCell>
                                                         <TableCell className="text-right">
                                                             <Button variant="ghost" size="sm" onClick={() => handleEdit(entry)}>Edit</Button>
                                                             <Button variant="ghost" size="sm" className="text-red-500" onClick={() => handleDelete(entry.id)}>Delete</Button>
@@ -216,7 +242,7 @@ export default function WeightTrackerPage() {
 
                         </div>
                         <div className="lg:col-span-1">
-                           <WeightChart logData={log} />
+                           <WeightChart logData={log} unit={unit}/>
                         </div>
                     </div>
                 </main>
