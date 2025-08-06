@@ -24,6 +24,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AppSidebar } from '@/components/glowher/AppSidebar';
+import { FitnessLogHistory } from '@/components/glowher/FitnessLogHistory';
 
 
 // --- SCHEMAS ---
@@ -58,7 +59,7 @@ const logFormSchema = z.object({
 // --- TYPES ---
 type DefaultGoalData = z.infer<typeof defaultGoalSchema>;
 type LogFormData = z.infer<typeof logFormSchema>;
-type DailyFitnessLog = {
+export type DailyFitnessLog = {
     logDate: string;
     steps?: {
         count: number;
@@ -72,7 +73,7 @@ type DailyFitnessLog = {
 
 // --- LOCAL STORAGE KEYS ---
 const DEFAULT_GOALS_KEY = 'glowher-fitness-goals';
-const DEFAULT_LOG_PREFIX = 'glowher-fitness-log-';
+export const DEFAULT_LOG_PREFIX = 'glowher-fitness-log-';
 const LAST_DATE_KEY = 'glowher-fitness-last-date';
 
 
@@ -94,6 +95,7 @@ export default function FitnessGoalsPage() {
     const [selectedActivityType, setSelectedActivityType] = useState<'step-based' | 'workout-based'>('step-based');
     const [completedWorkouts, setCompletedWorkouts] = useState(0);
     const [isChartLoading, setIsChartLoading] = useState(true);
+    const [historyKey, setHistoryKey] = useState(0); // Used to force-rerender history
 
     // --- FORM HOOKS ---
     const defaultGoalForm = useForm<DefaultGoalData>({ resolver: zodResolver(defaultGoalSchema), defaultValues: { steps: 8000, workouts: 3 }});
@@ -217,13 +219,18 @@ export default function FitnessGoalsPage() {
             const log = localStorage.getItem(logKey);
             if (log) {
                 const parsedLog: DailyFitnessLog = JSON.parse(log);
-                if (parsedLog.steps || parsedLog.workout) {
+                if ((parsedLog.steps && parsedLog.steps.count > 0) || (parsedLog.workout && parsedLog.workout.duration > 0)) {
                     if (!streakBroken) consecutiveDays++;
                 } else {
                      streakBroken = true;
                 }
             } else {
-                streakBroken = true;
+                if (!streakBroken) {
+                    // It's only a break if it's not today
+                    if (!isSameDay(date, today)) {
+                         streakBroken = true;
+                    }
+                }
             }
         }
         setStreak(consecutiveDays);
@@ -244,12 +251,12 @@ export default function FitnessGoalsPage() {
             if (savedLog) {
                 try {
                     const logData: DailyFitnessLog = JSON.parse(savedLog);
-                    if (logData.workout) {
-                        minutes = logData.workout.duration || 0;
+                    if (logData.workout && logData.workout.duration > 0) {
+                        minutes = logData.workout.duration;
                         workoutsThisWeek++;
                     }
-                    if (logData.steps) {
-                        steps = logData.steps.count || 0;
+                    if (logData.steps && logData.steps.count > 0) {
+                        steps = logData.steps.count;
                     }
                 } catch(e) { console.error("Error parsing log for chart", e); }
             }
@@ -267,7 +274,6 @@ export default function FitnessGoalsPage() {
     
     function onLogSubmit(data: LogFormData) { 
         try { 
-            const prevCompletedWorkouts = completedWorkouts;
             const logKey = `${DEFAULT_LOG_PREFIX}${format(data.logDate, 'yyyy-MM-dd')}`;
 
             // Read existing log for the day
@@ -276,6 +282,7 @@ export default function FitnessGoalsPage() {
                 ? JSON.parse(existingLogJSON) 
                 : { logDate: format(data.logDate, 'yyyy-MM-dd') };
 
+            const wasWorkoutPreviouslyLogged = !!dayLog.workout && dayLog.workout.duration > 0;
             let toastMessage = "";
 
             if (data.activityType === 'step-based' && data.steps !== undefined && data.stepWorkoutType) {
@@ -287,16 +294,31 @@ export default function FitnessGoalsPage() {
             }
             
             localStorage.setItem(logKey, JSON.stringify(dayLog)); 
-
             toast({ title: "Activity Logged!", description: toastMessage });
             
             loadWeeklyLogs();
+            setHistoryKey(k => k + 1); // Force history component to re-render
 
-            const newCompletedWorkouts = completedWorkouts + (data.activityType === 'workout-based' ? 1 : 0);
+            const isWorkoutNewlyLogged = !!dayLog.workout && dayLog.workout.duration > 0;
             const workoutGoal = defaultGoalForm.getValues('workouts');
 
-            if (prevCompletedWorkouts < workoutGoal && newCompletedWorkouts >= workoutGoal) {
-                toast({
+            // Recalculate completed workouts for the week to check for goal completion
+            const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+            let currentWeekWorkouts = 0;
+            for (let i = 0; i < 7; i++) {
+                const date = addDays(weekStart, i);
+                const key = `${DEFAULT_LOG_PREFIX}${format(date, 'yyyy-MM-dd')}`;
+                const logJSON = localStorage.getItem(key);
+                if (logJSON) {
+                    const log: DailyFitnessLog = JSON.parse(logJSON);
+                    if (log.workout && log.workout.duration > 0) {
+                        currentWeekWorkouts++;
+                    }
+                }
+            }
+
+            if (!wasWorkoutPreviouslyLogged && isWorkoutNewlyLogged && currentWeekWorkouts >= workoutGoal) {
+                 toast({
                     title: "Weekly Goal Met!",
                     description: "Congratulations on hitting your weekly workout goal!",
                 });
@@ -515,6 +537,7 @@ export default function FitnessGoalsPage() {
                                     )}
                                 </div>
                             </div>
+                            <FitnessLogHistory key={historyKey} />
                         </div>
                     </main>
                 </div>

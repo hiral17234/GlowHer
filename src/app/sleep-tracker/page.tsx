@@ -35,7 +35,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-sleep-log-';
 
-type SleepLog = {
+export type SleepLog = {
     logDate: string;
     sleepDuration: number[];
     sleepQuality: number[];
@@ -415,33 +415,9 @@ export default function SleepTrackerPage() {
                             </Form>
                             </CardContent>
                         </Card>
-
                         <div className="mt-8">
-                        <SleepLogHistory key={logKey} />
+                            <SleepLogHistory key={logKey} />
                         </div>
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 font-bold"><History className="text-indigo-400"/> Recent Logs</CardTitle>
-                                <CardDescription>Your sleep entries from the last 7 days.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {recentLogs.length > 0 ? (
-                                <ul className="space-y-3">
-                                        {recentLogs.map((log, index) => (
-                                            <li key={index} className="flex justify-between items-center p-3 rounded-lg bg-muted">
-                                                <div className="font-semibold">{format(new Date(log.logDate), 'EEEE, MMM d')}</div>
-                                                <div className="flex items-center gap-4 text-sm">
-                                                    <span><Bed className="inline-block mr-1 h-4 w-4" /> {log.sleepDuration[0]}h</span>
-                                                    <span><Star className="inline-block mr-1 h-4 w-4" /> {getQualityLabel(log.sleepQuality[0])}</span>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <p className="text-center text-muted-foreground py-4">No recent sleep logs found.</p>
-                                )}
-                            </CardContent>
-                        </Card>
                     </div>
                     <div className="lg:col-span-2 space-y-6">
                         <Card className="shadow-lg">
