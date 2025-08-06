@@ -44,7 +44,7 @@ const pregnancyLogSchema = z.object({
 
 // --- TYPES ---
 type PregnancyGoalData = z.infer<typeof pregnancyGoalSchema>;
-type PregnancyLogData = z.infer<typeof pregnancyLogSchema>;
+export type PregnancyLogData = z.infer<typeof pregnancyLogSchema>;
 
 // --- LOCAL STORAGE KEYS ---
 const PREGNANCY_GOALS_KEY = 'glowher-preg-fitness-goals';
@@ -298,7 +298,7 @@ export default function PregnancyFitnessPage() {
                                         <CardHeader>
                                             <div className="flex justify-between items-center">
                                                 <CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle>
-                                                <Button variant="outline" size="sm" onClick={() => router.push('/fitness-history')}>
+                                                <Button variant="outline" size="sm" onClick={() => router.push('/pregnancy-fitness-history')}>
                                                     <History className="mr-2 h-4 w-4" /> View History
                                                 </Button>
                                             </div>
