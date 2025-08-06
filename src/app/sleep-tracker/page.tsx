@@ -81,7 +81,8 @@ export default function SleepTrackerPage() {
   const sleepQualityValue = form.watch("sleepQuality");
 
   const getQualityLabel = (value: number) => {
-    return qualityOptions.find(q => q.value <= value)?.label ?? 'Fair';
+    const option = qualityOptions.find(q => q.value >= value);
+    return option ? option.label : qualityOptions[qualityOptions.length - 1].label;
   };
 
 
@@ -243,19 +244,12 @@ export default function SleepTrackerPage() {
             description: "Your entry for the night has been successfully saved.",
         });
 
-        // Add conditional toasts based on sleep duration
         const hours = data.sleepDuration[0];
-        if (hours < 3) {
-            toast({
-                variant: 'destructive',
-                title: "Please Be Careful",
-                description: "Consistently sleeping this little can be a sign of insomnia. Please consider speaking with a doctor.",
-            });
-        } else if (hours < 4) {
+        if (hours < 4) {
              toast({
                 variant: 'destructive',
                 title: "Short Sleep Alert",
-                description: "Getting less than 4 hours of sleep can significantly impact your physical and mental health. Try to prioritize more rest.",
+                description: "Getting less than 4 hours of sleep can significantly impact your health. Try to prioritize more rest.",
             });
         } else if (hours < 6) {
              toast({
@@ -263,7 +257,6 @@ export default function SleepTrackerPage() {
                 description: "A healthy body needs healthy sleep. Aim for 7-9 hours to feel your best!",
             });
         }
-
 
         calculateAchievements();
         loadRecentLogs();
@@ -293,10 +286,15 @@ export default function SleepTrackerPage() {
                     <div className="lg:col-span-3 space-y-8">
                         <Card className="shadow-lg">
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-3 text-2xl font-bold">
-                                    <Moon className="text-indigo-400"/>
-                                    Log Last Night's Sleep
-                                </CardTitle>
+                                <div className="flex justify-between items-center">
+                                    <CardTitle className="flex items-center gap-3 text-2xl font-bold">
+                                        <Moon className="text-indigo-400"/>
+                                        Log Last Night's Sleep
+                                    </CardTitle>
+                                    <Button variant="outline" onClick={() => router.push('/sleep-history')}>
+                                        <History className="mr-2 h-4 w-4" /> View Full History
+                                    </Button>
+                                </div>
                             </CardHeader>
                             <CardContent className="p-6">
                             <Form {...form}>

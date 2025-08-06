@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format, subDays, startOfDay, addDays, isWithinInterval, isSameDay, startOfWeek } from 'date-fns';
-import { BarChart, Dumbbell, Target, Footprints, Info, Heart, Lightbulb, Wind, Edit, Check, AlertTriangle, Award, Flame, ThumbsUp, Activity, Calendar as CalendarIcon, Baby } from 'lucide-react';
+import { BarChart, Dumbbell, Target, Footprints, Info, Heart, Lightbulb, Wind, Edit, Check, AlertTriangle, Award, Flame, ThumbsUp, Activity, Calendar as CalendarIcon, Baby, History } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +24,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AppSidebar } from '@/components/glowher/AppSidebar';
-import { FitnessLogHistory } from '@/components/glowher/FitnessLogHistory';
 
 
 // --- SCHEMAS ---
@@ -95,7 +94,6 @@ export default function FitnessGoalsPage() {
     const [selectedActivityType, setSelectedActivityType] = useState<'step-based' | 'workout-based'>('step-based');
     const [completedWorkouts, setCompletedWorkouts] = useState(0);
     const [isChartLoading, setIsChartLoading] = useState(true);
-    const [historyKey, setHistoryKey] = useState(0); // Used to force-rerender history
 
     // --- FORM HOOKS ---
     const defaultGoalForm = useForm<DefaultGoalData>({ resolver: zodResolver(defaultGoalSchema), defaultValues: { steps: 8000, workouts: 3 }});
@@ -297,7 +295,6 @@ export default function FitnessGoalsPage() {
             toast({ title: "Activity Logged!", description: toastMessage });
             
             loadWeeklyLogs();
-            setHistoryKey(k => k + 1); // Force history component to re-render
 
             const isWorkoutNewlyLogged = !!dayLog.workout && dayLog.workout.duration > 0;
             const workoutGoal = defaultGoalForm.getValues('workouts');
@@ -389,7 +386,12 @@ export default function FitnessGoalsPage() {
                                     </Card>
                                     <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
                                         <CardHeader>
-                                            <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Activity</CardTitle>
+                                            <div className="flex justify-between items-center">
+                                                <CardTitle className="flex items-center gap-2"><Dumbbell/> Log Activity</CardTitle>
+                                                <Button variant="outline" size="sm" onClick={() => router.push('/fitness-history')}>
+                                                    <History className="mr-2 h-4 w-4" /> View History
+                                                </Button>
+                                            </div>
                                         </CardHeader>
                                         <CardContent>
                                             <Form {...logForm}>
@@ -537,7 +539,6 @@ export default function FitnessGoalsPage() {
                                     )}
                                 </div>
                             </div>
-                            <FitnessLogHistory key={historyKey} />
                         </div>
                     </main>
                 </div>

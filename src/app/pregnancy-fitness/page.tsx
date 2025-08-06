@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format, subDays, startOfDay, addDays, isSameDay, differenceInDays, startOfWeek } from 'date-fns';
-import { BarChart, Dumbbell, Target, Info, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, HeartPulse, Award, Flame, ThumbsUp, Activity, Calendar as CalendarIcon, Baby } from 'lucide-react';
+import { BarChart, Dumbbell, Target, Info, Heart, Brain, Wind, Edit, Check, Lightbulb, AlertTriangle, HeartPulse, Award, Flame, ThumbsUp, Activity, Calendar as CalendarIcon, Baby, History } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,7 +48,7 @@ type PregnancyLogData = z.infer<typeof pregnancyLogSchema>;
 
 // --- LOCAL STORAGE KEYS ---
 const PREGNANCY_GOALS_KEY = 'glowher-preg-fitness-goals';
-const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
+export const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
 const LAST_DATE_KEY = 'glowher-preg-fitness-last-date';
 
 // --- DATA ---
@@ -295,7 +295,14 @@ export default function PregnancyFitnessPage() {
                                         </CardContent>
                                     </Card>
                                     <Card className="shadow-lg bg-background/80 backdrop-blur-sm border-border">
-                                        <CardHeader><CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle></CardHeader>
+                                        <CardHeader>
+                                            <div className="flex justify-between items-center">
+                                                <CardTitle className="flex items-center gap-2"><Activity/> Log Today's Movement</CardTitle>
+                                                <Button variant="outline" size="sm" onClick={() => router.push('/fitness-history')}>
+                                                    <History className="mr-2 h-4 w-4" /> View History
+                                                </Button>
+                                            </div>
+                                        </CardHeader>
                                         <CardContent>
                                             <Form {...pregnancyLogForm}>
                                                 <form onSubmit={pregnancyLogForm.handleSubmit(onPregnancyLogSubmit)} className="space-y-4">
