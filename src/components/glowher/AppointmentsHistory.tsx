@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { format, isFuture, isPast, parseISO } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, MapPin, Stethoscope, BookText, Trash2, ImageIcon, Edit } from 'lucide-react';
+import { Calendar, Clock, MapPin, Stethoscope, BookText, Trash2, ImageIcon, Edit, SortAsc, SortDesc } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Appointment } from '@/app/appointments/page';
 import {
@@ -34,20 +34,33 @@ interface AppointmentsHistoryProps {
 }
 
 export function AppointmentsHistory({ appointments, setAppointments, onEdit }: AppointmentsHistoryProps) {
+  const [upcomingSort, setUpcomingSort] = useState<'asc' | 'desc'>('asc');
+  const [pastSort, setPastSort] = useState<'desc' | 'asc'>('desc');
 
-  const upcomingAppointments = appointments
-    .filter(a => isFuture(parseISO(a.date.toISOString())))
-    .sort((a, b) => parseISO(a.date.toISOString()).getTime() - parseISO(b.date.toISOString()).getTime());
+  const upcomingAppointments = useMemo(() => {
+    return appointments
+      .filter(a => isFuture(parseISO(a.date.toISOString())))
+      .sort((a, b) => {
+        const timeA = parseISO(a.date.toISOString()).getTime();
+        const timeB = parseISO(b.date.toISOString()).getTime();
+        return upcomingSort === 'asc' ? timeA - timeB : timeB - timeA;
+      });
+  }, [appointments, upcomingSort]);
 
-  const pastAppointments = appointments
-    .filter(a => isPast(parseISO(a.date.toISOString())))
-    .sort((a, b) => parseISO(b.date.toISOString()).getTime() - parseISO(a.date.toISOString()).getTime());
+  const pastAppointments = useMemo(() => {
+    return appointments
+      .filter(a => isPast(parseISO(a.date.toISOString())))
+      .sort((a, b) => {
+        const timeA = parseISO(a.date.toISOString()).getTime();
+        const timeB = parseISO(b.date.toISOString()).getTime();
+        return pastSort === 'desc' ? timeB - timeA : timeA - timeB;
+      });
+  }, [appointments, pastSort]);
 
   const handleDelete = (id: string) => {
     const updatedAppointments = appointments.filter(a => a.id !== id);
     setAppointments(updatedAppointments);
   };
-
 
   return (
     <Card className="shadow-lg bg-black/20 backdrop-blur-sm border-white/20 text-white">
@@ -63,7 +76,17 @@ export function AppointmentsHistory({ appointments, setAppointments, onEdit }: A
         ) : (
           <div className="space-y-6">
             <div>
-              <h3 className="font-headline text-xl mb-4 text-pink-400">Upcoming Appointments</h3>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-headline text-xl text-pink-400">Upcoming Appointments</h3>
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" onClick={() => setUpcomingSort('asc')} className={upcomingSort === 'asc' ? 'bg-white/20' : ''}>
+                    <SortAsc className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => setUpcomingSort('desc')} className={upcomingSort === 'desc' ? 'bg-white/20' : ''}>
+                    <SortDesc className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
               {upcomingAppointments.length > 0 ? (
                 <Accordion type="single" collapsible className="w-full">
                   {upcomingAppointments.map((appt) => (
@@ -124,7 +147,17 @@ export function AppointmentsHistory({ appointments, setAppointments, onEdit }: A
             </div>
 
             <div>
-              <h3 className="font-headline text-xl mb-4 text-slate-400">Past Appointments</h3>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-headline text-xl text-slate-400">Past Appointments</h3>
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" onClick={() => setPastSort('desc')} className={pastSort === 'desc' ? 'bg-white/20' : ''}>
+                    <SortAsc className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => setPastSort('asc')} className={pastSort === 'asc' ? 'bg-white/20' : ''}>
+                    <SortDesc className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
               {pastAppointments.length > 0 ? (
                  <Accordion type="single" collapsible className="w-full">
                   {pastAppointments.map((appt) => (
