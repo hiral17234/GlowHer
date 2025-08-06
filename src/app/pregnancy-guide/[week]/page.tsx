@@ -92,8 +92,8 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                     <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
                         <CardContent className="p-0">
                             <div className="grid grid-cols-1 lg:grid-cols-2">
-                                <div className="relative">
-                                    <Image src={weekData.imageUrl} data-ai-hint={weekData.aiHint} alt={`Week ${weekData.week} development`} width={600} height={600} className="object-cover w-full h-full" />
+                                <div className="relative h-64 lg:h-auto">
+                                    <Image src={weekData.imageUrl} data-ai-hint={weekData.aiHint} alt={`Week ${weekData.week} development`} layout="fill" objectFit="cover" />
                                     <div className="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
                                         <h1 className="font-headline text-4xl text-white">{weekData.title}</h1>
                                         <p className="text-white/90 mt-1">{weekData.size}</p>

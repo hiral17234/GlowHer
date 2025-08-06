@@ -338,9 +338,14 @@ export default function FitnessGoalsPage() {
             <div className="flex">
                 <AppSidebar />
                 <div className="flex-1 flex flex-col">
+                    <header className="container mx-auto px-4 py-6 sticky top-0 bg-background/30 backdrop-blur-md z-40 border-b border-border/30 hidden md:flex items-center justify-center">
+                        <h1 className="font-headline text-3xl font-bold">
+                            Fitness Goal Planner
+                        </h1>
+                    </header>
                     <main className="flex-grow container mx-auto px-4 py-8 space-y-8">
                         <div className="max-w-6xl mx-auto space-y-8">
-                            <div className="text-center">
+                            <div className="text-center md:hidden">
                                 <h1 className="font-headline text-4xl md:text-5xl font-bold">Fitness Goal Planner</h1>
                                 <p className="mt-2 text-lg text-muted-foreground">Move mindfully through your health journey.</p>
                             </div>
