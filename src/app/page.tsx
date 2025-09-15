@@ -53,7 +53,7 @@ export default function HomePage() {
     try {
       const storedData = localStorage.getItem('glowher-user');
       if (!storedData) {
-        router.replace('/settings'); // Redirect to settings if no user data
+        router.replace('/welcome'); // Redirect to welcome if no user data
         return;
       }
       
@@ -155,7 +155,7 @@ export default function HomePage() {
 
     } catch (error) {
       console.error("Error during initial load:", error);
-      router.replace('/settings');
+      router.replace('/welcome');
     } finally {
         setLoading(false);
     }
