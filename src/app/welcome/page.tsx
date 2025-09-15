@@ -33,7 +33,7 @@ export default function WelcomePage() {
                     </p>
                 </div>
                 <Button 
-                    onClick={() => router.push('/settings')} 
+                    onClick={() => router.push('/onboarding')} 
                     size="lg" 
                     className="px-10 py-8 text-xl font-bold bg-pink-500 hover:bg-pink-600 text-white shadow-lg transform hover:scale-105 transition-transform"
                 >
