@@ -45,12 +45,17 @@ const settingsNavItems = [
     { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-function NavContent() {
+interface NavContentProps {
+    className?: string;
+    buttonClassName?: string;
+}
+
+function NavContent({ className, buttonClassName }: NavContentProps) {
     const pathname = usePathname();
     const isPregnancyPath = pathname.startsWith('/pregnancy');
 
     return (
-        <div className="flex flex-col h-full bg-background/90 text-foreground">
+        <div className={cn("flex flex-col h-full", className)}>
             <div className="p-4 flex items-center">
                 <GlowHerLogo />
             </div>
@@ -60,7 +65,7 @@ function NavContent() {
                     <Link key={item.href} href={item.href} title={item.label}>
                          <Button
                             variant={pathname === item.href ? 'secondary' : 'ghost'}
-                            className="w-full justify-start text-base"
+                            className={cn("w-full justify-start text-base", buttonClassName)}
                         >
                             <item.icon className="h-5 w-5 mr-3" />
                             <span>{item.label}</span>
@@ -73,7 +78,7 @@ function NavContent() {
                     <Link key={item.href} href={item.href} title={item.label}>
                          <Button
                             variant={pathname.startsWith('/pregnancy') ? 'secondary' : 'ghost'}
-                            className="w-full justify-start text-base"
+                            className={cn("w-full justify-start text-base", buttonClassName)}
                         >
                             <item.icon className="h-5 w-5 mr-3" />
                             <span>{item.label}</span>
@@ -86,7 +91,7 @@ function NavContent() {
                      <Link key={item.href} href={item.href} title={item.label}>
                          <Button
                             variant={pathname === item.href ? 'secondary' : 'ghost'}
-                            className="w-full justify-start text-base"
+                            className={cn("w-full justify-start text-base", buttonClassName)}
                         >
                             <item.icon className="h-5 w-5 mr-3" />
                             <span>{item.label}</span>
@@ -98,18 +103,27 @@ function NavContent() {
     )
 }
 
-export function AppSidebar() {
+interface AppSidebarProps {
+    className?: string;
+    buttonClassName?: string;
+    navContentClassName?: string;
+}
+
+
+export function AppSidebar({ className, buttonClassName, navContentClassName }: AppSidebarProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const pathname = usePathname();
 
     return (
         <>
             {/* Desktop Sidebar */}
             <nav className={cn(
                 "hidden md:flex flex-col border-r bg-background min-h-screen sticky top-0 transition-all duration-300",
-                isSidebarOpen ? "w-64" : "w-20"
+                isSidebarOpen ? "w-64" : "w-20",
+                className,
             )}>
                 <div className="p-2 mb-4 flex items-center justify-end">
-                    <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                    <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className={buttonClassName}>
                         <PanelLeft className="h-6 w-6" />
                     </Button>
                 </div>
@@ -118,7 +132,7 @@ export function AppSidebar() {
                         <Link key={item.href} href={item.href} title={item.label}>
                             <Button
                                 variant={usePathname() === item.href ? 'secondary' : 'ghost'}
-                                className={cn("w-full justify-start text-base my-1", !isSidebarOpen && "justify-center")}
+                                className={cn("w-full justify-start text-base my-1", !isSidebarOpen && "justify-center", buttonClassName)}
                             >
                                 <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
                                 <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
@@ -130,7 +144,7 @@ export function AppSidebar() {
                          <Link key={item.href} href={item.href} title={item.label}>
                             <Button
                                 variant={usePathname().startsWith('/pregnancy') ? 'secondary' : 'ghost'}
-                                className={cn("w-full justify-start text-base my-1", !isSidebarOpen && "justify-center")}
+                                className={cn("w-full justify-start text-base my-1", !isSidebarOpen && "justify-center", buttonClassName)}
                             >
                                 <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
                                 <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
@@ -143,7 +157,7 @@ export function AppSidebar() {
                         <Link key={item.href} href={item.href} title={item.label}>
                             <Button
                                 variant={usePathname() === item.href ? 'secondary' : 'ghost'}
-                                className={cn("w-full justify-start text-base my-1", !isSidebarOpen && "justify-center")}
+                                className={cn("w-full justify-start text-base my-1", !isSidebarOpen && "justify-center", buttonClassName)}
                             >
                                 <item.icon className={cn("h-5 w-5", isSidebarOpen && "mr-3")} />
                                 <span className={cn(!isSidebarOpen && "hidden")}>{item.label}</span>
@@ -157,12 +171,12 @@ export function AppSidebar() {
              <div className="md:hidden">
                 <Sheet>
                     <SheetTrigger asChild>
-                        <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 bg-background/50 backdrop-blur-sm">
+                        <Button variant="ghost" size="icon" className={cn("fixed top-4 left-4 z-50 bg-background/50 backdrop-blur-sm", buttonClassName)}>
                             <PanelLeft className="h-6 w-6" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="p-0 w-64 bg-background">
-                       <NavContent />
+                    <SheetContent side="left" className={cn("p-0 w-64 bg-background", navContentClassName)}>
+                       <NavContent className={navContentClassName} buttonClassName={buttonClassName} />
                     </SheetContent>
                 </Sheet>
             </div>

@@ -175,7 +175,11 @@ export default function LogSymptomsPage() {
     <div className="relative flex flex-col min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/1200x/77/f5/37/77f5373552698548522b033a838a3b35.jpg')"}}>
        <div className="absolute inset-0 bg-black/30 z-0"/>
        <div className="relative z-10 flex text-white">
-        <AppSidebar />
+        <AppSidebar
+          className="bg-black/10 backdrop-blur-lg border-white/20 text-white"
+          buttonClassName="text-white hover:bg-white/10 hover:text-white"
+          navContentClassName="bg-black/50 backdrop-blur-xl border-r-white/20 text-white"
+        />
         <main className="flex-grow container mx-auto px-4 py-8">
             <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8 p-4 rounded-lg">
