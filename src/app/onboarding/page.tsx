@@ -5,15 +5,13 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { format } from "date-fns";
+import { format, getDaysInMonth, getYear, getMonth, getDate } from "date-fns";
 import { CalendarIcon, User, Cake, VenetianMask } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
@@ -66,6 +64,73 @@ export default function OnboardingPage() {
     }
   }
 
+  const DatePickerField = ({ name, label }: { name: "dob" | "lastPeriodDate", label: string }) => {
+    const { control, watch, setValue } = form;
+    const selectedDate = watch(name);
+
+    const currentYear = getYear(new Date());
+    const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+    const months = Array.from({ length: 12 }, (_, i) => ({ value: i, label: format(new Date(0, i), 'MMMM') }));
+
+    const selectedYear = selectedDate ? getYear(selectedDate) : currentYear;
+    const selectedMonth = selectedDate ? getMonth(selectedDate) : getMonth(new Date());
+    
+    const daysInMonth = getDaysInMonth(new Date(selectedYear, selectedMonth));
+    const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+    const handleDateChange = (part: 'day' | 'month' | 'year', value: number) => {
+        const currentDate = selectedDate || new Date();
+        const newDate = new Date(
+            part === 'year' ? value : getYear(currentDate),
+            part === 'month' ? value : getMonth(currentDate),
+            part === 'day' ? value : getDate(currentDate)
+        );
+        setValue(name, newDate, { shouldValidate: true });
+    };
+
+    return (
+      <FormItem>
+        <FormLabel className="flex items-center gap-2">{label}</FormLabel>
+        <div className="grid grid-cols-3 gap-2">
+            <Select
+                value={selectedDate ? String(getMonth(selectedDate)) : undefined}
+                onValueChange={(value) => handleDateChange('month', parseInt(value))}
+            >
+                <SelectTrigger className="bg-white/10 border-white/20"><SelectValue placeholder="Month" /></SelectTrigger>
+                <SelectContent>
+                    {months.map(month => (
+                        <SelectItem key={month.value} value={String(month.value)}>{month.label}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+            <Select
+                value={selectedDate ? String(getDate(selectedDate)) : undefined}
+                onValueChange={(value) => handleDateChange('day', parseInt(value))}
+            >
+                <SelectTrigger className="bg-white/10 border-white/20"><SelectValue placeholder="Day" /></SelectTrigger>
+                <SelectContent>
+                    {days.map(day => (
+                        <SelectItem key={day} value={String(day)}>{day}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+            <Select
+                value={selectedDate ? String(getYear(selectedDate)) : undefined}
+                onValueChange={(value) => handleDateChange('year', parseInt(value))}
+            >
+                <SelectTrigger className="bg-white/10 border-white/20"><SelectValue placeholder="Year" /></SelectTrigger>
+                <SelectContent>
+                    {years.map(year => (
+                        <SelectItem key={year} value={String(year)}>{year}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+        </div>
+        <FormMessage />
+      </FormItem>
+    );
+  };
+
   return (
     <div 
         className="relative flex flex-col min-h-screen items-center justify-center p-4 text-white bg-cover bg-center"
@@ -99,29 +164,9 @@ export default function OnboardingPage() {
                                     </FormItem>
                                 )}
                             />
-                            <FormField 
-                                control={form.control} 
-                                name="dob" 
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel className="flex items-center gap-2"><Cake /> Date of Birth</FormLabel>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <FormControl>
-                                                    <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 hover:bg-white/20", !field.value && "text-white/60")}>
-                                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                                    </Button>
-                                                </FormControl>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-auto p-0" align="start">
-                                                <Calendar captionLayout="dropdown-buttons" fromYear={1900} toYear={new Date().getFullYear()} mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date() || date < new Date("1900-01-01")} initialFocus />
-                                            </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            
+                            <DatePickerField name="dob" label="Date of Birth" />
+                            
                              <FormField 
                                 control={form.control} 
                                 name="gender" 
@@ -145,29 +190,7 @@ export default function OnboardingPage() {
                                 )}
                             />
                             {gender === 'Female' && (
-                                <FormField 
-                                    control={form.control} 
-                                    name="lastPeriodDate" 
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Last Period Start Date</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal bg-white/10 border-white/20 hover:bg-white/20", !field.value && "text-white/60")}>
-                                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date > new Date()} initialFocus />
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                <DatePickerField name="lastPeriodDate" label="Last Period Start Date" />
                             )}
                             <Button type="submit" size="lg" className="w-full bg-pink-500 hover:bg-pink-600">
                                 Complete Setup
