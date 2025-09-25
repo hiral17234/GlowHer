@@ -71,9 +71,7 @@ const FormSchema = z.object({
   logDate: z.date({
     required_error: "A date is required.",
   }),
-  symptoms: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one symptom.",
-  }),
+  symptoms: z.array(z.string()).optional(),
   otherSymptom: z.string().optional(),
   mood: z.string({ required_error: "Please select a mood." }),
   moodIntensity: z.array(z.number()).optional(),
@@ -111,9 +109,11 @@ export default function LogSymptomsClient() {
     const dateParam = searchParams.get('date');
     if (dateParam) {
       const dateFromUrl = parseISO(dateParam);
-      form.setValue('logDate', dateFromUrl);
+      if (!isSameDay(dateFromUrl, logDate)) {
+        form.setValue('logDate', dateFromUrl);
+      }
     }
-  }, [searchParams, form]);
+  }, [searchParams, form, logDate]);
 
   useEffect(() => {
     if (isSameDay(logDate, currentDate)) return;
@@ -244,7 +244,7 @@ export default function LogSymptomsClient() {
                                     mode="single"
                                     selected={field.value}
                                     onSelect={field.onChange}
-                                    disabled={(date) => date > new Date() || date < subDays(new Date(), 30)}
+                                    disabled={(date) => date > new Date()}
                                     initialFocus
                                 />
                                 </PopoverContent>
