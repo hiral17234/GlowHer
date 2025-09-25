@@ -17,7 +17,10 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
 
     useEffect(() => {
         if (params.week) {
-            setWeekNumber(parseInt(params.week, 10));
+            const num = parseInt(params.week, 10);
+            if (!isNaN(num)) {
+                setWeekNumber(num);
+            }
         }
     }, [params.week]);
 
@@ -170,4 +173,3 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
             </div>
         </div>
     );
-}
