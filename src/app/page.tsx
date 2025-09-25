@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -99,14 +100,22 @@ export default function HomePage() {
 
         const expiredItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased) return false;
-            return isBefore(parseISO(item.expiryDate), addDays(today, 1));
+            try {
+                return isBefore(parseISO(item.expiryDate), addDays(today, 1));
+            } catch (e) {
+                return false;
+            }
         });
 
         const expiringItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
-            const tomorrow = addDays(today, 1);
-            const tenDaysFromNow = addDays(today, 10);
-            return isWithinInterval(parseISO(item.expiryDate), { start: tomorrow, end: tenDaysFromNow });
+            try {
+                const tomorrow = addDays(today, 1);
+                const tenDaysFromNow = addDays(today, 10);
+                return isWithinInterval(parseISO(item.expiryDate), { start: tomorrow, end: tenDaysFromNow });
+            } catch(e) {
+                return false;
+            }
         });
         
         if (expiredItems.length > 0) {
