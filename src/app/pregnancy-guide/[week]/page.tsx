@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,11 +13,22 @@ import { PregnancyNav } from '@/components/glowher/PregnancyNav';
 
 export default function WeekDetailPage({ params }: { params: { week: string } }) {
     const router = useRouter();
-    
-    // Using React.use() to be compliant with future Next.js versions
-    const routeParams = use(Promise.resolve(params));
-    const weekNumber = parseInt(routeParams.week, 10);
+    const [weekNumber, setWeekNumber] = useState<number | null>(null);
 
+    useEffect(() => {
+        if (params.week) {
+            setWeekNumber(parseInt(params.week, 10));
+        }
+    }, [params.week]);
+
+    if (weekNumber === null) {
+        return (
+             <div className="flex flex-col items-center justify-center min-h-screen">
+                <h1 className="text-2xl font-bold">Loading...</h1>
+            </div>
+        );
+    }
+    
     const weekData = weeklyDevelopment.find(w => w.week === weekNumber);
 
     if (!weekData) {
