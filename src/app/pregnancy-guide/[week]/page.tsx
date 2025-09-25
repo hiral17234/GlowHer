@@ -159,7 +159,7 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                     
                     <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
                         <CardHeader>
-                            <CardTitle className="text-pink-800">Your Body's Journey: Week {weekData.week}</CardTitle>
+                            <CardTitle className="text-pink-800">Your Body's Journey: Week ${weekData.week}</CardTitle>
                             <CardDescription>A visual look at how your body might be changing this week.</CardDescription>
                         </CardHeader>
                         <CardContent className="p-0 flex items-center justify-center">
