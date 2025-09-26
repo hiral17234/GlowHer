@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -49,130 +50,147 @@ export default function HomePage() {
 
 
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem('glowher-user');
-      if (!storedData) {
-        router.replace('/welcome'); // Redirect to welcome if no user data
-        return;
-      }
-      
-      const parsedUserData = JSON.parse(storedData);
-      setUserData(parsedUserData);
-      
-      const currentNotifications: Notification[] = [];
-      const todayKey = format(new Date(), 'yyyy-MM-dd');
-      const yesterdayKey = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+    let isMounted = true;
 
-      // Check for Period/Pregnancy status
-      const isPregnant = localStorage.getItem('glowher-fitness-is-pregnant') === 'true';
-      if (isPregnant) {
-        const pregData = localStorage.getItem('glowher-pregnancy-tracker');
-        if (pregData) {
-            const { dueDate } = JSON.parse(pregData);
-            const startDate = subDays(new Date(dueDate), 280);
-            const totalDays = differenceInDays(new Date(), startDate);
-            const gestationalAgeWeeks = Math.floor(totalDays / 7);
-            currentNotifications.push({ id: 'preg-status', icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-400', href: '/pregnancy-tracker', isDismissible: false });
+    function safeJsonParse(item: string | null) {
+        if (!item) return null;
+        try {
+            return JSON.parse(item);
+        } catch (e) {
+            console.error("Failed to parse JSON from localStorage", e);
+            return null;
         }
-      } else {
-        const periodData = localStorage.getItem('glowher-period-tracker');
-        if (periodData) {
-            const data = JSON.parse(periodData);
-            let currentCycleStartDate = startOfDay(new Date(data.lastPeriodDate));
-            while (addDays(currentCycleStartDate, data.cycleLength) <= new Date()) {
-                currentCycleStartDate = addDays(currentCycleStartDate, data.cycleLength);
-            }
-            const nextPeriodStart = addDays(currentCycleStartDate, data.cycleLength);
-            const daysUntil = differenceInDays(nextPeriodStart, new Date());
-            if(daysUntil >= 0 && daysUntil <= 7) {
-                currentNotifications.push({ id: 'period-status', icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-400', href: '/period-tracker', isDismissible: false });
-            }
-        }
-      }
-
-      // Check for expiring groceries
-      const savedInventory = localStorage.getItem('glowher-grocery-list');
-      if (savedInventory) {
-        const groceryList: GroceryItem[] = JSON.parse(savedInventory);
-        const today = startOfDay(new Date());
-
-        const expiredItems = groceryList.filter(item => {
-            if (!item.expiryDate || item.purchased) return false;
-            try {
-                return isBefore(parseISO(item.expiryDate), addDays(today, 1));
-            } catch (e) {
-                return false;
-            }
-        });
-
-        const expiringItems = groceryList.filter(item => {
-            if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
-            try {
-                const tomorrow = addDays(today, 1);
-                const tenDaysFromNow = addDays(today, 10);
-                return isWithinInterval(parseISO(item.expiryDate), { start: tomorrow, end: tenDaysFromNow });
-            } catch(e) {
-                return false;
-            }
-        });
-        
-        if (expiredItems.length > 0) {
-            expiredItems.forEach(item => {
-                const expiredMessage = `Oops! Your item "${item.name}" has expired.`;
-                currentNotifications.push({ id: `expired-item-${item.id}`, icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list', isDismissible: true });
-            });
-        }
-
-        if (expiringItems.length > 0) {
-            const expiringMessage = `Expiring soon: ${expiringItems.map(i => i.name).join(', ')}.`;
-            currentNotifications.push({ id: 'expiring-items', icon: AlertTriangle, message: expiringMessage, color: 'text-yellow-500', href: '/grocery-list', isDismissible: false });
-        }
-      }
-
-      // Check for items on shopping list
-      const savedShoppingList = localStorage.getItem('glowher-shopping-list');
-      if(savedShoppingList) {
-          const shoppingList: ShoppingListItem[] = JSON.parse(savedShoppingList);
-          if (shoppingList.length > 0) {
-              const shoppingMessage = `You have ${shoppingList.length} item(s) on your shopping list.`;
-              currentNotifications.push({ id: 'shopping-list', icon: ShoppingCart, message: shoppingMessage, color: 'text-blue-400', href: '/grocery-list', isDismissible: false });
-          }
-      }
-      
-      // Check sleep log for yesterday
-      const sleepLog = localStorage.getItem(`glowher-sleep-log-${yesterdayKey}`);
-      if (!sleepLog) {
-          currentNotifications.push({ id: 'sleep-log', icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-400', href: '/sleep-tracker', isDismissible: false });
-      }
-      
-      // Check water log for today
-      const waterLog = localStorage.getItem(`glowher-water-tracker-${todayKey}`);
-      if (!waterLog || JSON.parse(waterLog).entries.length === 0) {
-          currentNotifications.push({ id: 'water-log', icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-400', href: '/water-tracker', isDismissible: false });
-      }
-      
-      // Check fitness log for today
-      const fitnessLogKey = isPregnant ? `glowher-preg-fitness-log-${todayKey}` : `glowher-fitness-log-${todayKey}`;
-      const fitnessLog = localStorage.getItem(fitnessLogKey);
-      if (!fitnessLog) {
-          currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-400', href: '/fitness-goals', isDismissible: false });
-      }
-
-      setNotifications(currentNotifications);
-
-    } catch (error) {
-      console.error("Error during initial load:", error);
-      router.replace('/welcome');
-    } finally {
-        setLoading(false);
     }
-  }, [router, toast]);
+
+    const loadData = () => {
+        try {
+            const storedData = localStorage.getItem('glowher-user');
+            if (!storedData) {
+                router.replace('/welcome');
+                return;
+            }
+            
+            const parsedUserData = safeJsonParse(storedData);
+            if (!parsedUserData) {
+                // Handle corrupted data, maybe clear and redirect
+                localStorage.removeItem('glowher-user');
+                router.replace('/welcome');
+                return;
+            }
+
+            if (isMounted) {
+              setUserData(parsedUserData);
+            }
+            
+            const currentNotifications: Notification[] = [];
+            const todayKey = format(new Date(), 'yyyy-MM-dd');
+            const yesterdayKey = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+
+            // Check for Period/Pregnancy status
+            const isPregnant = localStorage.getItem('glowher-fitness-is-pregnant') === 'true';
+            if (isPregnant) {
+              const pregData = safeJsonParse(localStorage.getItem('glowher-pregnancy-tracker'));
+              if (pregData && pregData.dueDate) {
+                  const startDate = subDays(new Date(pregData.dueDate), 280);
+                  const totalDays = differenceInDays(new Date(), startDate);
+                  const gestationalAgeWeeks = Math.floor(totalDays / 7);
+                  currentNotifications.push({ id: 'preg-status', icon: Baby, message: `You are ${gestationalAgeWeeks} weeks pregnant.`, color: 'text-pink-400', href: '/pregnancy-tracker', isDismissible: false });
+              }
+            } else {
+              const periodData = safeJsonParse(localStorage.getItem('glowher-period-tracker'));
+              if (periodData && periodData.lastPeriodDate && periodData.cycleLength) {
+                  let currentCycleStartDate = startOfDay(new Date(periodData.lastPeriodDate));
+                  while (addDays(currentCycleStartDate, periodData.cycleLength) <= new Date()) {
+                      currentCycleStartDate = addDays(currentCycleStartDate, periodData.cycleLength);
+                  }
+                  const nextPeriodStart = addDays(currentCycleStartDate, periodData.cycleLength);
+                  const daysUntil = differenceInDays(nextPeriodStart, new Date());
+                  if(daysUntil >= 0 && daysUntil <= 7) {
+                      currentNotifications.push({ id: 'period-status', icon: Heart, message: `Your next period is predicted in ${daysUntil} days.`, color: 'text-red-400', href: '/period-tracker', isDismissible: false });
+                  }
+              }
+            }
+
+            // Check for expiring groceries
+            const savedInventory = safeJsonParse(localStorage.getItem('glowher-grocery-list'));
+            if (Array.isArray(savedInventory)) {
+              const groceryList: GroceryItem[] = savedInventory;
+              const today = startOfDay(new Date());
+
+              const expiredItems = groceryList.filter(item => {
+                  if (!item.expiryDate || item.purchased) return false;
+                  try { return isBefore(parseISO(item.expiryDate), addDays(today, 1)); } catch (e) { return false; }
+              });
+
+              const expiringItems = groceryList.filter(item => {
+                  if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
+                  try {
+                      const tomorrow = addDays(today, 1);
+                      const tenDaysFromNow = addDays(today, 10);
+                      return isWithinInterval(parseISO(item.expiryDate), { start: tomorrow, end: tenDaysFromNow });
+                  } catch(e) { return false; }
+              });
+              
+              if (expiredItems.length > 0) {
+                  expiredItems.forEach(item => {
+                      const expiredMessage = `Oops! Your item "${item.name}" has expired.`;
+                      currentNotifications.push({ id: `expired-item-${item.id}`, icon: AlertTriangle, message: expiredMessage, color: 'text-destructive', href: '/grocery-list', isDismissible: true });
+                  });
+              }
+
+              if (expiringItems.length > 0) {
+                  const expiringMessage = `Expiring soon: ${expiringItems.map(i => i.name).join(', ')}.`;
+                  currentNotifications.push({ id: 'expiring-items', icon: AlertTriangle, message: expiringMessage, color: 'text-yellow-500', href: '/grocery-list', isDismissible: false });
+              }
+            }
+
+            // Other checks
+            const savedShoppingList = safeJsonParse(localStorage.getItem('glowher-shopping-list'));
+            if(Array.isArray(savedShoppingList) && savedShoppingList.length > 0) {
+                currentNotifications.push({ id: 'shopping-list', icon: ShoppingCart, message: `You have ${savedShoppingList.length} item(s) on your shopping list.`, color: 'text-blue-400', href: '/grocery-list', isDismissible: false });
+            }
+            
+            if (!localStorage.getItem(`glowher-sleep-log-${yesterdayKey}`)) {
+                currentNotifications.push({ id: 'sleep-log', icon: Bed, message: "Don't forget to log last night's sleep.", color: 'text-indigo-400', href: '/sleep-tracker', isDismissible: false });
+            }
+            
+            const waterLog = safeJsonParse(localStorage.getItem(`glowher-water-tracker-${todayKey}`));
+            if (!waterLog || waterLog.entries.length === 0) {
+                currentNotifications.push({ id: 'water-log', icon: Droplet, message: "Remember to log your water intake today.", color: 'text-sky-400', href: '/water-tracker', isDismissible: false });
+            }
+            
+            const fitnessLogKey = isPregnant ? `glowher-preg-fitness-log-${todayKey}` : `glowher-fitness-log-${todayKey}`;
+            if (!localStorage.getItem(fitnessLogKey)) {
+                currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-400', href: '/fitness-goals', isDismissible: false });
+            }
+
+            if (isMounted) {
+              setNotifications(currentNotifications);
+            }
+
+        } catch (error) {
+            console.error("Error during initial data load:", error);
+            // In case of any error, redirect to a safe page
+            router.replace('/welcome');
+        } finally {
+            if (isMounted) {
+              setLoading(false);
+            }
+        }
+    };
+
+    loadData();
+
+    return () => {
+        isMounted = false;
+    };
+  }, [router]);
 
   if (loading || !userData) {
     return (
       <div className="flex flex-col min-h-screen items-center justify-center bg-background text-foreground">
         <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
-        <p className="mt-4 text-muted-foreground">Loading...</p>
+        <p className="mt-4 text-muted-foreground">Loading Your Dashboard...</p>
       </div>
     );
   }
