@@ -75,21 +75,31 @@ export default function RemindersPage() {
       // Check for expiring groceries
       const savedInventory = localStorage.getItem('glowher-grocery-list');
       if (savedInventory) {
-        const groceryList: GroceryItem[] = JSON.parse(savedInventory).map((item: any) => ({...item, expiryDate: item.expiryDate ? parseISO(item.expiryDate) : undefined, dateAdded: item.dateAdded ? parseISO(item.dateAdded) : new Date()}));
+        const groceryList: GroceryItem[] = JSON.parse(savedInventory);
         const today = startOfDay(new Date());
         
         const dismissedExpired = JSON.parse(localStorage.getItem('glowher-dismissed-expired-items') || '[]');
 
         const expiredItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased) return false;
-            return isBefore(item.expiryDate, addDays(today, 1)) && !dismissedExpired.includes(item.id);
+            try {
+                 const expiry = parseISO(item.expiryDate);
+                 return isBefore(expiry, addDays(today, 1)) && !dismissedExpired.includes(item.id);
+            } catch {
+                return false;
+            }
         });
 
         const expiringItems = groceryList.filter(item => {
             if (!item.expiryDate || item.purchased || expiredItems.some(exp => exp.id === item.id)) return false;
-            const tomorrow = addDays(today, 1);
-            const tenDaysFromNow = addDays(today, 10);
-            return isWithinInterval(item.expiryDate, { start: tomorrow, end: tenDaysFromNow });
+            try {
+                const expiry = parseISO(item.expiryDate);
+                const tomorrow = addDays(today, 1);
+                const tenDaysFromNow = addDays(today, 10);
+                return isWithinInterval(expiry, { start: tomorrow, end: tenDaysFromNow });
+            } catch {
+                return false;
+            }
         });
         
         if (expiredItems.length > 0) {
