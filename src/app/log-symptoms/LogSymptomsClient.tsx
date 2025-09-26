@@ -397,3 +397,5 @@ export default function LogSymptomsClient() {
     </div>
   );
 }
+
+    
