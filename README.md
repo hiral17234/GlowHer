@@ -62,3 +62,12 @@ Throughout the design and implementation process, the project achieved its inten
 The project not only highlights technical proficiency but also reinforces the positive impact of technology in promoting personal well-being. By transforming digital interaction into a medium for self-care and reflection, GlowHer contributes to the larger vision of making holistic health tracking accessible and intuitive.
 
 In conclusion, GlowHer demonstrates the potential of combining thoughtful design, technology, and personalization into a unified framework. With further development, the integration of cloud-based data storage, and expanded community features, this initiative can grow from a conceptual prototype into a vital tool for women's wellness—turning daily tracking into a tangible practice of self-love.
+
+### References
+
+1.  Lupton, D. (2016). *The Quantified Self: A Sociology of Self-Tracking*. Polity Press.
+2.  Fox, S., & Duggan, M. (2013). *Tracking for Health*. Pew Research Center.
+3.  Shin, H., & Lee, Y. (2020). *User experience of pregnancy and childbirth applications: A qualitative study*. BMC Medical Informatics and Decision Making, 20(1), 1-11.
+4.  Bietz, M. J., & Patrick, K. (2015). *The role of technology in wellness and self-care*. In Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies.
+5.  Epstein, D. A., et al. (2016). *Beyond tracking: The design implications of using self-tracking data for personal reflection*. In Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems.
+6.  Li, I., Dey, A., & Forlizzi, J. (2010). *A stage-based model of personal informatics systems*. In Proceedings of the SIGCHI conference on human factors in computing systems.
