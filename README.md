@@ -24,6 +24,10 @@ The implementation of the GlowHer Wellness platform requires a simple yet effici
 *   **IDE:** Visual Studio Code or equivalent
 
 ### Method
-The project follows a modular, component-based design approach. The frontend is developed using Next.js with React and TypeScript to ensure a responsive, type-safe, and interactive interface for users to track cycles, log moods, and interact with wellness tools. The backend functionality, particularly the AI features, is powered by Google's Genkit framework.
+The project follows a modular, component-based design approach, leveraging modern web technologies to create a robust and scalable application. The frontend is developed using Next.js with React, utilizing the App Router for optimized performance and server-side rendering capabilities. TypeScript is employed across the entire codebase to ensure type safety, reduce runtime errors, and improve developer experience.
 
-Each feature module has been developed, tested, and integrated to ensure smooth interaction between the frontend and backend services, maintaining efficiency, security, and user accessibility.
+For styling, the application integrates Tailwind CSS, a utility-first CSS framework that allows for rapid and consistent UI development. User interface components are built using ShadCN UI, providing a set of accessible and reusable components that can be easily customized.
+
+The backend functionality, particularly for AI-driven features like personalized advice and thought generation, is powered by Google's Genkit framework. This enables seamless integration with large language models to provide dynamic and intelligent content. Data persistence for user-specific information is handled through browser Local Storage for simplicity and client-side efficiency, with Firebase Firestore planned for more complex, scalable cloud storage solutions.
+
+Each feature module—from the Period Tracker to the Mood Journal—has been developed as an independent but interconnected component. This modularity ensures that the system is maintainable and extensible. Rigorous testing and integration practices are followed to ensure smooth interaction between the frontend and backend services, maintaining a high standard of efficiency, security, and user accessibility.
