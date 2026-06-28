@@ -134,8 +134,7 @@ export default function OnboardingPage() {
   return (
     <div 
         className="relative flex flex-col min-h-screen items-center justify-center p-4 text-white bg-cover bg-center"
-        style={{backgroundImage: "url('https://i.pinimg.com/originals/9a/7d/5d/9a7d5d7135e554d39e31d453b6f0011a.jpg')"}}
-    >
+style={{backgroundImage: "url('https://i.pinimg.com/1200x/e6/6b/c3/e66bc350d928193530331c3a233498bf.jpg')"}}    >
         <div className="absolute inset-0 bg-black/50 z-0" />
         
         <header className="absolute top-0 left-0 w-full container mx-auto px-4 py-6 z-10">
