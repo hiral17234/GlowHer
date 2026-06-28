@@ -4,7 +4,7 @@ GlowHer Wellness is a personalized digital sanctuary designed for holistic women
 
 ---
 
-## 1: PROJECT HIGHLIGHTS (For Report)
+## 1: PROJECT HIGHLIGHTS (For Word Report)
 
 *   **Unified Holistic Health Platform:** Built a comprehensive wellness sanctuary covering menstrual cycle tracking, week-by-week pregnancy monitoring, and mental health support—integrating over 8 distinct health modules into a single, cohesive experience.
 *   **AI-Driven Personalized Insights:** Integrated Google Genkit and Gemini AI to provide tailored wellness advice and daily "Thought of the Day" inspirations, dynamically generated based on user-logged moods and cycle phases.
@@ -13,7 +13,34 @@ GlowHer Wellness is a personalized digital sanctuary designed for holistic women
 
 ---
 
-## 2: SYSTEM REQUIREMENTS AND METHOD
+## 2: GITHUB SETUP INSTRUCTIONS (Terminal Commands)
+
+Follow these exact steps in your terminal to move your files to GitHub:
+
+1.  **Remove the existing remote:**
+    ```bash
+    git remote remove origin
+    ```
+2.  **Add all files:**
+    ```bash
+    git add .
+    ```
+3.  **Commit your changes:**
+    ```bash
+    git commit -m "Finalized project with correct report points"
+    ```
+4.  **Connect to your repository:**
+    ```bash
+    git remote add origin https://github.com/hiral17234/GlowHer
+    ```
+5.  **Push to GitHub (Force push):**
+    ```bash
+    git push -u origin main -f
+    ```
+
+---
+
+## 3: SYSTEM REQUIREMENTS AND METHOD
 
 ### The System Requirements
 The platform is optimized for modern web browsers and requires standard hardware (i5 processor, 8GB RAM) with stable internet for AI features.
@@ -27,7 +54,7 @@ GlowHer utilizes a modular, privacy-centric architecture built on the Next.js Ap
 
 ---
 
-## 3: IMPLEMENTATION/EXECUTION
+## 4: IMPLEMENTATION/EXECUTION
 
 The implementation phase focused on transforming holistic health concepts into a responsive digital platform. The process was divided into three core modules:
 
@@ -39,7 +66,7 @@ The implementation phase focused on transforming holistic health concepts into a
 
 ---
 
-## 4: RESULT AND DISCUSSION
+## 5: RESULT AND DISCUSSION
 
 The implementation resulted in a fully functional, user-friendly platform. Key modules such as the **Period Tracker**, **Pregnancy Guide**, and **MindDump** performed reliably under various user scenarios.
 
@@ -47,36 +74,9 @@ The dashboard effectively serves as a central hub, providing immediate access to
 
 ---
 
-## 5: CONCLUSION
+## 6: CONCLUSION
 
 GlowHer Wellness successfully demonstrates how modern web technologies can be used to create a comprehensive yet private health companion. By combining a user-centric UI with powerful generative AI and a secure local data model, the project fulfills its objective of providing an accessible personal sanctuary for women's wellness.
-
----
-
-## 6: GITHUB SETUP INSTRUCTIONS (Terminal Commands)
-
-Follow these exact steps in your terminal to move your files to GitHub:
-
-1.  **Remove any existing remote:**
-    ```bash
-    git remote remove origin
-    ```
-2.  **Add all files:**
-    ```bash
-    git add .
-    ```
-3.  **Commit your changes:**
-    ```bash
-    git commit -m "Update project for GitHub"
-    ```
-4.  **Connect to your repository:**
-    ```bash
-    git remote add origin https://github.com/hiral17234/GlowHer
-    ```
-5.  **Push to GitHub:**
-    ```bash
-    git push -u origin main -f
-    ```
 
 ---
 

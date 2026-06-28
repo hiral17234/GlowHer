@@ -2,12 +2,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/.yarn/cache
-/.yarn/unplugged
-/.yarn/install-state.gz
-/.yarn/build-state.yml
-/.yarn/cache
-/.pnp.*
+.yarn/install-state.gz
 
 # testing
 /coverage
