@@ -16,7 +16,13 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { ChevronLeft, History, Footprints, Dumbbell, Calendar, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DailyFitnessLog, DEFAULT_LOG_PREFIX } from '@/app/fitness-goals/page';
+const DEFAULT_LOG_PREFIX = 'glowher-fitness-log-';
+
+type DailyFitnessLog = {
+  logDate: string;
+  steps?: { count: number; workoutType: string; };
+  workout?: { type: string; duration: number; };
+};
 
 export default function FitnessHistoryPage() {
   const router = useRouter();
