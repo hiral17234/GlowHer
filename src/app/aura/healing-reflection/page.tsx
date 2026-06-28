@@ -57,9 +57,7 @@ export default function HealingReflectionPage() {
     const handleRetry = () => {
         router.push('/breathe');
     };
-
-    return (
-        <div className="relative flex flex-col min-h-screen items-center justify-center p-4 bg-cover bg-center text-white selection:bg-teal-300 selection:text-slate-900" style={{backgroundImage: "url('https://i.pinimg.com/736x/9d/6a/7b/9d6a7bc03e8fc4a82e39bf4872852045.jpg')"}}>
+className="relative flex flex-col h-screen overflow-hidden items-center justify-center p-4 bg-cover bg-center text-white selection:bg-teal-300 selection:text-slate-900" style={{backgroundImage: "url('https://i.pinimg.com/736x/e8/81/eb/e881eb9ef7f18afd8ad5d740c5161e3f.jpg')"}}
              <div className="absolute inset-0 bg-black/30 z-0"/>
              <main className="relative z-10 w-full max-w-lg mx-auto">
                 <Card className="shadow-2xl bg-black/20 backdrop-blur-lg border-white/10">
