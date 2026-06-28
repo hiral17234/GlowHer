@@ -1,9 +1,29 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  addDays, format, startOfDay, differenceInDays,
-  isWithinInterval, isSameDay, subDays,
-  startOfMonth, endOfMonth, eachDayOfInterval, getDay,
-} from "date-fns";
+
+// Inline date utilities (replaces date-fns)
+function startOfDay(d) { const r = new Date(d); r.setHours(0,0,0,0); return r; }
+function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
+function subDays(d, n) { return addDays(d, -n); }
+function differenceInDays(a, b) { return Math.round((startOfDay(a) - startOfDay(b)) / 86400000); }
+function isSameDay(a, b) { return startOfDay(a).getTime() === startOfDay(b).getTime(); }
+function isWithinInterval(d, { start, end }) { const t = startOfDay(d).getTime(); return t >= startOfDay(start).getTime() && t <= startOfDay(end).getTime(); }
+function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
+function endOfMonth(d) { return new Date(d.getFullYear(), d.getMonth() + 1, 0); }
+function eachDayOfInterval({ start, end }) { const days = []; let cur = startOfDay(start); const e = startOfDay(end); while (cur <= e) { days.push(new Date(cur)); cur = addDays(cur, 1); } return days; }
+function getDay(d) { return d.getDay(); }
+function format(d, fmt) {
+  const dt = new Date(d);
+  const pad = n => String(n).padStart(2, "0");
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthsShort = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return fmt
+    .replace("yyyy", dt.getFullYear())
+    .replace("MMMM", months[dt.getMonth()])
+    .replace("MMM", monthsShort[dt.getMonth()])
+    .replace("MM", pad(dt.getMonth() + 1))
+    .replace("dd", pad(dt.getDate()))
+    .replace("d", dt.getDate());
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const PHASES = {
@@ -142,8 +162,8 @@ function computeCycleData(lastPeriodDate, cycleLength, lutealLen) {
 
 function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
 
-function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
-function load(key) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch { return null; } }
+function save(key, val) { try { window.storage?.set(key, JSON.stringify(val)); } catch {} }
+function load(key) { return null; } // storage loaded async in useEffect below
 
 // ─── UI Primitives ────────────────────────────────────────────────────────────
 function Modal({ onClose, children, title, wide }) {
@@ -481,11 +501,11 @@ function CycleSettingsModal({ form, onSave, onClose }) {
     return !Object.keys(e).length;
   }
 
-  function submit(e) { e.preventDefault(); if (validate()) onSave(local); }
+  function submit() { if (validate()) onSave(local); }
 
   return (
     <Modal onClose={onClose} title="⚙️ Cycle settings">
-      <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
         <div>
           <label style={lbl}>Last period started</label>
           <input type="date" style={inp} value={local.lastPeriodDate ? format(new Date(local.lastPeriodDate), "yyyy-MM-dd") : ""} max={format(new Date(), "yyyy-MM-dd")}
@@ -513,8 +533,8 @@ function CycleSettingsModal({ form, onSave, onClose }) {
             ⚠️ Cycles over 35 days may indicate a hormonal imbalance. Worth mentioning to your doctor.
           </div>
         )}
-        <PrimaryBtn style={{ width: "100%" }}>Save cycle settings</PrimaryBtn>
-      </form>
+        <PrimaryBtn onClick={submit} style={{ width: "100%" }}>Save cycle settings</PrimaryBtn>
+      </div>
     </Modal>
   );
 }
@@ -1061,10 +1081,19 @@ export default function PeriodTracker() {
   const [appSettings, setAppSettings] = useState(DEFAULT_SETTINGS);
 
   useEffect(() => {
-    const f = load("pt-form"); if (f) { if (f.lastPeriodDate) f.lastPeriodDate = new Date(f.lastPeriodDate); setForm(f); }
-    const pl = load("pt-periods"); if (pl) setPeriodLogs(pl);
-    const sl = load("pt-symptoms"); if (sl) setSymptomLogs(sl);
-    const as = load("pt-settings"); if (as) setAppSettings(as);
+    async function loadData() {
+      try {
+        const fRes = await window.storage?.get("pt-form");
+        if (fRes?.value) { const f = JSON.parse(fRes.value); if (f.lastPeriodDate) f.lastPeriodDate = new Date(f.lastPeriodDate); setForm(f); }
+        const plRes = await window.storage?.get("pt-periods");
+        if (plRes?.value) setPeriodLogs(JSON.parse(plRes.value));
+        const slRes = await window.storage?.get("pt-symptoms");
+        if (slRes?.value) setSymptomLogs(JSON.parse(slRes.value));
+        const asRes = await window.storage?.get("pt-settings");
+        if (asRes?.value) setAppSettings(JSON.parse(asRes.value));
+      } catch {}
+    }
+    loadData();
   }, []);
 
   useEffect(() => {
