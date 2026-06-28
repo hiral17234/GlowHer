@@ -57,9 +57,9 @@ GlowHer Wellness successfully demonstrates how modern web technologies can be us
 
 Follow these exact steps in your terminal to move your files to GitHub:
 
-1.  **Initialize Git:**
+1.  **Remove any existing remote:**
     ```bash
-    git init
+    git remote remove origin
     ```
 2.  **Add all files:**
     ```bash
@@ -67,19 +67,15 @@ Follow these exact steps in your terminal to move your files to GitHub:
     ```
 3.  **Commit your changes:**
     ```bash
-    git commit -m "Initial commit of GlowHer Wellness"
+    git commit -m "Update project for GitHub"
     ```
-4.  **Rename the branch:**
-    ```bash
-    git branch -M main
-    ```
-5.  **Connect to your repository:**
+4.  **Connect to your repository:**
     ```bash
     git remote add origin https://github.com/hiral17234/GlowHer
     ```
-6.  **Push to GitHub:**
+5.  **Push to GitHub:**
     ```bash
-    git push -u origin main
+    git push -u origin main -f
     ```
 
 ---
