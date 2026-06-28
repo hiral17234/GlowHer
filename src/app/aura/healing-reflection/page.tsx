@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -9,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Sparkles, History, Check, Smile } from 'lucide-react';
+import { History, Check, Smile } from 'lucide-react';
 
 const LOCAL_STORAGE_KEY_PREFIX = 'glowher-mental-health-log-';
 
@@ -23,7 +22,6 @@ export default function HealingReflectionPage() {
         try {
             const initialNote = localStorage.getItem('tempGlowherNote') || '';
             const aura = localStorage.getItem('tempGlowherAura') || 'Unknown';
-
             const todayKey = `${LOCAL_STORAGE_KEY_PREFIX}${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}`;
             const dataToSave = {
                 logDate: new Date().toISOString(),
@@ -32,38 +30,32 @@ export default function HealingReflectionPage() {
                 healingPercentage: healingValue[0],
                 finalNote: finalNote,
             };
-
             localStorage.setItem(todayKey, JSON.stringify(dataToSave));
-            
-            // Clean up temporary storage
             localStorage.removeItem('tempGlowherNote');
             localStorage.removeItem('tempGlowherAura');
-
-            toast({
-                title: "Reflection Saved!",
-                description: "Your healing journey continues. Well done.",
-            });
+            toast({ title: "Reflection Saved!", description: "Your healing journey continues. Well done." });
             router.push('/');
         } catch (error) {
             console.error("Failed to save healing reflection:", error);
-            toast({
-                variant: 'destructive',
-                title: "Error",
-                description: "Could not save your reflection. Please try again.",
-            });
+            toast({ variant: 'destructive', title: "Error", description: "Could not save your reflection. Please try again." });
         }
     };
 
     const handleRetry = () => {
         router.push('/breathe');
     };
-className="relative flex flex-col h-screen overflow-hidden items-center justify-center p-4 bg-cover bg-center text-white selection:bg-teal-300 selection:text-slate-900" style={{backgroundImage: "url('https://i.pinimg.com/736x/e8/81/eb/e881eb9ef7f18afd8ad5d740c5161e3f.jpg')"}}
-             <div className="absolute inset-0 bg-black/30 z-0"/>
-             <main className="relative z-10 w-full max-w-lg mx-auto">
+
+    return (
+        <div
+            className="relative flex flex-col h-screen overflow-hidden items-center justify-center p-4 bg-cover bg-center text-white selection:bg-teal-300 selection:text-slate-900"
+            style={{backgroundImage: "url('https://i.pinimg.com/736x/e8/81/eb/e881eb9ef7f18afd8ad5d740c5161e3f.jpg')"}}
+        >
+            <div className="absolute inset-0 bg-black/30 z-0"/>
+            <main className="relative z-10 w-full max-w-lg mx-auto">
                 <Card className="shadow-2xl bg-black/20 backdrop-blur-lg border-white/10">
                     <CardHeader className="text-center">
                         <div className="flex justify-center items-center mb-4">
-                           <Smile className="h-12 w-12 text-teal-300" />
+                            <Smile className="h-12 w-12 text-teal-300" />
                         </div>
                         <CardTitle className="font-headline text-3xl text-white">How do you feel now?</CardTitle>
                         <CardDescription className="text-slate-300">Reflect on your emotional shift.</CardDescription>
@@ -83,7 +75,6 @@ className="relative flex flex-col h-screen overflow-hidden items-center justify-
                                 className="[&>span>span]:bg-teal-400 [&>span]:bg-teal-400/20"
                             />
                         </div>
-
                         <div>
                             <label htmlFor="healing-note" className="block text-lg font-semibold mb-2">
                                 Add a final private note (optional)
@@ -96,7 +87,6 @@ className="relative flex flex-col h-screen overflow-hidden items-center justify-
                                 className="bg-white/10 border-white/20 text-white placeholder:text-slate-400"
                             />
                         </div>
-
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Button onClick={handleFinish} className="flex-1 bg-teal-500 hover:bg-teal-600 text-slate-900 font-bold">
                                 <Check className="mr-2 h-4 w-4" /> Finish
@@ -107,7 +97,7 @@ className="relative flex flex-col h-screen overflow-hidden items-center justify-
                         </div>
                     </CardContent>
                 </Card>
-             </main>
+            </main>
         </div>
     );
 }
