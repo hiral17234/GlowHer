@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -161,7 +160,7 @@ export default function HomePage() {
             
             const fitnessLogKey = isPregnant ? `glowher-preg-fitness-log-${todayKey}` : `glowher-fitness-log-${todayKey}`;
             if (!localStorage.getItem(fitnessLogKey)) {
-                currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-400', href: '/fitness-goals', isDismissible: false });
+                currentNotifications.push({ id: 'fitness-log', icon: Activity, message: "Have you logged your fitness activity today?", color: 'text-teal-400', href: isPregnant ? '/pregnancy-fitness' : '/fitness-goals', isDismissible: false });
             }
 
             if (isMounted) {

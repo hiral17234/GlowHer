@@ -1,28 +1,28 @@
-
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Home } from 'lucide-react';
 import { weeklyDevelopment } from '@/lib/pregnancy-data';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PregnancyNav } from '@/components/glowher/PregnancyNav';
 
-export default function WeekDetailPage({ params }: { params: { week: string } }) {
+export default function WeekDetailPage({ params }: { params: Promise<{ week: string }> }) {
+    const { week } = use(params);
     const router = useRouter();
     const [weekNumber, setWeekNumber] = useState<number | null>(null);
 
     useEffect(() => {
-        if (params.week) {
-            const num = parseInt(params.week, 10);
+        if (week) {
+            const num = parseInt(week, 10);
             if (!isNaN(num)) {
                 setWeekNumber(num);
             }
         }
-    }, [params.week]);
+    }, [week]);
 
     if (weekNumber === null) {
         return (
@@ -45,9 +45,9 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
         );
     }
     
-    const goToWeek = (week: number) => {
-        if(week > 0 && week <= 41) {
-            router.push(`/pregnancy-guide/${week}`);
+    const goToWeek = (wNum: number) => {
+        if(wNum > 0 && wNum <= 41) {
+            router.push(`/pregnancy-guide/${wNum}`);
         }
     }
 
@@ -159,7 +159,7 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
                     
                     <Card className="shadow-xl bg-white/50 backdrop-blur-sm border-white/30 overflow-hidden">
                         <CardHeader>
-                            <CardTitle className="text-pink-800">Your Body's Journey: Week ${weekData.week}</CardTitle>
+                            <CardTitle className="text-pink-800">Your Body's Journey: Week {weekData.week}</CardTitle>
                             <CardDescription>A visual look at how your body might be changing this week.</CardDescription>
                         </CardHeader>
                         <CardContent className="p-0 flex items-center justify-center">
@@ -173,3 +173,4 @@ export default function WeekDetailPage({ params }: { params: { week: string } })
             </div>
         </div>
     );
+}

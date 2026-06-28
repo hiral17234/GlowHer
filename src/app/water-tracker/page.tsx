@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -79,7 +78,7 @@ export default function WaterTrackerPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [currentDateKey, setCurrentDateKey] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [currentDateKey, setCurrentDateKey] = useState<string | null>(null);
   const [dailyLog, setDailyLog] = useState<DailyLog>({ entries: [] });
   const [goal, setGoal] = useState(8); // Always stored in cups
   const [unit, setUnit] = useState<Unit>('cups');
@@ -87,6 +86,9 @@ export default function WaterTrackerPage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [hydrationStreak, setHydrationStreak] = useState(0);
 
+  useEffect(() => {
+    setCurrentDateKey(format(new Date(), 'yyyy-MM-dd'));
+  }, []);
 
   const settingsForm = useForm<SettingsFormData>({
     resolver: zodResolver(settingsFormSchema),
@@ -152,6 +154,8 @@ export default function WaterTrackerPage() {
 };
 
   useEffect(() => {
+    if (!currentDateKey) return;
+    
     // Initialize audio on client
     if (typeof window !== 'undefined') {
         audioRef.current = new Audio(REMINDER_SOUND_URL);
@@ -217,7 +221,7 @@ export default function WaterTrackerPage() {
     
     calculateStreak();
 
-  }, [currentDateKey, settingsForm, reminderForm]);
+  }, [currentDateKey]);
 
   const playReminderSound = () => {
     if (audioRef.current) {
@@ -226,6 +230,7 @@ export default function WaterTrackerPage() {
   };
 
   useEffect(() => {
+    if (!currentDateKey) return;
     try {
         localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${currentDateKey}`, JSON.stringify(dailyLog));
     } catch(e) { console.error(e) }
@@ -260,7 +265,7 @@ export default function WaterTrackerPage() {
         playReminderSound();
       }
     }
-  }, [dailyLog, currentDateKey, reminderForm, toast]);
+  }, [dailyLog, currentDateKey]);
 
   const handleSetUnit = (newUnit: Unit) => {
     const oldGoalInCups = goal;
@@ -334,6 +339,8 @@ export default function WaterTrackerPage() {
   const intakeInCurrentUnit = totalIntake * unitConversions[unit];
   const goalInCurrentUnit = goal * unitConversions[unit];
   const progress = goal > 0 ? (totalIntake / goal) * 100 : 0;
+
+  if (!currentDateKey) return null;
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-white text-slate-800">
