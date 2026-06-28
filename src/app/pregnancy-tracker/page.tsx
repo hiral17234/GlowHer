@@ -230,13 +230,9 @@ export default function PregnancyTrackerPage() {
         const supportiveMessage = supportiveMessages[week];
 
         if(milestone){
-            toast({
-                title: (
-                    <div className="flex items-center gap-2">
-                        <PartyPopper className="text-yellow-400" />
-                        <span className="font-bold">{milestone.title}</span>
-                    </div>
-                ),
+           toast({
+  title: milestone.title,
+  description: "🎉 Congratulations on reaching this milestone!",
                 description: milestone.description,
                 duration: 5000,
             });
