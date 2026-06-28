@@ -232,7 +232,6 @@ export default function PregnancyTrackerPage() {
         if(milestone){
            toast({
   title: milestone.title,
-  description: "🎉 Congratulations on reaching this milestone!",
                 description: milestone.description,
                 duration: 5000,
             });
