@@ -1,4 +1,4 @@
-# GlowHer Wellness
+# GlowHer Wellness 
 
 GlowHer Wellness is a personalized digital sanctuary designed for holistic women's health. The platform integrates period tracking, mood journaling, pregnancy guidance, and AI-driven insights into a cohesive, user-centric interface.
 
