@@ -72,7 +72,7 @@ export type DailyFitnessLog = {
 
 // --- LOCAL STORAGE KEYS ---
 const DEFAULT_GOALS_KEY = 'glowher-fitness-goals';
-export const DEFAULT_LOG_PREFIX = 'glowher-fitness-log-';
+const DEFAULT_LOG_PREFIX = 'glowher-fitness-log-';
 const LAST_DATE_KEY = 'glowher-fitness-last-date';
 
 
