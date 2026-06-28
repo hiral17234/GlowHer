@@ -1,4 +1,3 @@
-
 # GlowHer Wellness
 
 GlowHer Wellness is a personalized digital sanctuary designed for holistic women's health. The platform integrates period tracking, mood journaling, pregnancy guidance, and AI-driven insights into a cohesive, user-centric interface.
@@ -70,18 +69,16 @@ Follow these exact steps in your terminal to move your files to GitHub:
     ```bash
     git commit -m "Initial commit of GlowHer Wellness"
     ```
-4.  **Create a New Repository on GitHub:**
-    *   Go to [GitHub](https://github.com/new).
-    *   Give it a name (e.g., `glowher-wellness`).
-    *   Do **not** initialize it with a README or .gitignore (we already have them).
-5.  **Connect Local to GitHub:**
-    *   Copy the URL of your new repo and run (replace `<YOUR_REPOSITORY_URL>` with your actual URL):
+4.  **Rename the branch:**
     ```bash
-    git remote add origin <YOUR_REPOSITORY_URL>
+    git branch -M main
+    ```
+5.  **Connect to your repository:**
+    ```bash
+    git remote add origin https://github.com/hiral17234/GlowHer
     ```
 6.  **Push to GitHub:**
     ```bash
-    git branch -M main
     git push -u origin main
     ```
 
