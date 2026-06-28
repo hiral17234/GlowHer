@@ -15,28 +15,21 @@ GlowHer Wellness is a personalized digital sanctuary designed for holistic women
 
 ## 2: GITHUB SETUP INSTRUCTIONS (Terminal Commands)
 
-Follow these exact steps in your terminal to move your files to GitHub:
+If you get an error saying "remote origin already exists," run these exact steps in your terminal:
 
-1.  **Remove the existing remote:**
+1.  **Remove the existing link:**
     ```bash
     git remote remove origin
     ```
-2.  **Add all files:**
-    ```bash
-    git add .
-    ```
-3.  **Commit your changes:**
-    ```bash
-    git commit -m "Finalized project with correct report points"
-    ```
-4.  **Connect to your repository:**
+2.  **Add your correct link:**
     ```bash
     git remote add origin https://github.com/hiral17234/GlowHer
     ```
-5.  **Push to GitHub (Force push):**
+3.  **Upload your files (Force push):**
     ```bash
     git push -u origin main -f
     ```
+*Note: The authorization code needed for the browser is displayed in your terminal after you run the push command.*
 
 ---
 
