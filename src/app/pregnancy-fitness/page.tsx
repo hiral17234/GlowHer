@@ -48,7 +48,7 @@ export type PregnancyLogData = z.infer<typeof pregnancyLogSchema>;
 
 // --- LOCAL STORAGE KEYS ---
 const PREGNANCY_GOALS_KEY = 'glowher-preg-fitness-goals';
-export const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
+const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
 const LAST_DATE_KEY = 'glowher-preg-fitness-last-date';
 
 // --- DATA ---
