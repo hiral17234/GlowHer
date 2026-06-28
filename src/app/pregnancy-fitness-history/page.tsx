@@ -16,8 +16,14 @@ import { GlowHerLogo } from '@/components/glowher/GlowHerLogo';
 import { ChevronLeft, History, Dumbbell, Calendar, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PregnancyLogData, PREGNANCY_LOG_PREFIX } from '@/app/pregnancy-fitness/page';
+const PREGNANCY_LOG_PREFIX = 'glowher-preg-fitness-log-';
 
+type PregnancyLogData = {
+  logDate: string;
+  minutes: number;
+  feeling?: string;
+  notes?: string;
+};
 export default function PregnancyFitnessHistoryPage() {
   const router = useRouter();
   const [logs, setLogs] = useState<PregnancyLogData[]>([]);
