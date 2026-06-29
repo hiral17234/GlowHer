@@ -92,8 +92,26 @@ const DEFAULT_APP_SETTINGS = {
   reminders:true,
   animations:true,
   sound:true,
-  theme:"classic",
+  theme:"cat",
   pet:"cat",
+};
+
+const THEME_OPTIONS = [
+  {id:"cat",label:"Cat Theme",mascot:"Cute Cat"},
+  {id:"fox",label:"Fox Theme",mascot:"Cute Fox"},
+  {id:"dog",label:"Dog Theme",mascot:"Puppy"},
+  {id:"parrot",label:"Parrot Theme",mascot:"Parrot"},
+  {id:"mermaid",label:"Mermaid Theme",mascot:"Mermaid"},
+  {id:"fairy",label:"Fairy Theme",mascot:"Fairy"},
+];
+
+const THEME_CONFIG = {
+  cat:{name:"Cat",icon:"CAT",accent:"#db2777",accent2:"#7c3aed",soft:"#fdf2f8",light:"#fce7f3",bg:"linear-gradient(160deg,#ede9fe 0%,#fff1f2 48%,#f8fafc 100%)",darkBg:"linear-gradient(160deg,#1f1633 0%,#331827 52%,#111827 100%)",mascot:{body:"#5a5a6a",body2:"#4a4a5a",accent:"#f9a8d4",detail:"#f59e0b"}},
+  fox:{name:"Fox",icon:"FOX",accent:"#ea580c",accent2:"#f97316",soft:"#fff7ed",light:"#fed7aa",bg:"linear-gradient(160deg,#fff7ed 0%,#ffedd5 48%,#fef3c7 100%)",darkBg:"linear-gradient(160deg,#2b170d 0%,#3b1d10 52%,#111827 100%)",mascot:{body:"#f97316",body2:"#c2410c",accent:"#fff7ed",detail:"#111827"}},
+  dog:{name:"Dog",icon:"DOG",accent:"#a16207",accent2:"#f59e0b",soft:"#fefce8",light:"#fde68a",bg:"linear-gradient(160deg,#fefce8 0%,#fef3c7 45%,#fff7ed 100%)",darkBg:"linear-gradient(160deg,#241a0a 0%,#3a2a12 52%,#111827 100%)",mascot:{body:"#b45309",body2:"#78350f",accent:"#fde68a",detail:"#fef3c7"}},
+  parrot:{name:"Parrot",icon:"BIRD",accent:"#059669",accent2:"#0ea5e9",soft:"#ecfdf5",light:"#bbf7d0",bg:"linear-gradient(160deg,#ecfdf5 0%,#cffafe 46%,#e0f2fe 100%)",darkBg:"linear-gradient(160deg,#052e2b 0%,#082f49 52%,#111827 100%)",mascot:{body:"#10b981",body2:"#0ea5e9",accent:"#facc15",detail:"#ef4444"}},
+  mermaid:{name:"Mermaid",icon:"SEA",accent:"#0891b2",accent2:"#8b5cf6",soft:"#ecfeff",light:"#a5f3fc",bg:"linear-gradient(160deg,#ecfeff 0%,#ddd6fe 48%,#fdf2f8 100%)",darkBg:"linear-gradient(160deg,#083344 0%,#2e1065 52%,#111827 100%)",mascot:{body:"#38bdf8",body2:"#7c3aed",accent:"#f0abfc",detail:"#06b6d4"}},
+  fairy:{name:"Fairy",icon:"FAE",accent:"#9333ea",accent2:"#16a34a",soft:"#faf5ff",light:"#e9d5ff",bg:"linear-gradient(160deg,#faf5ff 0%,#dcfce7 48%,#fdf2f8 100%)",darkBg:"linear-gradient(160deg,#2e1065 0%,#14532d 52%,#111827 100%)",mascot:{body:"#a855f7",body2:"#22c55e",accent:"#f9a8d4",detail:"#fef08a"}},
 };
 
 const PARTNER_SECTIONS = {
@@ -119,8 +137,10 @@ const PARTNER_SECTIONS = {
     "Feel-good":["Mamma Mia!","Julie & Julia","Little Women","Hidden Figures"],
     Animated:["Kiki's Delivery Service","Ratatouille","Tangled","Inside Out"],
     "Comfort movies":["The Parent Trap","You've Got Mail","Matilda","Paddington 2"],
+    Bollywood:["Yeh Jawaani Hai Deewani","Dil Dhadakne Do","Jab We Met","Khoobsurat","Queen","Zindagi Na Milegi Dobara"],
   },
   music:["Acoustic calm","Lo-fi rain","Soft piano","Aromatherapy spa mix","Cozy cafe jazz"],
+  bollywoodMusic:["Kabira","Iktara","Ilahi","Raabta","Shaam","Agar Tum Saath Ho","Love You Zindagi","Phir Se Ud Chala"],
   books:["Little Women","Anne of Green Gables","The Comfort Book","Before the Coffee Gets Cold","A Psalm for the Wild-Built"],
   foods:["Soup","Khichdi or rice bowl","Dark chocolate","Banana pancakes","Warm pasta","Herbal tea","Mashed potatoes"],
   messages:[
@@ -218,6 +238,40 @@ function CatMascot({size=120}) {
 }
 
 // ─── UI Primitives ────────────────────────────────────────────────────────────
+function ThemedMascot({theme="cat",size=120,animated=true}) {
+  const cfg = THEME_CONFIG[theme] || THEME_CONFIG.cat;
+  const m = cfg.mascot;
+  const isFox = theme === "fox";
+  const isDog = theme === "dog";
+  const isParrot = theme === "parrot";
+  const isMermaid = theme === "mermaid";
+  const isFairy = theme === "fairy";
+  return (
+    <svg className={animated ? "mascot-animated" : ""} width={size} height={size*1.08} viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label={`${cfg.name} mascot`}>
+      <ellipse cx="60" cy="121" rx="28" ry="6" fill="rgba(15,23,42,0.12)"/>
+      {isFairy&&<><ellipse className="mascot-wing-left" cx="34" cy="58" rx="18" ry="28" fill={m.accent} opacity="0.35"/><ellipse className="mascot-wing-right" cx="86" cy="58" rx="18" ry="28" fill={m.accent} opacity="0.35"/></>}
+      {isParrot&&<><path className="mascot-wing-left" d="M36 64 Q15 70 20 94 Q38 88 49 75" fill={m.body2} opacity="0.9"/><path className="mascot-wing-right" d="M84 64 Q105 70 100 94 Q82 88 71 75" fill={m.body2} opacity="0.75"/></>}
+      {isMermaid ? <path className="mascot-tail" d="M47 88 Q34 108 28 122 Q48 116 60 101 Q72 116 92 122 Q86 108 73 88 Z" fill={m.body2}/> : <ellipse className="mascot-breathe" cx="60" cy="91" rx="31" ry="27" fill={m.body2}/>}
+      {!isParrot&&!isMermaid&&<path className="mascot-tail" d={isDog?"M88 92 Q110 82 99 68":"M87 94 Q112 86 103 66"} stroke={m.body2} strokeWidth={isFox?12:8} strokeLinecap="round" fill="none"/>}
+      <ellipse className="mascot-breathe" cx="60" cy="59" rx="31" ry="28" fill={m.body}/>
+      {!isParrot&&!isMermaid&&!isFairy&&<><polygon points="35,38 28,16 50,31" fill={m.body}/><polygon points="85,38 92,16 70,31" fill={m.body}/><polygon points="38,35 32,22 47,32" fill={m.accent}/><polygon points="82,35 88,22 73,32" fill={m.accent}/></>}
+      {isDog&&<><ellipse cx="36" cy="44" rx="9" ry="21" fill={m.body2} transform="rotate(20 36 44)"/><ellipse cx="84" cy="44" rx="9" ry="21" fill={m.body2} transform="rotate(-20 84 44)"/></>}
+      {isParrot&&<><path d="M48 31 Q60 8 72 31" fill={m.accent}/><path d="M72 61 Q91 58 78 72" fill={m.detail}/></>}
+      {isMermaid&&<><path d="M34 36 Q60 10 86 36 Q75 28 60 30 Q45 28 34 36" fill={m.accent}/><path d="M43 84 Q60 98 77 84" stroke={m.accent} strokeWidth="5" strokeLinecap="round"/></>}
+      {isFairy&&<path d="M46 31 Q60 14 74 31 Q60 25 46 31" fill={m.detail}/>}
+      <ellipse cx="60" cy="64" rx="21" ry="18" fill={isParrot?m.accent:"#fff"} opacity="0.9"/>
+      <circle className="mascot-eye" cx="51" cy="56" r="7" fill="#fff"/><circle className="mascot-eye" cx="69" cy="56" r="7" fill="#fff"/>
+      <circle cx="51" cy="56" r="4" fill="#111827"/><circle cx="69" cy="56" r="4" fill="#111827"/>
+      <circle cx="52.5" cy="54.5" r="1.5" fill="#fff"/><circle cx="70.5" cy="54.5" r="1.5" fill="#fff"/>
+      <ellipse cx="60" cy="66" rx={isParrot?7:3.4} ry={isParrot?5:2.4} fill={isParrot?m.detail:m.accent}/>
+      <path d="M55 72 Q60 76 65 72" stroke="#475569" strokeWidth="2" strokeLinecap="round"/>
+      {!isParrot&&!isMermaid&&<><line x1="38" y1="64" x2="53" y2="66" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round"/><line x1="67" y1="66" x2="82" y2="64" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round"/></>}
+      <rect x="42" y="82" width="36" height="11" rx="6" fill={m.accent} opacity="0.9"/>
+      <circle cx="60" cy="87.5" r="3" fill={m.detail}/>
+    </svg>
+  );
+}
+
 function Modal({onClose,children,title,wide,extraWide}){
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(15,23,42,0.45)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:16}} onClick={onClose}>
@@ -233,7 +287,7 @@ function Modal({onClose,children,title,wide,extraWide}){
 }
 function PrimaryBtn({onClick,children,color,style={}}){
   return(
-    <button onClick={onClick} style={{padding:"13px 24px",borderRadius:99,border:"none",cursor:"pointer",background:color||"linear-gradient(135deg,#e11d48,#db2777)",color:"#fff",fontSize:14,fontWeight:700,fontFamily:"inherit",transition:"opacity 0.15s",...style}}
+    <button onClick={onClick} style={{padding:"13px 24px",borderRadius:99,border:"none",cursor:"pointer",background:color||"linear-gradient(135deg,var(--theme-accent,#e11d48),var(--theme-accent-2,#db2777))",color:"#fff",fontSize:14,fontWeight:700,fontFamily:"inherit",transition:"opacity 0.15s",...style}}
       onMouseEnter={e=>e.currentTarget.style.opacity="0.88"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{children}</button>
   );
 }
@@ -245,7 +299,7 @@ function DangerBtn({onClick,children,style={}}){
 }
 function Toggle({checked,onChange}){
   return(
-    <div onClick={()=>onChange(!checked)} style={{width:44,height:24,borderRadius:99,cursor:"pointer",background:checked?"#e11d48":"#e2e8f0",position:"relative",transition:"background 0.2s",flexShrink:0}}>
+    <div onClick={()=>onChange(!checked)} style={{width:44,height:24,borderRadius:99,cursor:"pointer",background:checked?"var(--theme-accent,#e11d48)":"#e2e8f0",position:"relative",transition:"background 0.2s",flexShrink:0}}>
       <div style={{position:"absolute",top:3,left:checked?23:3,width:18,height:18,borderRadius:"50%",background:"#fff",boxShadow:"0 1px 4px rgba(0,0,0,0.2)",transition:"left 0.2s"}}/>
     </div>
   );
@@ -614,7 +668,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
 }
 
 // ─── HISTORY TAB ─────────────────────────────────────────────────────────────
-function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSymptoms,cycleData}){
+function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSymptoms,cycleData,themeKey="cat"}){
   const [search,setSearch]=useState("");
   const [filterMonth,setFilterMonth]=useState("all");
   const [sortOrder,setSortOrder]=useState("desc");
@@ -710,7 +764,7 @@ function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSym
       {/* Entries */}
       {filtered.length===0?(
         <div style={{background:"#fff",borderRadius:20,padding:"40px 20px",textAlign:"center",boxShadow:"0 2px 8px rgba(0,0,0,0.05)"}}>
-          <div style={{fontSize:40,marginBottom:12}}>📭</div>
+          <ThemedMascot theme={themeKey} size={78}/>
           <p style={{fontSize:15,fontWeight:700,color:"#1e293b",marginBottom:4}}>{search?"No results found":"No logs yet"}</p>
           <p style={{fontSize:13,color:"#94a3b8",margin:0}}>{search?"Try a different search term":"Start logging to see your history here."}</p>
         </div>
@@ -935,16 +989,17 @@ function CalendarTab({cycleData,periodLogs,symptomLogs,onLogPeriod,onEditPeriod,
 }
 
 // ─── TODAY TAB ────────────────────────────────────────────────────────────────
-function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,onEditSymptoms,symptomLogs,onPartnerMode}){
+function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,onEditSymptoms,symptomLogs,onPartnerMode,themeKey}){
   const todayKey=format(new Date(),"yyyy-MM-dd");
   const todayLog=symptomLogs[todayKey];
+  const themeCfg=THEME_CONFIG[themeKey]||THEME_CONFIG.cat;
   if(!cycleData){
     return(
       <div style={{display:"flex",flexDirection:"column",gap:20}}>
-        <div style={{background:"linear-gradient(160deg,#e8e0ff 0%,#ffd6e7 50%,#ffecd2 100%)",borderRadius:28,padding:"40px 28px 32px",textAlign:"center",position:"relative",overflow:"hidden",minHeight:300,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+        <div style={{background:themeCfg.bg,borderRadius:28,padding:"40px 28px 32px",textAlign:"center",position:"relative",overflow:"hidden",minHeight:300,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
           <div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 70% 30%,rgba(255,200,220,0.5),transparent 60%)"}}/>
           <div style={{position:"relative",zIndex:1}}>
-            <CatMascot size={110}/>
+            <ThemedMascot theme={themeKey} size={110}/>
             <h2 style={{fontSize:26,fontWeight:900,color:"#1e293b",margin:"16px 0 8px"}}>Track your cycle 🌸</h2>
             <p style={{color:"#64748b",fontSize:14,maxWidth:260,margin:"0 auto 24px"}}>Enter your last period date to see personalized daily insights.</p>
             <PrimaryBtn onClick={onOpenCycleSettings}>Set up cycle →</PrimaryBtn>
@@ -958,35 +1013,56 @@ function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,
   }
   const {phase,dayOfCycle,cycleLength,nextPeriodIn,nextPeriodDate}=cycleData;
   const p=PHASES[phase];
+  const moodLine=todayLog?.mood?MOODS.find(m=>m.id===todayLog.mood)?.label:"a gentle check-in";
+  const motivation=phase==="Menstrual"
+    ?"Rest is productive today. Keep things warm, soft, and simple."
+    : phase==="Ovulation"
+      ?"Your energy may be brighter today. Choose one joyful thing and enjoy it fully."
+      : phase==="Luteal"
+        ?"Slow down before your body has to ask twice. Comfort counts."
+        :"Fresh energy is building. Start small and let momentum find you.";
   return(
-    <div style={{display:"flex",flexDirection:"column",gap:16}}>
-      <div style={{background:"linear-gradient(160deg,#e8e0ff 0%,#ffd6e7 50%,#ffecd2 100%)",borderRadius:28,padding:"28px 24px 24px",position:"relative",overflow:"hidden",minHeight:220}}>
+    <div style={{display:"flex",flexDirection:"column",gap:18}}>
+      <div style={{background:"rgba(255,255,255,0.78)",borderRadius:22,padding:"18px 20px",boxShadow:"0 12px 34px rgba(15,23,42,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:16,overflow:"hidden"}}>
+        <div style={{minWidth:0}}>
+          <div style={{fontSize:12,fontWeight:900,color:themeCfg.accent,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:4}}>Good to see you</div>
+          <h2 style={{fontSize:24,fontWeight:950,color:"#1e293b",margin:"0 0 4px",lineHeight:1.1}}>Today needs {moodLine}</h2>
+          <p style={{fontSize:14,color:"#64748b",margin:0,lineHeight:1.55}}>{motivation}</p>
+        </div>
+        <span style={{background:themeCfg.soft,color:themeCfg.accent,borderRadius:99,padding:"8px 12px",fontSize:12,fontWeight:900,whiteSpace:"nowrap"}}>Day {dayOfCycle}</span>
+      </div>
+      <div className="hero-card" style={{background:themeCfg.bg,borderRadius:30,padding:"32px 30px 28px",position:"relative",overflow:"hidden",minHeight:240,boxShadow:"0 22px 60px rgba(219,39,119,0.13)"}}>
         <div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 75% 25%,rgba(255,180,210,0.6),transparent 60%)"}}/>
-        <div style={{position:"relative",zIndex:1,display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:12}}>
-          <div style={{flex:1}}>
-            <div style={{fontSize:13,fontWeight:700,color:"#7c3aed",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>{phase==="Menstrual"?"Period":phase}</div>
-            <h1 style={{fontSize:36,fontWeight:900,color:"#1e293b",margin:"0 0 4px",lineHeight:1}}>{nextPeriodIn===0?"Today 🩸":nextPeriodIn===1?"1 DAY LEFT":`${nextPeriodIn} DAYS LEFT`}</h1>
-            <p style={{fontSize:14,color:"#64748b",margin:"0 0 18px"}}>{format(nextPeriodDate,"MMM d")} · Next Period</p>
-            <PrimaryBtn onClick={onLogPeriod} color="linear-gradient(135deg,#e11d48,#f43f5e)">Period Starts</PrimaryBtn>
+        <div style={{position:"relative",zIndex:1,display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:18}}>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:13,fontWeight:900,color:themeCfg.accent,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8}}>{phase==="Menstrual"?"Period phase":`${phase} phase`}</div>
+            <h1 style={{fontSize:44,fontWeight:950,color:"#1e293b",margin:"0 0 6px",lineHeight:0.98}}>{nextPeriodIn===0?"Expected today":nextPeriodIn===1?"1 day left":`${nextPeriodIn} days left`}</h1>
+            <p style={{fontSize:15,color:"#64748b",margin:"0 0 20px",lineHeight:1.5}}>{format(nextPeriodDate,"MMM d")} ? Next period ? {PHASES[phase]?.tagline}</p>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap",alignItems:"center"}}>
+              <PrimaryBtn onClick={onLogPeriod} color="linear-gradient(135deg,#e11d48,#f43f5e)">Period Starts</PrimaryBtn>
+              <button onClick={todayLog?()=>onEditSymptoms(todayKey):onLogSymptoms} style={{border:"none",background:"rgba(255,255,255,0.78)",color:themeCfg.accent,borderRadius:99,padding:"13px 18px",fontSize:14,fontWeight:900,fontFamily:"inherit",cursor:"pointer",boxShadow:"0 8px 20px rgba(15,23,42,0.08)"}}>{todayLog?"Edit check-in":"Log mood"}</button>
+            </div>
           </div>
-          <div style={{flexShrink:0,marginBottom:-8}}><CatMascot size={100}/></div>
+          <div style={{flexShrink:0,marginBottom:-8}}><ThemedMascot theme={themeKey} size={112}/></div>
         </div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
-        <button onClick={onPartnerMode} style={{background:"linear-gradient(145deg,#ede9fe,#fdf2f8)",border:"none",borderRadius:20,padding:"16px 14px",position:"relative",overflow:"hidden",minHeight:130,textAlign:"left",cursor:"pointer",fontFamily:"inherit"}}>
-          <div style={{fontSize:13,fontWeight:800,color:"#1e293b",lineHeight:1.2,marginBottom:8}}>Partner<br/>Mode</div>
-          <div style={{position:"absolute",bottom:-10,right:-10,width:70,height:70,borderRadius:"50%",background:"rgba(244,114,182,0.25)"}}/>
-          <div style={{position:"absolute",bottom:10,right:6,fontSize:28}}>🫶</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(170px,1fr))",gap:14}}>
+        <button className="lift-card" onClick={onPartnerMode} style={{background:`linear-gradient(145deg,${themeCfg.soft},${themeCfg.light})`,border:"none",borderRadius:22,padding:"18px 16px",position:"relative",overflow:"hidden",minHeight:142,textAlign:"left",cursor:"pointer",fontFamily:"inherit",boxShadow:"0 12px 28px rgba(124,58,237,0.08)"}}>
+          <div style={{fontSize:12,fontWeight:900,color:themeCfg.accent,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Care hub</div>
+          <div style={{fontSize:17,fontWeight:950,color:"#1e293b",lineHeight:1.15}}>Partner<br/>Mode</div>
+          <div style={{position:"absolute",bottom:-10,right:-10,width:76,height:76,borderRadius:"50%",background:"rgba(244,114,182,0.25)"}}/>
+          <div style={{position:"absolute",bottom:12,right:10,width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.72)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:950,color:themeCfg.accent}}>CARE</div>
         </button>
-        <div style={{background:"#fff",borderRadius:20,padding:"14px",boxShadow:"0 2px 12px rgba(0,0,0,0.07)",display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-          <div style={{fontSize:10,fontWeight:700,color:p.color,textTransform:"uppercase",letterSpacing:"0.06em"}}>CYCLE DAY</div>
+        <div className="lift-card" style={{background:"#fff",borderRadius:22,padding:"16px",boxShadow:"0 12px 30px rgba(0,0,0,0.07)",display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+          <div style={{fontSize:10,fontWeight:900,color:p.color,textTransform:"uppercase",letterSpacing:"0.08em"}}>Cycle day</div>
           <CycleRing day={dayOfCycle} total={cycleLength} color={p.color}/>
         </div>
-        <div style={{background:"linear-gradient(145deg,#fff1f2,#fdf2f8)",borderRadius:20,padding:"16px 14px",position:"relative",overflow:"hidden",minHeight:130}}>
-          <div style={{fontSize:13,fontWeight:800,color:"#1e293b",lineHeight:1.2,marginBottom:4}}>{format(nextPeriodDate,"MMM d")}</div>
-          <div style={{fontSize:11,color:"#94a3b8"}}>Next Period</div>
-          <div style={{position:"absolute",bottom:-8,right:-8,width:60,height:60,borderRadius:"50%",background:"rgba(251,113,133,0.2)"}}/>
-          <div style={{position:"absolute",bottom:10,right:10,fontSize:32}}>🩸</div>
+        <div className="lift-card" style={{background:"linear-gradient(145deg,#fff1f2,#fdf2f8)",borderRadius:22,padding:"18px 16px",position:"relative",overflow:"hidden",minHeight:142,boxShadow:"0 12px 28px rgba(244,63,94,0.08)"}}>
+          <div style={{fontSize:12,fontWeight:900,color:"#e11d48",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8}}>Next period</div>
+          <div style={{fontSize:19,fontWeight:950,color:"#1e293b",lineHeight:1.15,marginBottom:4}}>{format(nextPeriodDate,"MMM d")}</div>
+          <div style={{fontSize:13,color:"#94a3b8"}}>{nextPeriodIn} days away</div>
+          <div style={{position:"absolute",bottom:-8,right:-8,width:64,height:64,borderRadius:"50%",background:"rgba(251,113,133,0.2)"}}/>
+          <div style={{position:"absolute",bottom:10,right:10,width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.72)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:950,color:"#e11d48"}}>DATE</div>
         </div>
       </div>
       <CycleBar cycleData={cycleData}/>
@@ -1070,6 +1146,8 @@ function SettingsModal({settings,onSave,onClose}){
     </div>
   );
   const inp={width:"100%",padding:"11px 13px",borderRadius:12,fontSize:15,border:"1.5px solid #e2e8f0",outline:"none",boxSizing:"border-box",color:"#1e293b",background:"#fff",fontFamily:"inherit"};
+  const localTheme=THEME_CONFIG[local.theme]?local.theme:"cat";
+  const localPet=THEME_CONFIG[local.pet]?local.pet:localTheme;
   return(
     <Modal onClose={onClose} title="Settings" wide>
       <div style={{display:"flex",flexDirection:"column",gap:18}}>
@@ -1078,15 +1156,29 @@ function SettingsModal({settings,onSave,onClose}){
           <div style={{fontSize:13,color:"#64748b",lineHeight:1.5}}>App settings live here. Cycle details stay in Cycle settings.</div>
         </div>
         <div style={{background:"#fff",borderRadius:16,padding:"0 4px"}}>
-          {row("darkMode","Dark Mode","Use a softer low-light interface. Placeholder for now.")}
+          {row("darkMode","Dark Mode","Use a premium low-light interface with softer contrast.")}
           {row("notifications","Notifications","Allow browser and in-app reminder alerts.")}
           {row("reminders","Reminder toggle","Turn scheduled reminders on or off globally.")}
           {row("animations","Animations","Keep gentle motion and transitions enabled.")}
           {row("sound","Sound","Allow relaxation sounds and future alert tones.")}
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-          <div><label style={{fontSize:12,fontWeight:800,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.04em",display:"block",marginBottom:7}}>Theme selection</label><select disabled style={{...inp,background:"#f8fafc",color:"#94a3b8"}} value={local.theme}><option value="classic">Classic Glow - coming soon</option></select></div>
-          <div><label style={{fontSize:12,fontWeight:800,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.04em",display:"block",marginBottom:7}}>Pet selection</label><select disabled style={{...inp,background:"#f8fafc",color:"#94a3b8"}} value={local.pet}><option value="cat">Current mascot - coming soon</option></select></div>
+          <div><label style={{fontSize:12,fontWeight:800,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.04em",display:"block",marginBottom:7}}>Theme selection</label><select style={inp} value={localTheme} onChange={e=>setLocal(v=>({...v,theme:e.target.value,pet:e.target.value}))}>{THEME_OPTIONS.map(t=><option key={t.id} value={t.id}>{t.label}</option>)}</select></div>
+          <div><label style={{fontSize:12,fontWeight:800,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.04em",display:"block",marginBottom:7}}>Pet selection</label><select style={inp} value={localPet} onChange={e=>setLocal(v=>({...v,pet:e.target.value,theme:e.target.value}))}>{THEME_OPTIONS.map(t=><option key={t.id} value={t.id}>{t.mascot}</option>)}</select></div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:10}}>
+          {THEME_OPTIONS.map(t=>{
+            const cfg=THEME_CONFIG[t.id];
+            const active=localTheme===t.id;
+            return <button key={t.id} onClick={()=>setLocal(v=>({...v,theme:t.id,pet:t.id}))} style={{border:`2px solid ${active?cfg.accent:"#e2e8f0"}`,background:active?cfg.soft:"#fff",borderRadius:16,padding:12,cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:active?`0 8px 24px ${cfg.accent}24`:"none"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+                <span style={{fontSize:12,fontWeight:900,color:cfg.accent}}>{cfg.icon}</span>
+                <span style={{width:18,height:18,borderRadius:"50%",background:`linear-gradient(135deg,${cfg.accent},${cfg.accent2})`,display:"inline-block"}}/>
+              </div>
+              <div style={{fontSize:13,fontWeight:900,color:"#1e293b",marginTop:8}}>{t.label}</div>
+              <div style={{fontSize:11,color:"#94a3b8",marginTop:2}}>{t.mascot}</div>
+            </button>;
+          })}
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <div style={{background:"#f8fafc",borderRadius:16,padding:16}}><div style={{fontSize:15,fontWeight:900,color:"#1e293b",marginBottom:4}}>Backup & Restore</div><div style={{fontSize:13,color:"#94a3b8"}}>Placeholder for export and import tools.</div></div>
@@ -1098,59 +1190,99 @@ function SettingsModal({settings,onSave,onClose}){
   );
 }
 
-function PartnerModeTab({cycleData,onBack}){
+function PartnerModeTab({cycleData,onBack,themeKey="cat"}){
   const phase=cycleData?.phase||"None";
   const phaseInfo=PHASES[phase]||PHASES.None;
+  const themeCfg=THEME_CONFIG[themeKey]||THEME_CONFIG.cat;
+  const [movieTab,setMovieTab]=useState("Bollywood");
+  const [carePick,setCarePick]=useState(0);
+  const careCards=[
+    {title:"Warm comfort kit",tag:"Right now",text:"Heating pad, warm water, soft blanket, and no rushing.",img:"https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=900&q=80"},
+    {title:"Sweet little rescue",tag:"Snack",text:"Chocolate, fruit, or her favorite comfort snack plated nicely.",img:"https://images.unsplash.com/photo-1481391319762-47dff72954d9?auto=format&fit=crop&w=900&q=80"},
+    {title:"Quiet date mode",tag:"Evening",text:"Low lights, comfort movie, phone away, and gentle presence.",img:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80"},
+  ];
+  const imageTiles=[
+    {title:"Spa Day",img:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80"},
+    {title:"Cafe Visit",img:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=80"},
+    {title:"Sunset Walk",img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"},
+  ];
+  const movieGroups=Object.keys(PARTNER_SECTIONS.movies);
+  const selectedMovies=PARTNER_SECTIONS.movies[movieTab]||PARTNER_SECTIONS.movies.Bollywood;
   const softCard=(item,i)=>(
-    <div key={item.title||item} style={{background:i%2?"#f5f3ff":"#fff1f2",borderRadius:18,padding:"16px 15px",border:"1px solid rgba(255,255,255,0.7)",boxShadow:"0 2px 10px rgba(15,23,42,0.04)"}}>
-      <div style={{width:44,height:44,borderRadius:"50%",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,color:i%2?"#7c3aed":"#e11d48",marginBottom:10}}>{String(item.icon||"care").slice(0,4)}</div>
-      <div style={{fontSize:15,fontWeight:900,color:"#1e293b",marginBottom:5}}>{item.title||item}</div>
-      {item.text&&<div style={{fontSize:13,color:"#64748b",lineHeight:1.5}}>{item.text}</div>}
-    </div>
+    <button key={item.title||item} className="lift-card" onClick={()=>setCarePick(i%careCards.length)} style={{background:i%2?themeCfg.soft:"#fff",border:`1px solid ${i%2?themeCfg.light:"#f1f5f9"}`,borderRadius:18,padding:"16px 15px",boxShadow:"0 10px 26px rgba(15,23,42,0.06)",fontFamily:"inherit",cursor:"pointer",textAlign:"left"}}>
+      <div style={{width:42,height:42,borderRadius:14,background:`linear-gradient(135deg,${themeCfg.accent},${themeCfg.accent2})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:950,color:"#fff",marginBottom:10}}>{String(item.icon||"care").slice(0,4).toUpperCase()}</div>
+      <div style={{fontSize:15,fontWeight:950,color:"#1e293b",marginBottom:5,lineHeight:1.2}}>{item.title||item}</div>
+      {item.text&&<div style={{fontSize:13,color:"#64748b",lineHeight:1.55}}>{item.text}</div>}
+    </button>
   );
   return(
-    <div style={{display:"flex",flexDirection:"column",gap:18}}>
-      <div style={{background:"linear-gradient(145deg,#fff1f2,#ede9fe)",borderRadius:24,padding:"22px 22px 20px",position:"relative",overflow:"hidden"}}>
-        {onBack&&<button onClick={onBack} style={{background:"rgba(255,255,255,0.8)",border:"none",borderRadius:99,padding:"8px 14px",fontSize:13,fontWeight:800,color:"#7c3aed",fontFamily:"inherit",cursor:"pointer",marginBottom:14}}>Back to dashboard</button>}
-        <div style={{fontSize:13,fontWeight:900,color:"#be185d",textTransform:"uppercase",letterSpacing:"0.04em",marginBottom:6}}>Partner Mode</div>
-        <h1 style={{fontSize:30,lineHeight:1.08,fontWeight:950,color:"#1e293b",margin:"0 0 8px"}}>Small care, big comfort</h1>
-        <p style={{fontSize:15,color:"#64748b",lineHeight:1.6,margin:0,maxWidth:520}}>Today she may be in the {phaseInfo.label} phase. Keep support practical, gentle, and low-pressure.</p>
+    <div style={{display:"flex",flexDirection:"column",gap:20}}>
+      <div className="hero-card" style={{background:`linear-gradient(135deg,${themeCfg.light},${themeCfg.soft} 45%,#fff)`,borderRadius:30,padding:"24px 24px 22px",position:"relative",overflow:"hidden",display:"grid",gridTemplateColumns:"minmax(0,1fr) auto",gap:18,alignItems:"center",boxShadow:"0 22px 60px rgba(15,23,42,0.10)"}}>
+        <div style={{position:"absolute",inset:0,background:`radial-gradient(circle at 88% 10%,${themeCfg.accent}22,transparent 38%)`}}/>
+        <div style={{position:"relative",zIndex:1,minWidth:0}}>
+          {onBack&&<button onClick={onBack} className="pressable" style={{background:"rgba(255,255,255,0.78)",border:"none",borderRadius:99,padding:"8px 14px",fontSize:13,fontWeight:900,color:themeCfg.accent,fontFamily:"inherit",cursor:"pointer",marginBottom:16}}>? Dashboard</button>}
+          <div style={{fontSize:12,fontWeight:950,color:themeCfg.accent,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8}}>Partner Mode ? {phaseInfo.label}</div>
+          <h1 style={{fontSize:34,lineHeight:1.02,fontWeight:950,color:"#1e293b",margin:"0 0 10px"}}>Care that feels thoughtful, not random</h1>
+          <p style={{fontSize:15,color:"#64748b",lineHeight:1.65,margin:"0 0 16px",maxWidth:620}}>Pick a tiny action, a movie, a song, or a date idea. The goal is soft support, not fixing everything.</p>
+          <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+            {["Warmth","Snacks","Listen","Rest"].map(x=><span key={x} style={{background:"rgba(255,255,255,0.72)",color:themeCfg.accent,borderRadius:99,padding:"8px 12px",fontSize:12,fontWeight:900}}>{x}</span>)}
+          </div>
+        </div>
+        <div style={{position:"relative",zIndex:1,display:"flex",justifyContent:"center"}}><ThemedMascot theme={themeKey} size={124}/></div>
       </div>
 
-      <section style={{background:"#fff",borderRadius:20,padding:22,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-        <h2 style={{fontSize:20,fontWeight:950,color:"#1e293b",margin:"0 0 14px"}}>How to Help Today</h2>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:12}}>{PARTNER_SECTIONS.help.map(softCard)}</div>
+      <section style={{display:"grid",gridTemplateColumns:"minmax(0,1.05fr) minmax(260px,.95fr)",gap:16}} className="partner-feature-grid">
+        <div style={{background:"#fff",borderRadius:24,padding:20,boxShadow:"0 14px 38px rgba(15,23,42,0.07)"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:14}}>
+            <div><h2 style={{fontSize:20,fontWeight:950,color:"#1e293b",margin:"0 0 4px"}}>How to Help Today</h2><p style={{fontSize:13,color:"#64748b",margin:0}}>Tap a card to change the featured care idea.</p></div>
+            <span style={{background:themeCfg.soft,color:themeCfg.accent,borderRadius:99,padding:"7px 10px",fontSize:12,fontWeight:900}}>Interactive</span>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:12}}>{PARTNER_SECTIONS.help.map(softCard)}</div>
+        </div>
+        <div className="image-care-card" style={{borderRadius:24,overflow:"hidden",minHeight:360,boxShadow:"0 18px 48px rgba(15,23,42,0.16)",background:`linear-gradient(180deg,rgba(15,23,42,0.08),rgba(15,23,42,0.72)),url(${careCards[carePick].img}) center/cover`}}>
+          <div style={{height:"100%",minHeight:360,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:22,color:"#fff"}}>
+            <span style={{alignSelf:"flex-start",background:"rgba(255,255,255,0.22)",border:"1px solid rgba(255,255,255,0.35)",backdropFilter:"blur(8px)",borderRadius:99,padding:"7px 10px",fontSize:12,fontWeight:900,marginBottom:10}}>{careCards[carePick].tag}</span>
+            <h2 style={{fontSize:26,lineHeight:1.05,fontWeight:950,margin:"0 0 8px"}}>{careCards[carePick].title}</h2>
+            <p style={{fontSize:14,lineHeight:1.55,margin:0,opacity:.94}}>{careCards[carePick].text}</p>
+          </div>
+        </div>
       </section>
 
-      <section style={{background:"#fff",borderRadius:20,padding:22,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+      <section style={{background:"#fff",borderRadius:24,padding:20,boxShadow:"0 14px 38px rgba(15,23,42,0.07)"}}>
         <h2 style={{fontSize:20,fontWeight:950,color:"#1e293b",margin:"0 0 14px"}}>What She Might Be Feeling</h2>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(170px,1fr))",gap:12}}>{PARTNER_SECTIONS.feelings.map(softCard)}</div>
       </section>
 
-      <section style={{background:"linear-gradient(145deg,#fdf2f8,#fff7ed)",borderRadius:20,padding:22}}>
-        <h2 style={{fontSize:20,fontWeight:950,color:"#1e293b",margin:"0 0 14px"}}>Cute Care Cards</h2>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12}}>
-          {["Build a blanket nest","Bring a warm drink","Make a no-questions snack plate","Send a sweet check-in"].map((c,i)=><div key={c} style={{background:"#fff",borderRadius:18,padding:18,minHeight:120,position:"relative",overflow:"hidden"}}><div style={{position:"absolute",right:-18,bottom:-18,width:80,height:80,borderRadius:"50%",background:i%2?"#ddd6fe":"#fecdd3"}}/><div style={{fontSize:13,fontWeight:900,color:"#e11d48",marginBottom:10}}>CARE</div><div style={{fontSize:16,fontWeight:900,color:"#1e293b",position:"relative"}}>{c}</div></div>)}
+      <section style={{background:`linear-gradient(145deg,${themeCfg.soft},#fff)`,borderRadius:24,padding:20,boxShadow:"0 14px 38px rgba(15,23,42,0.06)"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:14,flexWrap:"wrap"}}>
+          <h2 style={{fontSize:20,fontWeight:950,color:"#1e293b",margin:0}}>Movie Recommendations</h2>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{movieGroups.map(cat=><button key={cat} onClick={()=>setMovieTab(cat)} className="pressable" style={{border:"none",borderRadius:99,padding:"8px 12px",background:movieTab===cat?themeCfg.accent:"#fff",color:movieTab===cat?"#fff":"#64748b",fontSize:12,fontWeight:900,fontFamily:"inherit",cursor:"pointer",boxShadow:movieTab===cat?`0 8px 20px ${themeCfg.accent}33`:"0 4px 12px rgba(15,23,42,0.05)"}}>{cat}</button>)}</div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12}}>{selectedMovies.map((m,i)=><div key={m} className="lift-card" style={{background:i%2?"#fff":"#f8fafc",borderRadius:18,padding:16,border:"1px solid #f1f5f9"}}><div style={{fontSize:11,fontWeight:950,color:themeCfg.accent,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:8}}>{movieTab}</div><div style={{fontSize:15,fontWeight:900,color:"#1e293b",lineHeight:1.25}}>{m}</div></div>)}</div>
+      </section>
+
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))",gap:14}}>
+        <section style={{background:"#fff",borderRadius:22,padding:20,boxShadow:"0 14px 38px rgba(15,23,42,0.07)"}}><h2 style={{fontSize:18,fontWeight:950,color:"#1e293b",margin:"0 0 12px"}}>Bollywood Comfort Music</h2>{PARTNER_SECTIONS.bollywoodMusic.map(x=><div key={x} className="music-row" style={{display:"flex",alignItems:"center",gap:10,background:"#f8fafc",borderRadius:14,padding:"10px 12px",fontSize:13,color:"#475569",fontWeight:750,marginBottom:8}}><span style={{width:34,height:26,borderRadius:99,background:themeCfg.light,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:950,color:themeCfg.accent}}>BGM</span>{x}</div>)}</section>
+        <section style={{background:"#fff",borderRadius:22,padding:20,boxShadow:"0 14px 38px rgba(15,23,42,0.07)"}}><h2 style={{fontSize:18,fontWeight:950,color:"#1e293b",margin:"0 0 12px"}}>Comfort Foods</h2>{PARTNER_SECTIONS.foods.map(x=><div key={x} style={{background:"#fff7ed",borderRadius:14,padding:"10px 12px",fontSize:13,color:"#475569",fontWeight:750,marginBottom:8}}>{x}</div>)}</section>
+        <section style={{background:"#fff",borderRadius:22,padding:20,boxShadow:"0 14px 38px rgba(15,23,42,0.07)"}}><h2 style={{fontSize:18,fontWeight:950,color:"#1e293b",margin:"0 0 12px"}}>Sweet Messages</h2>{PARTNER_SECTIONS.messages.map(x=><div key={x} style={{background:themeCfg.soft,borderRadius:14,padding:"10px 12px",fontSize:13,color:"#475569",lineHeight:1.45,marginBottom:8}}>{x}</div>)}</section>
+      </div>
+
+      <section style={{background:"#fff",borderRadius:24,padding:20,boxShadow:"0 14px 38px rgba(15,23,42,0.07)"}}>
+        <h2 style={{fontSize:20,fontWeight:950,color:"#1e293b",margin:"0 0 14px"}}>Girls' Bucket List</h2>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(170px,1fr))",gap:12}}>
+          {imageTiles.map(tile=><div key={tile.title} className="lift-card" style={{borderRadius:18,overflow:"hidden",minHeight:160,background:`linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.55)),url(${tile.img}) center/cover`,display:"flex",alignItems:"flex-end",padding:14,color:"#fff",fontWeight:950,fontSize:17}}>{tile.title}</div>)}
+          {PARTNER_SECTIONS.bucket.slice(3).map(x=><div key={x} className="lift-card" style={{background:themeCfg.soft,borderRadius:18,padding:16,minHeight:92,display:"flex",alignItems:"center",fontSize:15,fontWeight:900,color:"#1e293b"}}>{x}</div>)}
         </div>
       </section>
-
-      <section style={{background:"#fff",borderRadius:20,padding:22,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-        <h2 style={{fontSize:20,fontWeight:950,color:"#1e293b",margin:"0 0 14px"}}>Movie Recommendations</h2>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12}}>{Object.entries(PARTNER_SECTIONS.movies).map(([cat,movies])=><div key={cat} style={{background:"#f8fafc",borderRadius:16,padding:15}}><div style={{fontSize:15,fontWeight:900,color:"#7c3aed",marginBottom:8}}>{cat}</div>{movies.map(m=><div key={m} style={{fontSize:13,color:"#475569",padding:"4px 0"}}>{m}</div>)}</div>)}</div>
-      </section>
-
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:14}}>
-        {[{title:"Relaxing Music",items:PARTNER_SECTIONS.music},{title:"Book Recommendations",items:PARTNER_SECTIONS.books},{title:"Comfort Foods",items:PARTNER_SECTIONS.foods},{title:"Sweet Messages",items:PARTNER_SECTIONS.messages},{title:"Girls' Bucket List",items:PARTNER_SECTIONS.bucket}].map(block=><section key={block.title} style={{background:"#fff",borderRadius:20,padding:20,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}><h2 style={{fontSize:18,fontWeight:950,color:"#1e293b",margin:"0 0 12px"}}>{block.title}</h2><div style={{display:"flex",flexDirection:"column",gap:8}}>{block.items.map(x=><div key={x} style={{background:"#f8fafc",borderRadius:12,padding:"9px 11px",fontSize:13,color:"#475569",lineHeight:1.45}}>{x}</div>)}</div></section>)}
-      </div>
     </div>
   );
 }
 
-function AnalysisTab({cycleData,form,periodLogs,symptomLogs,onLogPeriod,onEditPeriod}){
+function AnalysisTab({cycleData,form,periodLogs,symptomLogs,onLogPeriod,onEditPeriod,themeKey="cat"}){
   if(!cycleData){
     return(
       <div style={{background:"#f8fafc",borderRadius:20,padding:40,textAlign:"center"}}>
-        <div style={{fontSize:48,marginBottom:12}}>📊</div>
+        <ThemedMascot theme={themeKey} size={86}/>
         <p style={{fontSize:16,fontWeight:700,color:"#1e293b",marginBottom:6}}>No data yet</p>
         <p style={{fontSize:13,color:"#94a3b8"}}>Set up your cycle to unlock analysis and insights.</p>
       </div>
@@ -1360,7 +1492,7 @@ export default function PeriodTracker(){
   const savePeriods=useCallback(async(logs)=>{setPeriodLogs(logs);await storageSet("pt-periods",logs);},[]);
   const saveSymptoms=useCallback(async(logs)=>{setSymptomLogs(logs);await storageSet("pt-symptoms",logs);},[]);
   const saveReminders=useCallback(async(r)=>{setReminders(r);await storageSet("pt-reminders",r);},[]);
-  const saveSettings=useCallback(async(settings)=>{setAppSettings(settings);await storageSet("pt-settings",settings);},[]);
+  const saveSettings=useCallback(async(settings)=>{const normalized={...settings,theme:THEME_CONFIG[settings.theme]?settings.theme:"cat",pet:THEME_CONFIG[settings.pet]?settings.pet:(THEME_CONFIG[settings.theme]?settings.theme:"cat")};setAppSettings(normalized);await storageSet("pt-settings",normalized);},[]);
 
   function handleEditPeriod(entry){setEditingPeriod(entry);setModal("editPeriod");}
   function handleDeletePeriod(id){savePeriods(periodLogs.filter(l=>l.id!==id));}
@@ -1368,11 +1500,14 @@ export default function PeriodTracker(){
   function dismissNotif(id){setInAppNotifs(n=>n.filter(x=>x.id!==id));}
 
   const bellCount=inAppNotifs.length;
+  const themeKey=THEME_CONFIG[appSettings.theme]?appSettings.theme:(THEME_CONFIG[appSettings.pet]?appSettings.pet:"cat");
+  const themeCfg=THEME_CONFIG[themeKey]||THEME_CONFIG.cat;
+  const mode=appSettings.darkMode?"dark":"light";
 
   if(!loaded){
     return(
-      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(160deg,#ede9fe,#fdf2f8)",fontFamily:"Nunito,Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",lineHeight:1.5}}>
-        <div style={{textAlign:"center"}}><CatMascot size={80}/><p style={{color:"#94a3b8",fontSize:14,marginTop:12}}>Loading…</p></div>
+      <div className="period-app" data-mode={mode} data-theme={themeKey} data-animations={appSettings.animations?"on":"off"} style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:appSettings.darkMode?themeCfg.darkBg:themeCfg.bg,fontFamily:"Nunito,Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",lineHeight:1.5}}>
+        <div style={{textAlign:"center"}}><ThemedMascot theme={themeKey} size={80}/><p style={{color:"#94a3b8",fontSize:14,marginTop:12}}>Loading…</p></div>
       </div>
     );
   }
@@ -1380,16 +1515,16 @@ export default function PeriodTracker(){
   const activePhase=cycleData?.phase||"None";
   const p=PHASES[activePhase];
   const nav=[
-    {id:"today",icon:"H",label:"Today"},
-    {id:"calendar",icon:"C",label:"Calendar"},
-    {id:"history",icon:"L",label:"History"},
-    {id:"selfcare",icon:"S",label:"Self Care"},
-    {id:"partner",icon:"P",label:"Partner"},
-    {id:"analysis",icon:"A",label:"Analysis"},
+    {id:"today",icon:"🏠",label:"Today"},
+    {id:"calendar",icon:"📅",label:"Calendar"},
+    {id:"history",icon:"📋",label:"History"},
+    {id:"selfcare",icon:"💆",label:"Self Care"},
+    {id:"partner",icon:"💞",label:"Partner"},
+    {id:"analysis",icon:"📊",label:"Analysis"},
   ];
 
   return(
-    <div style={{minHeight:"100vh",background:"linear-gradient(160deg,#ede9fe 0%,#f8fafc 40%,#fdf2f8 100%)",fontFamily:"Nunito,Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",fontSize:15,lineHeight:1.5,display:"flex",flexDirection:"column"}}>
+    <div className="period-app" data-mode={mode} data-theme={themeKey} data-animations={appSettings.animations?"on":"off"} style={{"--theme-accent":themeCfg.accent,"--theme-accent-2":themeCfg.accent2,"--theme-soft":themeCfg.soft,"--theme-light":themeCfg.light,minHeight:"100vh",background:appSettings.darkMode?themeCfg.darkBg:themeCfg.bg,fontFamily:"Nunito,Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",fontSize:15,lineHeight:1.5,display:"flex",flexDirection:"column"}}>
 
       {/* In-app notifications */}
       <NotificationToast notifications={inAppNotifs} onDismiss={dismissNotif}/>
@@ -1440,13 +1575,13 @@ export default function PeriodTracker(){
 
         {/* Main content */}
         <main style={{flex:1,overflowY:"auto",padding:"20px",paddingBottom:90}}>
-          <div style={{maxWidth:680,margin:"0 auto"}}>
-            {tab==="today"&&<TodayTab cycleData={cycleData} form={form} onOpenCycleSettings={()=>setModal("cycle")} onLogPeriod={()=>setModal("period")} onLogSymptoms={()=>setModal("symptoms")} onEditSymptoms={handleEditSymptoms} symptomLogs={symptomLogs} onPartnerMode={()=>setTab("partner")}/>}
+          <div style={{maxWidth:920,margin:"0 auto"}}>
+            {tab==="today"&&<TodayTab cycleData={cycleData} form={form} onOpenCycleSettings={()=>setModal("cycle")} onLogPeriod={()=>setModal("period")} onLogSymptoms={()=>setModal("symptoms")} onEditSymptoms={handleEditSymptoms} symptomLogs={symptomLogs} onPartnerMode={()=>setTab("partner")} themeKey={themeKey}/>}
             {tab==="calendar"&&<CalendarTab cycleData={cycleData} periodLogs={periodLogs} symptomLogs={symptomLogs} onLogPeriod={()=>setModal("period")} onEditPeriod={handleEditPeriod} onEditSymptoms={handleEditSymptoms}/>}
-            {tab==="history"&&<HistoryTab symptomLogs={symptomLogs} periodLogs={periodLogs} onEditSymptoms={handleEditSymptoms} onEditPeriod={handleEditPeriod} onLogSymptoms={()=>setModal("symptoms")} cycleData={cycleData}/>}
+            {tab==="history"&&<HistoryTab symptomLogs={symptomLogs} periodLogs={periodLogs} onEditSymptoms={handleEditSymptoms} onEditPeriod={handleEditPeriod} onLogSymptoms={()=>setModal("symptoms")} cycleData={cycleData} themeKey={themeKey}/>}
             {tab==="selfcare"&&<SelfCareTab/>}
-            {tab==="partner"&&<PartnerModeTab cycleData={cycleData} onBack={()=>setTab("today")}/>}
-            {tab==="analysis"&&<AnalysisTab cycleData={cycleData} form={form} periodLogs={periodLogs} symptomLogs={symptomLogs} onLogPeriod={()=>setModal("period")} onEditPeriod={handleEditPeriod}/>}
+            {tab==="partner"&&<PartnerModeTab cycleData={cycleData} onBack={()=>setTab("today")} themeKey={themeKey}/>}
+            {tab==="analysis"&&<AnalysisTab cycleData={cycleData} form={form} periodLogs={periodLogs} symptomLogs={symptomLogs} onLogPeriod={()=>setModal("period")} onEditPeriod={handleEditPeriod} themeKey={themeKey}/>}
           </div>
         </main>
       </div>
@@ -1461,9 +1596,63 @@ export default function PeriodTracker(){
       </nav>
 
       <style>{`
+        .period-app,.period-app *{transition:background-color .28s ease,color .28s ease,border-color .28s ease,box-shadow .28s ease,transform .28s ease}
+        .period-app h1,.period-app h2,.period-app h3{letter-spacing:0}
+        .hero-card{animation:softFadeUp .42s ease both}
+        .lift-card{transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}
+        .lift-card:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(15,23,42,.13)!important}
+        .pressable{transition:transform .16s ease,filter .18s ease,box-shadow .18s ease}
+        .pressable:hover{filter:brightness(1.03)}
+        .pressable:active{transform:scale(.97)}
+        .music-row:hover{transform:translateX(3px);background:var(--theme-soft,#f8fafc)!important}
+        .image-care-card{animation:softFadeUp .45s ease both}
+        .period-app [style*="#e11d48"],.period-app [style*="#db2777"]{accent-color:var(--theme-accent)}
+        .period-app[data-mode="dark"]{color:#e5e7eb}
+        .period-app[data-mode="dark"] header,
+        .period-app[data-mode="dark"] aside,
+        .period-app[data-mode="dark"] nav{background:rgba(15,23,42,.82)!important;border-color:rgba(148,163,184,.18)!important}
+        .period-app[data-mode="dark"] main,
+        .period-app[data-mode="dark"] section,
+        .period-app[data-mode="dark"] div[style*="background:#fff"],
+        .period-app[data-mode="dark"] div[style*="background: #fff"]{background:#111827!important;color:#e5e7eb!important;border-color:rgba(148,163,184,.16)!important;box-shadow:0 18px 48px rgba(0,0,0,.28)!important}
+        .period-app[data-mode="dark"] div[style*="#f8fafc"],
+        .period-app[data-mode="dark"] button[style*="#f8fafc"],
+        .period-app[data-mode="dark"] input,
+        .period-app[data-mode="dark"] textarea,
+        .period-app[data-mode="dark"] select{background:#1f2937!important;color:#e5e7eb!important;border-color:#334155!important}
+        .period-app[data-mode="dark"] [style*="#1e293b"]{color:#f8fafc!important}
+        .period-app[data-mode="dark"] [style*="#475569"]{color:#cbd5e1!important}
+        .period-app[data-mode="dark"] [style*="#64748b"]{color:#cbd5e1!important}
+        .period-app[data-mode="dark"] [style*="#94a3b8"]{color:#94a3b8!important}
+        .period-app[data-mode="dark"] [style*="#fff1f2"],
+        .period-app[data-mode="dark"] [style*="#fdf2f8"],
+        .period-app[data-mode="dark"] [style*="#f5f3ff"],
+        .period-app[data-mode="dark"] [style*="#fffbeb"],
+        .period-app[data-mode="dark"] [style*="#f0fdfa"],
+        .period-app[data-mode="dark"] [style*="#ecfdf5"],
+        .period-app[data-mode="dark"] [style*="#fef3c7"]{background:rgba(255,255,255,.07)!important}
+        .mascot-animated{animation:mascotFloat 4.8s ease-in-out infinite;transform-origin:center}
+        .mascot-animated .mascot-breathe{animation:mascotBreathe 3.4s ease-in-out infinite;transform-origin:center}
+        .mascot-animated .mascot-tail{animation:mascotTail 2.8s ease-in-out infinite;transform-origin:72px 90px}
+        .mascot-animated .mascot-eye{animation:mascotBlink 5s ease-in-out infinite;transform-origin:center}
+        .mascot-animated .mascot-wing-left{animation:mascotWingLeft 3.2s ease-in-out infinite;transform-origin:55px 65px}
+        .mascot-animated .mascot-wing-right{animation:mascotWingRight 3.2s ease-in-out infinite;transform-origin:65px 65px}
+        .period-app[data-animations="off"] .mascot-animated,
+        .period-app[data-animations="off"] .mascot-animated *{animation:none!important}
+        .period-app[data-animations="off"] .hero-card,
+        .period-app[data-animations="off"] .image-care-card{animation:none!important}
+        @media(max-width:900px){.partner-feature-grid{grid-template-columns:1fr!important}.hero-card{grid-template-columns:1fr!important}.hero-card svg{max-width:120px}}
+        @media(max-width:720px){.period-app main{padding:14px!important;padding-bottom:92px!important}.hero-card{border-radius:22px!important;padding:22px 18px!important}.hero-card h1{font-size:32px!important}.partner-feature-grid{gap:12px!important}}
         @media(min-width:640px){.sidebar-nav{display:flex!important}.bottom-nav{display:none!important}}
         @media(max-width:639px){.sidebar-nav{display:none!important}.bottom-nav{display:flex!important}}
         @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes softFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes mascotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+        @keyframes mascotBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+        @keyframes mascotTail{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+        @keyframes mascotBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.12)}}
+        @keyframes mascotWingLeft{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-4deg)}}
+        @keyframes mascotWingRight{0%,100%{transform:rotate(0deg)}50%{transform:rotate(4deg)}}
       `}</style>
     </div>
   );
