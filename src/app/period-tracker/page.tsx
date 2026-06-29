@@ -106,12 +106,12 @@ const THEME_OPTIONS = [
 ];
 
 const THEME_CONFIG = {
-  cat:{name:"Cat",icon:"CAT",accent:"#db2777",accent2:"#7c3aed",soft:"#fdf2f8",light:"#fce7f3",bg:"linear-gradient(160deg,#ede9fe 0%,#fff1f2 48%,#f8fafc 100%)",darkBg:"linear-gradient(160deg,#1f1633 0%,#331827 52%,#111827 100%)",mascot:{body:"#5a5a6a",body2:"#4a4a5a",accent:"#f9a8d4",detail:"#f59e0b"}},
-  fox:{name:"Fox",icon:"FOX",accent:"#ea580c",accent2:"#f97316",soft:"#fff7ed",light:"#fed7aa",bg:"linear-gradient(160deg,#fff7ed 0%,#ffedd5 48%,#fef3c7 100%)",darkBg:"linear-gradient(160deg,#2b170d 0%,#3b1d10 52%,#111827 100%)",mascot:{body:"#f97316",body2:"#c2410c",accent:"#fff7ed",detail:"#111827"}},
-  dog:{name:"Dog",icon:"DOG",accent:"#a16207",accent2:"#f59e0b",soft:"#fefce8",light:"#fde68a",bg:"linear-gradient(160deg,#fefce8 0%,#fef3c7 45%,#fff7ed 100%)",darkBg:"linear-gradient(160deg,#241a0a 0%,#3a2a12 52%,#111827 100%)",mascot:{body:"#b45309",body2:"#78350f",accent:"#fde68a",detail:"#fef3c7"}},
-  parrot:{name:"Parrot",icon:"BIRD",accent:"#059669",accent2:"#0ea5e9",soft:"#ecfdf5",light:"#bbf7d0",bg:"linear-gradient(160deg,#ecfdf5 0%,#cffafe 46%,#e0f2fe 100%)",darkBg:"linear-gradient(160deg,#052e2b 0%,#082f49 52%,#111827 100%)",mascot:{body:"#10b981",body2:"#0ea5e9",accent:"#facc15",detail:"#ef4444"}},
-  mermaid:{name:"Mermaid",icon:"SEA",accent:"#0891b2",accent2:"#8b5cf6",soft:"#ecfeff",light:"#a5f3fc",bg:"linear-gradient(160deg,#ecfeff 0%,#ddd6fe 48%,#fdf2f8 100%)",darkBg:"linear-gradient(160deg,#083344 0%,#2e1065 52%,#111827 100%)",mascot:{body:"#38bdf8",body2:"#7c3aed",accent:"#f0abfc",detail:"#06b6d4"}},
-  fairy:{name:"Fairy",icon:"FAE",accent:"#9333ea",accent2:"#16a34a",soft:"#faf5ff",light:"#e9d5ff",bg:"linear-gradient(160deg,#faf5ff 0%,#dcfce7 48%,#fdf2f8 100%)",darkBg:"linear-gradient(160deg,#2e1065 0%,#14532d 52%,#111827 100%)",mascot:{body:"#a855f7",body2:"#22c55e",accent:"#f9a8d4",detail:"#fef08a"}},
+  cat:{name:"Cat",icon:"CAT",accent:"#d86f6f",accent2:"#7fb069",soft:"#fff7ed",light:"#dcfce7",bg:"linear-gradient(160deg,#fff9ed 0%,#effaf0 44%,#eaf6ff 100%)",darkBg:"linear-gradient(160deg,#181818 0%,#202018 52%,#1b1d22 100%)",ambient:"forest",sticker:"https://i.ibb.co/GvKfpB4J/7fdd7118-890f-416c-b19c-8d64dbf96968.png",mascot:{body:"#5a5a6a",body2:"#4a4a5a",accent:"#f9a8d4",detail:"#f59e0b"}},
+  fox:{name:"Fox",icon:"FOX",accent:"#c96b34",accent2:"#d6a03f",soft:"#fff7ed",light:"#fed7aa",bg:"linear-gradient(160deg,#fff7ed 0%,#fff0d7 46%,#edf7df 100%)",darkBg:"linear-gradient(160deg,#1b1815 0%,#211b16 52%,#181818 100%)",ambient:"autumn",sticker:"https://i.ibb.co/21SSdk2v/56ed3091-e494-4961-bc89-4d7554ed2390.png",mascot:{body:"#f97316",body2:"#c2410c",accent:"#fff7ed",detail:"#111827"}},
+  dog:{name:"Dog",icon:"DOG",accent:"#b07a45",accent2:"#74a96f",soft:"#fff8e7",light:"#ddf7d8",bg:"linear-gradient(160deg,#fff9e8 0%,#eaf8dc 48%,#e7f5ff 100%)",darkBg:"linear-gradient(160deg,#181818 0%,#211f1a 52%,#1a1f22 100%)",ambient:"meadow",sticker:"https://i.ibb.co/PGxrHBh8/200a4be7-da1a-4246-82a4-2291aaca69ce.png",mascot:{body:"#b45309",body2:"#78350f",accent:"#fde68a",detail:"#fef3c7"}},
+  parrot:{name:"Parrot",icon:"BIRD",accent:"#2E8B57",accent2:"#42A5F5",soft:"#ecfdf5",light:"#d9f99d",bg:"linear-gradient(160deg,#f0fff4 0%,#dcfce7 34%,#dff8ff 68%,#fff8d6 100%)",darkBg:"linear-gradient(160deg,#181818 0%,#17211b 48%,#182225 100%)",ambient:"tropical",sticker:"https://i.ibb.co/84QsWXGt/20b1e6c0-02d2-4746-ba3d-8375483e32f1.png",mascot:{body:"#2E8B57",body2:"#42A5F5",accent:"#FFD54F",detail:"#E53935"}},
+  mermaid:{name:"Mermaid",icon:"SEA",accent:"#1398a8",accent2:"#8b7adf",soft:"#ecfeff",light:"#b9f4f1",bg:"linear-gradient(160deg,#eaffff 0%,#d8f5f5 44%,#eee8ff 100%)",darkBg:"linear-gradient(160deg,#181818 0%,#172225 48%,#1e1b28 100%)",ambient:"ocean",sticker:"https://i.ibb.co/NdRFh0v9/Chat-GPT-Image-Jun-29-2026-04-57-19-PM.png",mascot:{body:"#38bdf8",body2:"#7c3aed",accent:"#f0abfc",detail:"#06b6d4"}},
+  fairy:{name:"Fairy",icon:"FAE",accent:"#b978d9",accent2:"#75b987",soft:"#fff5fb",light:"#eadcff",bg:"linear-gradient(160deg,#fff6fb 0%,#f2eaff 44%,#ebfaed 100%)",darkBg:"linear-gradient(160deg,#181818 0%,#211b27 50%,#1b221d 100%)",ambient:"fairy",sticker:"https://static.wikia.nocookie.net/charactercommunity/images/a/af/Rosetta.png/revision/latest?cb=20201219040733",mascot:{body:"#a855f7",body2:"#22c55e",accent:"#f9a8d4",detail:"#fef08a"}},
 };
 
 const PARTNER_SECTIONS = {
@@ -240,6 +240,13 @@ function CatMascot({size=120}) {
 // ─── UI Primitives ────────────────────────────────────────────────────────────
 function ThemedMascot({theme="cat",size=120,animated=true}) {
   const cfg = THEME_CONFIG[theme] || THEME_CONFIG.cat;
+  if (cfg.sticker) {
+    return (
+      <div className={animated ? "sticker-mascot mascot-animated" : "sticker-mascot"} style={{width:size,height:size*1.08,display:"flex",alignItems:"center",justifyContent:"center"}} aria-label={`${cfg.name} companion`}>
+        <img src={cfg.sticker} alt={`${cfg.name} companion`} style={{maxWidth:"100%",maxHeight:"100%",objectFit:"contain",display:"block",filter:"drop-shadow(0 18px 18px rgba(15,23,42,0.18))"}} loading="lazy" referrerPolicy="no-referrer"/>
+      </div>
+    );
+  }
   const m = cfg.mascot;
   const isFox = theme === "fox";
   const isDog = theme === "dog";
@@ -269,6 +276,27 @@ function ThemedMascot({theme="cat",size=120,animated=true}) {
       <rect x="42" y="82" width="36" height="11" rx="6" fill={m.accent} opacity="0.9"/>
       <circle cx="60" cy="87.5" r="3" fill={m.detail}/>
     </svg>
+  );
+}
+
+function ThemeEnvironment({themeKey="cat"}) {
+  const cfg=THEME_CONFIG[themeKey]||THEME_CONFIG.cat;
+  const worldItems={
+    cat:["sunray","tree","tree","grass","grass","flower","flower","butterfly","butterfly","bird","leaf","pollen","cloud","mouse"],
+    fox:["sunray","autumn-tree","autumn-tree","leaf","leaf","leaf","mushroom","mushroom","log","mist","bird","dust","branch"],
+    dog:["sunray","meadow","meadow","fence","cloud","cloud","flower","flower","butterfly","bird","bee","seed","seed","grass"],
+    parrot:["sunray","sunray","palm","palm","banana-leaf","vine","vine","branch","orchid","hibiscus","butterfly","butterfly","bird","distant-parrot","feather","firefly","pollen","waterfall","rock","nest","mango","coconut","banana","fern"],
+    mermaid:["ray","ray","bubble","bubble","bubble","coral","coral","seaweed","seaweed","pearl","shell","starfish","jelly","fish","fish","school"],
+    fairy:["rainbow","cloud","cloud","pixie","pixie","spark","spark","petal","petal","butterfly","firefly","mushroom","crystal","star","fog"],
+  }[themeKey]||["spark","petal","glow"];
+  return (
+    <div className={`theme-world theme-world-${themeKey}`} aria-hidden="true">
+      <div className="world-gradient"/>
+      <div className="world-horizon"/>
+      <div className="ambient-orb ambient-orb-a" style={{background:cfg.accent}}/>
+      <div className="ambient-orb ambient-orb-b" style={{background:cfg.accent2}}/>
+      {worldItems.map((item,i)=><span key={`${item}-${i}`} className={`world-item world-item-${i} world-${item}`}/>)}
+    </div>
   );
 }
 
@@ -1202,9 +1230,12 @@ function PartnerModeTab({cycleData,onBack,themeKey="cat"}){
     {title:"Quiet date mode",tag:"Evening",text:"Low lights, comfort movie, phone away, and gentle presence.",img:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80"},
   ];
   const imageTiles=[
-    {title:"Spa Day",img:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80"},
-    {title:"Cafe Visit",img:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=80"},
-    {title:"Sunset Walk",img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"},
+    {title:"Sunset Walk",img:"https://i.pinimg.com/1200x/f5/ae/23/f5ae235bcd1be8b1140fd201c633e782.jpg"},
+    {title:"Painting",img:"https://i.pinimg.com/736x/52/71/bf/5271bf5d99d74e8a816f752900d7281e.jpg"},
+    {title:"Movie Night",img:"https://i.pinimg.com/736x/60/33/83/6033835147be6b0bd9803ae303c4115d.jpg"},
+    {title:"Cafe Visit",img:"https://i.pinimg.com/736x/60/df/67/60df6777fba2c640e0ca587d3ea9e96d.jpg"},
+    {title:"Photography",img:"https://i.pinimg.com/736x/cd/f2/d8/cdf2d866db370a2b1c270d138b788c69.jpg"},
+    {title:"Journaling",img:"https://i.pinimg.com/736x/68/b0/d4/68b0d45f534a2afd9c65de64fe71f5ed.jpg"},
   ];
   const movieGroups=Object.keys(PARTNER_SECTIONS.movies);
   const selectedMovies=PARTNER_SECTIONS.movies[movieTab]||PARTNER_SECTIONS.movies.Bollywood;
@@ -1525,6 +1556,7 @@ export default function PeriodTracker(){
 
   return(
     <div className="period-app" data-mode={mode} data-theme={themeKey} data-animations={appSettings.animations?"on":"off"} style={{"--theme-accent":themeCfg.accent,"--theme-accent-2":themeCfg.accent2,"--theme-soft":themeCfg.soft,"--theme-light":themeCfg.light,minHeight:"100vh",background:appSettings.darkMode?themeCfg.darkBg:themeCfg.bg,fontFamily:"Nunito,Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",fontSize:15,lineHeight:1.5,display:"flex",flexDirection:"column"}}>
+      <ThemeEnvironment themeKey={themeKey}/>
 
       {/* In-app notifications */}
       <NotificationToast notifications={inAppNotifs} onDismiss={dismissNotif}/>
@@ -1576,6 +1608,7 @@ export default function PeriodTracker(){
         {/* Main content */}
         <main style={{flex:1,overflowY:"auto",padding:"20px",paddingBottom:90}}>
           <div style={{maxWidth:920,margin:"0 auto"}}>
+            {tab!=="today"&&<button className="back-dashboard-btn" onClick={()=>setTab("today")}><span>←</span> Back to Dashboard</button>}
             {tab==="today"&&<TodayTab cycleData={cycleData} form={form} onOpenCycleSettings={()=>setModal("cycle")} onLogPeriod={()=>setModal("period")} onLogSymptoms={()=>setModal("symptoms")} onEditSymptoms={handleEditSymptoms} symptomLogs={symptomLogs} onPartnerMode={()=>setTab("partner")} themeKey={themeKey}/>}
             {tab==="calendar"&&<CalendarTab cycleData={cycleData} periodLogs={periodLogs} symptomLogs={symptomLogs} onLogPeriod={()=>setModal("period")} onEditPeriod={handleEditPeriod} onEditSymptoms={handleEditSymptoms}/>}
             {tab==="history"&&<HistoryTab symptomLogs={symptomLogs} periodLogs={periodLogs} onEditSymptoms={handleEditSymptoms} onEditPeriod={handleEditPeriod} onLogSymptoms={()=>setModal("symptoms")} cycleData={cycleData} themeKey={themeKey}/>}
@@ -1606,20 +1639,98 @@ export default function PeriodTracker(){
         .pressable:active{transform:scale(.97)}
         .music-row:hover{transform:translateX(3px);background:var(--theme-soft,#f8fafc)!important}
         .image-care-card{animation:softFadeUp .45s ease both}
+        .back-dashboard-btn{position:sticky;top:12px;z-index:35;margin:0 0 14px;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.72);border-radius:999px;padding:10px 16px;color:var(--theme-accent,#db2777);font-size:13px;font-weight:950;font-family:inherit;cursor:pointer;box-shadow:0 12px 30px rgba(15,23,42,.10);overflow:hidden}
+        .back-dashboard-btn span{display:inline-flex;margin-right:6px;transition:transform .18s ease}
+        .back-dashboard-btn:hover{transform:translateY(-2px) scale(1.015);box-shadow:0 16px 34px rgba(15,23,42,.14)}
+        .back-dashboard-btn:hover span{transform:translateX(-3px)}
+        .back-dashboard-btn:active{transform:scale(.98)}
+        .back-dashboard-btn::after{content:"";position:absolute;inset:auto auto 50% 50%;width:10px;height:10px;border-radius:50%;background:var(--theme-accent,#db2777);opacity:.15;transform:translate(-50%,50%) scale(0);transition:transform .35s ease}
+        .back-dashboard-btn:active::after{transform:translate(-50%,50%) scale(18)}
+        .sticker-mascot{position:relative}
+        .sticker-mascot img{background:transparent!important;border:none!important;outline:none!important}
+        .theme-world{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;transition:opacity .55s ease,filter .55s ease}
+        .period-app>header,.period-app>div,.period-app>nav,.period-app>.bottom-nav{position:relative;z-index:1}
+        .world-gradient{position:absolute;inset:0;opacity:.46;transition:background .55s ease}
+        .world-horizon{position:absolute;left:-5%;right:-5%;bottom:-16%;height:34%;opacity:.42;filter:blur(.2px)}
+        .ambient-orb{position:absolute;width:34vw;height:34vw;max-width:520px;max-height:520px;border-radius:50%;filter:blur(78px);opacity:.15;animation:ambientDrift 16s ease-in-out infinite}
+        .ambient-orb-a{top:-10%;left:-8%}.ambient-orb-b{right:-8%;bottom:-12%;animation-delay:-7s}
+        .world-item{position:absolute;display:block;opacity:.34;animation:worldFloat 14s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(15,23,42,.08))}
+        .world-item::before,.world-item::after{content:"";position:absolute;display:block}
+        .world-item-0{left:6%;top:16%;animation-delay:-1s}.world-item-1{left:76%;top:12%;animation-delay:-4s}.world-item-2{left:13%;top:70%;animation-delay:-7s}.world-item-3{left:84%;top:65%;animation-delay:-10s}.world-item-4{left:40%;top:10%;animation-delay:-13s}.world-item-5{left:61%;top:78%;animation-delay:-2s}.world-item-6{left:24%;top:36%;animation-delay:-5s}.world-item-7{left:90%;top:32%;animation-delay:-8s}.world-item-8{left:4%;top:48%;animation-delay:-12s}.world-item-9{left:52%;top:26%;animation-delay:-3s}.world-item-10{left:33%;top:84%;animation-delay:-6s}.world-item-11{left:69%;top:44%;animation-delay:-9s}.world-item-12{left:17%;top:8%;animation-delay:-14s}.world-item-13{left:79%;top:84%;animation-delay:-11s}.world-item-14{left:48%;top:58%;animation-delay:-15s}.world-item-15{left:30%;top:60%;animation-delay:-16s}.world-item-16{left:56%;top:12%;animation-delay:-18s}.world-item-17{left:92%;top:78%;animation-delay:-20s}.world-item-18{left:9%;top:88%;animation-delay:-22s}.world-item-19{left:73%;top:58%;animation-delay:-24s}.world-item-20{left:18%;top:28%;animation-delay:-26s}.world-item-21{left:44%;top:88%;animation-delay:-28s}.world-item-22{left:86%;top:20%;animation-delay:-30s}.world-item-23{left:3%;top:12%;animation-delay:-32s}
+        .theme-world-cat .world-gradient{background:radial-gradient(circle at 20% 15%,rgba(255,221,151,.45),transparent 24%),radial-gradient(circle at 78% 24%,rgba(186,230,253,.42),transparent 28%),linear-gradient(180deg,rgba(255,255,255,.18),rgba(220,252,231,.44))}
+        .theme-world-cat .world-horizon{background:linear-gradient(180deg,transparent,rgba(127,176,105,.24));border-radius:55% 45% 0 0}
+        .theme-world-fox .world-gradient{background:radial-gradient(circle at 20% 18%,rgba(250,204,21,.36),transparent 24%),radial-gradient(circle at 84% 14%,rgba(201,107,52,.26),transparent 26%),linear-gradient(180deg,rgba(255,247,237,.22),rgba(214,160,63,.18))}
+        .theme-world-fox .world-horizon{background:linear-gradient(180deg,transparent,rgba(120,76,38,.22));border-radius:50% 50% 0 0}
+        .theme-world-dog .world-gradient{background:radial-gradient(circle at 18% 16%,rgba(255,226,143,.4),transparent 26%),radial-gradient(circle at 80% 20%,rgba(186,230,253,.42),transparent 28%),linear-gradient(180deg,rgba(255,255,255,.12),rgba(221,247,216,.44))}
+        .theme-world-dog .world-horizon{background:linear-gradient(180deg,transparent,rgba(116,169,111,.28));border-radius:55% 45% 0 0}
+        .theme-world-parrot .world-gradient{background:radial-gradient(circle at 17% 14%,rgba(255,213,79,.42),transparent 22%),radial-gradient(circle at 82% 16%,rgba(135,206,235,.5),transparent 28%),radial-gradient(circle at 55% 48%,rgba(64,224,208,.2),transparent 34%),linear-gradient(180deg,rgba(240,255,244,.32),rgba(102,187,106,.23) 58%,rgba(46,139,87,.18))}
+        .theme-world-parrot .world-horizon{background:radial-gradient(ellipse at 52% 110%,rgba(46,139,87,.34),transparent 62%),linear-gradient(180deg,transparent,rgba(34,139,34,.26));border-radius:50% 50% 0 0}
+        .theme-world-mermaid .world-gradient{background:linear-gradient(180deg,rgba(216,252,255,.45),rgba(19,152,168,.22) 45%,rgba(20,83,102,.18)),radial-gradient(circle at 75% 18%,rgba(139,122,223,.24),transparent 28%)}
+        .theme-world-mermaid .world-horizon{background:radial-gradient(ellipse at 50% 100%,rgba(20,83,102,.26),transparent 68%)}
+        .theme-world-fairy .world-gradient{background:radial-gradient(circle at 22% 18%,rgba(255,214,240,.42),transparent 25%),radial-gradient(circle at 82% 18%,rgba(186,230,253,.38),transparent 27%),radial-gradient(circle at 52% 8%,rgba(250,204,21,.18),transparent 20%),linear-gradient(180deg,rgba(255,255,255,.18),rgba(234,220,255,.28))}
+        .theme-world-fairy .world-horizon{background:linear-gradient(180deg,transparent,rgba(185,120,217,.15),rgba(117,185,135,.16));border-radius:55% 45% 0 0}
+        .world-sunray,.world-ray{width:220px;height:72px;border-radius:50%;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.55),rgba(255,255,255,.04));transform:rotate(-28deg);animation:rayDrift 9s ease-in-out infinite}
+        .world-tree,.world-autumn-tree,.world-palm{width:72px;height:115px;opacity:.2}
+        .world-tree::before,.world-autumn-tree::before,.world-palm::before{width:58px;height:58px;border-radius:50%;left:7px;top:0;background:#7fb069;box-shadow:-18px 22px 0 #9ccc7d,18px 20px 0 #6aa85f}
+        .world-tree::after,.world-autumn-tree::after,.world-palm::after{width:10px;height:58px;left:31px;top:50px;border-radius:8px;background:#9a6a3a}
+        .world-autumn-tree::before{background:#d6a03f;box-shadow:-18px 22px 0 #c96b34,18px 20px 0 #9f6b2d}
+        .world-palm::before{width:86px;height:42px;left:-8px;background:linear-gradient(135deg,#2E8B57,#40E0D0);clip-path:polygon(50% 0,62% 45%,100% 20%,70% 58%,92% 95%,54% 68%,20% 100%,34% 58%,0 24%,40% 44%);animation:sway 5.5s ease-in-out infinite}
+        .world-banana-leaf{width:88px;height:32px;border-radius:90% 0 90% 0;background:linear-gradient(135deg,#66BB6A,#A4DE02);opacity:.24;animation:sway 5.8s ease-in-out infinite}
+        .world-vine{width:10px;height:150px;border-left:4px solid rgba(46,139,87,.36);border-radius:50%;top:-8%!important;animation:sway 6.2s ease-in-out infinite}.world-vine::before{width:18px;height:12px;border-radius:90% 0;background:#66BB6A;left:-14px;top:40px;box-shadow:18px 32px 0 #2E8B57,-6px 70px 0 #A4DE02}
+        .world-grass,.world-meadow{width:130px;height:34px;border-radius:50% 50% 0 0;background:linear-gradient(180deg,rgba(127,176,105,.0),rgba(127,176,105,.35));bottom:4%;top:auto!important}
+        .world-flower,.world-orchid,.world-hibiscus{width:24px;height:24px;border-radius:50%;background:var(--theme-accent);box-shadow:18px 5px 0 var(--theme-accent-2),8px 20px 0 rgba(255,255,255,.78);opacity:.28}
+        .world-orchid{background:#d946ef;box-shadow:14px 0 0 #f0abfc,7px 14px 0 #fff,0 0 18px rgba(217,70,239,.32)}
+        .world-hibiscus{background:#E53935;box-shadow:15px 0 0 #FFB74D,7px 14px 0 #FFD54F,0 0 16px rgba(229,57,53,.25)}
+        .world-butterfly,.world-bird,.world-bee,.world-firefly,.world-pixie,.world-distant-parrot{width:24px;height:16px;animation:flyAcross 18s linear infinite}
+        .world-butterfly::before,.world-butterfly::after{width:13px;height:18px;border-radius:70% 30%;background:var(--theme-accent);top:0}.world-butterfly::before{left:0;transform:rotate(-22deg)}.world-butterfly::after{right:0;transform:rotate(22deg)}
+        .world-bird::before{width:30px;height:14px;border-top:3px solid var(--theme-accent);border-radius:50%;transform:rotate(8deg)}
+        .world-distant-parrot::before{width:28px;height:18px;border-radius:60% 40% 60% 40%;background:linear-gradient(135deg,#E53935 0 35%,#FFD54F 36% 58%,#42A5F5 59%);box-shadow:14px 4px 0 rgba(46,139,87,.8)}
+        .world-bee::before,.world-firefly::before,.world-pixie::before{width:10px;height:10px;border-radius:50%;background:var(--theme-accent);box-shadow:12px 0 0 var(--theme-accent-2),0 0 16px var(--theme-accent)}
+        .world-leaf,.world-petal,.world-feather,.world-seed,.world-dust,.world-pollen,.world-spark,.world-star,.world-glow,.world-fog{width:12px;height:20px;border-radius:90% 0 90% 0;background:var(--theme-accent);animation:fallDrift 12s linear infinite}
+        .world-petal{background:#f9a8d4}.world-feather{height:28px;background:#2d9cc9}.world-seed,.world-pollen,.world-dust{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 0 12px var(--theme-accent)}.world-spark,.world-star,.world-glow{width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 18px var(--theme-accent),0 0 30px var(--theme-accent-2)}
+        .world-cloud{width:80px;height:28px;border-radius:999px;background:rgba(255,255,255,.55);box-shadow:22px -10px 0 rgba(255,255,255,.42),-20px -4px 0 rgba(255,255,255,.36);animation:cloudDrift 24s linear infinite}
+        .world-mouse{width:28px;height:15px;border-radius:50%;background:#9ca3af;bottom:8%;top:auto!important;animation:groundRun 18s linear infinite}.world-mouse::before{width:8px;height:8px;border-radius:50%;background:#cbd5e1;right:-4px;top:1px}.world-mouse::after{width:18px;height:2px;background:#9ca3af;left:-14px;top:9px;transform:rotate(15deg)}
+        .world-mushroom{width:30px;height:26px}.world-mushroom::before{width:30px;height:16px;border-radius:18px 18px 5px 5px;background:var(--theme-accent);top:0}.world-mushroom::after{width:12px;height:18px;border-radius:8px;background:#fff7ed;left:9px;top:12px}
+        .world-log,.world-branch,.world-fence{width:82px;height:16px;border-radius:99px;background:#9f6b2d;transform:rotate(-8deg);opacity:.22}.world-fence{height:10px;box-shadow:0 18px 0 #b07a45}
+        .world-fern{width:54px;height:62px;bottom:3%;top:auto!important}.world-fern::before{width:7px;height:58px;background:#2E8B57;border-radius:8px;left:24px;bottom:0}.world-fern::after{width:42px;height:48px;left:5px;bottom:6px;background:#66BB6A;clip-path:polygon(50% 0,62% 18%,100% 12%,68% 32%,94% 46%,62% 48%,86% 70%,56% 62%,52% 100%,44% 62%,14% 70%,38% 48%,6% 46%,32% 32%,0 12%,38% 18%)}
+        .world-waterfall{width:44px;height:90px;border-radius:18px;background:linear-gradient(180deg,rgba(135,206,235,.08),rgba(64,224,208,.46),rgba(255,255,255,.1));filter:blur(.2px);bottom:6%;top:auto!important;animation:waterShimmer 3s ease-in-out infinite}
+        .world-rock{width:58px;height:24px;border-radius:60% 50% 30% 40%;background:#94a3b8;opacity:.2;bottom:4%;top:auto!important}
+        .world-nest{width:42px;height:18px;border-radius:50%;background:repeating-linear-gradient(20deg,#9f6b2d 0 4px,#7c4a20 5px 8px);opacity:.24}
+        .world-mango,.world-coconut,.world-banana{width:22px;height:26px;border-radius:60% 45% 55% 50%;background:#FFB74D;box-shadow:0 0 14px rgba(255,183,77,.28);animation:worldFloat 10s ease-in-out infinite}.world-coconut{background:#8b5a2b}.world-banana{width:34px;height:16px;border-radius:0 0 80% 80%;background:#FFD54F;transform:rotate(-20deg)}
+        .period-app[data-theme="parrot"] .hero-card,
+        .period-app[data-theme="parrot"] .lift-card{border:1px solid rgba(255,255,255,.64)!important;box-shadow:0 16px 42px rgba(46,139,87,.12)!important}
+        .period-app[data-theme="parrot"] .lift-card:hover{box-shadow:0 20px 48px rgba(46,139,87,.18)!important}
+        .period-app[data-theme="parrot"] aside,
+        .period-app[data-theme="parrot"] header,
+        .period-app[data-theme="parrot"] nav{background:rgba(255,255,255,.78)!important;backdrop-filter:blur(18px)}
+        .period-app[data-theme="parrot"] .back-dashboard-btn{background:rgba(255,255,255,.78);border-color:rgba(164,222,2,.32);box-shadow:0 12px 30px rgba(46,139,87,.14)}
+        .period-app[data-theme="parrot"] .sticker-mascot.mascot-animated{animation:parrotIdle 4.2s ease-in-out infinite;transform-origin:50% 78%}
+        .period-app[data-theme="parrot"] .sticker-mascot.mascot-animated img{animation:parrotHeadTilt 5.6s ease-in-out infinite;filter:drop-shadow(0 18px 18px rgba(46,139,87,.22)) drop-shadow(0 0 12px rgba(255,213,79,.18))!important}
+        .period-app[data-theme="parrot"] .sticker-mascot.mascot-animated::before,
+        .period-app[data-theme="parrot"] .sticker-mascot.mascot-animated::after{content:"";position:absolute;width:9px;height:18px;border-radius:90% 0 90% 0;background:#42A5F5;opacity:0;right:14%;top:18%;filter:drop-shadow(0 6px 8px rgba(46,139,87,.18));animation:featherFlutter 7.5s ease-in-out infinite}
+        .period-app[data-theme="parrot"] .sticker-mascot.mascot-animated::after{background:#E53935;right:8%;top:30%;animation-delay:-3.2s}
+        .world-mist{width:130px;height:38px;border-radius:999px;background:rgba(255,255,255,.34);filter:blur(10px);animation:cloudDrift 28s linear infinite}
+        .world-bubble,.world-pearl{width:18px;height:18px;border:2px solid rgba(255,255,255,.75);border-radius:50%;background:rgba(255,255,255,.14);animation:bubbleRise 11s linear infinite}.world-pearl{background:rgba(255,255,255,.72);border:none;box-shadow:0 0 16px rgba(255,255,255,.8)}
+        .world-coral{width:52px;height:60px;bottom:4%;top:auto!important}.world-coral::before{width:9px;height:52px;background:#fb7185;border-radius:8px;left:21px;bottom:0;box-shadow:-16px 16px 0 #f9a8d4,16px 10px 0 #f472b6}.world-coral::after{width:11px;height:11px;border-radius:50%;background:#fb7185;left:9px;top:20px;box-shadow:28px -8px 0 #f472b6,14px -17px 0 #f9a8d4}
+        .world-seaweed{width:44px;height:72px;bottom:3%;top:auto!important}.world-seaweed::before,.world-seaweed::after{width:12px;height:70px;border-radius:50%;border-left:8px solid #22c55e;left:10px;animation:sway 4.8s ease-in-out infinite}.world-seaweed::after{left:25px;height:58px;border-color:#14b8a6;animation-delay:-1.8s}
+        .world-shell,.world-starfish,.world-jelly{width:32px;height:28px}.world-shell::before{width:32px;height:24px;border-radius:24px 24px 8px 8px;background:#fbcfe8}.world-starfish::before{width:34px;height:34px;background:#fb7185;clip-path:polygon(50% 0,61% 34%,98% 35%,68% 56%,79% 91%,50% 70%,20% 91%,31% 56%,2% 35%,39% 34%)}.world-jelly::before{width:30px;height:22px;border-radius:20px 20px 8px 8px;background:rgba(216,180,254,.5);box-shadow:0 0 18px rgba(216,180,254,.7)}.world-jelly::after{width:28px;height:28px;border-left:2px solid rgba(216,180,254,.7);border-right:2px solid rgba(216,180,254,.7);left:4px;top:20px}
+        .world-fish,.world-school{width:38px;height:18px;background:#38bdf8;border-radius:50%;animation:fishSwim 22s linear infinite}.world-fish::after,.world-school::after{right:-10px;top:2px;border-left:14px solid #38bdf8;border-top:7px solid transparent;border-bottom:7px solid transparent}.world-school{box-shadow:45px -20px 0 #facc15,90px 8px 0 #fb7185;opacity:.24}
+        .world-rainbow{width:150px;height:76px;border-radius:150px 150px 0 0;border:10px solid rgba(249,168,212,.34);border-bottom:0;box-shadow:0 -10px 0 rgba(186,230,253,.28),0 -20px 0 rgba(196,181,253,.24);opacity:.42}
+        .world-crystal{width:24px;height:38px;background:linear-gradient(135deg,#c4b5fd,#ecfeff);clip-path:polygon(50% 0,100% 32%,78% 100%,22% 100%,0 32%);box-shadow:0 0 18px rgba(196,181,253,.45)}
         .period-app [style*="#e11d48"],.period-app [style*="#db2777"]{accent-color:var(--theme-accent)}
-        .period-app[data-mode="dark"]{color:#e5e7eb}
+        .period-app[data-mode="dark"]{color:#e8e8e8;background:#181818!important}
         .period-app[data-mode="dark"] header,
         .period-app[data-mode="dark"] aside,
-        .period-app[data-mode="dark"] nav{background:rgba(15,23,42,.82)!important;border-color:rgba(148,163,184,.18)!important}
+        .period-app[data-mode="dark"] nav{background:rgba(24,24,24,.86)!important;border-color:rgba(255,255,255,.08)!important;box-shadow:none!important}
         .period-app[data-mode="dark"] main,
         .period-app[data-mode="dark"] section,
         .period-app[data-mode="dark"] div[style*="background:#fff"],
-        .period-app[data-mode="dark"] div[style*="background: #fff"]{background:#111827!important;color:#e5e7eb!important;border-color:rgba(148,163,184,.16)!important;box-shadow:0 18px 48px rgba(0,0,0,.28)!important}
+        .period-app[data-mode="dark"] div[style*="background: #fff"]{background:#202020!important;color:#e8e8e8!important;border-color:rgba(255,255,255,.08)!important;box-shadow:0 12px 28px rgba(0,0,0,.28)!important}
         .period-app[data-mode="dark"] div[style*="#f8fafc"],
         .period-app[data-mode="dark"] button[style*="#f8fafc"],
         .period-app[data-mode="dark"] input,
         .period-app[data-mode="dark"] textarea,
-        .period-app[data-mode="dark"] select{background:#1f2937!important;color:#e5e7eb!important;border-color:#334155!important}
+        .period-app[data-mode="dark"] select{background:#222!important;color:#e8e8e8!important;border-color:#343434!important}
         .period-app[data-mode="dark"] [style*="#1e293b"]{color:#f8fafc!important}
         .period-app[data-mode="dark"] [style*="#475569"]{color:#cbd5e1!important}
         .period-app[data-mode="dark"] [style*="#64748b"]{color:#cbd5e1!important}
@@ -1630,7 +1741,12 @@ export default function PeriodTracker(){
         .period-app[data-mode="dark"] [style*="#fffbeb"],
         .period-app[data-mode="dark"] [style*="#f0fdfa"],
         .period-app[data-mode="dark"] [style*="#ecfdf5"],
-        .period-app[data-mode="dark"] [style*="#fef3c7"]{background:rgba(255,255,255,.07)!important}
+        .period-app[data-mode="dark"] [style*="#fef3c7"]{background:rgba(255,255,255,.055)!important}
+        .period-app[data-mode="dark"] .lift-card:hover{box-shadow:0 14px 28px rgba(0,0,0,.34)!important}
+        .period-app[data-mode="dark"] .world-gradient{opacity:.28}
+        .period-app[data-mode="dark"] .world-horizon{opacity:.22}
+        .period-app[data-mode="dark"] .world-item{opacity:.2;filter:drop-shadow(0 8px 18px rgba(0,0,0,.18))}
+        .period-app[data-mode="dark"] .ambient-orb{opacity:.1;filter:blur(90px)}
         .mascot-animated{animation:mascotFloat 4.8s ease-in-out infinite;transform-origin:center}
         .mascot-animated .mascot-breathe{animation:mascotBreathe 3.4s ease-in-out infinite;transform-origin:center}
         .mascot-animated .mascot-tail{animation:mascotTail 2.8s ease-in-out infinite;transform-origin:72px 90px}
@@ -1640,13 +1756,30 @@ export default function PeriodTracker(){
         .period-app[data-animations="off"] .mascot-animated,
         .period-app[data-animations="off"] .mascot-animated *{animation:none!important}
         .period-app[data-animations="off"] .hero-card,
-        .period-app[data-animations="off"] .image-care-card{animation:none!important}
+        .period-app[data-animations="off"] .image-care-card,
+        .period-app[data-animations="off"] .theme-world *,
+        .period-app[data-animations="off"] .world-item{animation:none!important}
         @media(max-width:900px){.partner-feature-grid{grid-template-columns:1fr!important}.hero-card{grid-template-columns:1fr!important}.hero-card svg{max-width:120px}}
         @media(max-width:720px){.period-app main{padding:14px!important;padding-bottom:92px!important}.hero-card{border-radius:22px!important;padding:22px 18px!important}.hero-card h1{font-size:32px!important}.partner-feature-grid{gap:12px!important}}
         @media(min-width:640px){.sidebar-nav{display:flex!important}.bottom-nav{display:none!important}}
         @media(max-width:639px){.sidebar-nav{display:none!important}.bottom-nav{display:flex!important}}
         @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
         @keyframes softFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes ambientDrift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(4%,3%,0) scale(1.08)}}
+        @keyframes particleFloat{0%{transform:translateY(22px) rotate(0deg);opacity:0}15%,80%{opacity:.24}100%{transform:translateY(-38px) rotate(18deg);opacity:0}}
+        @keyframes worldFloat{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(12px,-18px,0) rotate(6deg)}}
+        @keyframes rayDrift{0%,100%{opacity:.18;transform:translateX(-12px) rotate(-28deg)}50%{opacity:.38;transform:translateX(18px) rotate(-24deg)}}
+        @keyframes flyAcross{0%{transform:translateX(-40px) translateY(0) scale(.92);opacity:0}12%,82%{opacity:.34}100%{transform:translateX(120px) translateY(-22px) scale(1.05);opacity:0}}
+        @keyframes fallDrift{0%{transform:translate3d(0,-28px,0) rotate(0deg);opacity:0}12%,78%{opacity:.34}100%{transform:translate3d(46px,96px,0) rotate(150deg);opacity:0}}
+        @keyframes cloudDrift{0%{transform:translateX(-80px);opacity:0}15%,80%{opacity:.36}100%{transform:translateX(120px);opacity:0}}
+        @keyframes groundRun{0%{transform:translateX(-70px);opacity:0}10%,82%{opacity:.28}100%{transform:translateX(170px);opacity:0}}
+        @keyframes bubbleRise{0%{transform:translateY(90px) scale(.7);opacity:0}15%,82%{opacity:.38}100%{transform:translateY(-150px) scale(1.14);opacity:0}}
+        @keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(6deg)}}
+        @keyframes fishSwim{0%{transform:translateX(-130px);opacity:0}12%,82%{opacity:.32}100%{transform:translateX(180px);opacity:0}}
+        @keyframes waterShimmer{0%,100%{opacity:.18;transform:translateY(0)}50%{opacity:.34;transform:translateY(6px)}}
+        @keyframes parrotIdle{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}22%{transform:translateY(-6px) rotate(-1.5deg) scale(1.015)}48%{transform:translateY(2px) rotate(1.5deg) scale(.995)}72%{transform:translateY(-4px) rotate(.8deg) scale(1.01)}}
+        @keyframes parrotHeadTilt{0%,100%{transform:rotate(0deg)}18%{transform:rotate(-2.5deg)}38%{transform:rotate(2.5deg)}62%{transform:rotate(-1.5deg)}82%{transform:rotate(1.8deg)}}
+        @keyframes featherFlutter{0%,72%,100%{opacity:0;transform:translate3d(0,0,0) rotate(0deg) scale(.85)}78%{opacity:.55;transform:translate3d(8px,-12px,0) rotate(38deg) scale(1)}90%{opacity:.2;transform:translate3d(22px,22px,0) rotate(110deg) scale(.72)}}
         @keyframes mascotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
         @keyframes mascotBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
         @keyframes mascotTail{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
