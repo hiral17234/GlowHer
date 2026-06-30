@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
-// â”€â”€â”€ Date utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Date utilities 
 function startOfDay(d) { const r = new Date(d); r.setHours(0,0,0,0); return r; }
 function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
 function subDays(d, n) { return addDays(d, -n); }
@@ -34,39 +34,39 @@ function formatTime(iso) {
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Constants 
 const PHASES = {
-  Menstrual:  { label:"Menstrual",  days:"Days 1â€“5",   tagline:"Rest & restore", color:"#e11d48", calColor:"#fb7185", bg:"#fff1f2", light:"#ffe4e6", fertility:"LOW",  tips:[{icon:"ðŸ¥¬",title:"Iron-rich foods",text:"Spinach, lentils, and dark chocolate replenish iron lost during bleeding."},{icon:"ðŸ§˜",title:"Gentle movement",text:"Light yoga or slow walks â€” your body's doing hard work, let it lead."},{icon:"ðŸŒ¡ï¸",title:"Heat therapy",text:"A warm compress on your abdomen eases cramps effectively."},{icon:"ðŸ““",title:"Rest & reflect",text:"Intuition is sharp this week. Journal, slow down, be kind to yourself."}] },
-  Follicular: { label:"Follicular", days:"Days 6â€“13",  tagline:"Rise & begin",   color:"#7c3aed", calColor:"#a78bfa", bg:"#f5f3ff", light:"#ede9fe", fertility:"LOW",  tips:[{icon:"ðŸ¥—",title:"Lean proteins",text:"Complex carbs and protein support your rising energy."},{icon:"ðŸƒ",title:"Build momentum",text:"Energy is climbing â€” try a new workout class or brisk walk."},{icon:"ðŸ’¡",title:"Create & plan",text:"Mental clarity peaks here. Great time for big projects."},{icon:"âœ¨",title:"Skin glow",text:"Estrogen peaks â€” skin is often clearest. Keep routine simple."}] },
-  Ovulation:  { label:"Ovulation",  days:"Peak day",   tagline:"Peak energy",    color:"#d97706", calColor:"#fbbf24", bg:"#fffbeb", light:"#fef3c7", fertility:"HIGH", tips:[{icon:"ðŸ«",title:"Antioxidants",text:"Berries, leafy greens, and fiber support hormone processing."},{icon:"ðŸ’ª",title:"Peak performance",text:"You're at your strongest â€” HIIT, running, heavy lifting, go for it."},{icon:"ðŸ—£ï¸",title:"Speak up",text:"Verbal confidence peaks. Great for negotiations and presentations."},{icon:"â¤ï¸",title:"Connect",text:"High confidence. Best time for social events and important conversations."}] },
-  Luteal:     { label:"Luteal",     days:"Days 15â€“28", tagline:"Wind down",      color:"#0f766e", calColor:"#5eead4", bg:"#f0fdfa", light:"#ccfbf1", fertility:"LOW",  tips:[{icon:"ðŸ¥¦",title:"Manage PMS",text:"Magnesium-rich foods and B-vitamins ease mood swings. Reduce caffeine."},{icon:"ðŸŠ",title:"Ease off",text:"Swap intense workouts for Pilates, swimming, or restorative yoga."},{icon:"ðŸ’§",title:"Stay hydrated",text:"Bloating is common. Up water intake and wear comfortable clothing."},{icon:"ðŸ›",title:"Deep self-care",text:"Turn inward â€” a bath, a book, a film. Cozy over productive."}] },
-  None:       { label:"Not set",    days:"",           tagline:"Set up cycle",   color:"#db2777", calColor:"#f9a8d4", bg:"#fdf2f8", light:"#fce7f3", fertility:"â€”",    tips:[{icon:"ðŸ“…",title:"Track your cycle",text:"Enter your last period date to unlock personalized daily insights."},{icon:"ðŸ”",title:"Spot patterns",text:"Tracking helps you understand what's normal for your unique body."},{icon:"ðŸ’ª",title:"Sync workouts",text:"Align your exercise with your natural hormonal rhythm for better results."},{icon:"ðŸ¥—",title:"Eat with your cycle",text:"Each phase calls for different nutrients to feel your best."}] },
+  Menstrual:  { label:"Menstrual",  days:"Days 1-5",   tagline:"Rest & restore", color:"#e11d48", calColor:"#fb7185", bg:"#fff1f2", light:"#ffe4e6", fertility:"LOW",  tips:[{icon:"FE",title:"Iron-rich foods",text:"Spinach, lentils, and dark chocolate replenish iron lost during bleeding."},{icon:"MV",title:"Gentle movement",text:"Light yoga or slow walks - your body's doing hard work, let it lead."},{icon:"HT",title:"Heat therapy",text:"A warm compress on your abdomen eases cramps effectively."},{icon:"JR",title:"Rest & reflect",text:"Intuition is sharp this week. Journal, slow down, be kind to yourself."}] },
+  Follicular: { label:"Follicular", days:"Days 6-13",  tagline:"Rise & begin",   color:"#7c3aed", calColor:"#a78bfa", bg:"#f5f3ff", light:"#ede9fe", fertility:"LOW",  tips:[{icon:"PR",title:"Lean proteins",text:"Complex carbs and protein support your rising energy."},{icon:"WK",title:"Build momentum",text:"Energy is climbing - try a new workout class or brisk walk."},{icon:"PL",title:"Create & plan",text:"Mental clarity peaks here. Great time for big projects."},{icon:"GL",title:"Skin glow",text:"Estrogen peaks - skin is often clearest. Keep routine simple."}] },
+  Ovulation:  { label:"Ovulation",  days:"Peak day",   tagline:"Peak energy",    color:"#d97706", calColor:"#fbbf24", bg:"#fffbeb", light:"#fef3c7", fertility:"HIGH", tips:[{icon:"OX",title:"Antioxidants",text:"Berries, leafy greens, and fiber support hormone processing."},{icon:"PW",title:"Peak performance",text:"You're at your strongest - HIIT, running, heavy lifting, go for it."},{icon:"SP",title:"Speak up",text:"Verbal confidence peaks. Great for negotiations and presentations."},{icon:"CN",title:"Connect",text:"High confidence. Best time for social events and important conversations."}] },
+  Luteal:     { label:"Luteal",     days:"Days 15-28", tagline:"Wind down",      color:"#0f766e", calColor:"#5eead4", bg:"#f0fdfa", light:"#ccfbf1", fertility:"LOW",  tips:[{icon:"MG",title:"Manage PMS",text:"Magnesium-rich foods and B-vitamins ease mood swings. Reduce caffeine."},{icon:"EZ",title:"Ease off",text:"Swap intense workouts for Pilates, swimming, or restorative yoga."},{icon:"HY",title:"Stay hydrated",text:"Bloating is common. Up water intake and wear comfortable clothing."},{icon:"SC",title:"Deep self-care",text:"Turn inward - a bath, a book, a film. Cozy over productive."}] },
+  None:       { label:"Not set",    days:"",           tagline:"Set up cycle",   color:"#db2777", calColor:"#f9a8d4", bg:"#fdf2f8", light:"#fce7f3", fertility:"-",    tips:[{icon:"TR",title:"Track your cycle",text:"Enter your last period date to unlock personalized daily insights."},{icon:"PT",title:"Spot patterns",text:"Tracking helps you understand what's normal for your unique body."},{icon:"WO",title:"Sync workouts",text:"Align your exercise with your natural hormonal rhythm for better results."},{icon:"FD",title:"Eat with your cycle",text:"Each phase calls for different nutrients to feel your best."}] },
 };
 const SYMPTOMS = [
-  {id:"cramps",emoji:"ðŸŒ€",label:"Cramps"},{id:"headache",emoji:"ðŸ¤•",label:"Headache"},
-  {id:"bloating",emoji:"ðŸ’¨",label:"Bloating"},{id:"fatigue",emoji:"ðŸ˜´",label:"Fatigue"},
-  {id:"mood_swings",emoji:"ðŸŽ¢",label:"Mood swings"},{id:"acne",emoji:"ðŸ˜®",label:"Acne"},
-  {id:"breast_tenderness",emoji:"ðŸ’—",label:"Breast pain"},{id:"nausea",emoji:"ðŸ¤¢",label:"Nausea"},
-  {id:"back_pain",emoji:"ðŸ¦´",label:"Back pain"},{id:"cravings",emoji:"ðŸ«",label:"Cravings"},
-  {id:"insomnia",emoji:"ðŸŒ™",label:"Insomnia"},{id:"anxiety",emoji:"ðŸ˜°",label:"Anxiety"},
+  {id:"cramps",emoji:"CR",label:"Cramps"},{id:"headache",emoji:"HD",label:"Headache"},
+  {id:"bloating",emoji:"BL",label:"Bloating"},{id:"fatigue",emoji:"FT",label:"Fatigue"},
+  {id:"mood_swings",emoji:"MS",label:"Mood swings"},{id:"acne",emoji:"AC",label:"Acne"},
+  {id:"breast_tenderness",emoji:"BT",label:"Breast pain"},{id:"nausea",emoji:"NA",label:"Nausea"},
+  {id:"back_pain",emoji:"BP",label:"Back pain"},{id:"cravings",emoji:"CV",label:"Cravings"},
+  {id:"insomnia",emoji:"IN",label:"Insomnia"},{id:"anxiety",emoji:"AX",label:"Anxiety"},
 ];
 const MOODS = [
-  {id:"happy",emoji:"ðŸ˜Š",label:"Happy"},{id:"calm",emoji:"ðŸ˜Œ",label:"Calm"},
-  {id:"energetic",emoji:"âš¡",label:"Energetic"},{id:"sad",emoji:"ðŸ˜¢",label:"Sad"},
-  {id:"anxious",emoji:"ðŸ˜°",label:"Anxious"},{id:"irritable",emoji:"ðŸ˜¤",label:"Irritable"},
-  {id:"tired",emoji:"ðŸ˜©",label:"Tired"},{id:"sensitive",emoji:"ðŸ¥º",label:"Sensitive"},
+  {id:"happy",emoji:"HA",label:"Happy"},{id:"calm",emoji:"CA",label:"Calm"},
+  {id:"energetic",emoji:"EN",label:"Energetic"},{id:"sad",emoji:"SA",label:"Sad"},
+  {id:"anxious",emoji:"AN",label:"Anxious"},{id:"irritable",emoji:"IR",label:"Irritable"},
+  {id:"tired",emoji:"TI",label:"Tired"},{id:"sensitive",emoji:"SE",label:"Sensitive"},
 ];
 const FLOW_LEVELS = [
   {id:"spotting",label:"Spotting",color:"#fda4af"},{id:"light",label:"Light",color:"#fb7185"},
   {id:"medium",label:"Medium",color:"#e11d48"},{id:"heavy",label:"Heavy",color:"#9f1239"},
 ];
 const SOUNDSCAPES = [
-  {id:"forest",name:"Forest Adventure",emoji:"ðŸŒ²",bg:"#d1fae5",color:"#065f46",freq:180,file:"/sounds/audiopapkin-forest-ambience-296528.mp3"},
-  {id:"rain",name:"Forest Rain",emoji:"ðŸŒ§ï¸",bg:"#dbeafe",color:"#1e40af",freq:220,file:"/sounds/enternalrainsounds-light-rain-ambience-with-cricket-sound-in-forest-night-420326.mp3"},
-  {id:"ocean",name:"Ocean Waves",emoji:"ðŸŒŠ",bg:"#cffafe",color:"#164e63",freq:140,file:"/sounds/dragon-studio-ocean-waves-376898.mp3"},
-  {id:"night",name:"Night Crickets",emoji:"ðŸŒ™",bg:"#ede9fe",color:"#4c1d95",freq:440,file:"/sounds/schorsch1964-night-atmosphere-with-crickets-374652.mp3"},
-  {id:"fire",name:"Crackling Fire",emoji:"ðŸ”¥",bg:"#fef3c7",color:"#92400e",freq:160,file:"/sounds/soundreality-fire-crackling-528620.mp3"},
-  {id:"wind",name:"Mountain Wind",emoji:"ðŸ”ï¸",bg:"#f1f5f9",color:"#334155",freq:100,file:"/sounds/freesound_community-ambience-mountain-outdoor-mirador-montbau-1-53134.mp3"},
+  {id:"forest",name:"Forest Adventure",emoji:"FR",bg:"#d1fae5",color:"#065f46",freq:180,file:"/sounds/audiopapkin-forest-ambience-296528.mp3"},
+  {id:"rain",name:"Forest Rain",emoji:"RN",bg:"#dbeafe",color:"#1e40af",freq:220,file:"/sounds/enternalrainsounds-light-rain-ambience-with-cricket-sound-in-forest-night-420326.mp3"},
+  {id:"ocean",name:"Ocean Waves",emoji:"OC",bg:"#cffafe",color:"#164e63",freq:140,file:"/sounds/dragon-studio-ocean-waves-376898.mp3"},
+  {id:"night",name:"Night Crickets",emoji:"NT",bg:"#ede9fe",color:"#4c1d95",freq:440,file:"/sounds/schorsch1964-night-atmosphere-with-crickets-374652.mp3"},
+  {id:"fire",name:"Crackling Fire",emoji:"FI",bg:"#fef3c7",color:"#92400e",freq:160,file:"/sounds/soundreality-fire-crackling-528620.mp3"},
+  {id:"wind",name:"Mountain Wind",emoji:"WD",bg:"#f1f5f9",color:"#334155",freq:100,file:"/sounds/freesound_community-ambience-mountain-outdoor-mirador-montbau-1-53134.mp3"},
 ];
 
 const PHASE_SUPPORT = {
@@ -77,21 +77,33 @@ const PHASE_SUPPORT = {
   None:{button:"Log period",headline:"Cycle care ideas",partner:"Set cycle details to unlock phase-specific support.",ideas:["Set cycle","Log symptoms","Drink water","Rest","Journal"]},
 };
 const RELIEF_ROUTINES = [
-  {title:"Period pain relief",duration:"12 min",emoji:"ðŸ§˜â€â™€ï¸",desc:"Gentle yoga flows to ease cramps",steps:["Child's pose (2 min)","Supine twist (3 min)","Reclined butterfly (3 min)","Savasana (4 min)"]},
-  {title:"Foot reflexology",duration:"6 min",emoji:"ðŸ¦¶",desc:"Pressure points connected to the uterus",steps:["Warm foot soak (2 min)","Inner arch press (2 min)","Ankle rotation (2 min)"]},
-  {title:"Breathing for cramps",duration:"8 min",emoji:"ðŸ’¨",desc:"4-7-8 breathing reduces pain signals",steps:["Inhale 4 counts","Hold 7 counts","Exhale 8 counts","Repeat 8 cycles"]},
-  {title:"Hip opening flow",duration:"15 min",emoji:"ðŸŒ¸",desc:"Releases pelvic tension and improves circulation",steps:["Pigeon pose left (3 min)","Pigeon pose right (3 min)","Lizard pose (3 min)","Happy baby (3 min)","Rest (3 min)"]},
+  {title:"Period pain relief",duration:"12 min",emoji:"YO",desc:"Gentle yoga flows to ease cramps",steps:["Child's pose (2 min)","Supine twist (3 min)","Reclined butterfly (3 min)","Savasana (4 min)"]},
+  {title:"Foot reflexology",duration:"6 min",emoji:"FT",desc:"Pressure points connected to the uterus",steps:["Warm foot soak (2 min)","Inner arch press (2 min)","Ankle rotation (2 min)"]},
+  {title:"Breathing for cramps",duration:"8 min",emoji:"BR",desc:"4-7-8 breathing reduces pain signals",steps:["Inhale 4 counts","Hold 7 counts","Exhale 8 counts","Repeat 8 cycles"]},
+  {title:"Hip opening flow",duration:"15 min",emoji:"HP",desc:"Releases pelvic tension and improves circulation",steps:["Pigeon pose left (3 min)","Pigeon pose right (3 min)","Lizard pose (3 min)","Happy baby (3 min)","Rest (3 min)"]},
 ];
 
 // Default reminder config
 const DEFAULT_REMINDERS = [
-  {id:"period",icon:"ðŸ©¸",label:"Period reminder",desc:"2 days before expected period",enabled:true,daysBefore:2,time:"08:00"},
-  {id:"ovulation",icon:"ðŸŒŸ",label:"Ovulation alert",desc:"On ovulation day",enabled:true,daysBefore:0,time:"08:00"},
-  {id:"medication",icon:"ðŸ’Š",label:"Medication",desc:"Daily pill reminder",enabled:false,time:"09:00",customText:"Take your medication"},
-  {id:"water",icon:"ðŸ’§",label:"Hydration",desc:"Drink water reminders",enabled:false,time:"10:00",interval:"every3h"},
-  {id:"mood",icon:"ðŸ’¬",label:"Mood check-in",desc:"Daily mood logging reminder",enabled:false,time:"20:00"},
-  {id:"custom1",icon:"â­",label:"Custom reminder",desc:"",enabled:false,time:"09:00",customText:"",isCustom:true},
+  {id:"period",icon:"PD",label:"Period reminder",desc:"2 days before expected period",enabled:true,daysBefore:2,time:"08:00"},
+  {id:"ovulation",icon:"OV",label:"Ovulation alert",desc:"On ovulation day",enabled:true,daysBefore:0,time:"08:00"},
+  {id:"medication",icon:"RX",label:"Medication",desc:"Daily pill reminder",enabled:false,time:"09:00",customText:"Take your medication"},
+  {id:"water",icon:"WA",label:"Hydration",desc:"Drink water reminders",enabled:false,time:"10:00",interval:"every3h"},
+  {id:"mood",icon:"MO",label:"Mood check-in",desc:"Daily mood logging reminder",enabled:false,time:"20:00"},
+  {id:"custom1",icon:"CU",label:"Custom reminder",desc:"",enabled:false,time:"09:00",customText:"",isCustom:true},
 ];
+
+const GLYPH_CODEPOINTS = {
+  HOME:0x1F3E0,CAL:0x1F4C5,HIST:0x1F4D6,CARE:0x1F486,PART:0x1F49E,ANLY:0x1F4CA,
+  SET:0x2699,BELL:0x1F514,PD:0x1FA78,OV:0x1F33C,RX:0x1F48A,WA:0x1F4A7,MO:0x1F4AC,CU:0x2728,
+  CR:0x1F321,HD:0x1F9E0,BL:0x1F4AD,FT:0x1F634,MS:0x1F300,AC:0x2728,BT:0x1F493,NA:0x1F922,BP:0x1F4AA,CV:0x1F36B,IN:0x1F319,AX:0x1F343,
+  HA:0x1F60A,CA:0x1F60C,EN:0x26A1,SA:0x1F614,AN:0x1F630,IR:0x1F624,TI:0x1F971,SE:0x1F97A,
+  FR:0x1F332,RN:0x1F327,OC:0x1F30A,NT:0x1F319,FI:0x1F525,WD:0x1F3D4,
+  FE:0x1F96C,MV:0x1F9D8,HT:0x1F525,JR:0x1F4D3,PR:0x1F95A,WK:0x1F45F,PL:0x1F4CB,GL:0x2728,OX:0x1FAD0,PW:0x1F4AA,SP:0x1F5E3,CN:0x1F91D,MG:0x1F331,EZ:0x1F9D8,HY:0x1F4A7,SC:0x1F6C1,TR:0x1F4DD,PT:0x1F4CA,WO:0x1F3CB,FD:0x1F957,YO:0x1F9D8,BR:0x1FAC1,HP:0x1F9D8,
+  CAT:0x1F431,FOX:0x1F98A,DOG:0x1F436,BIRD:0x1F99C,SEA:0x1F9DC,FAE:0x1F9DA,
+  heat:0x1F525,tea:0x2615,sweet:0x1F36B,heart:0x1F497,rest:0x1F6CC,massage:0x1F486,walk:0x1F45F,mood:0x1F300,moon:0x1F319,low:0x1F634,pain:0x1F321,calm:0x1F343
+};
+function glyph(token){ const code=GLYPH_CODEPOINTS[token]; return code ? String.fromCodePoint(code) : (token||""); }
 
 
 const DEFAULT_APP_SETTINGS = {
@@ -160,7 +172,7 @@ const PARTNER_SECTIONS = {
   bucket:["Spa Day","Ice Cream Date","Shopping","Sunset Walk","Painting","Movie Night","Cafe Visit","Photography","Journaling"],
 };
 
-// â”€â”€â”€ Storage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Storage 
 async function storageGet(key) {
   try { if (window.storage) { const r = await window.storage.get(key); return r ? r.value : null; } } catch {}
   try { return localStorage.getItem(key); } catch {}
@@ -172,7 +184,7 @@ async function storageSet(key, val) {
   try { localStorage.setItem(key, str); } catch {}
 }
 
-// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Helpers 
 function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
 
 function computeCycleData(lastPeriodDate, cycleLength, lutealLen, periodLen=5) {
@@ -218,7 +230,7 @@ function computeCycleData(lastPeriodDate, cycleLength, lutealLen, periodLen=5) {
   return {phase,dayOfCycle,cycleLength,nextPeriodIn,nextPeriodDate:nextPeriodStart,cycleStart,ovDay,periodDays,fertileDays,ovulationDays,dayPhaseMap};
 }
 
-// â”€â”€â”€ Cat Mascot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Cat Mascot 
 function CatMascot({size=120}) {
   return (
     <svg width={size} height={size*1.1} viewBox="0 0 120 132" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -245,7 +257,7 @@ function CatMascot({size=120}) {
   );
 }
 
-// â”€â”€â”€ UI Primitives â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  UI Primitives 
 function ThemedMascot({theme="cat",size=120,animated=true}) {
   const cfg = THEME_CONFIG[theme] || THEME_CONFIG.cat;
   const mascotSize = size * (theme === "fairy" ? 3 : 2);
@@ -291,12 +303,12 @@ function ThemedMascot({theme="cat",size=120,animated=true}) {
 function ThemeEnvironment({themeKey="cat"}) {
   const cfg=THEME_CONFIG[themeKey]||THEME_CONFIG.cat;
   const worldItems={
-    cat:["sunray","tree","tree","grass","grass","flower","flower","butterfly","butterfly","bird","leaf","pollen","cloud","mouse"],
-    fox:["sunray","autumn-tree","autumn-tree","leaf","leaf","leaf","mushroom","mushroom","log","mist","bird","dust","branch"],
-    dog:["sunray","meadow","meadow","fence","cloud","cloud","flower","flower","butterfly","bird","bee","seed","seed","grass"],
-    parrot:["sunray","sunray","palm","palm","banana-leaf","vine","vine","branch","orchid","hibiscus","butterfly","butterfly","bird","distant-parrot","feather","firefly","pollen","waterfall","rock","nest","mango","coconut","banana","fern"],
-    mermaid:["ray","ray","bubble","bubble","bubble","coral","coral","seaweed","seaweed","pearl","shell","starfish","jelly","fish","fish","school"],
-    fairy:["rainbow","cloud","cloud","pixie","pixie","spark","spark","petal","petal","butterfly","firefly","mushroom","crystal","star","fog"],
+    cat:["sunray","tree","grass","flower","butterfly","bird","leaf","pollen","cloud","mouse"],
+    fox:["sunray","autumn-tree","leaf","leaf","mushroom","log","mist","bird","dust","branch"],
+    dog:["sunray","meadow","fence","cloud","flower","butterfly","bird","bee","seed","grass"],
+    parrot:["sunray","palm","banana-leaf","vine","branch","orchid","hibiscus","butterfly","bird","distant-parrot","feather","firefly","pollen","waterfall","fern","mango"],
+    mermaid:["ray","bubble","bubble","coral","seaweed","pearl","shell","jelly","fish","school"],
+    fairy:["rainbow","cloud","pixie","spark","petal","butterfly","firefly","mushroom","crystal","fog"],
   }[themeKey]||["spark","petal","glow"];
   return (
     <div className={`theme-world theme-world-${themeKey}`} aria-hidden="true">
@@ -315,7 +327,7 @@ function Modal({onClose,children,title,wide,extraWide}){
       <div style={{background:"#fff",borderRadius:24,padding:28,width:"100%",maxWidth:extraWide?700:wide?560:440,boxShadow:"0 24px 64px rgba(0,0,0,0.18)",maxHeight:"90vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
           <h2 style={{fontSize:18,fontWeight:800,color:"#1e293b",margin:0}}>{title}</h2>
-          <button onClick={onClose} style={{background:"none",border:"none",fontSize:24,cursor:"pointer",color:"#94a3b8",lineHeight:1,padding:"0 4px"}}>Ã—</button>
+          <button onClick={onClose} aria-label="Close" style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#94a3b8",lineHeight:1,padding:"0 4px"}}>x</button>
         </div>
         {children}
       </div>
@@ -350,7 +362,7 @@ function CycleRing({day,total,color}){
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={stroke}
         strokeDasharray={`${progress*circ} ${circ}`} strokeLinecap="round"
         style={{transform:"rotate(-90deg)",transformOrigin:"center"}}/>
-      <text x={cx} y={cy+6} textAnchor="middle" fontSize="22" fontWeight="800" fill="#1e293b">{day||"â€”"}</text>
+      <text x={cx} y={cy+6} textAnchor="middle" fontSize="22" fontWeight="800" fill="#1e293b">{day||""}</text>
     </svg>
   );
 }
@@ -367,8 +379,8 @@ function CycleBar({cycleData}){
   ];
   return(
     <div style={{padding:"16px 20px 20px",background:"#fff",borderRadius:20,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-      <div style={{fontSize:13,fontWeight:800,color:"#1e293b",marginBottom:2}}>Today â€” Cycle Day {dayOfCycle}</div>
-      <div style={{fontSize:12,color:"#94a3b8",marginBottom:14}}>{PHASES[cycleData.phase]?.fertility||"LOW"} â€” Chance of getting pregnant</div>
+      <div style={{fontSize:13,fontWeight:800,color:"#1e293b",marginBottom:2}}>Today  Cycle Day {dayOfCycle}</div>
+      <div style={{fontSize:12,color:"#94a3b8",marginBottom:14}}>{PHASES[cycleData.phase]?.fertility||"LOW"}  Chance of getting pregnant</div>
       <div style={{fontSize:11,color:"#94a3b8",marginBottom:6}}>{format(cycleStart,"MMM d")}</div>
       <div style={{position:"relative",height:12,borderRadius:99,overflow:"visible",display:"flex",marginBottom:28}}>
         <div style={{display:"flex",width:"100%",borderRadius:99,overflow:"hidden",height:"100%"}}>
@@ -381,26 +393,26 @@ function CycleBar({cycleData}){
   );
 }
 
-// â”€â”€â”€ In-App Notification Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  In-App Notification Toast 
 function NotificationToast({notifications, onDismiss}) {
   if (!notifications.length) return null;
   return (
     <div style={{position:"fixed",top:70,right:16,zIndex:300,display:"flex",flexDirection:"column",gap:8,maxWidth:340}}>
       {notifications.map(n=>(
         <div key={n.id} style={{background:"#fff",borderRadius:16,padding:"14px 16px",boxShadow:"0 8px 32px rgba(0,0,0,0.15)",border:`2px solid ${n.color||"#e11d48"}20`,display:"flex",alignItems:"flex-start",gap:12,animation:"slideIn 0.3s ease"}}>
-          <span style={{fontSize:22,flexShrink:0}}>{n.icon}</span>
+          <span style={{fontSize:22,flexShrink:0}}>{glyph(n.icon)}</span>
           <div style={{flex:1}}>
             <div style={{fontSize:13,fontWeight:700,color:"#1e293b"}}>{n.title}</div>
             <div style={{fontSize:12,color:"#64748b",marginTop:2}}>{n.body}</div>
           </div>
-          <button onClick={()=>onDismiss(n.id)} style={{background:"none",border:"none",cursor:"pointer",color:"#94a3b8",fontSize:18,padding:"0 2px",lineHeight:1,flexShrink:0}}>Ã—</button>
+          <button onClick={()=>onDismiss(n.id)} aria-label="Dismiss reminder" style={{background:"none",border:"none",cursor:"pointer",color:"#94a3b8",fontSize:16,padding:"0 2px",lineHeight:1,flexShrink:0}}>x</button>
         </div>
       ))}
     </div>
   );
 }
 
-// â”€â”€â”€ MODALS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  MODALS 
 function LogPeriodModal({onClose,onSave,onDelete,logs,editEntry}){
   const [startDate,setStartDate]=useState(editEntry?.startDate||format(new Date(),"yyyy-MM-dd"));
   const [endDate,setEndDate]=useState(editEntry?.endDate||"");
@@ -417,7 +429,7 @@ function LogPeriodModal({onClose,onSave,onDelete,logs,editEntry}){
   }
   const inp={width:"100%",padding:"10px 12px",borderRadius:10,fontSize:14,border:"1.5px solid #e2e8f0",outline:"none",boxSizing:"border-box",color:"#1e293b",background:"#fff",fontFamily:"inherit"};
   return(
-    <Modal onClose={onClose} title={editEntry?"âœï¸ Edit period":"ðŸ©¸ Log period"}>
+    <Modal onClose={onClose} title={editEntry?" Edit period":" Log period"}>
       <div style={{display:"flex",flexDirection:"column",gap:18}}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <div><label style={{fontSize:12,fontWeight:600,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",display:"block",marginBottom:6}}>Start date</label><input type="date" style={inp} value={startDate} max={format(new Date(),"yyyy-MM-dd")} onChange={e=>setStartDate(e.target.value)}/></div>
@@ -428,9 +440,9 @@ function LogPeriodModal({onClose,onSave,onDelete,logs,editEntry}){
             {FLOW_LEVELS.map(f=><button key={f.id} onClick={()=>setFlow(f.id)} style={{padding:"8px 16px",borderRadius:99,border:`2px solid ${flow===f.id?f.color:"#e2e8f0"}`,background:flow===f.id?f.color+"20":"#fff",color:flow===f.id?f.color:"#64748b",fontSize:13,fontWeight:flow===f.id?700:500,cursor:"pointer",fontFamily:"inherit"}}>{f.label}</button>)}
           </div>
         </div>
-        <div><label style={{fontSize:12,fontWeight:600,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",display:"block",marginBottom:6}}>Notes</label><textarea style={{...inp,minHeight:70,resize:"vertical"}} placeholder="Any notesâ€¦" value={notes} onChange={e=>setNotes(e.target.value)}/></div>
+        <div><label style={{fontSize:12,fontWeight:600,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",display:"block",marginBottom:6}}>Notes</label><textarea style={{...inp,minHeight:70,resize:"vertical"}} placeholder="Any notes" value={notes} onChange={e=>setNotes(e.target.value)}/></div>
         <PrimaryBtn onClick={submit} style={{width:"100%"}}>{editEntry?"Update period":"Save period"}</PrimaryBtn>
-        {editEntry&&onDelete&&<DangerBtn onClick={()=>{onDelete(editEntry.id);onClose();}} style={{width:"100%"}}>ðŸ—‘ï¸ Delete this log</DangerBtn>}
+        {editEntry&&onDelete&&<DangerBtn onClick={()=>{onDelete(editEntry.id);onClose();}} style={{width:"100%"}}> Delete this log</DangerBtn>}
       </div>
     </Modal>
   );
@@ -456,30 +468,30 @@ function LogSymptomsModal({onClose,onSave,symptomLogs,dateKey}){
   }
   const inp={width:"100%",padding:"10px 12px",borderRadius:10,fontSize:14,border:"1.5px solid #e2e8f0",outline:"none",boxSizing:"border-box",fontFamily:"inherit",minHeight:70,resize:"vertical"};
   return(
-    <Modal onClose={onClose} title={isEdit?"âœï¸ Edit log":"How are you feeling?"} wide>
+    <Modal onClose={onClose} title={isEdit?" Edit log":"How are you feeling?"} wide>
       <div style={{display:"flex",flexDirection:"column",gap:18}}>
         <div style={{fontSize:12,fontWeight:600,color:"#94a3b8"}}>{key}</div>
         <div><p style={{fontSize:12,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8,marginTop:0}}>Mood</p>
           <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-            {MOODS.map(m=><button key={m.id} onClick={()=>setMood(mood===m.id?"":m.id)} style={{padding:"7px 12px",borderRadius:99,border:`1.5px solid ${mood===m.id?"#e11d48":"#e2e8f0"}`,background:mood===m.id?"#fff1f2":"#fff",color:mood===m.id?"#e11d48":"#475569",fontSize:13,fontWeight:mood===m.id?700:500,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:4}}><span>{m.emoji}</span>{m.label}</button>)}
+            {MOODS.map(m=><button key={m.id} onClick={()=>setMood(mood===m.id?"":m.id)} style={{padding:"7px 12px",borderRadius:99,border:`1.5px solid ${mood===m.id?"#e11d48":"#e2e8f0"}`,background:mood===m.id?"#fff1f2":"#fff",color:mood===m.id?"#e11d48":"#475569",fontSize:13,fontWeight:mood===m.id?700:500,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:4}}><span>{glyph(m.emoji)}</span>{m.label}</button>)}
           </div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
           <div><p style={{fontSize:12,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8,marginTop:0}}>Energy {energy}/5</p>
-            <div style={{display:"flex",alignItems:"center",gap:8}}><span>ðŸ˜©</span><input type="range" min={1} max={5} value={energy} onChange={e=>setEnergy(Number(e.target.value))} style={{flex:1}}/><span>âš¡</span></div>
+            <div style={{display:"flex",alignItems:"center",gap:8}}><span>Low</span><input type="range" min={1} max={5} value={energy} onChange={e=>setEnergy(Number(e.target.value))} style={{flex:1}}/><span>High</span></div>
           </div>
           <div><p style={{fontSize:12,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8,marginTop:0}}>Pain {pain}/10</p>
-            <div style={{display:"flex",alignItems:"center",gap:8}}><span>ðŸ˜Œ</span><input type="range" min={0} max={10} value={pain} onChange={e=>setPain(Number(e.target.value))} style={{flex:1}}/><span>ðŸ˜£</span></div>
+            <div style={{display:"flex",alignItems:"center",gap:8}}><span>0</span><input type="range" min={0} max={10} value={pain} onChange={e=>setPain(Number(e.target.value))} style={{flex:1}}/><span>10</span></div>
           </div>
         </div>
         <div><p style={{fontSize:12,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8,marginTop:0}}>Symptoms</p>
           <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-            {SYMPTOMS.map(s=><button key={s.id} onClick={()=>toggle(s.id)} style={{padding:"7px 12px",borderRadius:99,border:`1.5px solid ${selected.has(s.id)?"#e11d48":"#e2e8f0"}`,background:selected.has(s.id)?"#fff1f2":"#fff",color:selected.has(s.id)?"#e11d48":"#475569",fontSize:13,fontWeight:selected.has(s.id)?700:500,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:4}}><span>{s.emoji}</span>{s.label}</button>)}
+            {SYMPTOMS.map(s=><button key={s.id} onClick={()=>toggle(s.id)} style={{padding:"7px 12px",borderRadius:99,border:`1.5px solid ${selected.has(s.id)?"#e11d48":"#e2e8f0"}`,background:selected.has(s.id)?"#fff1f2":"#fff",color:selected.has(s.id)?"#e11d48":"#475569",fontSize:13,fontWeight:selected.has(s.id)?700:500,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:4}}><span>{glyph(s.emoji)}</span>{s.label}</button>)}
           </div>
         </div>
-        <div><p style={{fontSize:12,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6,marginTop:0}}>Notes</p><textarea style={inp} placeholder="Anything else todayâ€¦" value={notes} onChange={e=>setNotes(e.target.value)}/></div>
+        <div><p style={{fontSize:12,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6,marginTop:0}}>Notes</p><textarea style={inp} placeholder="Anything else today" value={notes} onChange={e=>setNotes(e.target.value)}/></div>
         <PrimaryBtn onClick={submit} style={{width:"100%"}}>{isEdit?"Update log":"Save log"}</PrimaryBtn>
-        {isEdit&&<DangerBtn onClick={handleDelete} style={{width:"100%"}}>ðŸ—‘ï¸ Delete this log</DangerBtn>}
+        {isEdit&&<DangerBtn onClick={handleDelete} style={{width:"100%"}}> Delete this log</DangerBtn>}
       </div>
     </Modal>
   );
@@ -520,26 +532,26 @@ function RoutineModal({routine,onClose}){
   const [done,setDone]=useState(false);
   if(!routine) return null;
   return(
-    <Modal onClose={onClose} title={`${routine.emoji} ${routine.title}`}>
+    <Modal onClose={onClose} title={`${glyph(routine.emoji)} ${routine.title}`}>
       <div style={{display:"flex",flexDirection:"column",gap:16}}>
-        <div style={{display:"flex",alignItems:"center",gap:8,background:"#fff1f2",borderRadius:12,padding:"10px 16px"}}><span style={{fontSize:20}}>â±ï¸</span><span style={{fontSize:14,fontWeight:600,color:"#e11d48"}}>{routine.duration} Â· {routine.desc}</span></div>
+        <div style={{display:"flex",alignItems:"center",gap:8,background:"#fff1f2",borderRadius:12,padding:"10px 16px"}}><span style={{fontSize:20}}></span><span style={{fontSize:14,fontWeight:600,color:"#e11d48"}}>{routine.duration}  {routine.desc}</span></div>
         {!done?(
           <>
             <div style={{display:"flex",flexDirection:"column",gap:8}}>
               {routine.steps.map((s,i)=>(
                 <div key={i} onClick={()=>setStep(i)} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",borderRadius:12,background:i===step?"#fff1f2":i<step?"#f0fdf4":"#f8fafc",border:`1.5px solid ${i===step?"#e11d48":i<step?"#86efac":"#f1f5f9"}`,cursor:"pointer"}}>
-                  <div style={{width:28,height:28,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:800,background:i<step?"#22c55e":i===step?"#e11d48":"#e2e8f0",color:i<=step?"#fff":"#94a3b8"}}>{i<step?"âœ“":i+1}</div>
+                  <div style={{width:28,height:28,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:800,background:i<step?"#22c55e":i===step?"#e11d48":"#e2e8f0",color:i<=step?"#fff":"#94a3b8"}}>{i<step?"":i+1}</div>
                   <span style={{fontSize:14,color:i===step?"#e11d48":i<step?"#15803d":"#475569",fontWeight:i===step?700:500}}>{s}</span>
                 </div>
               ))}
             </div>
             <div style={{display:"flex",gap:10}}>
               {step>0&&<button onClick={()=>setStep(s=>s-1)} style={{flex:1,padding:12,borderRadius:12,border:"1.5px solid #e2e8f0",background:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",color:"#475569"}}>Back</button>}
-              <PrimaryBtn onClick={()=>step<routine.steps.length-1?setStep(s=>s+1):setDone(true)} style={{flex:1}}>{step<routine.steps.length-1?"Next step â†’":"Complete âœ“"}</PrimaryBtn>
+              <PrimaryBtn onClick={()=>step<routine.steps.length-1?setStep(s=>s+1):setDone(true)} style={{flex:1}}>{step<routine.steps.length-1?"Next step ":"Complete "}</PrimaryBtn>
             </div>
           </>
         ):(
-          <div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:48,marginBottom:12}}>ðŸŽ‰</div><p style={{fontSize:18,fontWeight:800,color:"#1e293b"}}>Routine complete!</p><PrimaryBtn onClick={onClose} style={{width:"100%"}}>Done</PrimaryBtn></div>
+          <div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:48,marginBottom:12}}></div><p style={{fontSize:18,fontWeight:800,color:"#1e293b"}}>Routine complete!</p><PrimaryBtn onClick={onClose} style={{width:"100%"}}>Done</PrimaryBtn></div>
         )}
       </div>
     </Modal>
@@ -576,14 +588,14 @@ function SoundscapePlayer({sound,onClose}){
   useEffect(()=>()=>{stopAll();clearInterval(intRef.current);},[]);
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
   return(
-    <Modal onClose={()=>{stopAll();onClose();}} title={`${sound.emoji} ${sound.name}`}>
+    <Modal onClose={()=>{stopAll();onClose();}} title={`${glyph(sound.emoji)} ${sound.name}`}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:24,padding:"8px 0"}}>
         {sound.file&&<audio ref={audioRef} src={sound.file} preload="auto"/>}
-        <div style={{width:100,height:100,borderRadius:"50%",background:sound.bg,fontSize:48,display:"flex",alignItems:"center",justifyContent:"center",border:playing?`3px solid ${sound.color}`:"3px solid transparent"}}>{sound.emoji}</div>
-        <div style={{textAlign:"center"}}><div style={{fontSize:32,fontWeight:800,color:"#1e293b"}}>{fmt(elapsed)}</div><div style={{fontSize:13,color:"#94a3b8"}}>{playing?"Playingâ€¦":"Paused"}</div></div>
+        <div style={{width:100,height:100,borderRadius:"50%",background:sound.bg,fontSize:48,display:"flex",alignItems:"center",justifyContent:"center",border:playing?`3px solid ${sound.color}`:"3px solid transparent"}}>{glyph(sound.emoji)}</div>
+        <div style={{textAlign:"center"}}><div style={{fontSize:32,fontWeight:800,color:"#1e293b"}}>{fmt(elapsed)}</div><div style={{fontSize:13,color:"#94a3b8"}}>{playing?"Playing":"Paused"}</div></div>
         <div style={{display:"flex",gap:16}}>
-          <button onClick={togglePlay} style={{width:60,height:60,borderRadius:"50%",border:"none",cursor:"pointer",background:sound.color,color:"#fff",fontSize:24,display:"flex",alignItems:"center",justifyContent:"center"}}>{playing?"â¸":"â–¶"}</button>
-          <button onClick={()=>{stopAll();setElapsed(0);setPlaying(false);}} style={{width:60,height:60,borderRadius:"50%",border:"1.5px solid #e2e8f0",cursor:"pointer",background:"#fff",color:"#64748b",fontSize:22,display:"flex",alignItems:"center",justifyContent:"center"}}>â¹</button>
+          <button onClick={togglePlay} style={{width:70,height:60,borderRadius:999,border:"none",cursor:"pointer",background:sound.color,color:"#fff",fontSize:14,fontWeight:900,display:"flex",alignItems:"center",justifyContent:"center"}}>{playing?"Pause":"Play"}</button>
+          <button onClick={()=>{stopAll();setElapsed(0);setPlaying(false);}} style={{width:74,height:60,borderRadius:999,border:"1.5px solid #e2e8f0",cursor:"pointer",background:"#fff",color:"#64748b",fontSize:14,fontWeight:900,display:"flex",alignItems:"center",justifyContent:"center"}}>Reset</button>
         </div>
         {audioError&&<div style={{fontSize:12,color:"#b45309",background:"#fffbeb",borderRadius:10,padding:"9px 12px",width:"100%",boxSizing:"border-box"}}>{audioError}</div>}
         <div style={{width:"100%"}}><div style={{fontSize:12,fontWeight:600,color:"#94a3b8",marginBottom:6}}>Volume</div><input type="range" min={0} max={1} step={0.05} value={vol} onChange={e=>setVol(Number(e.target.value))} style={{width:"100%"}}/></div>
@@ -592,7 +604,7 @@ function SoundscapePlayer({sound,onClose}){
   );
 }
 
-// â”€â”€â”€ REMINDERS PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  REMINDERS PANEL 
 function RemindersPanel({onClose,reminders,onSave,cycleData}){
   const [local,setLocal]=useState(reminders.map(r=>({...r})));
   const [notifPerm,setNotifPerm]=useState(typeof Notification!=="undefined"?Notification.permission:"unsupported");
@@ -621,7 +633,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
 
   function triggerTestNotification(permission=notifPerm){
     if(permission==="granted"){
-      new Notification("GlowHer ðŸŒ¸",{body:"Notifications enabled! You'll receive cycle reminders here.",icon:"https://emojicdn.elk.sh/ðŸŒ¸"});
+      new Notification("GlowHer ",{body:"Notifications enabled! You'll receive cycle reminders here.",icon:"https://emojicdn.elk.sh/"});
     }
   }
 
@@ -631,7 +643,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
 
   function addCustom(){
     const newId="custom"+(Date.now());
-    setLocal(prev=>[...prev,{id:newId,icon:"â­",label:"Custom reminder",desc:"",enabled:true,time:"09:00",customText:"",isCustom:true}]);
+    setLocal(prev=>[...prev,{id:newId,icon:"CU",label:"Custom reminder",desc:"",enabled:true,time:"09:00",customText:"",isCustom:true}]);
     setAdded(true);
   }
 
@@ -664,13 +676,13 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
   const inp={width:"100%",padding:"9px 12px",borderRadius:10,fontSize:13,border:"1.5px solid #e2e8f0",outline:"none",boxSizing:"border-box",fontFamily:"inherit",color:"#1e293b",background:"#fff"};
 
   return(
-    <Modal onClose={onClose} title="ðŸ”” Reminders" wide>
+    <Modal onClose={onClose} title=" Reminders" wide>
       <div style={{display:"flex",flexDirection:"column",gap:0}}>
 
         {/* Notification permission banner */}
         {notifPerm!=="granted"&&notifPerm!=="unsupported"&&(
           <div style={{background:"#fef3c7",borderRadius:14,padding:"14px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:12}}>
-            <span style={{fontSize:22}}>ðŸ””</span>
+            <span style={{fontSize:22}}></span>
             <div style={{flex:1}}>
               <div style={{fontSize:13,fontWeight:700,color:"#92400e"}}>Enable browser notifications</div>
               <div style={{fontSize:12,color:"#a16207"}}>Get alerts even when the app is in the background</div>
@@ -680,7 +692,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
         )}
         {notifPerm==="granted"&&(
           <div style={{background:"#f0fdf4",borderRadius:14,padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:10}}>
-            <span style={{fontSize:18}}>âœ…</span>
+            <span style={{fontSize:18}}></span>
             <span style={{fontSize:13,color:"#15803d",fontWeight:600}}>Browser notifications active</span>
           </div>
         )}
@@ -693,7 +705,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
         {/* Active cycle alerts */}
         {cycleData&&getActiveAlerts().map(a=>(
           <div key={a.id} style={{background:`${a.color}10`,border:`1.5px solid ${a.color}30`,borderRadius:14,padding:"12px 16px",marginBottom:12,display:"flex",gap:10,alignItems:"center"}}>
-            <span style={{fontSize:22}}>{a.icon}</span>
+            <span style={{fontSize:22}}>{glyph(a.icon)}</span>
             <div><div style={{fontSize:13,fontWeight:700,color:a.color}}>{a.title}</div><div style={{fontSize:12,color:"#64748b"}}>{a.body}</div></div>
           </div>
         ))}
@@ -702,7 +714,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
         {local.map((r,i)=>(
           <div key={r.id} style={{padding:"16px 0",borderBottom:"1px solid #f1f5f9"}}>
             <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:r.enabled?10:0}}>
-              <span style={{fontSize:22,flexShrink:0}}>{r.icon}</span>
+              <span style={{fontSize:22,flexShrink:0}}>{glyph(r.icon)}</span>
               <div style={{flex:1}}>
                 {r.isCustom?(
                   <input value={r.label} onChange={e=>update(r.id,{label:e.target.value})} style={{...inp,padding:"5px 8px",fontWeight:700,fontSize:14}} placeholder="Reminder name"/>
@@ -712,7 +724,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
                 {!r.isCustom&&<div style={{fontSize:12,color:"#94a3b8"}}>{r.desc}</div>}
               </div>
               <Toggle checked={r.enabled} onChange={v=>update(r.id,{enabled:v})}/>
-              {r.isCustom&&<button onClick={()=>removeCustom(r.id)} style={{background:"none",border:"none",cursor:"pointer",color:"#fca5a5",fontSize:18,padding:"0 4px"}}>ðŸ—‘ï¸</button>}
+              {r.isCustom&&<button onClick={()=>removeCustom(r.id)} style={{background:"none",border:"none",cursor:"pointer",color:"#fca5a5",fontSize:13,fontWeight:900,padding:"0 4px"}}>Remove</button>}
             </div>
             {r.enabled&&(
               <div style={{paddingLeft:34,display:"flex",flexDirection:"column",gap:8}}>
@@ -727,7 +739,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
                   )}
                 </div>
                 {(r.isCustom||r.id==="medication")&&(
-                  <input value={r.customText||""} onChange={e=>update(r.id,{customText:e.target.value})} style={inp} placeholder="Reminder messageâ€¦"/>
+                  <input value={r.customText||""} onChange={e=>update(r.id,{customText:e.target.value})} style={inp} placeholder="Reminder message"/>
                 )}
               </div>
             )}
@@ -741,7 +753,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
   );
 }
 
-// â”€â”€â”€ HISTORY TAB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  HISTORY TAB 
 function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSymptoms,cycleData,themeKey="cat"}){
   const [search,setSearch]=useState("");
   const [filterMonth,setFilterMonth]=useState("all");
@@ -786,7 +798,7 @@ function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSym
       {/* Header */}
       <div style={{background:"#fff",borderRadius:20,padding:"18px 20px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-          <h2 style={{fontSize:18,fontWeight:900,color:"#1e293b",margin:0}}>ðŸ“‹ History</h2>
+          <h2 style={{fontSize:18,fontWeight:900,color:"#1e293b",margin:0}}> History</h2>
           <PrimaryBtn onClick={onLogSymptoms} style={{fontSize:12,padding:"8px 16px"}}>+ Log today</PrimaryBtn>
         </div>
 
@@ -799,8 +811,8 @@ function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSym
 
         {/* Search */}
         <div style={{position:"relative",marginBottom:10}}>
-          <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:16,color:"#94a3b8"}}>ðŸ”</span>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search symptoms, mood, notesâ€¦" style={{...inp,width:"100%",paddingLeft:38,boxSizing:"border-box"}}/>
+          <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:16,color:"#94a3b8"}}></span>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search symptoms, mood, notes" style={{...inp,width:"100%",paddingLeft:38,boxSizing:"border-box"}}/>
         </div>
 
         {/* Filters */}
@@ -813,7 +825,7 @@ function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSym
             })}
           </select>
           <button onClick={()=>setSortOrder(s=>s==="desc"?"asc":"desc")} style={{...inp,cursor:"pointer",fontSize:13,padding:"7px 14px",fontWeight:600,color:"#64748b"}}>
-            {sortOrder==="desc"?"â†“ Newest first":"â†‘ Oldest first"}
+            {sortOrder==="desc"?" Newest first":" Oldest first"}
           </button>
         </div>
       </div>
@@ -822,12 +834,12 @@ function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSym
       {viewMode==="symptoms"&&symptomEntries.length>0&&(
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
           {[
-            {label:"Total logs",value:symptomEntries.length,icon:"ðŸ“",color:"#7c3aed",bg:"#f5f3ff"},
-            {label:"This month",value:symptomEntries.filter(e=>e.dateKey.startsWith(format(new Date(),"yyyy-MM"))).length,icon:"ðŸ“…",color:"#e11d48",bg:"#fff1f2"},
-            {label:"Avg pain",value:(symptomEntries.filter(e=>e.pain>0).reduce((a,e)=>a+(e.pain||0),0)/Math.max(1,symptomEntries.filter(e=>e.pain>0).length)).toFixed(1),icon:"ðŸ’Š",color:"#0f766e",bg:"#f0fdfa"},
+            {label:"Total logs",value:symptomEntries.length,icon:"HIST",color:"#7c3aed",bg:"#f5f3ff"},
+            {label:"This month",value:symptomEntries.filter(e=>e.dateKey.startsWith(format(new Date(),"yyyy-MM"))).length,icon:"CAL",color:"#e11d48",bg:"#fff1f2"},
+            {label:"Avg pain",value:(symptomEntries.filter(e=>e.pain>0).reduce((a,e)=>a+(e.pain||0),0)/Math.max(1,symptomEntries.filter(e=>e.pain>0).length)).toFixed(1),icon:"CR",color:"#0f766e",bg:"#f0fdfa"},
           ].map(s=>(
             <div key={s.label} style={{background:s.bg,borderRadius:16,padding:"14px 12px",textAlign:"center"}}>
-              <div style={{fontSize:20,marginBottom:4}}>{s.icon}</div>
+              <div style={{fontSize:20,marginBottom:4}}>{glyph(s.icon)}</div>
               <div style={{fontSize:20,fontWeight:900,color:s.color}}>{s.value}</div>
               <div style={{fontSize:11,color:"#64748b"}}>{s.label}</div>
             </div>
@@ -867,7 +879,7 @@ function SymptomHistoryCard({entry,cycleData,onEdit}){
     <div style={{background:"#fff",borderRadius:18,boxShadow:"0 2px 8px rgba(0,0,0,0.05)",overflow:"hidden"}}>
       <div onClick={()=>setOpen(o=>!o)} style={{padding:"16px 18px",cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
         <div style={{width:42,height:42,borderRadius:12,background:phaseInfo?phaseInfo.light:"#f8fafc",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>
-          {mood?mood.emoji:"ðŸ“"}
+          {mood?glyph(mood.emoji):""}
         </div>
         <div style={{flex:1,minWidth:0}}>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
@@ -876,15 +888,15 @@ function SymptomHistoryCard({entry,cycleData,onEdit}){
             {phaseInfo&&<span style={{fontSize:11,fontWeight:600,color:phaseInfo.color,background:phaseInfo.light,borderRadius:99,padding:"2px 8px"}}>{phase}</span>}
           </div>
           <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-            {mood&&<span style={{fontSize:12,color:"#64748b"}}>{mood.emoji} {mood.label}</span>}
-            {entry.pain>0&&<span style={{fontSize:12,color:"#e11d48"}}>Â· Pain {entry.pain}/10</span>}
-            {entry.energy&&<span style={{fontSize:12,color:"#64748b"}}>Â· Energy {entry.energy}/5</span>}
-            {syms.length>0&&<span style={{fontSize:12,color:"#94a3b8"}}>Â· {syms.map(s=>s.emoji).join(" ")}</span>}
+            {mood&&<span style={{fontSize:12,color:"#64748b"}}>{glyph(mood.emoji)} {mood.label}</span>}
+            {entry.pain>0&&<span style={{fontSize:12,color:"#e11d48"}}> Pain {entry.pain}/10</span>}
+            {entry.energy&&<span style={{fontSize:12,color:"#64748b"}}> Energy {entry.energy}/5</span>}
+            {syms.length>0&&<span style={{fontSize:12,color:"#94a3b8"}}> {syms.map(s=>glyph(s.emoji)).join(" ")}</span>}
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <button onClick={e=>{e.stopPropagation();onEdit();}} style={{background:"#f5f3ff",border:"none",borderRadius:8,padding:"6px 10px",cursor:"pointer",fontSize:12,fontWeight:700,color:"#7c3aed",fontFamily:"inherit"}}>âœï¸</button>
-          <span style={{color:"#94a3b8",fontSize:16}}>{open?"â–²":"â–¼"}</span>
+          <button onClick={e=>{e.stopPropagation();onEdit();}} style={{background:"#f5f3ff",border:"none",borderRadius:8,padding:"6px 10px",cursor:"pointer",fontSize:12,fontWeight:700,color:"#7c3aed",fontFamily:"inherit"}}>Edit</button>
+          <span style={{color:"#94a3b8",fontSize:16}}>{open?"-":"+"}</span>
         </div>
       </div>
       {open&&(
@@ -893,7 +905,7 @@ function SymptomHistoryCard({entry,cycleData,onEdit}){
             <div style={{marginBottom:10}}>
               <div style={{fontSize:11,fontWeight:700,color:"#94a3b8",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Symptoms</div>
               <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                {syms.map(s=><span key={s.id} style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>{s.emoji} {s.label}</span>)}
+                {syms.map(s=><span key={s.id} style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>{glyph(s.emoji)} {s.label}</span>)}
               </div>
             </div>
           )}
@@ -923,20 +935,20 @@ function PeriodHistoryCard({log,onEdit}){
   return(
     <div style={{background:"#fff",borderRadius:18,boxShadow:"0 2px 8px rgba(0,0,0,0.05)",overflow:"hidden"}}>
       <div onClick={()=>setOpen(o=>!o)} style={{padding:"16px 18px",cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
-        <div style={{width:42,height:42,borderRadius:12,background:"#fff1f2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>ðŸ©¸</div>
+        <div style={{width:42,height:42,borderRadius:12,background:"#fff1f2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}></div>
         <div style={{flex:1}}>
           <div style={{fontSize:14,fontWeight:700,color:"#1e293b",marginBottom:3}}>
-            {format(new Date(log.startDate+"T12:00:00"),"MMM d")}{log.endDate?` â€“ ${format(new Date(log.endDate+"T12:00:00"),"MMM d")}`:""}{dur?` (${dur} days)`:""}
+            {format(new Date(log.startDate+"T12:00:00"),"MMM d")}{log.endDate?`  ${format(new Date(log.endDate+"T12:00:00"),"MMM d")}`:""}{dur?` (${dur} days)`:""}
           </div>
           <div style={{display:"flex",gap:6,alignItems:"center"}}>
             <span style={{width:8,height:8,borderRadius:"50%",background:flowColor,flexShrink:0,display:"inline-block"}}/>
             <span style={{fontSize:12,color:"#64748b",textTransform:"capitalize"}}>{log.flow} flow</span>
-            {log.notes&&<span style={{fontSize:12,color:"#94a3b8"}}>Â· Has note</span>}
+            {log.notes&&<span style={{fontSize:12,color:"#94a3b8"}}> Has note</span>}
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <button onClick={e=>{e.stopPropagation();onEdit();}} style={{background:"#fff1f2",border:"none",borderRadius:8,padding:"6px 10px",cursor:"pointer",fontSize:12,fontWeight:700,color:"#e11d48",fontFamily:"inherit"}}>âœï¸</button>
-          <span style={{color:"#94a3b8",fontSize:16}}>{open?"â–²":"â–¼"}</span>
+          <button onClick={e=>{e.stopPropagation();onEdit();}} style={{background:"#fff1f2",border:"none",borderRadius:8,padding:"6px 10px",cursor:"pointer",fontSize:12,fontWeight:700,color:"#e11d48",fontFamily:"inherit"}}>Edit</button>
+          <span style={{color:"#94a3b8",fontSize:16}}>{open?"-":"+"}</span>
         </div>
       </div>
       {open&&log.notes&&(
@@ -950,7 +962,7 @@ function PeriodHistoryCard({log,onEdit}){
   );
 }
 
-// â”€â”€â”€ CALENDAR TAB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  CALENDAR TAB 
 function CalendarTab({cycleData,periodLogs,symptomLogs,onLogPeriod,onEditPeriod,onEditSymptoms}){
   const now=new Date();
   const [viewYear,setViewYear]=useState(now.getFullYear());
@@ -976,9 +988,9 @@ function CalendarTab({cycleData,periodLogs,symptomLogs,onLogPeriod,onEditPeriod,
     <div style={{display:"flex",flexDirection:"column",gap:16}}>
       <div style={{background:"#fff",borderRadius:20,boxShadow:"0 2px 12px rgba(0,0,0,0.06)",overflow:"hidden"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 20px 12px"}}>
-          <button onClick={prev} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,color:"#475569",padding:"4px 10px",borderRadius:8}}>â€¹</button>
+          <button onClick={prev} aria-label="Previous month" style={{background:"none",border:"none",cursor:"pointer",fontSize:22,color:"#475569",padding:"4px 10px",borderRadius:8}}>&lt;</button>
           <span style={{fontWeight:800,fontSize:17,color:"#1e293b"}}>{format(new Date(viewYear,viewMonth,1),"MMMM yyyy")}</span>
-          <button onClick={next} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,color:"#475569",padding:"4px 10px",borderRadius:8}}>â€º</button>
+          <button onClick={next} aria-label="Next month" style={{background:"none",border:"none",cursor:"pointer",fontSize:22,color:"#475569",padding:"4px 10px",borderRadius:8}}>&gt;</button>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"0 8px"}}>
           {DAYS_HDR.map(d=><div key={d} style={{textAlign:"center",fontSize:11,color:"#94a3b8",fontWeight:700,padding:"4px 0"}}>{d}</div>)}
@@ -1027,21 +1039,21 @@ function CalendarTab({cycleData,periodLogs,symptomLogs,onLogPeriod,onEditPeriod,
               {cycleData&&dayPhaseMap[selKey]&&<div style={{fontSize:13,color:"#94a3b8"}}>Cycle Day {differenceInDays(selected.date,cycleData.cycleStart)+1}</div>}
             </div>
             <div style={{display:"flex",gap:8}}>
-              {(selPeriodLog||selLog)&&<button onClick={()=>{if(selPeriodLog)onEditPeriod(selPeriodLog);else if(selLog)onEditSymptoms(selKey);}} style={{background:"linear-gradient(135deg,#fce7f3,#ede9fe)",border:"none",borderRadius:99,padding:"8px 18px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#7c3aed",fontFamily:"inherit"}}>âœï¸ Edit</button>}
+              {(selPeriodLog||selLog)&&<button onClick={()=>{if(selPeriodLog)onEditPeriod(selPeriodLog);else if(selLog)onEditSymptoms(selKey);}} style={{background:"linear-gradient(135deg,#fce7f3,#ede9fe)",border:"none",borderRadius:99,padding:"8px 18px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#7c3aed",fontFamily:"inherit"}}> Edit</button>}
               {!selLog&&<button onClick={()=>onEditSymptoms(selKey)} style={{background:"#f8fafc",border:"1.5px solid #e2e8f0",borderRadius:99,padding:"8px 18px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#64748b",fontFamily:"inherit"}}>+ Add log</button>}
             </div>
           </div>
-          {selPhase&&<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}><div style={{width:8,height:8,borderRadius:"50%",background:selP?.color||"#94a3b8"}}/><span style={{fontSize:13,color:"#64748b"}}>{PHASES[selPhase]?.fertility} â€” Chance of getting pregnant</span></div>}
-          {periodDays.has(selKey)&&<div style={{background:"#fff1f2",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#e11d48"}}>ðŸ©¸ Period day (predicted)</span></div>}
-          {ovulationDays.has(selKey)&&<div style={{background:"#fffbeb",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#d97706"}}>ðŸŒŸ Ovulation day</span></div>}
-          {selPeriodLog&&<div style={{background:"#fdf2f8",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#db2777"}}>Logged: {selPeriodLog.flow} flow{selPeriodLog.notes?` Â· ${selPeriodLog.notes}`:""}</span></div>}
+          {selPhase&&<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}><div style={{width:8,height:8,borderRadius:"50%",background:selP?.color||"#94a3b8"}}/><span style={{fontSize:13,color:"#64748b"}}>{PHASES[selPhase]?.fertility}  Chance of getting pregnant</span></div>}
+          {periodDays.has(selKey)&&<div style={{background:"#fff1f2",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#e11d48"}}> Period day (predicted)</span></div>}
+          {ovulationDays.has(selKey)&&<div style={{background:"#fffbeb",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#d97706"}}> Ovulation day</span></div>}
+          {selPeriodLog&&<div style={{background:"#fdf2f8",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#db2777"}}>Logged: {selPeriodLog.flow} flow{selPeriodLog.notes?`  ${selPeriodLog.notes}`:""}</span></div>}
           {selLog&&(
             <div style={{background:"#f8fafc",borderRadius:12,padding:"12px 14px"}}>
               <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:selLog.notes?8:0}}>
-                {selLog.mood&&<span style={{background:"#f5f3ff",color:"#7c3aed",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>{MOODS.find(m=>m.id===selLog.mood)?.emoji} {selLog.mood}</span>}
-                {selLog.energy&&<span style={{background:"#fef3c7",color:"#92400e",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>âš¡ {selLog.energy}/5</span>}
-                {selLog.pain>0&&<span style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>ðŸ’Š Pain {selLog.pain}/10</span>}
-                {(selLog.symptoms||[]).map(s=>{const sym=SYMPTOMS.find(x=>x.id===s);return sym?<span key={s} style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>{sym.emoji} {sym.label}</span>:null;})}
+                {selLog.mood&&<span style={{background:"#f5f3ff",color:"#7c3aed",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>{glyph(MOODS.find(m=>m.id===selLog.mood)?.emoji)} {selLog.mood}</span>}
+                {selLog.energy&&<span style={{background:"#fef3c7",color:"#92400e",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}> {selLog.energy}/5</span>}
+                {selLog.pain>0&&<span style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}> Pain {selLog.pain}/10</span>}
+                {(selLog.symptoms||[]).map(s=>{const sym=SYMPTOMS.find(x=>x.id===s);return sym?<span key={s} style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"4px 10px",fontSize:12,fontWeight:600}}>{glyph(sym.emoji)} {sym.label}</span>:null;})}
               </div>
               {selLog.notes&&<p style={{fontSize:13,color:"#64748b",margin:0}}>{selLog.notes}</p>}
             </div>
@@ -1057,12 +1069,12 @@ function CalendarTab({cycleData,periodLogs,symptomLogs,onLogPeriod,onEditPeriod,
           <div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:7,height:7,borderRadius:"50%",background:"#7c3aed"}}/><span style={{fontSize:12,color:"#64748b"}}>Has log</span></div>
         </div>
       </div>
-      <PrimaryBtn onClick={onLogPeriod} style={{width:"100%"}}>ðŸ©¸ Log a period</PrimaryBtn>
+      <PrimaryBtn onClick={onLogPeriod} style={{width:"100%"}}> Log a period</PrimaryBtn>
     </div>
   );
 }
 
-// â”€â”€â”€ TODAY TAB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  TODAY TAB 
 function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,onEditSymptoms,symptomLogs,onPartnerMode,themeKey}){
   const todayKey=format(new Date(),"yyyy-MM-dd");
   const todayLog=symptomLogs[todayKey];
@@ -1074,13 +1086,13 @@ function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,
           <div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 70% 30%,rgba(255,200,220,0.5),transparent 60%)"}}/>
           <div style={{position:"relative",zIndex:1}}>
             <ThemedMascot theme={themeKey} size={110}/>
-            <h2 style={{fontSize:26,fontWeight:900,color:"#1e293b",margin:"16px 0 8px"}}>Track your cycle ðŸŒ¸</h2>
+            <h2 style={{fontSize:26,fontWeight:900,color:"#1e293b",margin:"16px 0 8px"}}>Track your cycle </h2>
             <p style={{color:"#64748b",fontSize:14,maxWidth:260,margin:"0 auto 24px"}}>Enter your last period date to see personalized daily insights.</p>
-            <PrimaryBtn onClick={onOpenCycleSettings}>Set up cycle â†’</PrimaryBtn>
+            <PrimaryBtn onClick={onOpenCycleSettings}>Set up cycle </PrimaryBtn>
           </div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:12}}>
-          {PHASES.None.tips.map((t,i)=><div key={i} style={{background:"#fdf2f8",borderRadius:16,padding:"16px"}}><div style={{fontSize:22,marginBottom:6}}>{t.icon}</div><div style={{fontSize:13,fontWeight:700,color:"#db2777",marginBottom:4}}>{t.title}</div><div style={{fontSize:12,color:"#475569",lineHeight:1.5}}>{t.text}</div></div>)}
+          {PHASES.None.tips.map((t,i)=><div key={i} style={{background:"#fdf2f8",borderRadius:16,padding:"16px"}}><div style={{fontSize:22,marginBottom:6}}>{glyph(t.icon)}</div><div style={{fontSize:13,fontWeight:700,color:"#db2777",marginBottom:4}}>{t.title}</div><div style={{fontSize:12,color:"#475569",lineHeight:1.5}}>{t.text}</div></div>)}
         </div>
       </div>
     );
@@ -1152,21 +1164,21 @@ function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,
         <div style={{flex:1}}>
           <div style={{fontSize:16,fontWeight:800,color:"#1e293b",marginBottom:4}}>How are you feeling today?</div>
           <div style={{fontSize:13,color:"#94a3b8",marginBottom:14}}>Tell us more about your body to get analysis</div>
-          <PrimaryBtn onClick={todayLog?()=>onEditSymptoms(todayKey):onLogSymptoms} color="#5b21b6" style={{fontSize:13,padding:"10px 20px"}}>{todayLog?"âœï¸ Edit today's log":"Add Symptom"}</PrimaryBtn>
+          <PrimaryBtn onClick={todayLog?()=>onEditSymptoms(todayKey):onLogSymptoms} color="#5b21b6" style={{fontSize:13,padding:"10px 20px"}}>{todayLog?" Edit today's log":"Add Symptom"}</PrimaryBtn>
         </div>
-        <div style={{fontSize:52,flexShrink:0}}>{todayLog?.mood?MOODS.find(m=>m.id===todayLog.mood)?.emoji||"ðŸ˜Š":"ðŸ˜Š"}</div>
+        <div style={{fontSize:52,flexShrink:0}}>{todayLog?.mood?MOODS.find(m=>m.id===todayLog.mood)?.emoji||"":""}</div>
       </div>
       {todayLog&&(
         <div style={{background:"#fff",borderRadius:18,padding:"18px 20px",boxShadow:"0 2px 8px rgba(0,0,0,0.05)"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
             <p style={{fontSize:14,fontWeight:700,color:"#1e293b",margin:0}}>Today's check-in</p>
-            <button onClick={()=>onEditSymptoms(todayKey)} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#7c3aed",fontWeight:700,fontFamily:"inherit"}}>âœï¸ Edit</button>
+            <button onClick={()=>onEditSymptoms(todayKey)} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#7c3aed",fontWeight:700,fontFamily:"inherit"}}> Edit</button>
           </div>
           <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
-            {todayLog.mood&&<span style={{background:"#f5f3ff",color:"#7c3aed",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}>{MOODS.find(m=>m.id===todayLog.mood)?.emoji} {todayLog.mood}</span>}
-            {todayLog.energy&&<span style={{background:"#fef3c7",color:"#92400e",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}>âš¡ {todayLog.energy}/5</span>}
-            {todayLog.pain>0&&<span style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}>ðŸ’Š Pain {todayLog.pain}/10</span>}
-            {(todayLog.symptoms||[]).map(s=>{const sym=SYMPTOMS.find(x=>x.id===s);return sym?<span key={s} style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}>{sym.emoji} {sym.label}</span>:null;})}
+            {todayLog.mood&&<span style={{background:"#f5f3ff",color:"#7c3aed",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}>{glyph(MOODS.find(m=>m.id===todayLog.mood)?.emoji)} {todayLog.mood}</span>}
+            {todayLog.energy&&<span style={{background:"#fef3c7",color:"#92400e",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}> {todayLog.energy}/5</span>}
+            {todayLog.pain>0&&<span style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}> Pain {todayLog.pain}/10</span>}
+            {(todayLog.symptoms||[]).map(s=>{const sym=SYMPTOMS.find(x=>x.id===s);return sym?<span key={s} style={{background:"#fff1f2",color:"#e11d48",borderRadius:99,padding:"5px 12px",fontSize:13,fontWeight:600}}>{glyph(sym.emoji)} {sym.label}</span>:null;})}
           </div>
           {todayLog.notes&&<p style={{fontSize:13,color:"#64748b",marginTop:8,marginBottom:0}}>{todayLog.notes}</p>}
         </div>
@@ -1174,14 +1186,14 @@ function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,
       <div>
         <p style={{fontSize:12,fontWeight:700,color:"#94a3b8",textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:10}}>What your body needs now</p>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:10}}>
-          {p.tips.map((t,i)=><div key={i} style={{background:p.light,borderRadius:14,padding:"14px"}}><div style={{fontSize:20,marginBottom:6}}>{t.icon}</div><div style={{fontSize:13,fontWeight:700,color:p.color,marginBottom:4}}>{t.title}</div><div style={{fontSize:12,color:"#475569",lineHeight:1.5}}>{t.text}</div></div>)}
+          {p.tips.map((t,i)=><div key={i} style={{background:p.light,borderRadius:14,padding:"14px"}}><div style={{fontSize:20,marginBottom:6}}>{glyph(t.icon)}</div><div style={{fontSize:13,fontWeight:700,color:p.color,marginBottom:4}}>{t.title}</div><div style={{fontSize:12,color:"#475569",lineHeight:1.5}}>{t.text}</div></div>)}
         </div>
       </div>
     </div>
   );
 }
 
-// â”€â”€â”€ SELF CARE TAB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  SELF CARE TAB 
 function SelfCareTab(){
   const [activeRoutine,setActiveRoutine]=useState(null);
   const [activeSound,setActiveSound]=useState(null);
@@ -1190,11 +1202,11 @@ function SelfCareTab(){
       {activeRoutine&&<RoutineModal routine={activeRoutine} onClose={()=>setActiveRoutine(null)}/>}
       {activeSound&&<SoundscapePlayer sound={activeSound} onClose={()=>setActiveSound(null)}/>}
       <div style={{background:"#fff",borderRadius:20,padding:24,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-        <p style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:16}}>ðŸŒ¿ Relief routines</p>
+        <p style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:16}}> Relief routines</p>
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
           {RELIEF_ROUTINES.map(r=>(
             <div key={r.title} onClick={()=>setActiveRoutine(r)} style={{display:"flex",alignItems:"center",gap:14,background:"#fafafa",borderRadius:14,padding:"14px 16px",border:"1px solid #f1f5f9",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.background="#fff1f2"} onMouseLeave={e=>e.currentTarget.style.background="#fafafa"}>
-              <div style={{fontSize:28}}>{r.emoji}</div>
+              <div style={{fontSize:28}}>{glyph(r.emoji)}</div>
               <div style={{flex:1}}><div style={{fontSize:14,fontWeight:700,color:"#1e293b"}}>{r.title}</div><div style={{fontSize:12,color:"#94a3b8",marginTop:2}}>{r.desc}</div></div>
               <span style={{fontSize:12,fontWeight:600,color:"#e11d48",background:"#fff1f2",padding:"4px 10px",borderRadius:99}}>{r.duration}</span>
             </div>
@@ -1202,23 +1214,23 @@ function SelfCareTab(){
         </div>
       </div>
       <div style={{background:"#fff",borderRadius:20,padding:24,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-        <p style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:4}}>ðŸŽµ Soundscapes</p>
+        <p style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:4}}> Soundscapes</p>
         <p style={{fontSize:13,color:"#94a3b8",marginBottom:16}}>Ambient sounds to help you relax</p>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:12}}>
-          {SOUNDSCAPES.map(s=><div key={s.id} onClick={()=>setActiveSound(s)} style={{background:s.bg,borderRadius:16,padding:"18px 14px",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.03)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}><div style={{fontSize:28,marginBottom:8}}>{s.emoji}</div><div style={{fontSize:13,fontWeight:700,color:s.color}}>{s.name}</div><div style={{fontSize:11,color:s.color,opacity:0.7,marginTop:2}}>Tap to play</div></div>)}
+          {SOUNDSCAPES.map(s=><div key={s.id} onClick={()=>setActiveSound(s)} style={{background:s.bg,borderRadius:16,padding:"18px 14px",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.03)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}><div style={{fontSize:28,marginBottom:8}}>{glyph(s.emoji)}</div><div style={{fontSize:13,fontWeight:700,color:s.color}}>{s.name}</div><div style={{fontSize:11,color:s.color,opacity:0.7,marginTop:2}}>Tap to play</div></div>)}
         </div>
       </div>
       <div style={{background:"linear-gradient(135deg,#fff1f2,#fdf2f8)",borderRadius:20,padding:24}}>
-        <p style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:12}}>ðŸ’Š Quick reminders</p>
+        <p style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:12}}> Quick reminders</p>
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          {[{emoji:"ðŸ’§",text:"Drink 8+ glasses of water today"},{emoji:"ðŸŒ™",text:"Aim for 7â€“9 hours of sleep"},{emoji:"ðŸ¥—",text:"Eat a colourful, iron-rich meal"},{emoji:"ðŸš¶",text:"Even a 10-minute walk helps"}].map((r,i)=><div key={i} style={{display:"flex",gap:10,alignItems:"center",fontSize:14,color:"#475569"}}><span style={{fontSize:18}}>{r.emoji}</span>{r.text}</div>)}
+          {[{emoji:"WA",text:"Drink 8+ glasses of water today"},{emoji:"NT",text:"Aim for 7-9 hours of sleep"},{emoji:"FD",text:"Eat a colourful, iron-rich meal"},{emoji:"WK",text:"Even a 10-minute walk helps"}].map((r,i)=><div key={i} style={{display:"flex",gap:10,alignItems:"center",fontSize:14,color:"#475569"}}><span style={{fontSize:18}}>{glyph(r.emoji)}</span>{r.text}</div>)}
         </div>
       </div>
     </div>
   );
 }
 
-// â”€â”€â”€ ANALYSIS TAB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ANALYSIS TAB 
 function SettingsModal({settings,onSave,onClose}){
   const [local,setLocal]=useState({...DEFAULT_APP_SETTINGS,...settings});
   const row=(key,label,desc)=>(
@@ -1254,7 +1266,7 @@ function SettingsModal({settings,onSave,onClose}){
             const active=localTheme===t.id;
             return <button key={t.id} onClick={()=>setLocal(v=>({...v,theme:t.id,pet:t.id}))} style={{border:`2px solid ${active?cfg.accent:"#e2e8f0"}`,background:active?cfg.soft:"#fff",borderRadius:16,padding:12,cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:active?`0 8px 24px ${cfg.accent}24`:"none"}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-                <span style={{fontSize:12,fontWeight:900,color:cfg.accent}}>{cfg.icon}</span>
+                <span style={{fontSize:22,fontWeight:900,color:cfg.accent}}>{glyph(cfg.icon)}</span>
                 <span style={{width:18,height:18,borderRadius:"50%",background:`linear-gradient(135deg,${cfg.accent},${cfg.accent2})`,display:"inline-block"}}/>
               </div>
               <div style={{fontSize:13,fontWeight:900,color:"#1e293b",marginTop:8}}>{t.label}</div>
@@ -1380,40 +1392,40 @@ function AnalysisTab({cycleData,form,periodLogs,symptomLogs,onLogPeriod,onEditPe
   Object.values(symptomLogs).forEach(log=>{(log.symptoms||[]).forEach(s=>{symCount[s]=(symCount[s]||0)+1;});});
   const topSymptoms=Object.entries(symCount).sort((a,b)=>b[1]-a[1]).slice(0,4);
   const totalLogs=Object.keys(symptomLogs).length;
-  const avgPain=totalLogs>0?(Object.values(symptomLogs).reduce((a,l)=>a+(l.pain||0),0)/totalLogs).toFixed(1):"â€”";
+  const avgPain=totalLogs>0?(Object.values(symptomLogs).reduce((a,l)=>a+(l.pain||0),0)/totalLogs).toFixed(1):"";
   return(
     <div style={{display:"flex",flexDirection:"column",gap:16}}>
       <div style={{background:"#fff",borderRadius:20,padding:22,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
         <p style={{fontSize:16,fontWeight:800,color:"#1e293b",marginBottom:16}}>Cycle analysis</p>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <div style={{background:"#fff1f2",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#e11d48",marginBottom:8}}>ðŸ©¸</div>
-            <div style={{fontSize:22,fontWeight:900,color:"#e11d48"}}>{periodLogs.length>0?`${periodLogs[0].endDate?Math.max(1,differenceInDays(new Date(periodLogs[0].endDate),new Date(periodLogs[0].startDate))+1):1} Day`:"â€” Day"}</div>
+            <div style={{fontSize:28,color:"#e11d48",marginBottom:8}}></div>
+            <div style={{fontSize:22,fontWeight:900,color:"#e11d48"}}>{periodLogs.length>0?`${periodLogs[0].endDate?Math.max(1,differenceInDays(new Date(periodLogs[0].endDate),new Date(periodLogs[0].startDate))+1):1} Day`:" Day"}</div>
             <div style={{fontSize:13,color:"#e11d48"}}>Average period</div>
           </div>
           <div style={{background:"#fffbeb",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#d97706",marginBottom:8}}>ðŸ”„</div>
+            <div style={{fontSize:28,color:"#d97706",marginBottom:8}}></div>
             <div style={{fontSize:22,fontWeight:900,color:"#d97706"}}>{cycleLength} Days</div>
             <div style={{fontSize:13,color:"#d97706"}}>Cycle length</div>
           </div>
           <div style={{background:"#f0fdfa",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#0f766e",marginBottom:8}}>ðŸ“</div>
+            <div style={{fontSize:28,color:"#0f766e",marginBottom:8}}></div>
             <div style={{fontSize:22,fontWeight:900,color:"#0f766e"}}>{totalLogs}</div>
             <div style={{fontSize:13,color:"#0f766e"}}>Symptom logs</div>
           </div>
           <div style={{background:"#f5f3ff",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#7c3aed",marginBottom:8}}>ðŸ’Š</div>
+            <div style={{fontSize:28,color:"#7c3aed",marginBottom:8}}></div>
             <div style={{fontSize:22,fontWeight:900,color:"#7c3aed"}}>{avgPain}</div>
             <div style={{fontSize:13,color:"#7c3aed"}}>Avg pain score</div>
           </div>
         </div>
-        {periodLogs.length<3&&<p style={{fontSize:13,color:"#64748b",marginTop:12,marginBottom:0}}>Log 3 periods to unlock full analysis. <span onClick={onLogPeriod} style={{color:"#e11d48",fontWeight:700,cursor:"pointer"}}>Log period â†’</span></p>}
+        {periodLogs.length<3&&<p style={{fontSize:13,color:"#64748b",marginTop:12,marginBottom:0}}>Log 3 periods to unlock full analysis. <span onClick={onLogPeriod} style={{color:"#e11d48",fontWeight:700,cursor:"pointer"}}>Log period </span></p>}
       </div>
       <div style={{background:"#fff",borderRadius:20,padding:22,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
         <p style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:16}}>Upcoming dates</p>
-        {[{emoji:"ðŸŒ±",label:"Fertile window",date:format(fertileStart,"MMM d"),desc:"6-day window opens"},{emoji:"ðŸŒŸ",label:"Ovulation",date:format(ovuDate,"MMM d"),desc:"Peak fertility day"},{emoji:"ðŸ©¸",label:"Next period",date:format(nextPeriodDate,"MMM d"),desc:`${nextPeriodIn} days away`}].map(x=>(
+        {[{emoji:"OV",label:"Fertile window",date:format(fertileStart,"MMM d"),desc:"6-day window opens"},{emoji:"OV",label:"Ovulation",date:format(ovuDate,"MMM d"),desc:"Peak fertility day"},{emoji:"PD",label:"Next period",date:format(nextPeriodDate,"MMM d"),desc:`${nextPeriodIn} days away`}].map(x=>(
           <div key={x.label} style={{display:"flex",alignItems:"center",gap:14,padding:"11px 0",borderBottom:"1px solid #f8fafc"}}>
-            <span style={{fontSize:22}}>{x.emoji}</span>
+            <span style={{fontSize:22}}>{glyph(x.emoji)}</span>
             <div style={{flex:1}}><div style={{fontSize:14,fontWeight:600,color:"#1e293b"}}>{x.label}</div><div style={{fontSize:12,color:"#94a3b8"}}>{x.desc}</div></div>
             <div style={{fontSize:14,fontWeight:700,color:"#e11d48"}}>{x.date}</div>
           </div>
@@ -1427,8 +1439,8 @@ function AnalysisTab({cycleData,form,periodLogs,symptomLogs,onLogPeriod,onEditPe
             return(
               <div key={l.id} style={{marginBottom:16}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
-                  <span style={{fontSize:13,color:"#64748b"}}>{format(new Date(l.startDate+"T12:00:00"),"MMM d")}{l.endDate?" â€“ "+format(new Date(l.endDate+"T12:00:00"),"MMM d"):""} Â· {l.flow}</span>
-                  <button onClick={()=>onEditPeriod(l)} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:"#7c3aed",fontWeight:700,fontFamily:"inherit"}}>âœï¸</button>
+                  <span style={{fontSize:13,color:"#64748b"}}>{format(new Date(l.startDate+"T12:00:00"),"MMM d")}{l.endDate?"  "+format(new Date(l.endDate+"T12:00:00"),"MMM d"):""}  {l.flow}</span>
+                  <button onClick={()=>onEditPeriod(l)} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:"#7c3aed",fontWeight:700,fontFamily:"inherit"}}>Edit</button>
                 </div>
                 <div style={{position:"relative",height:10,borderRadius:99,background:"#f1f5f9"}}>
                   <div style={{height:"100%",width:`${Math.min(100,(w/cycleLength)*100)}%`,background:"#fb7185",borderRadius:99}}/>
@@ -1447,9 +1459,9 @@ function AnalysisTab({cycleData,form,periodLogs,symptomLogs,onLogPeriod,onEditPe
             const pct=totalLogs>0?Math.round((count/totalLogs)*100):0;
             return sym?(
               <div key={id} style={{display:"flex",alignItems:"center",gap:12,marginBottom:12}}>
-                <span style={{fontSize:20}}>{sym.emoji}</span>
+                <span style={{fontSize:20}}>{glyph(sym.emoji)}</span>
                 <div style={{flex:1}}>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#1e293b"}}>{sym.label}</span><span style={{fontSize:12,color:"#94a3b8"}}>{count}Ã— ({pct}%)</span></div>
+                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#1e293b"}}>{sym.label}</span><span style={{fontSize:12,color:"#94a3b8"}}>{count} ({pct}%)</span></div>
                   <div style={{height:6,background:"#f1f5f9",borderRadius:99}}><div style={{width:`${pct}%`,height:"100%",background:"#fb7185",borderRadius:99}}/></div>
                 </div>
               </div>
@@ -1461,7 +1473,7 @@ function AnalysisTab({cycleData,form,periodLogs,symptomLogs,onLogPeriod,onEditPe
   );
 }
 
-// â”€â”€â”€ MAIN APP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  MAIN APP 
 const DEFAULT_FORM={lastPeriodDate:null,cycleLength:28,lutealLen:14,periodDuration:5,averageFlow:"medium",pmsLength:5,pregnancyMode:false};
 
 export default function PeriodTracker(){
@@ -1524,21 +1536,21 @@ export default function PeriodTracker(){
     reminders.forEach(r=>{
       if(!r.enabled) return;
       if(r.id==="period"&&nextPeriodIn<=(r.daysBefore||2)&&nextPeriodIn>=0){
-        alerts.push({id:`notif-period-${Date.now()}`,icon:"ðŸ©¸",title:nextPeriodIn===0?"Period expected today":`Period in ${nextPeriodIn} day${nextPeriodIn===1?"":"s"}`,body:`Expected ${format(nextPeriodDate,"MMM d")}`,color:"#e11d48"});
+        alerts.push({id:`notif-period-${Date.now()}`,icon:"PD",title:nextPeriodIn===0?"Period expected today":`Period in ${nextPeriodIn} day${nextPeriodIn===1?"":"s"}`,body:`Expected ${format(nextPeriodDate,"MMM d")}`,color:"#e11d48"});
         if(typeof Notification!=="undefined"&&Notification.permission==="granted"){
-          new Notification("GlowHer ðŸŒ¸",{body:nextPeriodIn===0?"Your period is expected today":`Your period is in ${nextPeriodIn} days (${format(nextPeriodDate,"MMM d")})`});
+          new Notification("GlowHer ",{body:nextPeriodIn===0?"Your period is expected today":`Your period is in ${nextPeriodIn} days (${format(nextPeriodDate,"MMM d")})`});
         }
       }
       if(r.id==="ovulation"&&isSameDay(new Date(),ovDay)){
-        alerts.push({id:`notif-ov-${Date.now()}`,icon:"ðŸŒŸ",title:"Ovulation day",body:"Today is your peak fertility day",color:"#d97706"});
+        alerts.push({id:`notif-ov-${Date.now()}`,icon:"OV",title:"Ovulation day",body:"Today is your peak fertility day",color:"#d97706"});
         if(typeof Notification!=="undefined"&&Notification.permission==="granted"){
-          new Notification("GlowHer ðŸŒ¸",{body:"Today is your ovulation day â€” peak fertility!"});
+          new Notification("GlowHer ",{body:"Today is your ovulation day  peak fertility!"});
         }
       }
       if(r.id==="mood"){
         const todayKey=format(new Date(),"yyyy-MM-dd");
         if(!symptomLogs[todayKey]){
-          alerts.push({id:`notif-mood-${Date.now()}`,icon:"ðŸ’¬",title:"Daily mood check-in",body:"How are you feeling today?",color:"#7c3aed"});
+          alerts.push({id:`notif-mood-${Date.now()}`,icon:"MO",title:"Daily mood check-in",body:"How are you feeling today?",color:"#7c3aed"});
         }
       }
     });
@@ -1591,7 +1603,7 @@ export default function PeriodTracker(){
   if(!loaded){
     return(
       <div className="period-app" data-mode={mode} data-theme={themeKey} data-animations={appSettings.animations?"on":"off"} style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:appSettings.darkMode?themeCfg.darkBg:themeCfg.bg,fontFamily:"Nunito,Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",lineHeight:1.5}}>
-        <div style={{textAlign:"center"}}><ThemedMascot theme={themeKey} size={80}/><p style={{color:"#94a3b8",fontSize:14,marginTop:12}}>Loadingâ€¦</p></div>
+        <div style={{textAlign:"center"}}><ThemedMascot theme={themeKey} size={80}/><p style={{color:"#94a3b8",fontSize:14,marginTop:12}}>Loading</p></div>
       </div>
     );
   }
@@ -1599,12 +1611,12 @@ export default function PeriodTracker(){
   const activePhase=cycleData?.phase||"None";
   const p=PHASES[activePhase];
   const nav=[
-    {id:"today",icon:"ðŸ ",label:"Today"},
-    {id:"calendar",icon:"ðŸ“…",label:"Calendar"},
-    {id:"history",icon:"ðŸ“‹",label:"History"},
-    {id:"selfcare",icon:"ðŸ’†",label:"Self Care"},
-    {id:"partner",icon:"ðŸ’ž",label:"Partner"},
-    {id:"analysis",icon:"ðŸ“Š",label:"Analysis"},
+    {id:"today",icon:"HOME",label:"Today"},
+    {id:"calendar",icon:"CAL",label:"Calendar"},
+    {id:"history",icon:"HIST",label:"History"},
+    {id:"selfcare",icon:"CARE",label:"Self Care"},
+    {id:"partner",icon:"PART",label:"Partner"},
+    {id:"analysis",icon:"ANLY",label:"Analysis"},
   ];
 
   return(
@@ -1626,11 +1638,11 @@ export default function PeriodTracker(){
       {/* Header */}
       <header style={{padding:"14px 20px 12px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(255,255,255,0.7)",backdropFilter:"blur(12px)",position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(241,245,249,0.8)"}}>
         <button onClick={()=>setModal("settings")} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,position:"relative",padding:4}}>
-          âš™ï¸{!form.lastPeriodDate&&<span style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:"#e11d48",border:"1.5px solid #fff"}}/>}
+          <span style={{fontSize:12,fontWeight:950,color:themeCfg.accent}}>SET</span>{!form.lastPeriodDate&&<span style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:"#e11d48",border:"1.5px solid #fff"}}/>}
         </button>
-        <div style={{fontSize:16,fontWeight:900,color:"#1e293b",letterSpacing:"-0.02em"}}>GlowHer ðŸŒ¸</div>
+        <div style={{fontSize:16,fontWeight:900,color:"#1e293b",letterSpacing:"-0.02em"}}>GlowHer</div>
         <button onClick={()=>setModal("reminders")} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,padding:4,position:"relative"}}>
-          ðŸ””{bellCount>0&&<span style={{position:"absolute",top:0,right:0,minWidth:16,height:16,borderRadius:99,background:"#e11d48",border:"2px solid #fff",fontSize:10,fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px"}}>{bellCount}</span>}
+          <span style={{fontSize:12,fontWeight:950,color:themeCfg.accent}}>BELL</span>{bellCount>0&&<span style={{position:"absolute",top:0,right:0,minWidth:16,height:16,borderRadius:99,background:"#e11d48",border:"2px solid #fff",fontSize:10,fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px"}}>{bellCount}</span>}
         </button>
       </header>
 
@@ -1639,14 +1651,14 @@ export default function PeriodTracker(){
         <aside className="sidebar-nav" style={{width:210,padding:"20px 12px",flexShrink:0,borderRight:"1px solid rgba(241,245,249,0.8)",display:"flex",flexDirection:"column",gap:4,background:"rgba(255,255,255,0.5)"}}>
           {nav.map(n=>(
             <button key={n.id} onClick={()=>setTab(n.id)} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",borderRadius:14,border:"none",cursor:"pointer",background:tab===n.id?"rgba(225,29,72,0.1)":"transparent",color:tab===n.id?"#e11d48":"#64748b",fontSize:14,fontWeight:tab===n.id?700:500,fontFamily:"inherit",textAlign:"left",width:"100%"}}>
-              <span style={{fontSize:18}}>{n.icon}</span><span>{n.label}</span>
+              <span style={{fontSize:18}}>{glyph(n.icon)}</span><span>{n.label}</span>
             </button>
           ))}
           <div style={{height:1,background:"#f1f5f9",margin:"8px 4px"}}/>
           <p style={{fontSize:10,fontWeight:700,color:"#94a3b8",textTransform:"uppercase",letterSpacing:"0.07em",padding:"4px 16px 2px"}}>Quick actions</p>
-          {[{icon:"ðŸ©¸",label:"Log period",action:()=>setModal("period")},{icon:"ðŸ’¬",label:"Log symptoms",action:()=>setModal("symptoms")},{icon:"ðŸ””",label:"Reminders",action:()=>setModal("reminders")},{icon:"ðŸ”§",label:"Cycle settings",action:()=>setModal("cycle")}].map(x=>(
+          {[{icon:"PD",label:"Log period",action:()=>setModal("period")},{icon:"MO",label:"Log symptoms",action:()=>setModal("symptoms")},{icon:"BELL",label:"Reminders",action:()=>setModal("reminders")},{icon:"SET",label:"Cycle settings",action:()=>setModal("cycle")}].map(x=>(
             <button key={x.label} onClick={x.action} style={{display:"flex",alignItems:"center",gap:12,padding:"9px 16px",borderRadius:12,border:"none",cursor:"pointer",background:"transparent",color:"#64748b",fontSize:13,fontWeight:500,fontFamily:"inherit",textAlign:"left",width:"100%"}} onMouseEnter={e=>e.currentTarget.style.background="#f8fafc"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-              <span style={{fontSize:16}}>{x.icon}</span><span>{x.label}</span>
+              <span style={{fontSize:16}}>{glyph(x.icon)}</span><span>{x.label}</span>
             </button>
           ))}
           {cycleData&&(
@@ -1672,11 +1684,11 @@ export default function PeriodTracker(){
         </main>
       </div>
 
-      {/* Mobile bottom nav â€” 5 items, no FAB center to keep all tabs reachable */}
+      {/* Mobile bottom nav  5 items, no FAB center to keep all tabs reachable */}
       <nav className="bottom-nav" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.96)",backdropFilter:"blur(12px)",borderTop:"1px solid #f1f5f9",display:"flex",justifyContent:"space-around",alignItems:"center",padding:"8px 0 env(safe-area-inset-bottom,8px)",zIndex:50}}>
         {nav.map(n=>(
           <button key={n.id} onClick={()=>setTab(n.id)} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2,background:"none",border:"none",cursor:"pointer",padding:"5px 8px",borderRadius:12,color:tab===n.id?"#e11d48":"#94a3b8",fontFamily:"inherit",fontSize:9,fontWeight:tab===n.id?700:500,minWidth:44}}>
-            <span style={{fontSize:19}}>{n.icon}</span><span>{n.label}</span>
+            <span style={{fontSize:19}}>{glyph(n.icon)}</span><span>{n.label}</span>
           </button>
         ))}
       </nav>
@@ -1710,17 +1722,17 @@ export default function PeriodTracker(){
         .period-app[data-mode="light"] nav{background:rgba(255,255,255,.66)!important;backdrop-filter:blur(18px)}
         .period-app[data-mode="light"] div[style*="background:#fff"],
         .period-app[data-mode="light"] section[style*="background:#fff"],
-        .period-app[data-mode="light"] div[style*="background: #fff"]{background:rgba(255,255,255,.84)!important;backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.62)!important}
+        .period-app[data-mode="light"] div[style*="background: #fff"]{background:rgba(255,255,255,.76)!important;backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.58)!important}
         .period-app[data-mode="light"] div[style*="#f8fafc"],
         .period-app[data-mode="light"] button[style*="#f8fafc"]{background:rgba(255,255,255,.58)!important;backdrop-filter:blur(12px)}
-        .world-gradient{position:absolute;inset:0;opacity:.92;transition:background .55s ease}
-        .world-horizon{position:absolute;left:-8%;right:-8%;bottom:-9%;height:48%;opacity:.78;filter:blur(.2px)}
-        .ambient-orb{position:absolute;width:38vw;height:38vw;max-width:620px;max-height:620px;border-radius:50%;filter:blur(68px);opacity:.24;animation:ambientDrift 16s ease-in-out infinite}
+        .world-gradient{position:absolute;inset:0;opacity:1;transition:background .55s ease}
+        .world-horizon{position:absolute;left:-8%;right:-8%;bottom:-6%;height:54%;opacity:.96;filter:blur(.2px)}
+        .ambient-orb{position:absolute;width:42vw;height:42vw;max-width:720px;max-height:720px;border-radius:50%;filter:blur(58px);opacity:.34;animation:ambientDrift 16s ease-in-out infinite}
         .ambient-orb-a{top:-10%;left:-8%}.ambient-orb-b{right:-8%;bottom:-12%;animation-delay:-7s}
-        .world-item{position:absolute;display:block;opacity:.72;animation:worldFloat 14s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(15,23,42,.10))}
+        .world-item{position:absolute;display:block;opacity:.9;animation:worldFloat 14s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(15,23,42,.12))}
         .world-item::before,.world-item::after{content:"";position:absolute;display:block}
         .world-item-0{left:6%;top:16%;animation-delay:-1s}.world-item-1{left:76%;top:12%;animation-delay:-4s}.world-item-2{left:13%;top:70%;animation-delay:-7s}.world-item-3{left:84%;top:65%;animation-delay:-10s}.world-item-4{left:40%;top:10%;animation-delay:-13s}.world-item-5{left:61%;top:78%;animation-delay:-2s}.world-item-6{left:24%;top:36%;animation-delay:-5s}.world-item-7{left:90%;top:32%;animation-delay:-8s}.world-item-8{left:4%;top:48%;animation-delay:-12s}.world-item-9{left:52%;top:26%;animation-delay:-3s}.world-item-10{left:33%;top:84%;animation-delay:-6s}.world-item-11{left:69%;top:44%;animation-delay:-9s}.world-item-12{left:17%;top:8%;animation-delay:-14s}.world-item-13{left:79%;top:84%;animation-delay:-11s}.world-item-14{left:48%;top:58%;animation-delay:-15s}.world-item-15{left:30%;top:60%;animation-delay:-16s}.world-item-16{left:56%;top:12%;animation-delay:-18s}.world-item-17{left:92%;top:78%;animation-delay:-20s}.world-item-18{left:9%;top:88%;animation-delay:-22s}.world-item-19{left:73%;top:58%;animation-delay:-24s}.world-item-20{left:18%;top:28%;animation-delay:-26s}.world-item-21{left:44%;top:88%;animation-delay:-28s}.world-item-22{left:86%;top:20%;animation-delay:-30s}.world-item-23{left:3%;top:12%;animation-delay:-32s}
-        .theme-world-cat .world-gradient{background:radial-gradient(circle at 18% 12%,rgba(255,213,120,.7),transparent 23%),radial-gradient(circle at 78% 20%,rgba(135,206,235,.62),transparent 30%),linear-gradient(180deg,rgba(228,247,255,.72),rgba(220,252,231,.72))}
+        .theme-world-cat .world-gradient{background:radial-gradient(circle at 18% 12%,rgba(255,213,120,.78),transparent 23%),radial-gradient(circle at 78% 20%,rgba(135,206,235,.72),transparent 30%),linear-gradient(180deg,rgba(228,247,255,.86),rgba(220,252,231,.86))}
         .theme-world-cat .world-horizon{background:radial-gradient(ellipse at 22% 100%,rgba(127,176,105,.48),transparent 56%),radial-gradient(ellipse at 80% 100%,rgba(92,154,82,.36),transparent 58%),linear-gradient(180deg,transparent,rgba(127,176,105,.52));border-radius:55% 45% 0 0}
         .theme-world-cat::before{left:-3%;right:-3%;bottom:-2%;height:24%;background:repeating-linear-gradient(100deg,rgba(127,176,105,.42) 0 12px,rgba(255,255,255,0) 13px 30px);clip-path:polygon(0 32%,10% 24%,22% 35%,34% 20%,48% 36%,60% 21%,74% 33%,88% 19%,100% 31%,100% 100%,0 100%)}
         .theme-world-cat::after{right:-4%;bottom:8%;width:240px;height:420px;background:radial-gradient(circle at 50% 16%,rgba(127,176,105,.42) 0 22%,transparent 23%),radial-gradient(circle at 22% 28%,rgba(92,154,82,.32) 0 18%,transparent 19%),linear-gradient(90deg,transparent 47%,rgba(154,106,58,.42) 48% 53%,transparent 54%);filter:blur(.2px)}
@@ -1732,7 +1744,7 @@ export default function PeriodTracker(){
         .theme-world-dog .world-horizon{background:radial-gradient(ellipse at 26% 100%,rgba(116,169,111,.5),transparent 56%),radial-gradient(ellipse at 76% 100%,rgba(164,222,2,.32),transparent 58%),linear-gradient(180deg,transparent,rgba(116,169,111,.52));border-radius:55% 45% 0 0}
         .theme-world-dog::before{left:-5%;right:-5%;bottom:-2%;height:28%;background:linear-gradient(180deg,transparent,rgba(116,169,111,.48));clip-path:polygon(0 38%,10% 28%,21% 36%,32% 24%,43% 35%,55% 25%,66% 38%,78% 24%,90% 36%,100% 28%,100% 100%,0 100%)}
         .theme-world-dog::after{left:4%;bottom:16%;width:260px;height:92px;background:repeating-linear-gradient(90deg,rgba(176,122,69,.5) 0 12px,transparent 13px 44px),linear-gradient(180deg,transparent 46%,rgba(176,122,69,.55) 47% 58%,transparent 59% 100%)}
-        .theme-world-parrot .world-gradient{background:radial-gradient(circle at 17% 12%,rgba(255,213,79,.78),transparent 22%),radial-gradient(circle at 82% 14%,rgba(135,206,235,.78),transparent 30%),radial-gradient(circle at 55% 48%,rgba(64,224,208,.34),transparent 34%),linear-gradient(180deg,rgba(240,255,244,.86),rgba(102,187,106,.42) 58%,rgba(46,139,87,.3))}
+        .theme-world-parrot .world-gradient{background:radial-gradient(circle at 17% 12%,rgba(255,213,79,.9),transparent 22%),radial-gradient(circle at 82% 14%,rgba(135,206,235,.9),transparent 30%),radial-gradient(circle at 55% 48%,rgba(64,224,208,.5),transparent 34%),linear-gradient(180deg,rgba(240,255,244,.95),rgba(102,187,106,.6) 58%,rgba(46,139,87,.42))}
         .theme-world-parrot .world-horizon{background:radial-gradient(ellipse at 52% 105%,rgba(46,139,87,.62),transparent 62%),linear-gradient(180deg,transparent,rgba(34,139,34,.48));border-radius:50% 50% 0 0}
         .theme-world-parrot::before{left:-6%;right:-6%;top:-6%;height:34%;background:radial-gradient(ellipse at 10% 10%,rgba(46,139,87,.52),transparent 34%),radial-gradient(ellipse at 32% 0,rgba(102,187,106,.48),transparent 35%),radial-gradient(ellipse at 68% 2%,rgba(46,139,87,.5),transparent 34%),radial-gradient(ellipse at 94% 8%,rgba(164,222,2,.34),transparent 32%);filter:blur(.2px)}
         .theme-world-parrot::after{left:-4%;right:-4%;bottom:-1%;height:30%;background:radial-gradient(ellipse at 18% 100%,rgba(46,139,87,.54),transparent 45%),radial-gradient(ellipse at 86% 100%,rgba(34,139,34,.48),transparent 48%),repeating-linear-gradient(112deg,rgba(46,139,87,.38) 0 12px,rgba(164,222,2,.24) 13px 28px);clip-path:polygon(0 34%,9% 20%,18% 38%,28% 18%,39% 36%,50% 19%,61% 40%,73% 18%,84% 36%,94% 20%,100% 32%,100% 100%,0 100%)}
@@ -1745,15 +1757,15 @@ export default function PeriodTracker(){
         .theme-world-fairy::before{left:8%;top:8%;width:210px;height:110px;border-radius:210px 210px 0 0;border:18px solid rgba(249,168,212,.34);border-bottom:0;box-shadow:0 -18px 0 rgba(186,230,253,.28),0 -36px 0 rgba(196,181,253,.24)}
         .theme-world-fairy::after{left:-5%;right:-5%;bottom:-1%;height:28%;background:radial-gradient(circle at 14% 64%,rgba(185,120,217,.32) 0 5%,transparent 6%),radial-gradient(circle at 84% 66%,rgba(249,168,212,.34) 0 5%,transparent 6%),linear-gradient(180deg,transparent,rgba(117,185,135,.28));clip-path:polygon(0 38%,12% 24%,24% 36%,35% 22%,46% 38%,58% 20%,70% 36%,82% 23%,94% 34%,100% 28%,100% 100%,0 100%)}
         .world-sunray,.world-ray{width:220px;height:72px;border-radius:50%;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.55),rgba(255,255,255,.04));transform:rotate(-28deg);animation:rayDrift 9s ease-in-out infinite}
-        .world-tree,.world-autumn-tree,.world-palm{width:72px;height:115px;opacity:.2}
+        .world-tree,.world-autumn-tree,.world-palm{width:92px;height:145px;opacity:.62}
         .world-tree::before,.world-autumn-tree::before,.world-palm::before{width:58px;height:58px;border-radius:50%;left:7px;top:0;background:#7fb069;box-shadow:-18px 22px 0 #9ccc7d,18px 20px 0 #6aa85f}
         .world-tree::after,.world-autumn-tree::after,.world-palm::after{width:10px;height:58px;left:31px;top:50px;border-radius:8px;background:#9a6a3a}
         .world-autumn-tree::before{background:#d6a03f;box-shadow:-18px 22px 0 #c96b34,18px 20px 0 #9f6b2d}
         .world-palm::before{width:86px;height:42px;left:-8px;background:linear-gradient(135deg,#2E8B57,#40E0D0);clip-path:polygon(50% 0,62% 45%,100% 20%,70% 58%,92% 95%,54% 68%,20% 100%,34% 58%,0 24%,40% 44%);animation:sway 5.5s ease-in-out infinite}
-        .world-banana-leaf{width:88px;height:32px;border-radius:90% 0 90% 0;background:linear-gradient(135deg,#66BB6A,#A4DE02);opacity:.24;animation:sway 5.8s ease-in-out infinite}
+        .world-banana-leaf{width:118px;height:44px;border-radius:90% 0 90% 0;background:linear-gradient(135deg,#66BB6A,#A4DE02);opacity:.72;animation:sway 5.8s ease-in-out infinite}
         .world-vine{width:10px;height:150px;border-left:4px solid rgba(46,139,87,.36);border-radius:50%;top:-8%!important;animation:sway 6.2s ease-in-out infinite}.world-vine::before{width:18px;height:12px;border-radius:90% 0;background:#66BB6A;left:-14px;top:40px;box-shadow:18px 32px 0 #2E8B57,-6px 70px 0 #A4DE02}
         .world-grass,.world-meadow{width:130px;height:34px;border-radius:50% 50% 0 0;background:linear-gradient(180deg,rgba(127,176,105,.0),rgba(127,176,105,.35));bottom:4%;top:auto!important}
-        .world-flower,.world-orchid,.world-hibiscus{width:24px;height:24px;border-radius:50%;background:var(--theme-accent);box-shadow:18px 5px 0 var(--theme-accent-2),8px 20px 0 rgba(255,255,255,.78);opacity:.28}
+        .world-flower,.world-orchid,.world-hibiscus{width:28px;height:28px;border-radius:50%;background:var(--theme-accent);box-shadow:18px 5px 0 var(--theme-accent-2),8px 20px 0 rgba(255,255,255,.78);opacity:.8}
         .world-orchid{background:#d946ef;box-shadow:14px 0 0 #f0abfc,7px 14px 0 #fff,0 0 18px rgba(217,70,239,.32)}
         .world-hibiscus{background:#E53935;box-shadow:15px 0 0 #FFB74D,7px 14px 0 #FFD54F,0 0 16px rgba(229,57,53,.25)}
         .world-butterfly,.world-bird,.world-bee,.world-firefly,.world-pixie,.world-distant-parrot{width:24px;height:16px;animation:flyAcross 18s linear infinite}
@@ -1766,7 +1778,7 @@ export default function PeriodTracker(){
         .world-cloud{width:80px;height:28px;border-radius:999px;background:rgba(255,255,255,.55);box-shadow:22px -10px 0 rgba(255,255,255,.42),-20px -4px 0 rgba(255,255,255,.36);animation:cloudDrift 24s linear infinite}
         .world-mouse{width:28px;height:15px;border-radius:50%;background:#9ca3af;bottom:8%;top:auto!important;animation:groundRun 18s linear infinite}.world-mouse::before{width:8px;height:8px;border-radius:50%;background:#cbd5e1;right:-4px;top:1px}.world-mouse::after{width:18px;height:2px;background:#9ca3af;left:-14px;top:9px;transform:rotate(15deg)}
         .world-mushroom{width:30px;height:26px}.world-mushroom::before{width:30px;height:16px;border-radius:18px 18px 5px 5px;background:var(--theme-accent);top:0}.world-mushroom::after{width:12px;height:18px;border-radius:8px;background:#fff7ed;left:9px;top:12px}
-        .world-log,.world-branch,.world-fence{width:82px;height:16px;border-radius:99px;background:#9f6b2d;transform:rotate(-8deg);opacity:.22}.world-fence{height:10px;box-shadow:0 18px 0 #b07a45}
+        .world-log,.world-branch,.world-fence{width:110px;height:20px;border-radius:99px;background:#9f6b2d;transform:rotate(-8deg);opacity:.62}.world-fence{height:12px;box-shadow:0 22px 0 #b07a45}
         .world-fern{width:54px;height:62px;bottom:3%;top:auto!important}.world-fern::before{width:7px;height:58px;background:#2E8B57;border-radius:8px;left:24px;bottom:0}.world-fern::after{width:42px;height:48px;left:5px;bottom:6px;background:#66BB6A;clip-path:polygon(50% 0,62% 18%,100% 12%,68% 32%,94% 46%,62% 48%,86% 70%,56% 62%,52% 100%,44% 62%,14% 70%,38% 48%,6% 46%,32% 32%,0 12%,38% 18%)}
         .world-waterfall{width:44px;height:90px;border-radius:18px;background:linear-gradient(180deg,rgba(135,206,235,.08),rgba(64,224,208,.46),rgba(255,255,255,.1));filter:blur(.2px);bottom:6%;top:auto!important;animation:waterShimmer 3s ease-in-out infinite}
         .world-rock{width:58px;height:24px;border-radius:60% 50% 30% 40%;background:#94a3b8;opacity:.2;bottom:4%;top:auto!important}
@@ -1834,8 +1846,8 @@ export default function PeriodTracker(){
         .period-app[data-animations="off"] .image-care-card,
         .period-app[data-animations="off"] .theme-world *,
         .period-app[data-animations="off"] .world-item{animation:none!important}
-        @media(max-width:900px){.partner-feature-grid{grid-template-columns:1fr!important}.hero-card{grid-template-columns:1fr!important}.hero-card svg{max-width:120px}}
-        @media(max-width:720px){.period-app main{padding:14px!important;padding-bottom:92px!important}.hero-card{border-radius:22px!important;padding:22px 18px!important}.hero-card h1{font-size:32px!important}.partner-feature-grid{gap:12px!important}}
+        @media(max-width:900px){.partner-feature-grid{grid-template-columns:1fr!important}.hero-card{grid-template-columns:1fr!important}.hero-card svg{max-width:120px}.world-item:nth-of-type(n+13){display:none}}
+        @media(max-width:720px){.period-app main{padding:14px!important;padding-bottom:92px!important}.hero-card{border-radius:22px!important;padding:22px 18px!important}.hero-card h1{font-size:32px!important}.partner-feature-grid{gap:12px!important}.world-item{opacity:.46}.world-item:nth-of-type(n+10){display:none}.world-horizon{height:44%;opacity:.72}.ambient-orb{opacity:.22}}
         @media(min-width:640px){.sidebar-nav{display:flex!important}.bottom-nav{display:none!important}}
         @media(max-width:639px){.sidebar-nav{display:none!important}.bottom-nav{display:flex!important}}
         @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
@@ -1865,6 +1877,3 @@ export default function PeriodTracker(){
     </div>
   );
 }
-
-
-
