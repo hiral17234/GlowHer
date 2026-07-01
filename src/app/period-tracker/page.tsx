@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Settings, Bell, Home, CalendarDays, BookOpen, HeartHandshake, Heart, BarChart3, Droplets, MessageCircle, Wrench, Activity } from "lucide-react";
 
 //  Date utilities 
 function startOfDay(d) { const r = new Date(d); r.setHours(0,0,0,0); return r; }
@@ -104,6 +105,20 @@ const GLYPH_CODEPOINTS = {
   heat:0x1F525,tea:0x2615,sweet:0x1F36B,heart:0x1F497,rest:0x1F6CC,massage:0x1F486,walk:0x1F45F,mood:0x1F300,moon:0x1F319,low:0x1F634,pain:0x1F321,calm:0x1F343
 };
 function glyph(token){ const code=GLYPH_CODEPOINTS[token]; return code ? String.fromCodePoint(code) : (token||""); }
+function IconGlyph({name,size=20,color="currentColor",strokeWidth=2.4}) {
+  const icons = {SET:Settings,BELL:Bell,HOME:Home,CAL:CalendarDays,HIST:BookOpen,CARE:Heart,PART:HeartHandshake,ANLY:BarChart3,PD:Droplets,MO:MessageCircle,OV:Activity,RX:Activity,WA:Droplets,CU:Activity,WRENCH:Wrench};
+  const Icon = icons[name];
+  return Icon ? <Icon size={size} color={color} strokeWidth={strokeWidth}/> : <span>{glyph(name)}</span>;
+}
+function latestPeriodStart(logs=[]) {
+  const dates = logs
+    .map(l => l?.startDate)
+    .filter(Boolean)
+    .map(d => new Date(`${d}T00:00:00`))
+    .filter(d => !isNaN(d) && d <= new Date())
+    .sort((a,b) => b - a);
+  return dates[0] || null;
+}
 
 
 const DEFAULT_APP_SETTINGS = {
@@ -429,7 +444,7 @@ function LogPeriodModal({onClose,onSave,onDelete,logs,editEntry}){
   }
   const inp={width:"100%",padding:"10px 12px",borderRadius:10,fontSize:14,border:"1.5px solid #e2e8f0",outline:"none",boxSizing:"border-box",color:"#1e293b",background:"#fff",fontFamily:"inherit"};
   return(
-    <Modal onClose={onClose} title={editEntry?" Edit period":" Log period"}>
+    <Modal onClose={onClose} title={editEntry?"Edit period":"Log period"}>
       <div style={{display:"flex",flexDirection:"column",gap:18}}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <div><label style={{fontSize:12,fontWeight:600,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",display:"block",marginBottom:6}}>Start date</label><input type="date" style={inp} value={startDate} max={format(new Date(),"yyyy-MM-dd")} onChange={e=>setStartDate(e.target.value)}/></div>
@@ -468,7 +483,7 @@ function LogSymptomsModal({onClose,onSave,symptomLogs,dateKey}){
   }
   const inp={width:"100%",padding:"10px 12px",borderRadius:10,fontSize:14,border:"1.5px solid #e2e8f0",outline:"none",boxSizing:"border-box",fontFamily:"inherit",minHeight:70,resize:"vertical"};
   return(
-    <Modal onClose={onClose} title={isEdit?" Edit log":"How are you feeling?"} wide>
+    <Modal onClose={onClose} title={isEdit?"Edit log":"How are you feeling?"} wide>
       <div style={{display:"flex",flexDirection:"column",gap:18}}>
         <div style={{fontSize:12,fontWeight:600,color:"#94a3b8"}}>{key}</div>
         <div><p style={{fontSize:12,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8,marginTop:0}}>Mood</p>
@@ -534,7 +549,7 @@ function RoutineModal({routine,onClose}){
   return(
     <Modal onClose={onClose} title={`${glyph(routine.emoji)} ${routine.title}`}>
       <div style={{display:"flex",flexDirection:"column",gap:16}}>
-        <div style={{display:"flex",alignItems:"center",gap:8,background:"#fff1f2",borderRadius:12,padding:"10px 16px"}}><span style={{fontSize:20}}></span><span style={{fontSize:14,fontWeight:600,color:"#e11d48"}}>{routine.duration}  {routine.desc}</span></div>
+        <div style={{display:"flex",alignItems:"center",gap:8,background:"#fff1f2",borderRadius:12,padding:"10px 16px"}}><span style={{fontSize:20}}>{glyph(routine.emoji)}</span><span style={{fontSize:14,fontWeight:600,color:"#e11d48"}}>{routine.duration} - {routine.desc}</span></div>
         {!done?(
           <>
             <div style={{display:"flex",flexDirection:"column",gap:8}}>
@@ -551,7 +566,7 @@ function RoutineModal({routine,onClose}){
             </div>
           </>
         ):(
-          <div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:48,marginBottom:12}}></div><p style={{fontSize:18,fontWeight:800,color:"#1e293b"}}>Routine complete!</p><PrimaryBtn onClick={onClose} style={{width:"100%"}}>Done</PrimaryBtn></div>
+          <div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:48,marginBottom:12}}>{glyph("GL")}</div><p style={{fontSize:18,fontWeight:800,color:"#1e293b"}}>Routine complete!</p><PrimaryBtn onClick={onClose} style={{width:"100%"}}>Done</PrimaryBtn></div>
         )}
       </div>
     </Modal>
@@ -633,7 +648,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
 
   function triggerTestNotification(permission=notifPerm){
     if(permission==="granted"){
-      new Notification("GlowHer ",{body:"Notifications enabled! You'll receive cycle reminders here.",icon:"https://emojicdn.elk.sh/"});
+      new Notification("GlowHer",{body:"Notifications enabled! You'll receive cycle reminders here."});
     }
   }
 
@@ -676,13 +691,13 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
   const inp={width:"100%",padding:"9px 12px",borderRadius:10,fontSize:13,border:"1.5px solid #e2e8f0",outline:"none",boxSizing:"border-box",fontFamily:"inherit",color:"#1e293b",background:"#fff"};
 
   return(
-    <Modal onClose={onClose} title=" Reminders" wide>
+    <Modal onClose={onClose} title="Reminders" wide>
       <div style={{display:"flex",flexDirection:"column",gap:0}}>
 
         {/* Notification permission banner */}
         {notifPerm!=="granted"&&notifPerm!=="unsupported"&&(
           <div style={{background:"#fef3c7",borderRadius:14,padding:"14px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:12}}>
-            <span style={{fontSize:22}}></span>
+            <span style={{fontSize:22}}>{glyph("BELL")}</span>
             <div style={{flex:1}}>
               <div style={{fontSize:13,fontWeight:700,color:"#92400e"}}>Enable browser notifications</div>
               <div style={{fontSize:12,color:"#a16207"}}>Get alerts even when the app is in the background</div>
@@ -692,7 +707,7 @@ function RemindersPanel({onClose,reminders,onSave,cycleData}){
         )}
         {notifPerm==="granted"&&(
           <div style={{background:"#f0fdf4",borderRadius:14,padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:10}}>
-            <span style={{fontSize:18}}></span>
+            <span style={{fontSize:18}}>{glyph("GL")}</span>
             <span style={{fontSize:13,color:"#15803d",fontWeight:600}}>Browser notifications active</span>
           </div>
         )}
@@ -811,7 +826,7 @@ function HistoryTab({symptomLogs,periodLogs,onEditSymptoms,onEditPeriod,onLogSym
 
         {/* Search */}
         <div style={{position:"relative",marginBottom:10}}>
-          <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:16,color:"#94a3b8"}}></span>
+          <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:16,color:"#94a3b8"}}>{glyph("TR")}</span>
           <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search symptoms, mood, notes" style={{...inp,width:"100%",paddingLeft:38,boxSizing:"border-box"}}/>
         </div>
 
@@ -935,7 +950,7 @@ function PeriodHistoryCard({log,onEdit}){
   return(
     <div style={{background:"#fff",borderRadius:18,boxShadow:"0 2px 8px rgba(0,0,0,0.05)",overflow:"hidden"}}>
       <div onClick={()=>setOpen(o=>!o)} style={{padding:"16px 18px",cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
-        <div style={{width:42,height:42,borderRadius:12,background:"#fff1f2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}></div>
+        <div style={{width:42,height:42,borderRadius:12,background:"#fff1f2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{glyph("PD")}</div>
         <div style={{flex:1}}>
           <div style={{fontSize:14,fontWeight:700,color:"#1e293b",marginBottom:3}}>
             {format(new Date(log.startDate+"T12:00:00"),"MMM d")}{log.endDate?`  ${format(new Date(log.endDate+"T12:00:00"),"MMM d")}`:""}{dur?` (${dur} days)`:""}
@@ -1044,8 +1059,8 @@ function CalendarTab({cycleData,periodLogs,symptomLogs,onLogPeriod,onEditPeriod,
             </div>
           </div>
           {selPhase&&<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}><div style={{width:8,height:8,borderRadius:"50%",background:selP?.color||"#94a3b8"}}/><span style={{fontSize:13,color:"#64748b"}}>{PHASES[selPhase]?.fertility}  Chance of getting pregnant</span></div>}
-          {periodDays.has(selKey)&&<div style={{background:"#fff1f2",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#e11d48"}}> Period day (predicted)</span></div>}
-          {ovulationDays.has(selKey)&&<div style={{background:"#fffbeb",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#d97706"}}> Ovulation day</span></div>}
+          {periodDays.has(selKey)&&<div style={{background:"#fff1f2",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#e11d48"}}>{glyph("PD")} Period day (predicted)</span></div>}
+          {ovulationDays.has(selKey)&&<div style={{background:"#fffbeb",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#d97706"}}>{glyph("OV")} Ovulation day</span></div>}
           {selPeriodLog&&<div style={{background:"#fdf2f8",borderRadius:12,padding:"10px 14px",marginBottom:8}}><span style={{fontSize:13,fontWeight:700,color:"#db2777"}}>Logged: {selPeriodLog.flow} flow{selPeriodLog.notes?`  ${selPeriodLog.notes}`:""}</span></div>}
           {selLog&&(
             <div style={{background:"#f8fafc",borderRadius:12,padding:"12px 14px"}}>
@@ -1145,7 +1160,7 @@ function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,
           <div style={{fontSize:12,fontWeight:900,color:themeCfg.accent,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Care hub</div>
           <div style={{fontSize:17,fontWeight:950,color:"#1e293b",lineHeight:1.15}}>Partner<br/>Mode</div>
           <div style={{position:"absolute",bottom:-10,right:-10,width:76,height:76,borderRadius:"50%",background:"rgba(244,114,182,0.25)"}}/>
-          <div style={{position:"absolute",bottom:12,right:10,width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.72)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:950,color:themeCfg.accent}}>CARE</div>
+          <div style={{position:"absolute",bottom:12,right:10,width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.72)",display:"flex",alignItems:"center",justifyContent:"center",color:themeCfg.accent}}><IconGlyph name="PART" size={20}/></div>
         </button>
         <div className="lift-card" style={{background:"#fff",borderRadius:22,padding:"16px",boxShadow:"0 12px 30px rgba(0,0,0,0.07)",display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
           <div style={{fontSize:10,fontWeight:900,color:p.color,textTransform:"uppercase",letterSpacing:"0.08em"}}>Cycle day</div>
@@ -1156,7 +1171,7 @@ function TodayTab({cycleData,form,onOpenCycleSettings,onLogPeriod,onLogSymptoms,
           <div style={{fontSize:19,fontWeight:950,color:"#1e293b",lineHeight:1.15,marginBottom:4}}>{format(nextPeriodDate,"MMM d")}</div>
           <div style={{fontSize:13,color:"#94a3b8"}}>{nextPeriodIn} days away</div>
           <div style={{position:"absolute",bottom:-8,right:-8,width:64,height:64,borderRadius:"50%",background:"rgba(251,113,133,0.2)"}}/>
-          <div style={{position:"absolute",bottom:10,right:10,width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.72)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:950,color:"#e11d48"}}>DATE</div>
+          <div style={{position:"absolute",bottom:10,right:10,width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.72)",display:"flex",alignItems:"center",justifyContent:"center",color:"#e11d48"}}><IconGlyph name="CAL" size={20}/></div>
         </div>
       </div>
       <CycleBar cycleData={cycleData}/>
@@ -1308,7 +1323,7 @@ function PartnerModeTab({cycleData,onBack,themeKey="cat"}){
   const selectedMovies=PARTNER_SECTIONS.movies[movieTab]||PARTNER_SECTIONS.movies.Bollywood;
   const softCard=(item,i)=>(
     <button key={item.title||item} className="lift-card" onClick={()=>setCarePick(i%careCards.length)} style={{background:i%2?themeCfg.soft:"#fff",border:`1px solid ${i%2?themeCfg.light:"#f1f5f9"}`,borderRadius:18,padding:"16px 15px",boxShadow:"0 10px 26px rgba(15,23,42,0.06)",fontFamily:"inherit",cursor:"pointer",textAlign:"left"}}>
-      <div style={{width:42,height:42,borderRadius:14,background:`linear-gradient(135deg,${themeCfg.accent},${themeCfg.accent2})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:950,color:"#fff",marginBottom:10}}>{String(item.icon||"care").slice(0,4).toUpperCase()}</div>
+      <div style={{width:42,height:42,borderRadius:14,background:`linear-gradient(135deg,${themeCfg.accent},${themeCfg.accent2})`,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",marginBottom:10}}><IconGlyph name={item.icon||"CARE"} size={20}/></div>
       <div style={{fontSize:15,fontWeight:950,color:"#1e293b",marginBottom:5,lineHeight:1.2}}>{item.title||item}</div>
       {item.text&&<div style={{fontSize:13,color:"#64748b",lineHeight:1.55}}>{item.text}</div>}
     </button>
@@ -1399,22 +1414,22 @@ function AnalysisTab({cycleData,form,periodLogs,symptomLogs,onLogPeriod,onEditPe
         <p style={{fontSize:16,fontWeight:800,color:"#1e293b",marginBottom:16}}>Cycle analysis</p>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <div style={{background:"#fff1f2",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#e11d48",marginBottom:8}}></div>
+            <div style={{fontSize:28,color:"#e11d48",marginBottom:8}}>{glyph("PD")}</div>
             <div style={{fontSize:22,fontWeight:900,color:"#e11d48"}}>{periodLogs.length>0?`${periodLogs[0].endDate?Math.max(1,differenceInDays(new Date(periodLogs[0].endDate),new Date(periodLogs[0].startDate))+1):1} Day`:" Day"}</div>
             <div style={{fontSize:13,color:"#e11d48"}}>Average period</div>
           </div>
           <div style={{background:"#fffbeb",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#d97706",marginBottom:8}}></div>
+            <div style={{fontSize:28,color:"#d97706",marginBottom:8}}>{glyph("CAL")}</div>
             <div style={{fontSize:22,fontWeight:900,color:"#d97706"}}>{cycleLength} Days</div>
             <div style={{fontSize:13,color:"#d97706"}}>Cycle length</div>
           </div>
           <div style={{background:"#f0fdfa",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#0f766e",marginBottom:8}}></div>
+            <div style={{fontSize:28,color:"#0f766e",marginBottom:8}}>{glyph("HIST")}</div>
             <div style={{fontSize:22,fontWeight:900,color:"#0f766e"}}>{totalLogs}</div>
             <div style={{fontSize:13,color:"#0f766e"}}>Symptom logs</div>
           </div>
           <div style={{background:"#f5f3ff",borderRadius:16,padding:"16px"}}>
-            <div style={{fontSize:28,color:"#7c3aed",marginBottom:8}}></div>
+            <div style={{fontSize:28,color:"#7c3aed",marginBottom:8}}>{glyph("CR")}</div>
             <div style={{fontSize:22,fontWeight:900,color:"#7c3aed"}}>{avgPain}</div>
             <div style={{fontSize:13,color:"#7c3aed"}}>Avg pain score</div>
           </div>
@@ -1519,13 +1534,14 @@ export default function PeriodTracker(){
     loadAll();
   },[]);
 
-  // Compute cycle
+  // Compute cycle from the latest logged period first, then cycle settings.
   useEffect(()=>{
-    if(form.lastPeriodDate&&form.cycleLength>=21&&form.cycleLength<=45){
-      try{const d=new Date(form.lastPeriodDate);if(!isNaN(d))setCycleData(computeCycleData(d,form.cycleLength,form.lutealLen||14,form.periodDuration||5));else setCycleData(null);}
+    const activeLastPeriod = latestPeriodStart(periodLogs) || (form.lastPeriodDate ? new Date(form.lastPeriodDate) : null);
+    if(activeLastPeriod&&form.cycleLength>=21&&form.cycleLength<=45){
+      try{const d=new Date(activeLastPeriod);if(!isNaN(d))setCycleData(computeCycleData(d,form.cycleLength,form.lutealLen||14,form.periodDuration||5));else setCycleData(null);}
       catch{setCycleData(null);}
     } else setCycleData(null);
-  },[form]);
+  },[form,periodLogs]);
 
   // Fire in-app notifications based on reminders + cycle
   useEffect(()=>{
@@ -1538,13 +1554,13 @@ export default function PeriodTracker(){
       if(r.id==="period"&&nextPeriodIn<=(r.daysBefore||2)&&nextPeriodIn>=0){
         alerts.push({id:`notif-period-${Date.now()}`,icon:"PD",title:nextPeriodIn===0?"Period expected today":`Period in ${nextPeriodIn} day${nextPeriodIn===1?"":"s"}`,body:`Expected ${format(nextPeriodDate,"MMM d")}`,color:"#e11d48"});
         if(typeof Notification!=="undefined"&&Notification.permission==="granted"){
-          new Notification("GlowHer ",{body:nextPeriodIn===0?"Your period is expected today":`Your period is in ${nextPeriodIn} days (${format(nextPeriodDate,"MMM d")})`});
+          new Notification("GlowHer",{body:nextPeriodIn===0?"Your period is expected today":`Your period is in ${nextPeriodIn} days (${format(nextPeriodDate,"MMM d")})`});
         }
       }
       if(r.id==="ovulation"&&isSameDay(new Date(),ovDay)){
         alerts.push({id:`notif-ov-${Date.now()}`,icon:"OV",title:"Ovulation day",body:"Today is your peak fertility day",color:"#d97706"});
         if(typeof Notification!=="undefined"&&Notification.permission==="granted"){
-          new Notification("GlowHer ",{body:"Today is your ovulation day  peak fertility!"});
+          new Notification("GlowHer",{body:"Today is your ovulation day - peak fertility!"});
         }
       }
       if(r.id==="mood"){
@@ -1585,7 +1601,19 @@ export default function PeriodTracker(){
   },[loaded,appSettings,reminders,cycleData]);
 
   const saveForm=useCallback(async(f)=>{setForm(f);await storageSet("pt-form",{...f,lastPeriodDate:f.lastPeriodDate?new Date(f.lastPeriodDate).toISOString():null});setModal(null);},[]);
-  const savePeriods=useCallback(async(logs)=>{setPeriodLogs(logs);await storageSet("pt-periods",logs);},[]);
+  const savePeriods=useCallback(async(logs)=>{
+    setPeriodLogs(logs);
+    await storageSet("pt-periods",logs);
+    const latest = latestPeriodStart(logs);
+    if(latest){
+      const current = form.lastPeriodDate ? startOfDay(new Date(form.lastPeriodDate)).getTime() : null;
+      if(current!==startOfDay(latest).getTime()){
+        const nextForm={...form,lastPeriodDate:latest};
+        setForm(nextForm);
+        await storageSet("pt-form",{...nextForm,lastPeriodDate:latest.toISOString()});
+      }
+    }
+  },[form]);
   const saveSymptoms=useCallback(async(logs)=>{setSymptomLogs(logs);await storageSet("pt-symptoms",logs);},[]);
   const saveReminders=useCallback(async(r)=>{setReminders(r);await storageSet("pt-reminders",r);},[]);
   const saveSettings=useCallback(async(settings)=>{const normalized={...settings,theme:THEME_CONFIG[settings.theme]?settings.theme:"cat",pet:THEME_CONFIG[settings.pet]?settings.pet:(THEME_CONFIG[settings.theme]?settings.theme:"cat")};setAppSettings(normalized);await storageSet("pt-settings",normalized);},[]);
@@ -1637,12 +1665,12 @@ export default function PeriodTracker(){
 
       {/* Header */}
       <header style={{padding:"14px 20px 12px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(255,255,255,0.7)",backdropFilter:"blur(12px)",position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(241,245,249,0.8)"}}>
-        <button onClick={()=>setModal("settings")} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,position:"relative",padding:4}}>
-          <span style={{fontSize:12,fontWeight:950,color:themeCfg.accent}}>SET</span>{!form.lastPeriodDate&&<span style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:"#e11d48",border:"1.5px solid #fff"}}/>}
+        <button aria-label="Settings" onClick={()=>setModal("settings")} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,position:"relative",padding:4,color:themeCfg.accent,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <IconGlyph name="SET" size={23}/>{!form.lastPeriodDate&&<span style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:"#e11d48",border:"1.5px solid #fff"}}/>}
         </button>
         <div style={{fontSize:16,fontWeight:900,color:"#1e293b",letterSpacing:"-0.02em"}}>GlowHer</div>
-        <button onClick={()=>setModal("reminders")} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,padding:4,position:"relative"}}>
-          <span style={{fontSize:12,fontWeight:950,color:themeCfg.accent}}>BELL</span>{bellCount>0&&<span style={{position:"absolute",top:0,right:0,minWidth:16,height:16,borderRadius:99,background:"#e11d48",border:"2px solid #fff",fontSize:10,fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px"}}>{bellCount}</span>}
+        <button aria-label="Reminders" onClick={()=>setModal("reminders")} style={{background:"none",border:"none",cursor:"pointer",fontSize:22,padding:4,position:"relative",color:themeCfg.accent,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <IconGlyph name="BELL" size={23}/>{bellCount>0&&<span style={{position:"absolute",top:0,right:0,minWidth:16,height:16,borderRadius:99,background:"#e11d48",border:"2px solid #fff",fontSize:10,fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",padding:"0 3px"}}>{bellCount}</span>}
         </button>
       </header>
 
@@ -1651,14 +1679,14 @@ export default function PeriodTracker(){
         <aside className="sidebar-nav" style={{width:210,padding:"20px 12px",flexShrink:0,borderRight:"1px solid rgba(241,245,249,0.8)",display:"flex",flexDirection:"column",gap:4,background:"rgba(255,255,255,0.5)"}}>
           {nav.map(n=>(
             <button key={n.id} onClick={()=>setTab(n.id)} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",borderRadius:14,border:"none",cursor:"pointer",background:tab===n.id?"rgba(225,29,72,0.1)":"transparent",color:tab===n.id?"#e11d48":"#64748b",fontSize:14,fontWeight:tab===n.id?700:500,fontFamily:"inherit",textAlign:"left",width:"100%"}}>
-              <span style={{fontSize:18}}>{glyph(n.icon)}</span><span>{n.label}</span>
+              <span style={{fontSize:18,display:"flex",alignItems:"center"}}><IconGlyph name={n.icon} size={18}/></span><span>{n.label}</span>
             </button>
           ))}
           <div style={{height:1,background:"#f1f5f9",margin:"8px 4px"}}/>
           <p style={{fontSize:10,fontWeight:700,color:"#94a3b8",textTransform:"uppercase",letterSpacing:"0.07em",padding:"4px 16px 2px"}}>Quick actions</p>
           {[{icon:"PD",label:"Log period",action:()=>setModal("period")},{icon:"MO",label:"Log symptoms",action:()=>setModal("symptoms")},{icon:"BELL",label:"Reminders",action:()=>setModal("reminders")},{icon:"SET",label:"Cycle settings",action:()=>setModal("cycle")}].map(x=>(
             <button key={x.label} onClick={x.action} style={{display:"flex",alignItems:"center",gap:12,padding:"9px 16px",borderRadius:12,border:"none",cursor:"pointer",background:"transparent",color:"#64748b",fontSize:13,fontWeight:500,fontFamily:"inherit",textAlign:"left",width:"100%"}} onMouseEnter={e=>e.currentTarget.style.background="#f8fafc"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-              <span style={{fontSize:16}}>{glyph(x.icon)}</span><span>{x.label}</span>
+              <span style={{fontSize:16,display:"flex",alignItems:"center"}}><IconGlyph name={x.icon} size={16}/></span><span>{x.label}</span>
             </button>
           ))}
           {cycleData&&(
@@ -1688,7 +1716,7 @@ export default function PeriodTracker(){
       <nav className="bottom-nav" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.96)",backdropFilter:"blur(12px)",borderTop:"1px solid #f1f5f9",display:"flex",justifyContent:"space-around",alignItems:"center",padding:"8px 0 env(safe-area-inset-bottom,8px)",zIndex:50}}>
         {nav.map(n=>(
           <button key={n.id} onClick={()=>setTab(n.id)} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2,background:"none",border:"none",cursor:"pointer",padding:"5px 8px",borderRadius:12,color:tab===n.id?"#e11d48":"#94a3b8",fontFamily:"inherit",fontSize:9,fontWeight:tab===n.id?700:500,minWidth:44}}>
-            <span style={{fontSize:19}}>{glyph(n.icon)}</span><span>{n.label}</span>
+            <span style={{fontSize:19,display:"flex",alignItems:"center"}}><IconGlyph name={n.icon} size={19}/></span><span>{n.label}</span>
           </button>
         ))}
       </nav>
@@ -1714,12 +1742,13 @@ export default function PeriodTracker(){
         .back-dashboard-btn:active::after{transform:translate(-50%,50%) scale(18)}
         .sticker-mascot{position:relative}
         .sticker-mascot img{background:transparent!important;border:none!important;outline:none!important}
-        .theme-world{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;transition:opacity .55s ease,filter .55s ease}
+        .theme-world{position:fixed!important;inset:0;pointer-events:none;overflow:hidden;z-index:0!important;transition:opacity .55s ease,filter .55s ease}
         .theme-world::before,.theme-world::after{content:"";position:absolute;display:block;pointer-events:none}
-        .period-app>header,.period-app>div,.period-app>nav,.period-app>.bottom-nav{position:relative;z-index:2}
+        .period-app>header,.period-app>div:not(.theme-world),.period-app>nav,.period-app>.bottom-nav{position:relative;z-index:2}
         .period-app[data-mode="light"] header,
         .period-app[data-mode="light"] aside,
         .period-app[data-mode="light"] nav{background:rgba(255,255,255,.66)!important;backdrop-filter:blur(18px)}
+        .period-app[data-theme="parrot"]{background:linear-gradient(180deg,#e9fff0 0%,#dff8ff 42%,#f4ffd8 100%)!important}
         .period-app[data-mode="light"] div[style*="background:#fff"],
         .period-app[data-mode="light"] section[style*="background:#fff"],
         .period-app[data-mode="light"] div[style*="background: #fff"]{background:rgba(255,255,255,.76)!important;backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.58)!important}
@@ -1746,8 +1775,8 @@ export default function PeriodTracker(){
         .theme-world-dog::after{left:4%;bottom:16%;width:260px;height:92px;background:repeating-linear-gradient(90deg,rgba(176,122,69,.5) 0 12px,transparent 13px 44px),linear-gradient(180deg,transparent 46%,rgba(176,122,69,.55) 47% 58%,transparent 59% 100%)}
         .theme-world-parrot .world-gradient{background:radial-gradient(circle at 17% 12%,rgba(255,213,79,.9),transparent 22%),radial-gradient(circle at 82% 14%,rgba(135,206,235,.9),transparent 30%),radial-gradient(circle at 55% 48%,rgba(64,224,208,.5),transparent 34%),linear-gradient(180deg,rgba(240,255,244,.95),rgba(102,187,106,.6) 58%,rgba(46,139,87,.42))}
         .theme-world-parrot .world-horizon{background:radial-gradient(ellipse at 52% 105%,rgba(46,139,87,.62),transparent 62%),linear-gradient(180deg,transparent,rgba(34,139,34,.48));border-radius:50% 50% 0 0}
-        .theme-world-parrot::before{left:-6%;right:-6%;top:-6%;height:34%;background:radial-gradient(ellipse at 10% 10%,rgba(46,139,87,.52),transparent 34%),radial-gradient(ellipse at 32% 0,rgba(102,187,106,.48),transparent 35%),radial-gradient(ellipse at 68% 2%,rgba(46,139,87,.5),transparent 34%),radial-gradient(ellipse at 94% 8%,rgba(164,222,2,.34),transparent 32%);filter:blur(.2px)}
-        .theme-world-parrot::after{left:-4%;right:-4%;bottom:-1%;height:30%;background:radial-gradient(ellipse at 18% 100%,rgba(46,139,87,.54),transparent 45%),radial-gradient(ellipse at 86% 100%,rgba(34,139,34,.48),transparent 48%),repeating-linear-gradient(112deg,rgba(46,139,87,.38) 0 12px,rgba(164,222,2,.24) 13px 28px);clip-path:polygon(0 34%,9% 20%,18% 38%,28% 18%,39% 36%,50% 19%,61% 40%,73% 18%,84% 36%,94% 20%,100% 32%,100% 100%,0 100%)}
+        .theme-world-parrot::before{left:-8%;right:-8%;top:-7%;height:42%;background:radial-gradient(ellipse at 8% 8%,rgba(46,139,87,.72),transparent 34%),radial-gradient(ellipse at 30% 0,rgba(102,187,106,.62),transparent 35%),radial-gradient(ellipse at 66% 2%,rgba(46,139,87,.66),transparent 34%),radial-gradient(ellipse at 94% 7%,rgba(164,222,2,.5),transparent 32%),linear-gradient(105deg,rgba(255,213,79,.18),transparent 44%);filter:blur(.1px)}
+        .theme-world-parrot::after{left:-5%;right:-5%;bottom:-2%;height:38%;background:radial-gradient(ellipse at 14% 100%,rgba(46,139,87,.7),transparent 45%),radial-gradient(ellipse at 86% 100%,rgba(34,139,34,.62),transparent 48%),radial-gradient(ellipse at 50% 110%,rgba(164,222,2,.4),transparent 58%),repeating-linear-gradient(112deg,rgba(46,139,87,.5) 0 12px,rgba(164,222,2,.32) 13px 28px);clip-path:polygon(0 30%,8% 16%,17% 36%,27% 14%,38% 33%,49% 15%,60% 38%,72% 14%,84% 34%,94% 16%,100% 29%,100% 100%,0 100%)}
         .theme-world-mermaid .world-gradient{background:linear-gradient(180deg,rgba(200,252,255,.84),rgba(19,152,168,.48) 45%,rgba(20,83,102,.38)),radial-gradient(circle at 75% 18%,rgba(139,122,223,.42),transparent 30%)}
         .theme-world-mermaid .world-horizon{background:radial-gradient(ellipse at 50% 100%,rgba(20,83,102,.56),transparent 68%),linear-gradient(180deg,transparent,rgba(19,152,168,.34))}
         .theme-world-mermaid::before{inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.18) 0 2px,transparent 3px 58px);animation:waterShimmer 5.4s ease-in-out infinite}
@@ -1787,6 +1816,7 @@ export default function PeriodTracker(){
         .period-app[data-theme="parrot"] .hero-card,
         .period-app[data-theme="parrot"] .lift-card{border:1px solid rgba(255,255,255,.64)!important;box-shadow:0 16px 42px rgba(46,139,87,.12)!important}
         .period-app[data-theme="parrot"] .lift-card:hover{box-shadow:0 20px 48px rgba(46,139,87,.18)!important}
+        .period-app[data-theme="parrot"] .hero-card{background:linear-gradient(135deg,rgba(236,253,245,.9),rgba(217,249,157,.54),rgba(224,242,254,.72))!important}
         .period-app[data-theme="parrot"] aside,
         .period-app[data-theme="parrot"] header,
         .period-app[data-theme="parrot"] nav{background:rgba(255,255,255,.78)!important;backdrop-filter:blur(18px)}
@@ -1877,3 +1907,6 @@ export default function PeriodTracker(){
     </div>
   );
 }
+
+
+
